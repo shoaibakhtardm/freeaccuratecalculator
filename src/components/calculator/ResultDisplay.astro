@@ -1,0 +1,159 @@
+---
+// src/components/calculator/ResultDisplay.astro
+interface Props {
+  id: string;
+  label: string;
+  initialValue?: number;
+  decimals?: number;
+  prefix?: string;
+  suffix?: string;
+  isIndian?: boolean;
+  secondaryText?: string;
+  accent?: 'link' | 'cyan' | 'violet' | 'ink';
+  className?: string;
+}
+
+const {
+  id,
+  label,
+  initialValue = 0,
+  decimals = 2,
+  prefix = '',
+  suffix = '',
+  isIndian = false,
+  secondaryText = '',
+  accent = 'ink',
+  className = '',
+} = Astro.props;
+
+const accentClasses = {
+  ink: 'text-ink',
+  link: 'text-link',
+  cyan: 'text-cyan',
+  violet: 'text-violet',
+}[accent];
+---
+
+<div
+  class={`fac-result-card relative overflow-hidden rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-6 shadow-whisper transition-all ${className}`}
+  data-result-card={id}
+>
+  <div class="flex items-center justify-between gap-2 mb-2">
+    <span class="mono-eyebrow text-mute">{label}</span>
+    <div class="h-2 w-2 rounded-full bg-link/60 animate-pulse"></div>
+  </div>
+
+  <!-- Primary Animated Number (Accessibility aria-live) -->
+  <div
+    class="flex flex-wrap items-baseline gap-1"
+    aria-live="polite"
+    aria-atomic="true"
+  >
+    {prefix && (
+      <span
+        id={`${id}-prefix`}
+        class="text-lg sm:text-2xl font-mono font-medium text-mute select-none"
+      >
+        {prefix}
+      </span>
+    )}
+
+    <span
+      id={id}
+      class={`text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight font-mono break-all sm:break-normal ${accentClasses}`}
+      data-current-val={initialValue}
+      data-decimals={decimals}
+      data-prefix={prefix}
+      data-suffix={suffix}
+      data-indian={isIndian ? 'true' : 'false'}
+    >
+      {initialValue.toFixed(decimals)}
+    </span>
+
+    {suffix && (
+      <span
+        id={`${id}-suffix`}
+        class="text-sm sm:text-base font-medium text-mute select-none pl-1"
+      >
+        {suffix}
+      </span>
+    )}
+  </div>
+
+  {secondaryText && (
+    <p id={`${id}-secondary`} class="mt-2 text-xs text-body leading-relaxed">
+      {secondaryText}
+    </p>
+  )}
+</div>
+
+<script is:inline>
+  // Global EaseOutExpo Count-up engine
+  if (!window.facAnimateNumber) {
+    function easeOutExpo(t) {
+      return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+    }
+
+    function formatNumberString(val, decimals, isIndian) {
+      if (isNaN(val) || !isFinite(val)) return '0.00';
+      const fixed = val.toFixed(decimals);
+      const parts = fixed.split('.');
+      let intPart = parts[0];
+      const decPart = parts[1] !== undefined ? '.' + parts[1] : '';
+
+      if (isIndian) {
+        const isNeg = intPart.startsWith('-');
+        if (isNeg) intPart = intPart.substring(1);
+        if (intPart.length > 3) {
+          const last3 = intPart.substring(intPart.length - 3);
+          const rem = intPart.substring(0, intPart.length - 3);
+          intPart = rem.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + ',' + last3;
+        }
+        return (isNeg ? '-' : '') + intPart + decPart;
+      } else {
+        return intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + decPart;
+      }
+    }
+
+    window.facFormatNumber = formatNumberString;
+
+    window.facAnimateNumber = function (elementId, targetVal, options = {}) {
+      const el = document.getElementById(elementId);
+      if (!el) return;
+
+      const duration = options.duration || 500; // ms
+      const decimals = options.decimals !== undefined ? options.decimals : parseInt(el.getAttribute('data-decimals') || '2', 10);
+      const isIndian = options.isIndian !== undefined ? options.isIndian : el.getAttribute('data-indian') === 'true';
+
+      const startVal = parseFloat(el.getAttribute('data-current-val') || el.textContent.replace(/,/g, '') || '0');
+      const diff = targetVal - startVal;
+
+      if (Math.abs(diff) < 0.0001) {
+        el.textContent = formatNumberString(targetVal, decimals, isIndian);
+        el.setAttribute('data-current-val', targetVal.toString());
+        return;
+      }
+
+      let startTime = null;
+
+      function step(currentTime) {
+        if (!startTime) startTime = currentTime;
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = easeOutExpo(progress);
+        const currentNum = startVal + diff * eased;
+
+        el.textContent = formatNumberString(currentNum, decimals, isIndian);
+
+        if (progress < 1) {
+          requestAnimationFrame(step);
+        } else {
+          el.textContent = formatNumberString(targetVal, decimals, isIndian);
+          el.setAttribute('data-current-val', targetVal.toString());
+        }
+      }
+
+      requestAnimationFrame(step);
+    };
+  }
+</script>

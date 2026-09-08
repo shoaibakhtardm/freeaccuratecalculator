@@ -1,0 +1,104 @@
+{
+  "id": "emi-calculator",
+  "category": "finance",
+  "title": "Loan EMI Calculator — Monthly Installments & Reducing Balance Amortization",
+  "shortTitle": "EMI Calculator",
+  "description": "Calculate monthly loan EMI payments, total interest payable, and amortization schedules. Compare flat rate vs reducing balance with support for Indian Lakhs/Crores and international notation.",
+  "type": "country_aware",
+  "supportedLocales": ["en", "es", "fr", "hi"],
+  "formula": {
+    "name": "Equated Monthly Installment (EMI) Formula",
+    "expression": "EMI = P × r × (1 + r)^n / ((1 + r)^n - 1)",
+    "variables": {
+      "P": "Principal loan amount",
+      "r": "Monthly interest rate (Annual rate / 12 / 100)",
+      "n": "Total loan tenure in months"
+    },
+    "explanation": "Standard reducing balance EMI amortizes interest on the outstanding principal balance each month. During earlier months, a greater portion of each payment goes toward interest, gradually shifting toward principal repayment as the balance reduces."
+  },
+  "example": {
+    "problem": "Calculate the monthly EMI for a loan of $100,000 at 8.5% annual interest for 5 years (60 months).",
+    "steps": [
+      "Calculate monthly interest rate: r = 8.5 ÷ 12 ÷ 100 = 0.0070833",
+      "Calculate (1 + r)^60 = (1.0070833)^60 = 1.5273",
+      "Compute numerator: 100,000 × 0.0070833 × 1.5273 = 1,081.84",
+      "Compute denominator: 1.5273 - 1 = 0.5273",
+      "Divide: 1,081.84 ÷ 0.5273 = $2,051.65"
+    ],
+    "solution": "Monthly EMI payment is $2,051.65. Total interest paid over 5 years is $23,099."
+  },
+  "faqs": [
+    {
+      "question": "What is the difference between flat rate and reducing balance EMI?",
+      "answer": "A flat interest rate calculates interest on the entire original principal for the full duration, resulting in a much higher effective cost. Reducing balance recalculates interest only on the remaining unpaid principal each month, which is the standard method used by institutional banks."
+    },
+    {
+      "question": "How does prepaying a loan reduce overall interest?",
+      "answer": "Any prepayment directly reduces the outstanding principal balance, immediately decreasing the monthly interest accrued in subsequent periods and shortening loan tenure."
+    }
+  ],
+  "relatedCalculators": ["percentage-calculator", "bmi-calculator"],
+  "relatedBlogSlugs": ["how-to-reduce-home-loan-interest"],
+  "translations": {
+    "es": {
+      "title": "Calculadora de Cuota de Préstamo (EMI) — Amortización y Pagos Mensuales",
+      "description": "Calcula pagos mensuales de préstamos, intereses totales acumulados y cronograma de amortización de saldo decreciente.",
+      "formulaExplanation": "La fórmula estándar de cuota fija con saldo decreciente calcula los intereses mensuales únicamente sobre el saldo pendiente de devolución.",
+      "exampleProblem": "Calcular la cuota mensual para un préstamo de 100.000 € al 8,5% anual a 5 años (60 meses).",
+      "exampleSteps": [
+        "Calcular tasa mensual: r = 8,5 ÷ 12 ÷ 100 = 0,0070833",
+        "Calcular factor de capitalización: (1 + r)^60 = 1,5273",
+        "Calcular cuota resultante: 2.051,65 €/mes"
+      ],
+      "exampleSolution": "La cuota mensual es de 2.051,65 €. El interés total asciende a 23.099 €.",
+      "faqs": [
+        {
+          "question": "¿Qué ventaja tiene la amortización de saldo decreciente?",
+          "answer": "Permite pagar intereses únicamente sobre el capital real que aún debes al banco, reduciendo significativamente el coste total."
+        }
+      ]
+    },
+    "fr": {
+      "title": "Calculateur d'Échéance de Prêt (EMI) — Tableau d'Amortissement",
+      "description": "Calculez vos mensualités de crédit, le coût total des intérêts et découvrez le tableau d'amortissement détaillé.",
+      "formulaExplanation": "La méthode standard à taux d'intérêt dégressif calcule chaque mois les intérêts sur le capital restant dû.",
+      "exampleProblem": "Calculer la mensualité d'un emprunt de 100 000 € à 8,5% sur 5 ans (60 mois).",
+      "exampleSteps": [
+        "Taux mensuel : r = 8,5 ÷ 12 ÷ 100 = 0,0070833",
+        "Facteur d'actualisation : (1 + r)^60 = 1,5273",
+        "Mensualité : 2 051,65 €/mois"
+      ],
+      "exampleSolution": "La mensualité est de 2 051,65 €. Le total des intérêts est de 23 099 €.",
+      "faqs": [
+        {
+          "question": "Comment le remboursement anticipé réduit-il le coût du crédit ?",
+          "answer": "Tout remboursement anticipé vient directement en déduction du capital restant dû, réduisant immédiatement les intérêts futurs."
+        }
+      ]
+    },
+    "hi": {
+      "title": "ऋण ईएमआई कैलकुलेटर — मासिक किस्त और घटते शेष का परिशोधन (Amortization)",
+      "description": "मासिक ऋण ईएमआई, कुल देय ब्याज और परिशोधन अनुसूची की गणना करें। भारतीय लाख/करोड़ प्रणाली और अंतरराष्ट्रीय प्रारूप के साथ फ्लैट दर बनाम घटते शेष (Reducing Balance) की तुलना करें।",
+      "formulaExplanation": "मानक घटते शेष (रिड्यूसिंग बैलेंस) ईएमआई विधि प्रत्येक माह केवल बकाया मूलधन पर ब्याज की गणना करती है। शुरुआती महीनों में, प्रत्येक भुगतान का एक बड़ा हिस्सा ब्याज में जाता है, जो धीरे-धीरे मूलधन पुनर्भुगतान की ओर स्थानांतरित होता जाता है।",
+      "exampleProblem": "5 वर्ष (60 महीने) के लिए 8.5% वार्षिक ब्याज पर ₹1,00,000 के ऋण के लिए मासिक ईएमआई की गणना करें।",
+      "exampleSteps": [
+        "मासिक ब्याज दर निकालें: r = 8.5 ÷ 12 ÷ 100 = 0.0070833",
+        "(1 + r)^60 की गणना करें = (1.0070833)^60 = 1.5273",
+        "अंश की गणना करें: 1,00,000 × 0.0070833 × 1.5273 = 1,081.84",
+        "हर की गणना करें: 1.5273 - 1 = 0.5273",
+        "विभाजन करें: 1,081.84 ÷ 0.5273 = ₹2,051.65"
+      ],
+      "exampleSolution": "मासिक ईएमआई भुगतान ₹2,051.65 है। 5 वर्षों में कुल भुगतान किया गया ब्याज ₹23,099 है।",
+      "faqs": [
+        {
+          "question": "फ्लैट दर और घटते शेष (रिड्यूसिंग बैलेंस) ईएमआई में क्या अंतर है?",
+          "answer": "फ्लैट ब्याज दर पूरी अवधि के लिए मूलधन पर ब्याज लगाती है, जिससे वास्तविक लागत बहुत अधिक हो जाती है। घटते शेष में हर महीने केवल बचे हुए बकाया मूलधन पर ही ब्याज लगता है, जो सभी प्रमुख बैंकों द्वारा अपनाई जाने वाली मानक विधि है।"
+        },
+        {
+          "question": "प्रीपेमेंट करने से कुल ब्याज कैसे कम होता है?",
+          "answer": "कोई भी प्रीपेमेंट सीधे आपके बकाया मूलधन को कम करता है, जिससे आने वाले महीनों में लगने वाला ब्याज तुरंत कम हो जाता है और ऋण अवधि घट जाती है।"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,153 @@
+---
+// src/layouts/CalculatorLayout.astro
+import Layout from './Layout.astro';
+import Breadcrumbs from '../components/common/Breadcrumbs.astro';
+import AdSlot from '../components/common/AdSlot.astro';
+import ShareButton from '../components/calculator/ShareButton.astro';
+
+interface RelatedCalc {
+  title: string;
+  href: string;
+  badge?: string;
+}
+
+interface Props {
+  title: string;
+  metaDescription: string;
+  h1: string;
+  subtitle: string;
+  category: { label: string; href: string };
+  calculatorName: string;
+  relatedCalculators?: RelatedCalc[];
+  jsonLd?: Record<string, any> | Array<Record<string, any>>;
+  lang?: string;
+}
+
+const {
+  title,
+  metaDescription,
+  h1,
+  subtitle,
+  category,
+  calculatorName,
+  relatedCalculators = [],
+  jsonLd,
+  lang,
+} = Astro.props;
+
+// Auto-generate SoftwareApplication Schema.org structured data
+const softwareAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: calculatorName,
+  applicationCategory: 'UtilityApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript',
+  url: Astro.url.href,
+  offers: {
+    '@type': 'Offer',
+    price: '0.00',
+    priceCurrency: 'USD',
+  },
+  description: metaDescription,
+};
+
+const combinedSchemas = jsonLd
+  ? Array.isArray(jsonLd)
+    ? [softwareAppSchema, ...jsonLd]
+    : [softwareAppSchema, jsonLd]
+  : [softwareAppSchema];
+---
+
+<Layout
+  title={title}
+  description={metaDescription}
+  jsonLd={combinedSchemas}
+  lang={lang}
+>
+  <div class="max-w-7xl mx-auto">
+    <!-- Breadcrumbs -->
+    <Breadcrumbs
+      items={[
+        { label: category.label, href: category.href },
+        { label: calculatorName },
+      ]}
+    />
+
+    <!-- Header & Action Row -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-hairline pb-6 mb-8">
+      <div class="space-y-1.5">
+        <div class="flex items-center gap-2">
+          <span class="mono-eyebrow text-link">{category.label}</span>
+          <span class="h-1 w-1 rounded-full bg-faint"></span>
+          <span class="text-[11px] font-mono text-mute">Instant Client-Side Engine</span>
+        </div>
+        <h1 class="display-hero text-ink">{h1}</h1>
+        <p class="text-sm text-body max-w-2xl">{subtitle}</p>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <ShareButton />
+      </div>
+    </div>
+
+    <!-- Main Grid: Calculator & Content (Left) + Sidebar (Right) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <!-- Main Content Column (8 cols) -->
+      <div class="lg:col-span-8 space-y-8">
+        <!-- The Calculator UI Slot -->
+        <slot />
+
+        <!-- Native in-content ad slot between calculator and educational content -->
+        <AdSlot slotType="in-content" slotId="CALC-INCONTENT-01" />
+
+        <!-- Educational Sections Slot (Formula, Worked Example, FAQ) -->
+        <slot name="content" />
+      </div>
+
+      <!-- Sidebar Column (4 cols) -->
+      <aside class="lg:col-span-4 space-y-6">
+        <!-- Sidebar Ad Slot (Sticky Desktop) -->
+        <div class="sticky top-20 space-y-6">
+          <AdSlot slotType="rectangle" slotId="CALC-SIDEBAR-01" className="my-0" />
+
+          {relatedCalculators.length > 0 && (
+            <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-5 shadow-whisper space-y-3">
+              <h3 class="mono-eyebrow text-ink">Related Calculators</h3>
+              <ul class="space-y-2">
+                {relatedCalculators.map((rel) => (
+                  <li>
+                    <a
+                      href={rel.href}
+                      class="flex items-center justify-between rounded-[6px] border border-hairline-soft bg-canvas p-2.5 text-xs font-medium text-body hover:text-ink hover:border-mute transition-colors"
+                    >
+                      <span>{rel.title}</span>
+                      {rel.badge && (
+                        <span class="text-[10px] font-mono text-mute px-1.5 py-0.5 rounded bg-hairline-soft">
+                          {rel.badge}
+                        </span>
+                      )}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <!-- Trust Badge -->
+          <div class="rounded-[8px] border border-hairline-soft bg-canvas p-4 text-xs text-mute space-y-1.5">
+            <div class="flex items-center gap-1.5 font-medium text-ink">
+              <svg class="h-3.5 w-3.5 text-link" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+              </svg>
+              <span>Mathematically Verified</span>
+            </div>
+            <p class="text-[11px] leading-relaxed">
+              Formulas checked against standard reference models. Results compute instantly in your browser with zero latency.
+            </p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</Layout>

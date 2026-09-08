@@ -1,0 +1,337 @@
+---
+// src/pages/hi/math/percentage-calculator.astro
+import CalculatorLayout from '../../../layouts/CalculatorLayout.astro';
+import ResultDisplay from '../../../components/calculator/ResultDisplay.astro';
+import FormulaSection from '../../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../../components/calculator/WorkedExample.astro';
+import FAQSection from '../../../components/calculator/FAQSection.astro';
+import HistoryDrawer from '../../../components/calculator/HistoryDrawer.astro';
+import { useTranslations } from '../../../i18n/ui';
+
+const t = useTranslations('hi');
+
+const faqs = [
+  {
+    question: 'किसी संख्या का प्रतिशत कैसे ज्ञात करें?',
+    answer:
+      'किसी संख्या का प्रतिशत निकालने के लिए, प्रतिशत मान को 100 से विभाजित करके दशमलव में बदलें और फिर उसे कुल संख्या से गुणा करें। उदाहरण के लिए, 150 का 20% ज्ञात करने के लिए: (20 / 100) × 150 = 0.20 × 150 = 30।',
+  },
+  {
+    question: 'प्रतिशत वृद्धि या कमी की गणना कैसे की जाती है?',
+    answer:
+      'प्रतिशत परिवर्तन निकालने के लिए, प्रारंभिक मान को अंतिम मान से घटाएं, अंतर को प्रारंभिक मान के निरपेक्ष मान से विभाजित करें और 100 से गुणा करें: परिवर्तन = ((अंतिम - प्रारंभिक) / |प्रारंभिक|) × 100। धनात्मक परिणाम वृद्धि दर्शाता है और ऋणात्मक परिणाम कमी।',
+  },
+  {
+    question: 'क्या यह प्रतिशत कैलकुलेटर मुफ़्त और गोपनीय है?',
+    answer:
+      'हाँ। सभी गणनाएं क्लाइंट-साइड जावास्क्रिप्ट द्वारा सीधे आपके ब्राउज़र में निष्पादित होती हैं। कोई भी संख्यात्मक मान या डेटा किसी बाहरी सर्वर पर नहीं भेजा जाता है।',
+  },
+];
+
+const relatedCalculators = [
+  { title: 'ऋण ईएमआई कैलकुलेटर', href: '/hi/finance/emi-calculator/', badge: 'वित्त' },
+  { title: 'बीएमआई कैलकुलेटर', href: '/health/bmi-calculator/', badge: 'स्वास्थ्य' },
+];
+---
+
+<CalculatorLayout
+  title="मुफ़्त प्रतिशत कैलकुलेटर — तुरंत, सटीक और चरण-दर-चरण समाधान"
+  metaDescription="तुरंत प्रतिशत की गणना करें। किसी संख्या का प्रतिशत, X, Y का कितना प्रतिशत है, और प्रतिशत वृद्धि या कमी का चरण-दर-चरण गणितीय विवरण।"
+  h1="प्रतिशत कैलकुलेटर"
+  subtitle="प्रतिशत मान ज्ञात करें, दो संख्याओं के बीच का अनुपात निकालें, या वृद्धि व कमी की प्रतिशत दर का सटीक हिसाब लगाएं।"
+  category={{ label: 'गणित एवं परिशुद्धता', href: '/hi/math/' }}
+  calculatorName="प्रतिशत कैलकुलेटर"
+  relatedCalculators={relatedCalculators}
+  lang="hi"
+>
+  <!-- Calculator Card -->
+  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-6 sm:p-8 shadow-whisper space-y-6">
+    <!-- Mode Selector Tabs -->
+    <div class="flex flex-wrap gap-2 border-b border-hairline pb-4">
+      <button
+        id="mode-btn-1"
+        type="button"
+        class="pct-mode-tab active rounded-[6px] bg-primary px-3.5 py-1.5 text-xs font-medium text-on-primary cursor-pointer transition-all"
+        data-mode="1"
+      >
+        Y का X% कितना होगा?
+      </button>
+      <button
+        id="mode-btn-2"
+        type="button"
+        class="pct-mode-tab rounded-[6px] border border-hairline bg-canvas px-3.5 py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft cursor-pointer transition-all"
+        data-mode="2"
+      >
+        X, Y का कितना % है?
+      </button>
+      <button
+        id="mode-btn-3"
+        type="button"
+        class="pct-mode-tab rounded-[6px] border border-hairline bg-canvas px-3.5 py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft cursor-pointer transition-all"
+        data-mode="3"
+      >
+        % वृद्धि / कमी
+      </button>
+    </div>
+
+    <!-- Mode 1: What is X% of Y? -->
+    <div id="mode-1-container" class="mode-panel space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="m1-x" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            प्रतिशत (X%)
+          </label>
+          <div class="relative">
+            <input
+              id="m1-x"
+              type="number"
+              step="any"
+              value="15"
+              class="w-full rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+            />
+            <span class="absolute right-3 top-2.5 text-xs font-mono text-mute">%</span>
+          </div>
+        </div>
+
+        <div>
+          <label for="m1-y" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            कुल मान में से (Y)
+          </label>
+          <input
+            id="m1-y"
+            type="number"
+            step="any"
+            value="250"
+            class="w-full rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode 2: X is what % of Y? -->
+    <div id="mode-2-container" class="mode-panel hidden space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="m2-x" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            संख्या (X)
+          </label>
+          <input
+            id="m2-x"
+            type="number"
+            step="any"
+            value="45"
+            class="w-full rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+
+        <div>
+          <label for="m2-y" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            कुल आधार (Y)
+          </label>
+          <input
+            id="m2-y"
+            type="number"
+            step="any"
+            value="180"
+            class="w-full rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode 3: % Increase / Decrease -->
+    <div id="mode-3-container" class="mode-panel hidden space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="m3-initial" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            प्रारंभिक मान (V₁)
+          </label>
+          <input
+            id="m3-initial"
+            type="number"
+            step="any"
+            value="100"
+            class="w-full rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+
+        <div>
+          <label for="m3-final" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            अंतिम मान (V₂)
+          </label>
+          <input
+            id="m3-final"
+            type="number"
+            step="any"
+            value="125"
+            class="w-full rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Primary Animated Result Display -->
+    <ResultDisplay
+      id="pct-result"
+      label="गणना किया गया परिणाम"
+      initialValue={37.5}
+      decimals={2}
+      secondaryText="250 का 15% = 37.50"
+      accent="link"
+    />
+
+    <!-- Dynamic Formula Breakdown Box -->
+    <div id="live-step-breakdown" class="rounded-[8px] border border-hairline-soft bg-canvas p-4 text-xs font-mono text-body">
+      चरण : (15 ÷ 100) × 250 = 0.15 × 250 = 37.50
+    </div>
+
+    <!-- LocalStorage History Drawer -->
+    <HistoryDrawer calculatorId="percentage_hi" />
+  </div>
+
+  <!-- Educational Deep-Dive Content (Slot) -->
+  <div slot="content" class="space-y-8">
+    <FormulaSection
+      formula="P = (X ÷ 100) × Y"
+      explanation="किसी संख्या का दूसरी संख्या से प्रतिशत ज्ञात करने के लिए, भाग (X) को कुल (Y) से विभाजित करें और 100 से गुणा करें।"
+      title="सूत्र एवं गणितीय आधार"
+      variables={[
+        { symbol: 'P', meaning: 'अंतिम मूल्यांकित प्रतिशत परिणाम या भाग' },
+        { symbol: 'X', meaning: 'दर्ज किया गया प्रतिशत मान (उदा. 15% के लिए 15)' },
+        { symbol: 'Y', meaning: 'कुल आधार संख्या जिस पर गणना की जा रही है' },
+      ]}
+    />
+
+    <WorkedExample
+      title="व्यावहारिक उदाहरण: खरीदारी पर छूट"
+      scenario="आप ₹250.00 का सामान खरीदते हैं और उस पर 15% की छूट लागू करना चाहते हैं।"
+      steps={[
+        {
+          number: 1,
+          title: 'प्रतिशत को दशमलव भिन्न में बदलें',
+          description: '0.15 प्राप्त करने के लिए 15 को 100 से विभाजित करें।',
+          mathExpression: '15 ÷ 100 = 0.15',
+        },
+        {
+          number: 2,
+          title: 'कुल मूल्य से गुणा करें',
+          description: '0.15 को ₹250.00 के कुल मूल्य से गुणा करें।',
+          mathExpression: '0.15 × ₹250.00 = ₹37.50',
+        },
+        {
+          number: 3,
+          title: 'अंतिम छूट मूल्य की गणना करें',
+          description: 'प्रारंभिक मूल्य में से छूट की राशि घटाएं।',
+          mathExpression: '₹250.00 - ₹37.50 = ₹212.50',
+        },
+      ]}
+      conclusion="₹250.00 पर 15% की छूट से आपके ₹37.50 की बचत होती है, और अंतिम देय राशि ₹212.50 होगी।"
+    />
+
+    <FAQSection faqs={faqs} title="अक्सर पूछे जाने वाले प्रश्न (FAQ)" />
+  </div>
+</CalculatorLayout>
+
+<script is:inline>
+  (function () {
+    let currentMode = '1';
+
+    const tabs = document.querySelectorAll('.pct-mode-tab');
+    const panel1 = document.getElementById('mode-1-container');
+    const panel2 = document.getElementById('mode-2-container');
+    const panel3 = document.getElementById('mode-3-container');
+
+    const m1X = document.getElementById('m1-x');
+    const m1Y = document.getElementById('m1-y');
+
+    const m2X = document.getElementById('m2-x');
+    const m2Y = document.getElementById('m2-y');
+
+    const m3Initial = document.getElementById('m3-initial');
+    const m3Final = document.getElementById('m3-final');
+
+    const liveBreakdown = document.getElementById('live-step-breakdown');
+    const secondaryText = document.getElementById('pct-result-secondary');
+    const suffixBadge = document.getElementById('pct-result-suffix');
+
+    function calculate() {
+      let result = 0;
+      let summaryText = '';
+      let stepFormula = '';
+      let suffix = '';
+
+      if (currentMode === '1') {
+        const x = parseFloat(m1X?.value || '0');
+        const y = parseFloat(m1Y?.value || '0');
+        result = (x / 100) * y;
+        suffix = '';
+        summaryText = `${y} का ${x}% = ${result.toFixed(2)}`;
+        stepFormula = `चरण : (${x} ÷ 100) × ${y} = ${(x / 100).toFixed(4)} × ${y} = ${result.toFixed(2)}`;
+      } else if (currentMode === '2') {
+        const x = parseFloat(m2X?.value || '0');
+        const y = parseFloat(m2Y?.value || '1');
+        result = y !== 0 ? (x / y) * 100 : 0;
+        suffix = '%';
+        summaryText = `${x}, ${y} का ${result.toFixed(2)}% है`;
+        stepFormula = `चरण : (${x} ÷ ${y}) × 100 = ${(x / y).toFixed(4)} × 100 = ${result.toFixed(2)}%`;
+      } else if (currentMode === '3') {
+        const v1 = parseFloat(m3Initial?.value || '0');
+        const v2 = parseFloat(m3Final?.value || '0');
+        const diff = v2 - v1;
+        result = v1 !== 0 ? (diff / Math.abs(v1)) * 100 : 0;
+        suffix = '%';
+        const direction = result >= 0 ? 'वृद्धि' : 'कमी';
+        summaryText = `${v1} से ${v2} तक ${Math.abs(result).toFixed(2)}% की ${direction}`;
+        stepFormula = `चरण : ((${v2} - ${v1}) ÷ |${v1}|) × 100 = (${diff} ÷ ${Math.abs(v1)}) × 100 = ${result.toFixed(2)}%`;
+      }
+
+      if (suffixBadge) suffixBadge.textContent = suffix;
+      if (secondaryText) secondaryText.textContent = summaryText;
+      if (liveBreakdown) liveBreakdown.textContent = stepFormula;
+
+      if (window.facAnimateNumber) {
+        window.facAnimateNumber('pct-result', result, { decimals: 2 });
+      }
+
+      // Record to history debounced
+      clearTimeout(window.__pctHistoryTimeout);
+      window.__pctHistoryTimeout = setTimeout(() => {
+        if (window.facRecordHistory) {
+          window.facRecordHistory('percentage_hi', {
+            label: summaryText || 'प्रतिशत गणना',
+            value: `${result.toFixed(2)}${suffix}`,
+            timestamp: Date.now(),
+          });
+        }
+      }, 800);
+    }
+
+    // Switch Tabs
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach((t) => {
+          t.classList.remove('active', 'bg-primary', 'text-on-primary');
+          t.classList.add('border', 'border-hairline', 'bg-canvas', 'text-ink');
+        });
+        tab.classList.add('active', 'bg-primary', 'text-on-primary');
+        tab.classList.remove('border', 'border-hairline', 'bg-canvas', 'text-ink');
+
+        currentMode = tab.dataset.mode || '1';
+
+        panel1?.classList.toggle('hidden', currentMode !== '1');
+        panel2?.classList.toggle('hidden', currentMode !== '2');
+        panel3?.classList.toggle('hidden', currentMode !== '3');
+
+        calculate();
+      });
+    });
+
+    // Attach real-time input listeners
+    [m1X, m1Y, m2X, m2Y, m3Initial, m3Final].forEach((input) => {
+      input?.addEventListener('input', calculate);
+    });
+
+    // Initial calculation on load
+    calculate();
+  })();
+</script>

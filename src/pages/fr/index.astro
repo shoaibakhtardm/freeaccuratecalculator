@@ -1,0 +1,159 @@
+---
+// src/pages/fr/index.astro
+import Layout from '../../layouts/Layout.astro';
+import AdSlot from '../../components/common/AdSlot.astro';
+
+const categories = [
+  {
+    id: 'finance',
+    name: 'Calculateurs Financiers',
+    eyebrow: 'Mathématiques Financières de Haute Précision',
+    description: 'Amortissement de prêt, intérêts composés et mensualités de crédit.',
+    calculators: [
+      {
+        name: 'Calculateur de Prêt (EMI)',
+        slug: '/fr/finance/emi-calculator/',
+        desc: 'Mensualités fixes et intérêts dégressifs avec tableau d’amortissement complet.',
+        badge: 'Prêt',
+        badgeColor: 'text-cyan border-cyan/30 bg-cyan/10',
+      },
+      {
+        name: 'Intérêts Composés',
+        slug: '/finance/compound-interest-calculator/',
+        desc: 'Croissance du capital avec versements réguliers et capitalisation personnalisée.',
+        badge: 'Universel',
+        badgeColor: 'text-link border-link/30 bg-link/10',
+      },
+    ],
+  },
+  {
+    id: 'health',
+    name: 'Santé et Forme',
+    eyebrow: 'Métriques & Formules Cliniques',
+    description: 'Calculateurs validés pour l’IMC, le métabolisme de base et l’apport calorique.',
+    calculators: [
+      {
+        name: "Calculateur d'IMC",
+        slug: '/fr/health/bmi-calculator/',
+        desc: 'Indice de Masse Corporelle avec unités métriques (kg/cm) et impériales selon l’OMS.',
+        badge: 'Métrique / Impérial',
+        badgeColor: 'text-violet border-violet/30 bg-violet/10',
+      },
+    ],
+  },
+  {
+    id: 'math',
+    name: 'Mathématiques & Outils',
+    eyebrow: 'Arithmétique Exacte',
+    description: 'Pourcentages, fractions, notation scientifique et proportions.',
+    calculators: [
+      {
+        name: 'Calculateur de Pourcentage',
+        slug: '/fr/math/percentage-calculator/',
+        desc: 'Pourcentage d’un montant, hausses, baisses relatives et écarts étape par étape.',
+        badge: 'Universel',
+        badgeColor: 'text-link border-link/30 bg-link/10',
+      },
+    ],
+  },
+];
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Free Accurate Calculator (Français)',
+  url: 'https://freeaccuratecalculator.com/fr/',
+  description: 'Calculateurs en ligne rapides et mathématiquement vérifiés pour la finance, la santé, les maths et le quotidien.',
+};
+---
+
+<Layout
+  title="Calculateurs Gratuits et Précis — Rapides et Sans Lenteur"
+  description="Calculateurs en ligne mathématiquement vérifiés pour les Finances, la Santé, les Maths et le Quotidien avec confidentialité locale instantanée."
+  jsonLd={websiteSchema}
+  lang="fr"
+>
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden rounded-[16px] border border-hairline bg-canvas-elevated/70 px-4 py-8 sm:p-14 lg:p-20 text-center hero-mesh-gradient shadow-whisper">
+    <div class="relative z-10 mx-auto max-w-3xl space-y-6">
+      <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas/80 px-3 py-1 text-xs text-body backdrop-blur-sm shadow-whisper">
+        <span class="flex h-2 w-2 rounded-full bg-cyan animate-pulse"></span>
+        <span class="font-mono text-[11px] font-medium tracking-wide uppercase">Édition Internationale</span>
+      </div>
+
+      <h1 class="display-hero text-ink">
+        Des Calculs Bien Faits. <br class="hidden sm:inline" />
+        <span class="bg-gradient-to-r from-link via-violet to-magenta bg-clip-text text-transparent">
+          Rapides, Précis et Lisibles.
+        </span>
+      </h1>
+
+      <p class="text-base sm:text-lg text-body max-w-2xl mx-auto leading-relaxed font-normal">
+        Précision mathématique vérifiée avec une mise en page soignée, sans formules fiscales trompeuses et sans délai. Calculs locaux et diffusion instantanée sur le réseau Edge.
+      </p>
+
+      <!-- Search Input -->
+      <div class="pt-2 max-w-xl mx-auto">
+        <div class="relative flex items-center">
+          <svg class="absolute left-4 h-4 w-4 text-mute pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Rechercher un calculateur (ex. 'pourcentage', 'crédit', 'imc')..."
+            class="w-full rounded-[100px] border border-hairline bg-canvas py-3.5 pl-11 pr-4 text-base sm:text-sm text-ink placeholder-faint shadow-whisper focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-all"
+            aria-label="Rechercher des calculateurs"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Top Reserved Ad Slot -->
+  <div class="mt-8">
+    <AdSlot slotId="home-leaderboard" format="horizontal" />
+  </div>
+
+  <!-- Category Showcases -->
+  <div class="mt-12 space-y-16">
+    {categories.map((cat) => (
+      <section class="space-y-6">
+        <div>
+          <span class="mono-eyebrow text-link">{cat.eyebrow}</span>
+          <h2 class="heading-lg text-ink mt-1">{cat.name}</h2>
+          <p class="text-xs sm:text-sm text-body mt-1 max-w-xl">{cat.description}</p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {cat.calculators.map((calc) => (
+            <a
+              href={calc.slug}
+              class="group relative flex flex-col justify-between rounded-[12px] border border-hairline bg-canvas-elevated p-5 shadow-whisper transition-all duration-200 hover:-translate-y-0.5 hover:border-hairline-focus hover:shadow-card"
+            >
+              <div class="space-y-2.5">
+                <div class="flex items-center justify-between">
+                  <span class={`rounded-full border px-2 py-0.5 text-[10px] font-mono font-medium ${calc.badgeColor}`}>
+                    {calc.badge}
+                  </span>
+                </div>
+                <h3 class="text-base font-semibold text-ink group-hover:text-link transition-colors">
+                  {calc.name}
+                </h3>
+                <p class="text-xs leading-relaxed text-body line-clamp-2">
+                  {calc.desc}
+                </p>
+              </div>
+              <div class="mt-4 flex items-center text-xs font-medium text-link">
+                <span>Ouvrir le Calculateur</span>
+                <svg class="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+</Layout>

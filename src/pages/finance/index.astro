@@ -1,0 +1,131 @@
+---
+// src/pages/finance/index.astro
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
+import AdSlot from '../../components/common/AdSlot.astro';
+import { CALCULATORS, CATEGORY_METADATA } from '../../data/calculatorRegistry';
+
+const meta = CATEGORY_METADATA.finance;
+// Include EMI calculator which is in finance
+const calcs = CALCULATORS.filter((c) => c.category === 'finance');
+// Add EMI calculator representation if not in list
+const allFinanceCalcs = [
+  ...calcs,
+  {
+    id: 'emi-calculator',
+    category: 'finance',
+    name: 'EMI Calculator',
+    description: 'Equated Monthly Installment with reducing balance interest, Lakh/Crore support & amortization schedule.',
+    badge: 'Country-Aware',
+    badgeColor: 'text-cyan border-cyan/30 bg-cyan/10',
+  },
+].sort((a, b) => a.name.localeCompare(b.name));
+
+const categorySchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: meta.name,
+  description: meta.description,
+  url: 'https://freeaccuratecalculator.com/finance/',
+};
+---
+
+<Layout
+  title={`${meta.name} — Free, Accurate & Instant Financial Mathematics`}
+  description="Explore our suite of 16 free, mathematically verified finance calculators: Mortgages, Loans, Compound Interest, Investments, Taxes, Salaries, and Amortization schedules."
+  jsonLd={categorySchema}
+>
+  <div class="max-w-7xl mx-auto space-y-8">
+    <!-- Breadcrumbs -->
+    <Breadcrumbs items={[{ label: meta.name }]} />
+
+    <!-- Category Header Hero -->
+    <section class="relative overflow-hidden rounded-[16px] border border-hairline bg-canvas-elevated/70 px-4 py-8 sm:p-12 hero-mesh-gradient shadow-whisper">
+      <div class="max-w-3xl space-y-4">
+        <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas/80 px-3 py-1 text-xs text-body shadow-whisper">
+          <span class="flex h-2 w-2 rounded-full bg-cyan"></span>
+          <span class="font-mono text-[11px] font-medium tracking-wide uppercase">{allFinanceCalcs.length} Verified Financial Calculators</span>
+        </div>
+
+        <h1 class="display-hero text-ink">{meta.name}</h1>
+        <p class="text-base text-body leading-relaxed">{meta.description}</p>
+
+        <!-- Category Instant Search -->
+        <div class="pt-2 max-w-lg">
+          <div class="relative flex items-center">
+            <svg class="absolute left-3.5 h-4 w-4 text-mute pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              id="category-search"
+              type="search"
+              placeholder="Filter finance calculators (e.g. mortgage, loan, tax)..."
+              class="w-full min-h-[44px] rounded-[100px] border border-hairline bg-canvas py-2.5 pl-10 pr-4 text-base sm:text-sm text-ink placeholder-faint shadow-whisper focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-all"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top Reserved Ad Slot -->
+    <AdSlot slotId="category-finance-top" format="horizontal" />
+
+    <!-- Calculator Cards Grid -->
+    <div id="calculator-grid" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {allFinanceCalcs.map((calc) => (
+        <a
+          href={`/finance/${calc.id}/`}
+          class="calc-card group relative flex flex-col justify-between rounded-[12px] border border-hairline bg-canvas-elevated p-5 shadow-whisper transition-all duration-200 hover:-translate-y-0.5 hover:border-hairline-focus hover:shadow-card"
+          data-name={calc.name.toLowerCase()}
+          data-desc={calc.description.toLowerCase()}
+        >
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class={`rounded-full border px-2 py-0.5 text-[10px] font-mono font-medium ${calc.badgeColor}`}>
+                {calc.badge}
+              </span>
+              <span class="text-[11px] font-mono text-mute">Instant Client-Side</span>
+            </div>
+            <h2 class="text-base font-semibold text-ink group-hover:text-link transition-colors">
+              {calc.name}
+            </h2>
+            <p class="text-xs leading-relaxed text-body line-clamp-2">
+              {calc.description}
+            </p>
+          </div>
+          <div class="mt-4 flex items-center text-xs font-medium text-link">
+            <span>Calculate now</span>
+            <svg class="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- Educational Footer Guide -->
+    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper">
+      <h3 class="heading-md text-ink">Understanding Financial Mathematics</h3>
+      <p class="text-xs sm:text-sm text-body leading-relaxed">
+        Financial planning requires strict adherence to mathematical compounding identities. Standard loan amortization relies on annuity formulas where early installments cover accrued interest while later payments accelerate principal reduction. Our calculators execute all computations locally in your browser using IEEE 754 precision, guaranteeing complete confidentiality without transmitting sensitive financial numbers over external networks.
+      </p>
+    </section>
+  </div>
+</Layout>
+
+<script is:inline>
+  const searchInput = document.getElementById('category-search');
+  const cards = document.querySelectorAll('.calc-card');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      cards.forEach((card) => {
+        const name = card.dataset.name || '';
+        const desc = card.dataset.desc || '';
+        const matches = name.includes(q) || desc.includes(q);
+        card.style.display = matches ? 'flex' : 'none';
+      });
+    });
+  }
+</script>

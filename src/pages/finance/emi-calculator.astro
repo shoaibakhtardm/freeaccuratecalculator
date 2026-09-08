@@ -1,0 +1,675 @@
+---
+// src/pages/finance/emi-calculator.astro
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import ResultDisplay from '../../components/calculator/ResultDisplay.astro';
+import FormulaSection from '../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../components/calculator/WorkedExample.astro';
+import FAQSection from '../../components/calculator/FAQSection.astro';
+import HistoryDrawer from '../../components/calculator/HistoryDrawer.astro';
+import CurrencySwitcher from '../../components/common/CurrencySwitcher.astro';
+
+const faqs = [
+  {
+    question: 'What is an EMI and how is it calculated?',
+    answer:
+      'EMI stands for Equated Monthly Installment. It is a fixed payment amount made by a borrower to a lender at a specified date each calendar month. EMIs are calculated using the reducing balance method: E = P × r × (1 + r)ⁿ / ((1 + r)ⁿ - 1), where P is principal, r is the monthly interest rate, and n is the tenure in months.',
+  },
+  {
+    question: 'How does the reducing balance method differ from a flat interest rate?',
+    answer:
+      'In a reducing balance loan, interest is calculated each month solely on the outstanding principal. As you pay off principal each month, the interest portion of your EMI decreases while the principal portion increases. A flat rate loan calculates interest on the entire original principal for the full duration, resulting in a significantly higher effective APR.',
+  },
+  {
+    question: 'What is the Indian Lakh/Crore numbering system?',
+    answer:
+      'In India, South Asia, and regional banking, large currency figures are grouped in Lakhs and Crores rather than millions and billions. 1 Lakh equals 100,000 (written as 1,00,000) and 1 Crore equals 100 Lakhs or 10,000,000 (written as 1,00,00,000). Our calculator dynamically supports both formats.',
+  },
+  {
+    question: 'How do prepayments impact loan tenure and total interest?',
+    answer:
+      'Making partial prepayments directly reduces your outstanding principal balance. Because subsequent monthly interest is computed on this smaller balance, prepaying even a single extra installment annually can save thousands in interest and shave years off your loan tenure.',
+  },
+];
+
+const relatedCalculators = [
+  { title: 'Compound Interest', href: '/finance/compound-interest-calculator/' },
+  { title: 'Mortgage Calculator', href: '/finance/mortgage-calculator/' },
+  { title: 'Percentage Calculator', href: '/math/percentage-calculator/', badge: 'Math' },
+];
+---
+
+<CalculatorLayout
+  title="EMI Calculator — Equated Monthly Installment with Reducing Balance & Lakh/Crore Support"
+  metaDescription="Calculate your exact loan EMI, total interest payable, and amortization schedule. Features Indian Lakh/Crore and standard Million formatting with reducing balance math."
+  h1="EMI Calculator"
+  subtitle="Calculate equated monthly installments for home loans, personal loans, and car financing with instant reducing balance math."
+  category={{ label: 'Finance', href: '/finance/' }}
+  calculatorName="EMI Calculator"
+  relatedCalculators={relatedCalculators}
+>
+  <!-- Calculator Main Box -->
+  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+    <!-- Country/Format Controls Bar -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4 text-xs">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-2">
+          <span class="mono-eyebrow text-mute">Currency:</span>
+          <CurrencySwitcher selectId="emi-currency-select" className="w-auto" showFullName={true} />
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="mono-eyebrow text-mute">Notation:</span>
+          <div class="inline-flex rounded-[6px] border border-hairline bg-canvas p-0.5">
+            <button
+              id="format-standard-btn"
+              type="button"
+              class="rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors"
+            >
+              Standard (Million)
+            </button>
+            <button
+              id="format-indian-btn"
+              type="button"
+              class="rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors"
+            >
+              Indian (Lakh/Crore)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Preset Chips -->
+      <div class="flex items-center gap-1.5 overflow-x-auto text-[11px] font-medium text-mute pb-1 sm:pb-0">
+        <span class="select-none shrink-0">Presets:</span>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="500000">
+          5L
+        </button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="1500000">
+          15L
+        </button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="2500000">
+          25L
+        </button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="5000000">
+          50L
+        </button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="10000000">
+          1Cr
+        </button>
+      </div>
+    </div>
+
+    <!-- Inputs Grid -->
+    <div class="space-y-5">
+      <!-- 1. Principal Loan Amount -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
+          <label for="emi-principal">Loan Amount (Principal)</label>
+          <span id="principal-display" class="font-mono text-link text-sm">₹ 25,00,000</span>
+        </div>
+        <div class="relative flex items-center">
+          <span id="principal-symbol" class="absolute left-3.5 text-sm font-mono text-mute select-none">₹</span>
+          <input
+            id="emi-principal"
+            type="number"
+            min="1000"
+            max="100000000"
+            step="10000"
+            value="2500000"
+            class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas py-2.5 pl-8 pr-3 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+        <input
+          id="emi-principal-slider"
+          type="range"
+          min="100000"
+          max="10000000"
+          step="50000"
+          value="2500000"
+          class="w-full accent-link cursor-pointer h-5"
+        />
+      </div>
+
+      <!-- 2. Annual Interest Rate -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
+          <label for="emi-rate">Interest Rate (% P.A.)</label>
+          <span id="rate-display" class="font-mono text-cyan text-sm">8.50%</span>
+        </div>
+        <div class="relative flex items-center">
+          <input
+            id="emi-rate"
+            type="number"
+            min="0.1"
+            max="30"
+            step="0.05"
+            value="8.5"
+            class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas py-2.5 pl-3 pr-8 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+          <span class="absolute right-3.5 text-sm font-mono text-mute select-none">%</span>
+        </div>
+        <input
+          id="emi-rate-slider"
+          type="range"
+          min="4"
+          max="20"
+          step="0.1"
+          value="8.5"
+          class="w-full accent-cyan cursor-pointer h-5"
+        />
+      </div>
+
+      <!-- 3. Loan Tenure -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
+          <label for="emi-tenure">Loan Tenure</label>
+          <div class="flex items-center gap-2">
+            <span id="tenure-display" class="font-mono text-violet text-sm">20 Years (240 Mo)</span>
+            <div class="inline-flex rounded border border-hairline bg-canvas p-0.5 text-xs sm:text-[10px]">
+              <button id="tenure-yr-btn" type="button" class="rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium bg-primary text-on-primary">Yr</button>
+              <button id="tenure-mo-btn" type="button" class="rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium text-ink">Mo</button>
+            </div>
+          </div>
+        </div>
+        <input
+          id="emi-tenure"
+          type="number"
+          min="1"
+          max="360"
+          value="20"
+          class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas py-2.5 px-3 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+        />
+        <input
+          id="emi-tenure-slider"
+          type="range"
+          min="1"
+          max="30"
+          step="1"
+          value="20"
+          class="w-full accent-violet cursor-pointer h-5"
+        />
+      </div>
+    </div>
+
+    <!-- Primary Results Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+      <ResultDisplay
+        id="emi-monthly-result"
+        label="Monthly EMI Amount"
+        prefix="₹ "
+        initialValue={21696}
+        decimals={0}
+        secondaryText="Equated Monthly Installment"
+        accent="link"
+      />
+
+      <ResultDisplay
+        id="emi-interest-result"
+        label="Total Interest Payable"
+        prefix="₹ "
+        initialValue={2706935}
+        decimals={0}
+        secondaryText="Total interest across tenure"
+        accent="violet"
+      />
+
+      <ResultDisplay
+        id="emi-total-result"
+        label="Total Payment (P + I)"
+        prefix="₹ "
+        initialValue={5206935}
+        decimals={0}
+        secondaryText="Principal plus total interest"
+        accent="ink"
+      />
+    </div>
+
+    <!-- Principal vs Interest Breakdown Visual Ratio Bar -->
+    <div class="space-y-2 pt-2">
+      <div class="flex items-center justify-between text-xs font-mono">
+        <span class="flex items-center gap-1.5 text-link">
+          <span class="h-2 w-2 rounded-full bg-link"></span>
+          Principal: <span id="principal-pct-label">48.0%</span>
+        </span>
+        <span class="flex items-center gap-1.5 text-violet">
+          <span class="h-2 w-2 rounded-full bg-violet"></span>
+          Interest: <span id="interest-pct-label">52.0%</span>
+        </span>
+      </div>
+
+      <div class="flex h-3 w-full overflow-hidden rounded-full bg-canvas border border-hairline">
+        <div id="bar-principal" class="h-full bg-link transition-all duration-300" style="width: 48%;"></div>
+        <div id="bar-interest" class="h-full bg-violet transition-all duration-300" style="width: 52%;"></div>
+      </div>
+    </div>
+
+    <!-- Amortization Schedule Accordion Preview -->
+    <div class="border-t border-hairline pt-4">
+      <details class="group rounded-[8px] border border-hairline bg-canvas">
+        <summary class="flex min-h-[44px] items-center justify-between p-3.5 cursor-pointer list-none text-xs font-semibold text-ink hover:text-link transition-colors">
+          <span class="flex items-center gap-2">
+            <svg class="h-4 w-4 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span class="pr-2">View Amortization Schedule (Yearly Breakdown)</span>
+          </span>
+          <span class="text-xs text-mute group-open:rotate-180 transition-transform">▼</span>
+        </summary>
+
+        <div class="p-3.5 pt-0 overflow-x-auto max-w-full">
+          <p class="sm:hidden text-[11px] text-mute mb-2 flex items-center gap-1 font-mono">
+            <span>⇄ Swipe schedule horizontally</span>
+          </p>
+          <table class="w-full min-w-[480px] text-left text-xs font-mono">
+            <thead>
+              <tr class="border-b border-hairline text-mute">
+                <th class="py-2 pr-3">Year</th>
+                <th class="py-2 pr-3">Principal Paid</th>
+                <th class="py-2 pr-3">Interest Paid</th>
+                <th class="py-2 pr-3">Total Payment</th>
+                <th class="py-2">Remaining Balance</th>
+              </tr>
+            </thead>
+            <tbody id="amortization-table-body" class="divide-y divide-hairline-soft">
+              <!-- Dynamically rendered -->
+            </tbody>
+          </table>
+        </div>
+      </details>
+    </div>
+
+    <!-- History Drawer -->
+    <HistoryDrawer calculatorId="emi" />
+  </div>
+
+  <!-- Educational Deep-Dive Content (Slot) -->
+  <div slot="content" class="space-y-8">
+    <FormulaSection
+      formula="E = P × r × (1 + r)ⁿ ÷ ((1 + r)ⁿ - 1)"
+      explanation="The equated monthly installment (EMI) formula calculates equal payments over the repayment schedule using the reducing balance method. With each monthly installment, interest is evaluated solely on the remaining balance."
+      variables={[
+        { symbol: 'E', meaning: 'Equated Monthly Installment (EMI)' },
+        { symbol: 'P', meaning: 'Principal loan amount borrowed' },
+        { symbol: 'r', meaning: 'Monthly interest rate = (Annual Rate ÷ 12 ÷ 100)' },
+        { symbol: 'n', meaning: 'Total number of monthly installments (Years × 12)' },
+      ]}
+    />
+
+    <WorkedExample
+      title="Worked Example: Home Loan Calculation"
+      scenario="You take a Home Loan of ₹25,00,000 ($25 Lakhs) at an annual interest rate of 8.5% for a tenure of 20 years (240 months)."
+      steps={[
+        {
+          number: 1,
+          title: 'Determine the monthly interest rate (r)',
+          description: 'Divide the 8.5% annual rate by 12 months, then by 100.',
+          mathExpression: 'r = 8.5 ÷ 12 ÷ 100 = 0.0070833',
+        },
+        {
+          number: 2,
+          title: 'Compute the compounding factor (1 + r)ⁿ',
+          description: 'Compound over 240 months: (1 + 0.0070833)²⁴⁰ ≈ 5.4274.',
+          mathExpression: '(1 + 0.0070833)²⁴⁰ = 5.4274',
+        },
+        {
+          number: 3,
+          title: 'Calculate monthly EMI',
+          description: 'E = ₹25,00,000 × 0.0070833 × 5.4274 ÷ (5.4274 - 1).',
+          mathExpression: 'E = ₹21,696 per month',
+        },
+        {
+          number: 4,
+          title: 'Compute total interest over 20 years',
+          description: 'Total Payment = 240 × ₹21,696 = ₹52,06,935. Total Interest = ₹52,06,935 - ₹25,00,000.',
+          mathExpression: 'Total Interest = ₹27,06,935',
+        },
+      ]}
+      conclusion="Your monthly EMI is ₹21,696. Across 20 years, total interest paid is ₹27,06,935, totaling ₹52,06,935 in lifetime payments."
+    />
+
+    <FAQSection faqs={faqs} />
+  </div>
+</CalculatorLayout>
+
+<script is:inline>
+  (function () {
+    const activeCode = typeof window.facGetActiveCurrency === 'function'
+      ? window.facGetActiveCurrency()
+      : (new URLSearchParams(window.location.search).get('currency') || localStorage.getItem('fac_currency') || 'USD');
+    const activeInfo = typeof window.facGetCurrencyInfo === 'function'
+      ? window.facGetCurrencyInfo(activeCode)
+      : { symbol: activeCode === 'INR' ? '₹' : '$', isIndian: activeCode === 'INR' };
+
+    let currentCurrencySymbol = activeInfo?.symbol || (activeCode === 'INR' ? '₹' : '$');
+    let isIndianFormat = activeInfo ? !!activeInfo.isIndian : (activeCode === 'INR');
+    let tenureIsYears = true;
+
+    const principalInput = document.getElementById('emi-principal');
+    const principalSlider = document.getElementById('emi-principal-slider');
+    const principalDisplay = document.getElementById('principal-display');
+    const principalSymbol = document.getElementById('principal-symbol');
+
+    const rateInput = document.getElementById('emi-rate');
+    const rateSlider = document.getElementById('emi-rate-slider');
+    const rateDisplay = document.getElementById('rate-display');
+
+    const tenureInput = document.getElementById('emi-tenure');
+    const tenureSlider = document.getElementById('emi-tenure-slider');
+    const tenureDisplay = document.getElementById('tenure-display');
+
+    const tenureYrBtn = document.getElementById('tenure-yr-btn');
+    const tenureMoBtn = document.getElementById('tenure-mo-btn');
+
+    const formatStdBtn = document.getElementById('format-standard-btn');
+    const formatIndBtn = document.getElementById('format-indian-btn');
+
+    const barPrincipal = document.getElementById('bar-principal');
+    const barInterest = document.getElementById('bar-interest');
+    const principalPctLabel = document.getElementById('principal-pct-label');
+    const interestPctLabel = document.getElementById('interest-pct-label');
+
+    const amortTableBody = document.getElementById('amortization-table-body');
+
+    function formatVal(num, decimals = 0) {
+      if (window.facFormatNumber) {
+        return window.facFormatNumber(num, decimals, isIndianFormat);
+      }
+      return num.toLocaleString();
+    }
+
+    function calculate() {
+      const P = parseFloat(principalInput?.value || '0');
+      const annualRate = parseFloat(rateInput?.value || '0');
+      let tenure = parseFloat(tenureInput?.value || '0');
+
+      const totalMonths = tenureIsYears ? Math.round(tenure * 12) : Math.round(tenure);
+
+      if (principalDisplay) principalDisplay.textContent = `${currentCurrencySymbol} ${formatVal(P, 0)}`;
+      if (rateDisplay) rateDisplay.textContent = `${annualRate.toFixed(2)}%`;
+      if (tenureDisplay) {
+        if (tenureIsYears) {
+          tenureDisplay.textContent = `${tenure} Years (${totalMonths} Mo)`;
+        } else {
+          tenureDisplay.textContent = `${tenure} Months (${(tenure / 12).toFixed(1)} Yr)`;
+        }
+      }
+
+      if (P <= 0 || totalMonths <= 0) return;
+
+      const r = annualRate / 12 / 100;
+      let emi = 0;
+      let totalPayment = 0;
+      let totalInterest = 0;
+
+      if (r === 0) {
+        emi = P / totalMonths;
+        totalPayment = P;
+        totalInterest = 0;
+      } else {
+        const factor = Math.pow(1 + r, totalMonths);
+        emi = (P * r * factor) / (factor - 1);
+        totalPayment = emi * totalMonths;
+        totalInterest = totalPayment - P;
+      }
+
+      // Animate Results
+      if (window.facAnimateNumber) {
+        window.facAnimateNumber('emi-monthly-result', emi, { isIndian: isIndianFormat, decimals: 0 });
+        window.facAnimateNumber('emi-interest-result', totalInterest, { isIndian: isIndianFormat, decimals: 0 });
+        window.facAnimateNumber('emi-total-result', totalPayment, { isIndian: isIndianFormat, decimals: 0 });
+      }
+
+      // Update Breakdown Bar
+      if (totalPayment > 0) {
+        const principalPct = Math.round((P / totalPayment) * 100);
+        const interestPct = 100 - principalPct;
+
+        if (barPrincipal) barPrincipal.style.width = `${principalPct}%`;
+        if (barInterest) barInterest.style.width = `${interestPct}%`;
+        if (principalPctLabel) principalPctLabel.textContent = `${principalPct}%`;
+        if (interestPctLabel) interestPctLabel.textContent = `${interestPct}%`;
+      }
+
+      // Render Yearly Amortization Table
+      renderAmortization(P, r, emi, totalMonths);
+
+      // Debounced History
+      clearTimeout(window.__emiHistoryTimeout);
+      window.__emiHistoryTimeout = setTimeout(() => {
+        if (typeof window.facAddHistory === 'function') {
+          window.facAddHistory({
+            label: `Loan: ${currentCurrencySymbol} ${formatVal(P, 0)}`,
+            summary: `@ ${annualRate}% for ${tenureIsYears ? `${tenure} yrs` : `${tenure} mo`}`,
+            result: `EMI: ${currentCurrencySymbol} ${formatVal(emi, 0)}`,
+            inputs: {
+              principal: P,
+              rate: annualRate,
+              tenure: tenure,
+              tenureIsYears: tenureIsYears,
+              isIndianFormat: isIndianFormat,
+            },
+          });
+        }
+      }, 1500);
+    }
+
+    function renderAmortization(P, r, emi, totalMonths) {
+      if (!amortTableBody) return;
+      let balance = P;
+      let html = '';
+      const totalYears = Math.ceil(totalMonths / 12);
+
+      let currentYear = 1;
+      let yearlyPrincipal = 0;
+      let yearlyInterest = 0;
+
+      for (let m = 1; m <= totalMonths; m++) {
+        const interestMonth = balance * r;
+        const principalMonth = emi - interestMonth;
+        balance = Math.max(0, balance - principalMonth);
+
+        yearlyPrincipal += principalMonth;
+        yearlyInterest += interestMonth;
+
+        if (m % 12 === 0 || m === totalMonths) {
+          const yearlyTotal = yearlyPrincipal + yearlyInterest;
+          html += `
+            <tr class="hover:bg-canvas-elevated">
+              <td class="py-2 pr-3 font-semibold text-ink">Year ${currentYear}</td>
+              <td class="py-2 pr-3 text-link">${currentCurrencySymbol} ${formatVal(yearlyPrincipal, 0)}</td>
+              <td class="py-2 pr-3 text-violet">${currentCurrencySymbol} ${formatVal(yearlyInterest, 0)}</td>
+              <td class="py-2 pr-3 text-body">${currentCurrencySymbol} ${formatVal(yearlyTotal, 0)}</td>
+              <td class="py-2 text-ink font-medium">${currentCurrencySymbol} ${formatVal(balance, 0)}</td>
+            </tr>
+          `;
+          currentYear++;
+          yearlyPrincipal = 0;
+          yearlyInterest = 0;
+        }
+      }
+
+      amortTableBody.innerHTML = html;
+    }
+
+    // Slider <-> Input synchronization
+    if (principalInput && principalSlider) {
+      principalInput.addEventListener('input', () => {
+        principalSlider.value = principalInput.value;
+        calculate();
+      });
+      principalSlider.addEventListener('input', () => {
+        principalInput.value = principalSlider.value;
+        calculate();
+      });
+    }
+
+    if (rateInput && rateSlider) {
+      rateInput.addEventListener('input', () => {
+        rateSlider.value = rateInput.value;
+        calculate();
+      });
+      rateSlider.addEventListener('input', () => {
+        rateInput.value = rateSlider.value;
+        calculate();
+      });
+    }
+
+    if (tenureInput && tenureSlider) {
+      tenureInput.addEventListener('input', () => {
+        tenureSlider.value = tenureInput.value;
+        calculate();
+      });
+      tenureSlider.addEventListener('input', () => {
+        tenureInput.value = tenureSlider.value;
+        calculate();
+      });
+    }
+
+    // Tenure Toggle
+    tenureYrBtn?.addEventListener('click', () => {
+      tenureIsYears = true;
+      tenureYrBtn.className = 'rounded px-2 py-0.5 font-medium bg-primary text-on-primary';
+      tenureMoBtn.className = 'rounded px-2 py-0.5 font-medium text-ink';
+      if (tenureSlider) {
+        tenureSlider.max = '30';
+        tenureSlider.value = '20';
+      }
+      if (tenureInput) tenureInput.value = '20';
+      calculate();
+    });
+
+    tenureMoBtn?.addEventListener('click', () => {
+      tenureIsYears = false;
+      tenureMoBtn.className = 'rounded px-2 py-0.5 font-medium bg-primary text-on-primary';
+      tenureYrBtn.className = 'rounded px-2 py-0.5 font-medium text-ink';
+      if (tenureSlider) {
+        tenureSlider.max = '360';
+        tenureSlider.value = '240';
+      }
+      if (tenureInput) tenureInput.value = '240';
+      calculate();
+    });
+
+    // Format Toggle
+    formatStdBtn?.addEventListener('click', () => {
+      isIndianFormat = false;
+      formatStdBtn.className = 'rounded-[4px] bg-primary px-2.5 py-1 text-xs font-medium text-on-primary cursor-pointer';
+      formatIndBtn.className = 'rounded-[4px] px-2.5 py-1 text-xs font-medium text-ink cursor-pointer';
+      calculate();
+    });
+
+    formatIndBtn?.addEventListener('click', () => {
+      isIndianFormat = true;
+      formatIndBtn.className = 'rounded-[4px] bg-primary px-2.5 py-1 text-xs font-medium text-on-primary cursor-pointer';
+      formatStdBtn.className = 'rounded-[4px] px-2.5 py-1 text-xs font-medium text-ink cursor-pointer';
+      calculate();
+    });
+
+    // Preset chips
+    document.querySelectorAll('.preset-chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const amt = chip.getAttribute('data-amount');
+        if (amt && principalInput && principalSlider) {
+          principalInput.value = amt;
+          principalSlider.value = amt;
+          calculate();
+        }
+      });
+    });
+
+    function updateCurrencyUI() {
+      if (principalSymbol) principalSymbol.textContent = currentCurrencySymbol;
+
+      ['emi-monthly-result-prefix', 'emi-interest-result-prefix', 'emi-total-result-prefix'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = `${currentCurrencySymbol} `;
+      });
+
+      ['emi-monthly-result', 'emi-interest-result', 'emi-total-result'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.setAttribute('data-prefix', `${currentCurrencySymbol} `);
+          el.setAttribute('data-indian', isIndianFormat ? 'true' : 'false');
+        }
+      });
+
+      if (isIndianFormat) {
+        if (formatIndBtn) formatIndBtn.className = 'rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors';
+        if (formatStdBtn) formatStdBtn.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors';
+      } else {
+        if (formatStdBtn) formatStdBtn.className = 'rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors';
+        if (formatIndBtn) formatIndBtn.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors';
+      }
+    }
+
+    // Currency Switcher reaction
+    window.addEventListener('currencychange', (e) => {
+      currentCurrencySymbol = e.detail.symbol;
+      isIndianFormat = e.detail.isIndian;
+      updateCurrencyUI();
+      calculate();
+      if (typeof window.facSyncUrlState === 'function') {
+        window.facSyncUrlState();
+      }
+    });
+
+    // URL State Sharing
+    window.facSyncUrlState = function () {
+      const params = new URLSearchParams(window.location.search);
+      params.set('p', principalInput?.value || '2500000');
+      params.set('r', rateInput?.value || '8.5');
+      params.set('t', tenureInput?.value || '20');
+      params.set('ty', tenureIsYears ? 'yr' : 'mo');
+      params.set('fmt', isIndianFormat ? 'in' : 'std');
+      const activeCurr = typeof window.facGetActiveCurrency === 'function'
+        ? window.facGetActiveCurrency()
+        : (localStorage.getItem('fac_currency') || 'USD');
+      params.set('currency', activeCurr);
+      window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+    };
+
+    // Restore URL params
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('p') && principalInput && principalSlider) {
+      principalInput.value = params.get('p');
+      principalSlider.value = params.get('p');
+    }
+    if (params.has('r') && rateInput && rateSlider) {
+      rateInput.value = params.get('r');
+      rateSlider.value = params.get('r');
+    }
+    if (params.has('t') && tenureInput && tenureSlider) {
+      tenureInput.value = params.get('t');
+      tenureSlider.value = params.get('t');
+    }
+    if (params.get('ty') === 'mo') tenureMoBtn?.click();
+    if (params.get('fmt') === 'std') formatStdBtn?.click();
+
+    // History Restore callback
+    window.facRestoreHistoryItem = function (item) {
+      if (item.inputs) {
+        if (principalInput && item.inputs.principal) {
+          principalInput.value = item.inputs.principal;
+          if (principalSlider) principalSlider.value = item.inputs.principal;
+        }
+        if (rateInput && item.inputs.rate) {
+          rateInput.value = item.inputs.rate;
+          if (rateSlider) rateSlider.value = item.inputs.rate;
+        }
+        if (tenureInput && item.inputs.tenure) {
+          tenureInput.value = item.inputs.tenure;
+          if (tenureSlider) tenureSlider.value = item.inputs.tenure;
+        }
+        if (item.inputs.tenureIsYears === false) {
+          tenureMoBtn?.click();
+        } else {
+          tenureYrBtn?.click();
+        }
+      }
+      calculate();
+    };
+
+    // Initial calculation with currency UI sync
+    updateCurrencyUI();
+    calculate();
+  })();
+</script>

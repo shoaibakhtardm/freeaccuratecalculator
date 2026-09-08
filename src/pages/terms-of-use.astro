@@ -1,0 +1,63 @@
+---
+// src/pages/terms-of-use.astro
+import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../components/common/Breadcrumbs.astro';
+
+const lastUpdated = 'February 2025';
+---
+
+<Layout
+  title="Terms of Use"
+  description="Read the Free Accurate Calculator Terms of Use. Guidelines on permitted usage, accuracy limitations, and financial/medical disclaimers."
+>
+  <div class="max-w-3xl mx-auto">
+    <Breadcrumbs items={[{ label: 'Terms of Use' }]} />
+
+    <div class="space-y-4 mb-8">
+      <span class="mono-eyebrow text-link">Terms & Conditions</span>
+      <h1 class="heading-lg text-ink">Terms of Use</h1>
+      <p class="text-xs text-mute font-mono">Last Updated: {lastUpdated}</p>
+    </div>
+
+    <div class="prose prose-sm dark:prose-invert space-y-6 text-sm text-body leading-relaxed">
+      <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-6 space-y-3">
+        <h2 class="text-base font-semibold text-ink">1. Acceptance of Terms</h2>
+        <p>
+          By accessing or utilizing <strong>Free Accurate Calculator</strong> (<code>freeaccuratecalculator.com</code>), you acknowledge and agree to be bound by these Terms of Use and all applicable laws. If you do not agree with any part of these terms, you must refrain from using the website.
+        </p>
+      </section>
+
+      <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-6 space-y-3">
+        <h2 class="text-base font-semibold text-ink">2. Informational & Educational Purposes Only</h2>
+        <div class="rounded-[8px] border border-warning/30 bg-warning-soft/20 p-4 text-xs leading-relaxed text-ink">
+          <strong>Important Disclaimers:</strong>
+          <ul class="list-disc pl-5 mt-2 space-y-1">
+            <li><strong>No Financial/Tax Advice:</strong> All loan, amortization, compound interest, and EMI calculations are estimates. Lending institutions and taxing authorities may apply specific compounding intervals, origination fees, insurance charges, or rounding conventions not reflected in generic models.</li>
+            <li><strong>No Medical Advice:</strong> Health calculators (such as BMI, BMR, and Calorie requirements) are based on statistical population averages and World Health Organization guidelines. They do not constitute diagnostic or prescriptive clinical advice.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-6 space-y-3">
+        <h2 class="text-base font-semibold text-ink">3. Limitation of Liability</h2>
+        <p>
+          While we make every effort to ensure mathematical formulas are rigorous and verified against authoritative sources, Free Accurate Calculator and its creators provide all tools "AS IS" without warranties of any kind, express or implied. Under no circumstances shall Free Accurate Calculator be liable for any direct, indirect, incidental, or consequential damages resulting from the use or inability to use our calculations.
+        </p>
+      </section>
+
+      <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-6 space-y-3">
+        <h2 class="text-base font-semibold text-ink">4. Intellectual Property & Permitted Use</h2>
+        <p>
+          The layout, design, typography tokens, custom scripts, and explanatory text on this website are protected under copyright and intellectual property laws. You may use our calculators freely for personal, academic, or business planning. You may not scrape, frame, mirror, or reverse-engineer the site codebase for commercial resale without prior written authorization.
+        </p>
+      </section>
+
+      <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-6 space-y-3">
+        <h2 class="text-base font-semibold text-ink">5. Modifications to the Service</h2>
+        <p>
+          We reserve the right to modify, update, or discontinue any calculator, formula, or feature at any time without prior notice.
+        </p>
+      </section>
+    </div>
+  </div>
+</Layout>

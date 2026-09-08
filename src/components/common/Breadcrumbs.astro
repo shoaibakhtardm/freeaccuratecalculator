@@ -1,0 +1,60 @@
+---
+// src/components/common/Breadcrumbs.astro
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: Crumb[];
+}
+
+const { items } = Astro.props;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: 'https://freeaccuratecalculator.com/',
+    },
+    ...items.map((crumb, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 2,
+      name: crumb.label,
+      ...(crumb.href ? { item: `https://freeaccuratecalculator.com${crumb.href}` } : {}),
+    })),
+  ],
+};
+---
+
+<nav aria-label="Breadcrumbs" class="mb-6 flex flex-wrap items-center gap-x-1.5 gap-y-1 text-xs text-mute">
+  <a href="/" class="hover:text-ink transition-colors flex items-center gap-1 py-1">
+    <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+    </svg>
+    <span>Home</span>
+  </a>
+
+  {items.map((crumb, idx) => (
+    <div class="flex items-center gap-1.5">
+      <svg class="h-3 w-3 text-faint shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+      {crumb.href && idx < items.length - 1 ? (
+        <a href={crumb.href} class="hover:text-ink transition-colors py-1">
+          {crumb.label}
+        </a>
+      ) : (
+        <span class="text-ink font-medium select-none py-1" aria-current="page">
+          {crumb.label}
+        </span>
+      )}
+    </div>
+  ))}
+</nav>
+
+<script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />

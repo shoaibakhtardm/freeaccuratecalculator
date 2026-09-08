@@ -1,0 +1,123 @@
+---
+// src/pages/math/index.astro
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
+import AdSlot from '../../components/common/AdSlot.astro';
+import { CALCULATORS, CATEGORY_METADATA } from '../../data/calculatorRegistry';
+
+const meta = CATEGORY_METADATA.math;
+const calcs = CALCULATORS.filter((c) => c.category === 'math');
+const allMathCalcs = [
+  ...calcs,
+  {
+    id: 'percentage-calculator',
+    category: 'math',
+    name: 'Percentage Calculator',
+    description: 'Calculate percentages, percentage increase or decrease, and what percentage X is of Y with step-by-step breakdown.',
+    badge: 'Universal',
+    badgeColor: 'text-link border-link/30 bg-link/10',
+  },
+].sort((a, b) => a.name.localeCompare(b.name));
+
+const categorySchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: meta.name,
+  description: meta.description,
+  url: 'https://freeaccuratecalculator.com/math/',
+};
+---
+
+<Layout
+  title={`${meta.name} — Pure Mathematics & Statistical Algorithms`}
+  description="Exact mathematical calculators: Percentage, Scientific trigonometry/logs, Fraction arithmetic, Standard Deviation, Triangles, and Random Number Generator."
+  jsonLd={categorySchema}
+>
+  <div class="max-w-7xl mx-auto space-y-8">
+    <Breadcrumbs items={[{ label: meta.name }]} />
+
+    <section class="relative overflow-hidden rounded-[16px] border border-hairline bg-canvas-elevated/70 px-4 py-8 sm:p-12 hero-mesh-gradient shadow-whisper">
+      <div class="max-w-3xl space-y-4">
+        <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas/80 px-3 py-1 text-xs text-body shadow-whisper">
+          <span class="flex h-2 w-2 rounded-full bg-link"></span>
+          <span class="font-mono text-[11px] font-medium tracking-wide uppercase">{allMathCalcs.length} Verified Mathematical Calculators</span>
+        </div>
+
+        <h1 class="display-hero text-ink">{meta.name}</h1>
+        <p class="text-base text-body leading-relaxed">{meta.description}</p>
+
+        <div class="pt-2 max-w-lg">
+          <div class="relative flex items-center">
+            <svg class="absolute left-3.5 h-4 w-4 text-mute pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              id="category-search"
+              type="search"
+              placeholder="Filter math tools (e.g. percentage, fraction, scientific, standard deviation)..."
+              class="w-full min-h-[44px] rounded-[100px] border border-hairline bg-canvas py-2.5 pl-10 pr-4 text-base sm:text-sm text-ink placeholder-faint shadow-whisper focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-all"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <AdSlot slotId="category-math-top" format="horizontal" />
+
+    <div id="calculator-grid" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {allMathCalcs.map((calc) => (
+        <a
+          href={`/math/${calc.id}/`}
+          class="calc-card group relative flex flex-col justify-between rounded-[12px] border border-hairline bg-canvas-elevated p-5 shadow-whisper transition-all duration-200 hover:-translate-y-0.5 hover:border-hairline-focus hover:shadow-card"
+          data-name={calc.name.toLowerCase()}
+          data-desc={calc.description.toLowerCase()}
+        >
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class={`rounded-full border px-2 py-0.5 text-[10px] font-mono font-medium ${calc.badgeColor}`}>
+                {calc.badge}
+              </span>
+              <span class="text-[11px] font-mono text-mute">Exact Formula Engine</span>
+            </div>
+            <h2 class="text-base font-semibold text-ink group-hover:text-link transition-colors">
+              {calc.name}
+            </h2>
+            <p class="text-xs leading-relaxed text-body line-clamp-2">
+              {calc.description}
+            </p>
+          </div>
+          <div class="mt-4 flex items-center text-xs font-medium text-link">
+            <span>Calculate now</span>
+            <svg class="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper">
+      <h3 class="heading-md text-ink">Mathematical Rigor & Accuracy</h3>
+      <p class="text-xs sm:text-sm text-body leading-relaxed">
+        Our mathematics suite is built with verifiable step-by-step proofs. From trigonometric angles and logarithms to statistical dispersion and geometric relations, every algorithm runs instantly on your device with high floating-point precision, worked numerical examples, and complete formula documentation.
+      </p>
+    </section>
+  </div>
+</Layout>
+
+<script is:inline>
+  const searchInput = document.getElementById('category-search');
+  const cards = document.querySelectorAll('.calc-card');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      cards.forEach((card) => {
+        const name = card.dataset.name || '';
+        const desc = card.dataset.desc || '';
+        const matches = name.includes(q) || desc.includes(q);
+        card.style.display = matches ? 'flex' : 'none';
+      });
+    });
+  }
+</script>

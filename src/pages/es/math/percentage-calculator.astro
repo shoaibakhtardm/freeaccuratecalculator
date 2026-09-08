@@ -1,0 +1,337 @@
+---
+// src/pages/es/math/percentage-calculator.astro
+import CalculatorLayout from '../../../layouts/CalculatorLayout.astro';
+import ResultDisplay from '../../../components/calculator/ResultDisplay.astro';
+import FormulaSection from '../../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../../components/calculator/WorkedExample.astro';
+import FAQSection from '../../../components/calculator/FAQSection.astro';
+import HistoryDrawer from '../../../components/calculator/HistoryDrawer.astro';
+import { useTranslations } from '../../../i18n/ui';
+
+const t = useTranslations('es');
+
+const faqs = [
+  {
+    question: '¿Cómo se calcula el porcentaje de un número?',
+    answer:
+      'Para encontrar el porcentaje de un número, convierte el porcentaje en un decimal dividiéndolo por 100 y luego multiplícalo por el número total. Por ejemplo, para encontrar el 20% de 150: (20 / 100) × 150 = 0,20 × 150 = 30.',
+  },
+  {
+    question: '¿Cómo se calcula un aumento o disminución porcentual?',
+    answer:
+      'Para calcular el cambio porcentual, resta el valor inicial del valor final, divide por el valor inicial absoluto y multiplica por 100: Cambio = ((Final - Inicial) / |Inicial|) × 100. Un resultado positivo indica un aumento; un resultado negativo indica una disminución.',
+  },
+  {
+    question: '¿Esta calculadora de porcentajes es gratuita y privada?',
+    answer:
+      'Sí. Todos los cálculos se realizan localmente en tu navegador mediante JavaScript en el cliente. Ningún dato se envía a servidores externos.',
+  },
+];
+
+const relatedCalculators = [
+  { title: 'Calculadora EMI (Préstamos)', href: '/es/finance/emi-calculator/', badge: 'Finanzas' },
+  { title: 'Calculadora IMC', href: '/es/health/bmi-calculator/', badge: 'Salud' },
+];
+---
+
+<CalculatorLayout
+  title="Calculadora de Porcentajes Gratuita — Instantánea y Precisa"
+  metaDescription="Calcula porcentajes al instante con desglose paso a paso. Calcula el porcentaje de un número, aumentos, disminuciones y diferencias porcentuales."
+  h1="Calculadora de Porcentajes"
+  subtitle="Calcula valores porcentuales, determina qué porcentaje representa un número de otro o calcula aumentos y disminuciones porcentuales."
+  category={{ label: 'Matemáticas y Precisión', href: '/es/math/' }}
+  calculatorName="Calculadora de Porcentajes"
+  relatedCalculators={relatedCalculators}
+  lang="es"
+>
+  <!-- Calculator Card -->
+  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-6 sm:p-8 shadow-whisper space-y-6">
+    <!-- Mode Selector Tabs -->
+    <div class="flex flex-wrap gap-2 border-b border-hairline pb-4">
+      <button
+        id="mode-btn-1"
+        type="button"
+        class="pct-mode-tab active rounded-[6px] bg-primary px-3.5 py-1.5 text-xs font-medium text-on-primary cursor-pointer transition-all"
+        data-mode="1"
+      >
+        ¿Cuánto es el X% de Y?
+      </button>
+      <button
+        id="mode-btn-2"
+        type="button"
+        class="pct-mode-tab rounded-[6px] border border-hairline bg-canvas px-3.5 py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft cursor-pointer transition-all"
+        data-mode="2"
+      >
+        ¿Qué % es X de Y?
+      </button>
+      <button
+        id="mode-btn-3"
+        type="button"
+        class="pct-mode-tab rounded-[6px] border border-hairline bg-canvas px-3.5 py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft cursor-pointer transition-all"
+        data-mode="3"
+      >
+        % Aumento / Disminución
+      </button>
+    </div>
+
+    <!-- Mode 1: What is X% of Y? -->
+    <div id="mode-1-container" class="mode-panel space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="m1-x" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            Porcentaje (X%)
+          </label>
+          <div class="relative">
+            <input
+              id="m1-x"
+              type="number"
+              step="any"
+              value="15"
+              class="w-full rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+            />
+            <span class="absolute right-3 top-2.5 text-xs font-mono text-mute">%</span>
+          </div>
+        </div>
+
+        <div>
+          <label for="m1-y" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            Del Total (Y)
+          </label>
+          <input
+            id="m1-y"
+            type="number"
+            step="any"
+            value="250"
+            class="w-full rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode 2: X is what % of Y? -->
+    <div id="mode-2-container" class="mode-panel hidden space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="m2-x" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            Número (X)
+          </label>
+          <input
+            id="m2-x"
+            type="number"
+            step="any"
+            value="45"
+            class="w-full rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+
+        <div>
+          <label for="m2-y" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            Base Total (Y)
+          </label>
+          <input
+            id="m2-y"
+            type="number"
+            step="any"
+            value="180"
+            class="w-full rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode 3: % Increase / Decrease -->
+    <div id="mode-3-container" class="mode-panel hidden space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="m3-initial" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            Valor Inicial (V₁)
+          </label>
+          <input
+            id="m3-initial"
+            type="number"
+            step="any"
+            value="100"
+            class="w-full rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+
+        <div>
+          <label for="m3-final" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            Valor Final (V₂)
+          </label>
+          <input
+            id="m3-final"
+            type="number"
+            step="any"
+            value="125"
+            class="w-full rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Primary Animated Result Display -->
+    <ResultDisplay
+      id="pct-result"
+      label="Resultado Calculado"
+      initialValue={37.5}
+      decimals={2}
+      secondaryText="15% de 250 = 37.50"
+      accent="link"
+    />
+
+    <!-- Dynamic Formula Breakdown Box -->
+    <div id="live-step-breakdown" class="rounded-[8px] border border-hairline-soft bg-canvas p-4 text-xs font-mono text-body">
+      Paso: (15 ÷ 100) × 250 = 0.15 × 250 = 37.50
+    </div>
+
+    <!-- LocalStorage History Drawer -->
+    <HistoryDrawer calculatorId="percentage_es" />
+  </div>
+
+  <!-- Educational Deep-Dive Content (Slot) -->
+  <div slot="content" class="space-y-8">
+    <FormulaSection
+      formula="P = (X ÷ 100) × Y"
+      explanation="Para determinar qué porcentaje representa un número de otro, divide la parte (X) por el total (Y) y multiplica el cociente por 100."
+      title="Fórmula y Fundamento Matemático"
+      variables={[
+        { symbol: 'P', meaning: 'El valor o porción calculada final' },
+        { symbol: 'X', meaning: 'El porcentaje ingresado (ej. 15 para 15%)' },
+        { symbol: 'Y', meaning: 'El número base o total sobre el que se calcula' },
+      ]}
+    />
+
+    <WorkedExample
+      title="Ejemplo Práctico: Descuentos Comerciales"
+      scenario="Deseas comprar un artículo con un precio original de 250,00 € y aplicar un descuento promocional del 15%."
+      steps={[
+        {
+          number: 1,
+          title: 'Convertir el porcentaje a fracción decimal',
+          description: 'Divide 15% entre 100 para obtener 0,15.',
+          mathExpression: '15 ÷ 100 = 0,15',
+        },
+        {
+          number: 2,
+          title: 'Multiplicar por el precio de compra',
+          description: 'Multiplica 0,15 por el precio de 250,00 €.',
+          mathExpression: '0,15 × 250,00 € = 37,50 €',
+        },
+        {
+          number: 3,
+          title: 'Calcular el precio final rebajado',
+          description: 'Resta el importe descontado del precio original.',
+          mathExpression: '250,00 € - 37,50 € = 212,50 €',
+        },
+      ]}
+      conclusion="Un descuento del 15% sobre 250,00 € te ahorra 37,50 €, dejando el importe final en 212,50 €."
+    />
+
+    <FAQSection faqs={faqs} title="Preguntas Frecuentes" />
+  </div>
+</CalculatorLayout>
+
+<script is:inline>
+  (function () {
+    let currentMode = '1';
+
+    const tabs = document.querySelectorAll('.pct-mode-tab');
+    const panel1 = document.getElementById('mode-1-container');
+    const panel2 = document.getElementById('mode-2-container');
+    const panel3 = document.getElementById('mode-3-container');
+
+    const m1X = document.getElementById('m1-x');
+    const m1Y = document.getElementById('m1-y');
+
+    const m2X = document.getElementById('m2-x');
+    const m2Y = document.getElementById('m2-y');
+
+    const m3Initial = document.getElementById('m3-initial');
+    const m3Final = document.getElementById('m3-final');
+
+    const liveBreakdown = document.getElementById('live-step-breakdown');
+    const secondaryText = document.getElementById('pct-result-secondary');
+    const suffixBadge = document.getElementById('pct-result-suffix');
+
+    function calculate() {
+      let result = 0;
+      let summaryText = '';
+      let stepFormula = '';
+      let suffix = '';
+
+      if (currentMode === '1') {
+        const x = parseFloat(m1X?.value || '0');
+        const y = parseFloat(m1Y?.value || '0');
+        result = (x / 100) * y;
+        suffix = '';
+        summaryText = `${x}% de ${y} = ${result.toFixed(2)}`;
+        stepFormula = `Paso: (${x} ÷ 100) × ${y} = ${(x / 100).toFixed(4)} × ${y} = ${result.toFixed(2)}`;
+      } else if (currentMode === '2') {
+        const x = parseFloat(m2X?.value || '0');
+        const y = parseFloat(m2Y?.value || '1');
+        result = y !== 0 ? (x / y) * 100 : 0;
+        suffix = '%';
+        summaryText = `${x} es ${result.toFixed(2)}% de ${y}`;
+        stepFormula = `Paso: (${x} ÷ ${y}) × 100 = ${(x / y).toFixed(4)} × 100 = ${result.toFixed(2)}%`;
+      } else if (currentMode === '3') {
+        const v1 = parseFloat(m3Initial?.value || '0');
+        const v2 = parseFloat(m3Final?.value || '0');
+        const diff = v2 - v1;
+        result = v1 !== 0 ? (diff / Math.abs(v1)) * 100 : 0;
+        suffix = '%';
+        const direction = result >= 0 ? 'aumento' : 'disminución';
+        summaryText = `${Math.abs(result).toFixed(2)}% de ${direction} de ${v1} a ${v2}`;
+        stepFormula = `Paso: ((${v2} - ${v1}) ÷ |${v1}|) × 100 = (${diff} ÷ ${Math.abs(v1)}) × 100 = ${result.toFixed(2)}%`;
+      }
+
+      if (suffixBadge) suffixBadge.textContent = suffix;
+      if (secondaryText) secondaryText.textContent = summaryText;
+      if (liveBreakdown) liveBreakdown.textContent = stepFormula;
+
+      if (window.facAnimateNumber) {
+        window.facAnimateNumber('pct-result', result, { decimals: 2 });
+      }
+
+      // Record to history debounced
+      clearTimeout(window.__pctHistoryTimeout);
+      window.__pctHistoryTimeout = setTimeout(() => {
+        if (window.facRecordHistory) {
+          window.facRecordHistory('percentage_es', {
+            label: summaryText || 'Cálculo de Porcentaje',
+            value: `${result.toFixed(2)}${suffix}`,
+            timestamp: Date.now(),
+          });
+        }
+      }, 800);
+    }
+
+    // Switch Tabs
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        tabs.forEach((t) => {
+          t.classList.remove('active', 'bg-primary', 'text-on-primary');
+          t.classList.add('border', 'border-hairline', 'bg-canvas', 'text-ink');
+        });
+        tab.classList.add('active', 'bg-primary', 'text-on-primary');
+        tab.classList.remove('border', 'border-hairline', 'bg-canvas', 'text-ink');
+
+        currentMode = tab.dataset.mode || '1';
+
+        panel1?.classList.toggle('hidden', currentMode !== '1');
+        panel2?.classList.toggle('hidden', currentMode !== '2');
+        panel3?.classList.toggle('hidden', currentMode !== '3');
+
+        calculate();
+      });
+    });
+
+    // Attach real-time input listeners
+    [m1X, m1Y, m2X, m2Y, m3Initial, m3Final].forEach((input) => {
+      input?.addEventListener('input', calculate);
+    });
+
+    // Initial calculation on load
+    calculate();
+  })();
+</script>

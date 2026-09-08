@@ -1,0 +1,46 @@
+---
+// src/components/common/AdSlot.astro
+interface Props {
+  slotType?: 'leaderboard' | 'rectangle' | 'in-content' | 'sidebar';
+  format?: 'horizontal' | 'rectangle' | 'sidebar';
+  slotId?: string;
+  className?: string;
+}
+
+const {
+  slotType: propSlotType,
+  format,
+  slotId = 'FAC-AD-01',
+  className = '',
+} = Astro.props;
+
+// Normalize format vs slotType prop
+const effectiveSlotType: 'leaderboard' | 'rectangle' | 'in-content' | 'sidebar' =
+  propSlotType || (format === 'horizontal' ? 'leaderboard' : (format as any)) || 'rectangle';
+
+// Reserve exact sizes with responsive mobile dimensions to prevent Cumulative Layout Shift (CLS)
+const sizeClasses = {
+  leaderboard: 'w-full max-w-[728px] min-h-[50px] sm:min-h-[90px]',
+  rectangle: 'w-full max-w-[300px] sm:max-w-[336px] min-h-[250px] sm:min-h-[280px]',
+  sidebar: 'w-full max-w-[300px] min-h-[250px] sm:min-h-[600px]',
+  'in-content': 'w-full max-w-[728px] min-h-[90px] sm:min-h-[120px]',
+}[effectiveSlotType];
+---
+
+<div
+  class={`my-6 mx-auto flex max-w-full overflow-hidden flex-col items-center justify-center rounded-[8px] border border-dashed border-hairline bg-canvas-elevated/50 p-2 sm:p-3 text-center transition-all ${sizeClasses} ${className}`}
+  data-ad-slot={slotId}
+  data-ad-type={effectiveSlotType}
+>
+  <span class="mono-eyebrow text-[10px] text-faint tracking-wider mb-1 select-none">Advertisement</span>
+  
+  <!-- Reserved ad placeholder container (AdSense script injection target) -->
+  <div class="flex-1 w-full flex items-center justify-center text-xs text-mute/60 font-mono">
+    <div class="flex flex-col items-center gap-1">
+      <svg class="h-5 w-5 text-faint/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+      </svg>
+      <span class="text-[11px] text-faint">Reserved Ad Placement ({effectiveSlotType})</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,99 @@
+{
+  "id": "bmi-calculator",
+  "category": "health",
+  "title": "BMI Calculator — Body Mass Index for Adults (Metric & Imperial)",
+  "shortTitle": "BMI Calculator",
+  "description": "Calculate Body Mass Index (BMI) instantly using official World Health Organization (WHO) and Asian-specific BMI cut-offs with healthy weight targets.",
+  "type": "universal",
+  "supportedLocales": ["en", "es", "fr", "hi"],
+  "formula": {
+    "name": "Body Mass Index (Quetelet Index)",
+    "expression": "BMI = weight (kg) / [height (m)]^2",
+    "variables": {
+      "weight": "Body mass in kilograms (or pounds × 703 for imperial)",
+      "height": "Stature in meters (or inches for imperial)"
+    },
+    "explanation": "Body Mass Index evaluates body mass relative to height squared. Under WHO standards, < 18.5 is Underweight, 18.5–24.9 is Normal weight, 25.0–29.9 is Overweight, and ≥ 30 is classified as Obesity."
+  },
+  "example": {
+    "problem": "Calculate the BMI for an adult who weighs 70 kg and stands 175 cm tall.",
+    "steps": [
+      "Convert height to meters: 175 cm ÷ 100 = 1.75 m",
+      "Square the height: 1.75 × 1.75 = 3.0625 m²",
+      "Divide weight by height squared: 70 ÷ 3.0625 = 22.86 kg/m²"
+    ],
+    "solution": "The BMI is 22.9 kg/m², which sits squarely in the WHO Normal weight category (18.5 - 24.9)."
+  },
+  "faqs": [
+    {
+      "question": "Does BMI differentiate between muscle mass and body fat?",
+      "answer": "No. BMI does not measure body composition directly. Highly muscular athletes may be categorized as overweight despite having low body fat. Waist circumference and body fat percentage provide additional clinical context."
+    },
+    {
+      "question": "What are the Asian BMI thresholds?",
+      "answer": "Because cardiovascular risk occurs at lower BMIs in Asian populations, the WHO Western Pacific Region recommends: < 18.5 Underweight, 18.5–22.9 Normal, 23–27.4 Overweight, and ≥ 27.5 Obese."
+    }
+  ],
+  "relatedCalculators": ["percentage-calculator", "emi-calculator"],
+  "relatedBlogSlugs": ["understanding-bmi-vs-body-fat"],
+  "translations": {
+    "es": {
+      "title": "Calculadora de IMC — Índice de Masa Corporal (Métrico e Imperial)",
+      "description": "Calcula el Índice de Masa Corporal (IMC) según los estándares de la OMS con rangos de peso saludable.",
+      "formulaExplanation": "El IMC evalúa el peso en kilogramos dividido por la estatura en metros al cuadrado.",
+      "exampleProblem": "Calcular el IMC de una persona de 70 kg y 175 cm de altura.",
+      "exampleSteps": [
+        "Convertir altura a metros: 175 cm = 1,75 m",
+        "Elevar altura al cuadrado: 1,75 × 1,75 = 3,0625 m²",
+        "Dividir peso entre altura al cuadrado: 70 ÷ 3,0625 = 22,86 kg/m²"
+      ],
+      "exampleSolution": "El IMC es de 22,9 kg/m², clasificado como Peso Normal según la OMS.",
+      "faqs": [
+        {
+          "question": "¿Distingue el IMC entre músculo y grasa?",
+          "answer": "No. El IMC no mide la composición corporal directamente. Los atletas con gran masa muscular pueden figurar como sobrepeso."
+        }
+      ]
+    },
+    "fr": {
+      "title": "Calculateur d'IMC — Indice de Masse Corporelle (Métrique et Impérial)",
+      "description": "Calculez votre Indice de Masse Corporelle (IMC) selon les normes de l'OMS avec objectifs de poids de santé.",
+      "formulaExplanation": "L'IMC est calculé en divisant le poids en kilogrammes par le carré de la taille en mètres.",
+      "exampleProblem": "Calculer l'IMC pour un adulte de 70 kg et 175 cm.",
+      "exampleSteps": [
+        "Convertir la taille en mètres : 175 cm = 1,75 m",
+        "Élever au carré : 1,75 × 1,75 = 3,0625 m²",
+        "Calculer : 70 ÷ 3,0625 = 22,86 kg/m²"
+      ],
+      "exampleSolution": "L'IMC est de 22,9 kg/m², ce qui correspond à un Poids Normal selon l'OMS.",
+      "faqs": [
+        {
+          "question": "L'IMC fait-il la distinction entre muscle et graisse ?",
+          "answer": "Non. L'IMC ne mesure pas directement la composition corporelle. Les sportifs musclés peuvent présenter un IMC élevé."
+        }
+      ]
+    },
+    "hi": {
+      "title": "बीएमआई कैलकुलेटर — बॉडी मास इंडेक्स (मीट्रिक एवं इंपीरियल)",
+      "description": "विश्व स्वास्थ्य संगठन (WHO) और एशियाई आबादी के विशिष्ट कट-ऑफ के आधार पर तुरंत अपने बीएमआई (बॉडी मास इंडेक्स) और स्वस्थ वजन सीमा की गणना करें।",
+      "formulaExplanation": "बीएमआई की गणना वजन (किलोग्राम) को ऊंचाई (मीटर) के वर्ग से विभाजित करके की जाती है।",
+      "exampleProblem": "70 किग्रा वजन और 175 सेमी ऊंचाई वाले वयस्क के लिए बीएमआई की गणना करें।",
+      "exampleSteps": [
+        "ऊंचाई को मीटर में बदलें: 175 सेमी = 1.75 मी",
+        "वर्ग करें: 1.75 × 1.75 = 3.0625 मी²",
+        "गणना करें: 70 ÷ 3.0625 = 22.86 किग्रा/मी²"
+      ],
+      "exampleSolution": "बीएमआई 22.9 किग्रा/मी² है, जो WHO मानकों के अनुसार सामान्य वजन (Normal Weight) की श्रेणी में आता है।",
+      "faqs": [
+        {
+          "question": "क्या बीएमआई मांसपेशियों और वसा में अंतर करता है?",
+          "answer": "नहीं। बीएमआई शरीर की संरचना को सीधे नहीं मापता है। अधिक मांसपेशियों वाले एथलीटों का बीएमआई अधिक हो सकता है जबकि उनका स्वास्थ्य उत्कृष्ट होता है।"
+        },
+        {
+          "question": "एशियाई आबादी के लिए स्वस्थ बीएमआई सीमा क्या है?",
+          "answer": "एशियाई और भारतीय वयस्कों के लिए, WHO 23 से ऊपर अधिक वजन (overweight) और 27.5 से ऊपर मोटापे (obese) की श्रेणी निर्धारित करता है, क्योंकि इस आबादी में कम बीएमआई पर भी हृदय और मधुमेह संबंधी जोखिम अधिक होते हैं।"
+        }
+      ]
+    }
+  }
+}

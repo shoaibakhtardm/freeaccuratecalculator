@@ -1,0 +1,55 @@
+---
+// src/components/calculator/FAQSection.astro
+interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+interface Props {
+  faqs: FAQItem[];
+  title?: string;
+}
+
+const { faqs, title = 'Frequently Asked Questions' } = Astro.props;
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  })),
+};
+---
+
+<section class="mt-8 rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+  <div>
+    <span class="mono-eyebrow text-link">Knowledge Base</span>
+    <h2 class="heading-md text-ink mt-1">{title}</h2>
+  </div>
+
+  <div class="divide-y divide-hairline">
+    {faqs.map((faq, index) => (
+      <details class="group py-3 first:pt-0 last:pb-0" open={index === 0}>
+        <summary class="flex min-h-[44px] items-center justify-between cursor-pointer list-none text-sm font-semibold text-ink hover:text-link transition-colors focus:outline-none">
+          <span class="pr-2">{faq.question}</span>
+          <span class="ml-4 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-hairline text-mute group-open:rotate-180 transition-transform duration-200">
+            <svg class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </span>
+        </summary>
+        <div class="mt-2.5 pr-6 text-xs sm:text-sm text-body leading-relaxed">
+          <p>{faq.answer}</p>
+        </div>
+      </details>
+    ))}
+  </div>
+</section>
+
+<!-- Inject FAQ Schema.org JSON-LD -->
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />

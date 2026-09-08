@@ -1,0 +1,297 @@
+---
+// src/pages/index.astro
+import Layout from '../layouts/Layout.astro';
+import AdSlot from '../components/common/AdSlot.astro';
+
+import { CALCULATORS, CATEGORY_METADATA } from '../data/calculatorRegistry';
+
+// Build the complete list of 41 calculators across all 4 categories
+const masterList = [
+  ...CALCULATORS.map((c) => ({
+    name: c.name,
+    slug: `/${c.category}/${c.id}/`,
+    desc: c.description,
+    category: c.category,
+    badge: c.badge,
+    badgeColor: c.badgeColor,
+  })),
+  // Existing dedicated custom pages
+  {
+    name: 'EMI Calculator',
+    slug: '/finance/emi-calculator/',
+    desc: 'Equated Monthly Installment with reducing balance interest, Lakh/Crore support & amortization schedule.',
+    category: 'finance',
+    badge: 'Country-Aware',
+    badgeColor: 'text-cyan border-cyan/30 bg-cyan/10',
+  },
+  {
+    name: 'BMI Calculator',
+    slug: '/health/bmi-calculator/',
+    desc: 'Body Mass Index with instant Metric (kg/cm) & Imperial (lbs/ft-in) switch and WHO classification.',
+    category: 'health',
+    badge: 'Unit-Aware',
+    badgeColor: 'text-violet border-violet/30 bg-violet/10',
+  },
+  {
+    name: 'Percentage Calculator',
+    slug: '/math/percentage-calculator/',
+    desc: 'Calculate percentage of numbers, percentage change, increase, decrease, and differences.',
+    category: 'math',
+    badge: 'Universal',
+    badgeColor: 'text-link border-link/30 bg-link/10',
+  },
+];
+
+// De-duplicate by slug
+const uniqueCalculators = Array.from(new Map(masterList.map((item) => [item.slug, item])).values());
+
+const categories = Object.values(CATEGORY_METADATA).map((cat) => ({
+  id: cat.id,
+  name: cat.name,
+  eyebrow: cat.eyebrow,
+  description: cat.description,
+  calculators: uniqueCalculators
+    .filter((c) => c.category === cat.id)
+    .sort((a, b) => a.name.localeCompare(b.name)),
+}));
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Free Accurate Calculator',
+  url: 'https://freeaccuratecalculator.com/',
+  description: 'Fast, mathematically verified online calculators for finance, health, math, and everyday utility.',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: 'https://freeaccuratecalculator.com/?q={search_term_string}',
+    'query-input': 'required name=search_term_string',
+  },
+};
+---
+
+<Layout
+  title="Free Accurate Calculator — Fast, Precision Online Calculators"
+  description="Free Accurate Calculator delivers industrial-grade, mathematically verified online calculators for Finance, Health, Math, and Everyday calculations with zero cold start and instant local privacy."
+  jsonLd={websiteSchema}
+>
+  <!-- Hero Section with Vercel Mesh Gradient -->
+  <section class="relative overflow-hidden rounded-[16px] border border-hairline bg-canvas-elevated/70 px-4 py-8 sm:p-14 lg:p-20 text-center hero-mesh-gradient shadow-whisper">
+    <div class="relative z-10 mx-auto max-w-3xl space-y-6">
+      <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas/80 px-3 py-1 text-xs text-body backdrop-blur-sm shadow-whisper">
+        <span class="flex h-2 w-2 rounded-full bg-cyan animate-pulse"></span>
+        <span class="font-mono text-[11px] font-medium tracking-wide uppercase">International Edition 2.0</span>
+      </div>
+
+      <h1 class="display-hero text-ink">
+        Calculations Done Right. <br class="hidden sm:inline" />
+        <span class="bg-gradient-to-r from-link via-violet to-magenta bg-clip-text text-transparent">
+          Fast, Accurate & Clean.
+        </span>
+      </h1>
+
+      <p class="text-base sm:text-lg text-body max-w-2xl mx-auto leading-relaxed font-normal">
+        Fast, verified mathematical accuracy with an uncluttered layout, no misleading tax formulas, and zero lag. Built with country-aware finance rules and instant edge delivery.
+      </p>
+
+      <!-- Instant Search-to-Jump Input -->
+      <div class="pt-2 max-w-xl mx-auto">
+        <div class="relative flex items-center">
+          <svg class="absolute left-4 h-4 w-4 text-mute pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Search calculators (e.g., 'percentage', 'emi', 'bmi')..."
+            class="w-full rounded-[100px] border border-hairline bg-canvas py-3.5 pl-11 pr-4 text-base sm:text-sm text-ink placeholder-faint shadow-whisper focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-all"
+            aria-label="Search all calculators"
+          />
+        </div>
+
+        <!-- Quick Filter Category Pills -->
+        <div class="mt-4 flex flex-wrap items-center justify-center gap-2">
+          <button type="button" class="category-filter-btn active inline-flex items-center justify-center min-h-[44px] sm:min-h-[32px] rounded-[64px] border border-hairline bg-ink text-on-primary px-3.5 py-2 sm:py-1 text-xs font-medium cursor-pointer transition-all" data-category="all">
+            All
+          </button>
+          <button type="button" class="category-filter-btn inline-flex items-center justify-center min-h-[44px] sm:min-h-[32px] rounded-[64px] border border-hairline bg-canvas-elevated text-ink hover:bg-hairline-soft px-3.5 py-2 sm:py-1 text-xs font-medium cursor-pointer transition-all" data-category="finance">
+            Finance
+          </button>
+          <button type="button" class="category-filter-btn inline-flex items-center justify-center min-h-[44px] sm:min-h-[32px] rounded-[64px] border border-hairline bg-canvas-elevated text-ink hover:bg-hairline-soft px-3.5 py-2 sm:py-1 text-xs font-medium cursor-pointer transition-all" data-category="health">
+            Health
+          </button>
+          <button type="button" class="category-filter-btn inline-flex items-center justify-center min-h-[44px] sm:min-h-[32px] rounded-[64px] border border-hairline bg-canvas-elevated text-ink hover:bg-hairline-soft px-3.5 py-2 sm:py-1 text-xs font-medium cursor-pointer transition-all" data-category="math">
+            Math
+          </button>
+          <button type="button" class="category-filter-btn inline-flex items-center justify-center min-h-[44px] sm:min-h-[32px] rounded-[64px] border border-hairline bg-canvas-elevated text-ink hover:bg-hairline-soft px-3.5 py-2 sm:py-1 text-xs font-medium cursor-pointer transition-all" data-category="everyday">
+            Everyday
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reserved Top AdSlot (AdSense Ready) -->
+  <AdSlot slotType="leaderboard" slotId="FAC-HOME-TOP" className="my-8" />
+
+  <!-- Categorized Calculator Sections -->
+  <div id="calculator-directory" class="space-y-16 mt-8">
+    {categories.map((cat) => (
+      <section id={cat.id} class="category-block scroll-mt-20" data-cat-id={cat.id}>
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b border-hairline pb-4 mb-6">
+          <div>
+            <span class="mono-eyebrow text-link">{cat.eyebrow}</span>
+            <h2 class="heading-md text-ink mt-1">{cat.name}</h2>
+            <p class="text-xs text-body mt-0.5">{cat.description}</p>
+          </div>
+          <a href={`/${cat.id}/`} class="text-xs font-medium text-mute hover:text-ink transition-colors mt-2 sm:mt-0 flex items-center gap-1">
+            Browse all {cat.name}
+            <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+            </svg>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {cat.calculators.map((calc) => (
+            <a
+              href={calc.slug}
+              class="calc-card group relative flex flex-col justify-between rounded-[12px] border border-hairline bg-canvas-elevated p-5 hover:border-mute hover:shadow-whisper transition-all duration-200"
+              data-title={calc.name.toLowerCase()}
+              data-desc={calc.desc.toLowerCase()}
+            >
+              <div>
+                <div class="flex items-center justify-between gap-2 mb-2.5">
+                  <h3 class="text-sm font-semibold text-ink group-hover:text-link transition-colors">
+                    {calc.name}
+                  </h3>
+                  <span class={`rounded-full border px-2 py-0.5 text-[10px] font-mono font-medium ${calc.badgeColor}`}>
+                    {calc.badge}
+                  </span>
+                </div>
+                <p class="text-xs text-body leading-relaxed line-clamp-3">
+                  {calc.desc}
+                </p>
+              </div>
+
+              <div class="mt-4 pt-3 border-t border-hairline-soft flex items-center justify-between text-[11px] font-medium text-mute group-hover:text-ink transition-colors">
+                <span>Calculate now</span>
+                <svg class="h-3.5 w-3.5 transform transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+  </div>
+
+  <!-- Key Differentiator Band: Vercel Restrained Aesthetic -->
+  <section class="mt-20 rounded-[12px] border border-hairline bg-canvas-elevated p-8 sm:p-12 shadow-whisper">
+    <div class="text-center max-w-2xl mx-auto space-y-2 mb-10">
+      <span class="mono-eyebrow text-link">Product Architecture</span>
+      <h2 class="heading-lg text-ink">Built for Speed, Trust & AdSense Compliance</h2>
+      <p class="text-xs sm:text-sm text-body">
+        Why Free Accurate Calculator is engineered to stand out against outdated legacy calculator portals.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="rounded-[8px] border border-hairline-soft bg-canvas p-5 space-y-2">
+        <div class="flex h-8 w-8 items-center justify-center rounded-[6px] bg-canvas-elevated border border-hairline text-link">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <h3 class="text-sm font-semibold text-ink">Zero Cold Start & Edge Served</h3>
+        <p class="text-xs text-body leading-relaxed">
+          Static HTML prerendered across Cloudflare's 300+ global edge locations. Zero latency, instant calculations, and pristine Core Web Vitals.
+        </p>
+      </div>
+
+      <div class="rounded-[8px] border border-hairline-soft bg-canvas p-5 space-y-2">
+        <div class="flex h-8 w-8 items-center justify-center rounded-[6px] bg-canvas-elevated border border-hairline text-cyan">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
+          </svg>
+        </div>
+        <h3 class="text-sm font-semibold text-ink">Country-Aware Logic</h3>
+        <p class="text-xs text-body leading-relaxed">
+          Real localization. Finance rules adapt to Lakh/Crore systems and country-specific tax rules instead of passing off US laws as universal.
+        </p>
+      </div>
+
+      <div class="rounded-[8px] border border-hairline-soft bg-canvas p-5 space-y-2">
+        <div class="flex h-8 w-8 items-center justify-center rounded-[6px] bg-canvas-elevated border border-hairline text-violet">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        </div>
+        <h3 class="text-sm font-semibold text-ink">100% Privacy & Local State</h3>
+        <p class="text-xs text-body leading-relaxed">
+          No mandatory logins or server database logging. All history and inputs remain securely stored in your local browser storage.
+        </p>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script is:inline>
+  (function () {
+    const searchInput = document.getElementById('search-input');
+    const cards = document.querySelectorAll('.calc-card');
+    const categoryBlocks = document.querySelectorAll('.category-block');
+    const filterButtons = document.querySelectorAll('.category-filter-btn');
+
+    let currentCategory = 'all';
+
+    function filterCalculators() {
+      const query = (searchInput?.value || '').toLowerCase().trim();
+
+      categoryBlocks.forEach((block) => {
+        const catId = block.getAttribute('data-cat-id');
+        const matchesCategory = currentCategory === 'all' || currentCategory === catId;
+
+        let visibleInBlock = 0;
+        const blockCards = block.querySelectorAll('.calc-card');
+
+        blockCards.forEach((card) => {
+          const title = card.getAttribute('data-title') || '';
+          const desc = card.getAttribute('data-desc') || '';
+          const matchesSearch = !query || title.includes(query) || desc.includes(query);
+
+          if (matchesCategory && matchesSearch) {
+            card.classList.remove('hidden');
+            visibleInBlock++;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        if (visibleInBlock > 0) {
+          block.classList.remove('hidden');
+        } else {
+          block.classList.add('hidden');
+        }
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', filterCalculators);
+    }
+
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach((b) => {
+          b.classList.remove('bg-ink', 'text-on-primary', 'active');
+          b.classList.add('bg-canvas-elevated', 'text-ink');
+        });
+        btn.classList.add('bg-ink', 'text-on-primary', 'active');
+        btn.classList.remove('bg-canvas-elevated', 'text-ink');
+
+        currentCategory = btn.getAttribute('data-category') || 'all';
+        filterCalculators();
+      });
+    });
+  })();
+</script>

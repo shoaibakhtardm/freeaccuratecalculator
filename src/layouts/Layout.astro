@@ -1,0 +1,218 @@
+---
+// src/layouts/Layout.astro
+import '../styles/global.css';
+import Header from '../components/common/Header.astro';
+import Footer from '../components/common/Footer.astro';
+import ConsentBanner from '../components/common/ConsentBanner.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalUrl?: string;
+  jsonLd?: Record<string, any> | Array<Record<string, any>>;
+  noindex?: boolean;
+  lang?: string;
+}
+
+const {
+  title,
+  description,
+  canonicalUrl = Astro.url.href,
+  jsonLd,
+  noindex = false,
+  lang,
+} = Astro.props;
+
+const currentLocale = lang || Astro.currentLocale || 'en';
+const siteName = 'Free Accurate Calculator';
+const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
+
+// Compute hreflang alternate URLs for technical SEO
+const siteOrigin = 'https://freeaccuratecalculator.com';
+const pathname = Astro.url.pathname;
+// Strip any active locale prefix to get base path
+const cleanPath = pathname.replace(/^\/(es|fr|hi)(\/|$)/, '/');
+const normalizedPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
+
+const hreflangLinks = [
+  { lang: 'en', href: `${siteOrigin}${normalizedPath}` },
+  { lang: 'es', href: `${siteOrigin}/es${normalizedPath === '/' ? '/' : normalizedPath}` },
+  { lang: 'fr', href: `${siteOrigin}/fr${normalizedPath === '/' ? '/' : normalizedPath}` },
+  { lang: 'hi', href: `${siteOrigin}/hi${normalizedPath === '/' ? '/' : normalizedPath}` },
+  { lang: 'x-default', href: `${siteOrigin}${normalizedPath}` },
+];
+---
+
+<!doctype html>
+<html lang={currentLocale} class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- SEO Meta Tags -->
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- Multilingual Hreflang SEO -->
+    {hreflangLinks.map((alternate) => (
+      <link rel="alternate" hreflang={alternate.lang} href={alternate.href} />
+    ))}
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={siteName} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Anti-FOUT Dark Mode Script: Runs immediately before paint -->
+    <script is:inline>
+      (function () {
+        try {
+          const stored = localStorage.getItem('theme');
+          const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (stored === 'dark' || (!stored && prefersDark)) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (_) {}
+      })();
+    </script>
+
+    <!-- Global Currency Engine: Runs synchronously before paint -->
+    <script is:inline>
+      (function () {
+        try {
+          const currencyMap = {
+            USD: { symbol: '$', name: 'US Dollar', isIndian: false },
+            INR: { symbol: '₹', name: 'Indian Rupee', isIndian: true },
+            EUR: { symbol: '€', name: 'Euro', isIndian: false },
+            GBP: { symbol: '£', name: 'British Pound', isIndian: false },
+            CAD: { symbol: 'C$', name: 'Canadian Dollar', isIndian: false },
+            AUD: { symbol: 'A$', name: 'Australian Dollar', isIndian: false },
+            JPY: { symbol: '¥', name: 'Japanese Yen', isIndian: false },
+            CNY: { symbol: '¥', name: 'Chinese Yuan', isIndian: false },
+            SGD: { symbol: 'S$', name: 'Singapore Dollar', isIndian: false },
+            AED: { symbol: 'د.إ', name: 'UAE Dirham', isIndian: false },
+            SAR: { symbol: 'ر.س', name: 'Saudi Riyal', isIndian: false },
+            CHF: { symbol: 'CHF', name: 'Swiss Franc', isIndian: false },
+            NZD: { symbol: 'NZ$', name: 'New Zealand Dollar', isIndian: false },
+            ZAR: { symbol: 'R', name: 'South African Rand', isIndian: false },
+          };
+
+          function detect() {
+            const langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+            for (const l of langs) {
+              const loc = (l || '').toLowerCase().trim();
+              if (loc.endsWith('-in') || loc.includes('-in-') || loc === 'hi' || loc.startsWith('hi-')) return 'INR';
+              if (loc.endsWith('-gb') || loc.endsWith('-uk')) return 'GBP';
+              if (loc.endsWith('-ca')) return 'CAD';
+              if (loc.endsWith('-au')) return 'AUD';
+              if (loc.endsWith('-jp') || loc === 'ja' || loc.startsWith('ja-')) return 'JPY';
+              if (loc.endsWith('-cn') || loc === 'zh-cn') return 'CNY';
+              if (loc.endsWith('-sg')) return 'SGD';
+              if (loc.endsWith('-ae') || loc === 'ar-ae') return 'AED';
+              if (loc.endsWith('-sa') || loc === 'ar-sa') return 'SAR';
+              if (loc.endsWith('-ch')) return 'CHF';
+              if (loc.endsWith('-nz')) return 'NZD';
+              if (loc.endsWith('-za')) return 'ZAR';
+              if (loc.endsWith('-us')) return 'USD';
+              if (loc.endsWith('-de') || loc.endsWith('-fr') || loc.endsWith('-es') || loc.endsWith('-it') || loc.endsWith('-nl')) return 'EUR';
+            }
+            return 'USD';
+          }
+
+          // 1. Check URL param ?currency=
+          const params = new URLSearchParams(window.location.search);
+          const urlCurr = (params.get('currency') || '').toUpperCase();
+          let currentCode = null;
+
+          if (urlCurr && currencyMap[urlCurr]) {
+            currentCode = urlCurr;
+            localStorage.setItem('fac_currency', currentCode);
+          } else {
+            // 2. Check localStorage
+            const stored = (localStorage.getItem('fac_currency') || '').toUpperCase();
+            if (stored && currencyMap[stored]) {
+              currentCode = stored;
+            } else {
+              // 3. Browser locale detection
+              currentCode = detect();
+              localStorage.setItem('fac_currency', currentCode);
+            }
+          }
+
+          window.__facCurrency = currentCode;
+
+          window.facGetActiveCurrency = function () {
+            return window.__facCurrency || 'USD';
+          };
+
+          window.facGetCurrencyInfo = function (code) {
+            const c = (code || window.facGetActiveCurrency()).toUpperCase();
+            return currencyMap[c] || currencyMap.USD;
+          };
+
+          window.facSetActiveCurrency = function (code) {
+            const upper = (code || 'USD').toUpperCase();
+            if (!currencyMap[upper]) return;
+            window.__facCurrency = upper;
+            localStorage.setItem('fac_currency', upper);
+
+            // Sync all currency select elements on page
+            document.querySelectorAll('.fac-currency-select').forEach((sel) => {
+              if (sel.value !== upper) sel.value = upper;
+            });
+            document.querySelectorAll('.fac-currency-badge').forEach((badge) => {
+              badge.textContent = currencyMap[upper].symbol;
+            });
+
+            // Dispatch global event
+            window.dispatchEvent(
+              new CustomEvent('currencychange', {
+                detail: {
+                  currency: upper,
+                  symbol: currencyMap[upper].symbol,
+                  name: currencyMap[upper].name,
+                  isIndian: currencyMap[upper].isIndian,
+                },
+              })
+            );
+          };
+        } catch (_) {}
+      })();
+    </script>
+
+    <!-- Schema.org Structured Data -->
+    {jsonLd && (
+      Array.isArray(jsonLd) ? (
+        jsonLd.map((schema) => (
+          <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+        ))
+      ) : (
+        <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+      )
+    )}
+  </head>
+
+  <body class="min-h-screen bg-canvas text-ink antialiased selection:bg-link-soft selection:text-link-deep dark:selection:bg-link-deep dark:selection:text-link-soft flex flex-col transition-colors duration-200">
+    <Header />
+
+    <main class="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 md:py-10">
+      <slot />
+    </main>
+
+    <Footer />
+    <ConsentBanner />
+  </body>
+</html>

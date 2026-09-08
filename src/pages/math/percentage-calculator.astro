@@ -1,0 +1,403 @@
+---
+// src/pages/math/percentage-calculator.astro
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import ResultDisplay from '../../components/calculator/ResultDisplay.astro';
+import FormulaSection from '../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../components/calculator/WorkedExample.astro';
+import FAQSection from '../../components/calculator/FAQSection.astro';
+import HistoryDrawer from '../../components/calculator/HistoryDrawer.astro';
+
+const faqs = [
+  {
+    question: 'How do you calculate a percentage of a number?',
+    answer:
+      'To find the percentage of a number, convert the percentage into a decimal by dividing it by 100, then multiply by the total number. For example, to find 20% of 150: (20 / 100) × 150 = 0.20 × 150 = 30.',
+  },
+  {
+    question: 'How do you calculate percentage increase or decrease?',
+    answer:
+      'To calculate percentage change, subtract the initial value from the final value, divide by the absolute initial value, and multiply by 100: Percentage Change = ((Final - Initial) / |Initial|) × 100. A positive result denotes an increase, while a negative result denotes a decrease.',
+  },
+  {
+    question: 'How do you convert a fraction into a percentage?',
+    answer:
+      'To turn a fraction into a percentage, divide the numerator (top number) by the denominator (bottom number) to get a decimal, then multiply by 100 and append the % sign. For instance, 3/4 = 0.75, which becomes 75%.',
+  },
+  {
+    question: 'What is the difference between percentage points and percentage change?',
+    answer:
+      'Percentage change measures the relative difference between two values. Percentage points refer to the arithmetic difference between two percentages. If an interest rate climbs from 5% to 6%, it has increased by 1 percentage point, but by 20% in relative percentage change.',
+  },
+];
+
+const relatedCalculators = [
+  { title: 'Fraction Calculator', href: '/math/fraction-calculator/' },
+  { title: 'Ratio Calculator', href: '/math/ratio-calculator/' },
+  { title: 'Compound Interest', href: '/finance/compound-interest-calculator/', badge: 'Finance' },
+  { title: 'Tip & Split Calculator', href: '/everyday/tip-calculator/', badge: 'Everyday' },
+];
+---
+
+<CalculatorLayout
+  title="Percentage Calculator — Free, Accurate & Instant"
+  metaDescription="Free online percentage calculator. Calculate percentages, percentage change, increase, decrease, and differences with step-by-step formulas and instant animated results."
+  h1="Percentage Calculator"
+  subtitle="Calculate percentage values, find what percent one number is of another, or compute percentage increase/decrease."
+  category={{ label: 'Math & Precision', href: '/math/' }}
+  calculatorName="Percentage Calculator"
+  relatedCalculators={relatedCalculators}
+>
+  <!-- Calculator Card -->
+  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+    <!-- Mode Selector Tabs -->
+    <div class="flex flex-wrap gap-2 border-b border-hairline pb-4">
+      <button
+        id="mode-btn-1"
+        type="button"
+        class="pct-mode-tab active inline-flex items-center justify-center min-h-[44px] sm:min-h-[34px] rounded-[6px] bg-primary px-3.5 py-2 sm:py-1.5 text-xs font-medium text-on-primary cursor-pointer transition-all"
+        data-mode="1"
+      >
+        What is X% of Y?
+      </button>
+      <button
+        id="mode-btn-2"
+        type="button"
+        class="pct-mode-tab inline-flex items-center justify-center min-h-[44px] sm:min-h-[34px] rounded-[6px] border border-hairline bg-canvas px-3.5 py-2 sm:py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft cursor-pointer transition-all"
+        data-mode="2"
+      >
+        X is what % of Y?
+      </button>
+      <button
+        id="mode-btn-3"
+        type="button"
+        class="pct-mode-tab inline-flex items-center justify-center min-h-[44px] sm:min-h-[34px] rounded-[6px] border border-hairline bg-canvas px-3.5 py-2 sm:py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft cursor-pointer transition-all"
+        data-mode="3"
+      >
+        % Increase / Decrease
+      </button>
+    </div>
+
+    <!-- Mode 1: What is X% of Y? -->
+    <div id="mode-1-container" class="mode-panel space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="m1-x" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            Percentage (X%)
+          </label>
+          <div class="relative">
+            <input
+              id="m1-x"
+              type="number"
+              step="any"
+              value="15"
+              class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-base sm:text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+            />
+            <span class="absolute right-3 top-3 text-xs font-mono text-mute select-none">%</span>
+          </div>
+        </div>
+
+        <div>
+          <label for="m1-y" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            Of Total Number (Y)
+          </label>
+          <input
+            id="m1-y"
+            type="number"
+            step="any"
+            value="250"
+            class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-base sm:text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode 2: X is what % of Y? -->
+    <div id="mode-2-container" class="mode-panel hidden space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="m2-x" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            Number (X)
+          </label>
+          <input
+            id="m2-x"
+            type="number"
+            step="any"
+            value="45"
+            class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-base sm:text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+
+        <div>
+          <label for="m2-y" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            Total Base (Y)
+          </label>
+          <input
+            id="m2-y"
+            type="number"
+            step="any"
+            value="180"
+            class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-base sm:text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Mode 3: % Increase / Decrease -->
+    <div id="mode-3-container" class="mode-panel hidden space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label for="m3-initial" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            Initial Value (V₁)
+          </label>
+          <input
+            id="m3-initial"
+            type="number"
+            step="any"
+            value="100"
+            class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-base sm:text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+
+        <div>
+          <label for="m3-final" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
+            Final Value (V₂)
+          </label>
+          <input
+            id="m3-final"
+            type="number"
+            step="any"
+            value="125"
+            class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-base sm:text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Primary Animated Result Display -->
+    <ResultDisplay
+      id="pct-result"
+      label="Calculated Answer"
+      initialValue={37.5}
+      decimals={2}
+      secondaryText="15% of 250 = 37.50"
+      accent="link"
+    />
+
+    <!-- Dynamic Formula Breakdown Box -->
+    <div id="live-step-breakdown" class="rounded-[8px] border border-hairline-soft bg-canvas p-4 text-xs font-mono text-body">
+      Step: (15 ÷ 100) × 250 = 0.15 × 250 = 37.50
+    </div>
+
+    <!-- LocalStorage History Drawer -->
+    <HistoryDrawer calculatorId="percentage" />
+  </div>
+
+  <!-- Educational Deep-Dive Content (Slot) -->
+  <div slot="content" class="space-y-8">
+    <FormulaSection
+      formula="P = (X ÷ 100) × Y"
+      explanation="To calculate what percentage X is of Y, divide the percentage value by 100 to convert it into a multiplier decimal, then multiply by the base value."
+      variables={[
+        { symbol: 'P', meaning: 'The final evaluated portion or value' },
+        { symbol: 'X', meaning: 'The percentage rate entered (e.g. 15 for 15%)' },
+        { symbol: 'Y', meaning: 'The base or total number being calculated against' },
+      ]}
+    />
+
+    <WorkedExample
+      title="Worked Example: Calculating Sales Tax & Discounts"
+      scenario="You are purchasing an item priced at $250.00 and want to calculate a 15% promotional discount."
+      steps={[
+        {
+          number: 1,
+          title: 'Convert the percentage to a decimal fraction',
+          description: 'Divide 15% by 100 to yield 0.15.',
+          mathExpression: '15 ÷ 100 = 0.15',
+        },
+        {
+          number: 2,
+          title: 'Multiply by the original purchase price',
+          description: 'Multiply 0.15 by the item price of $250.00.',
+          mathExpression: '0.15 × $250.00 = $37.50',
+        },
+        {
+          number: 3,
+          title: 'Calculate the discounted final price',
+          description: 'Subtract the discount amount from the original base price.',
+          mathExpression: '$250.00 - $37.50 = $212.50',
+        },
+      ]}
+      conclusion="A 15% discount on $250.00 saves you $37.50, bringing your final payable amount to $212.50."
+    />
+
+    <FAQSection faqs={faqs} />
+  </div>
+</CalculatorLayout>
+
+<script is:inline>
+  (function () {
+    let currentMode = '1';
+
+    const tabs = document.querySelectorAll('.pct-mode-tab');
+    const panel1 = document.getElementById('mode-1-container');
+    const panel2 = document.getElementById('mode-2-container');
+    const panel3 = document.getElementById('mode-3-container');
+
+    const m1X = document.getElementById('m1-x');
+    const m1Y = document.getElementById('m1-y');
+
+    const m2X = document.getElementById('m2-x');
+    const m2Y = document.getElementById('m2-y');
+
+    const m3Initial = document.getElementById('m3-initial');
+    const m3Final = document.getElementById('m3-final');
+
+    const liveBreakdown = document.getElementById('live-step-breakdown');
+    const secondaryText = document.getElementById('pct-result-secondary');
+    const suffixBadge = document.getElementById('pct-result-suffix');
+
+    function calculate() {
+      let result = 0;
+      let summaryText = '';
+      let stepFormula = '';
+      let suffix = '';
+
+      if (currentMode === '1') {
+        const x = parseFloat(m1X?.value || '0');
+        const y = parseFloat(m1Y?.value || '0');
+        result = (x / 100) * y;
+        suffix = '';
+        summaryText = `${x}% of ${y} = ${result.toFixed(2)}`;
+        stepFormula = `Step: (${x} ÷ 100) × ${y} = ${(x / 100).toFixed(4)} × ${y} = ${result.toFixed(2)}`;
+      } else if (currentMode === '2') {
+        const x = parseFloat(m2X?.value || '0');
+        const y = parseFloat(m2Y?.value || '1');
+        result = y !== 0 ? (x / y) * 100 : 0;
+        suffix = '%';
+        summaryText = `${x} is ${result.toFixed(2)}% of ${y}`;
+        stepFormula = `Step: (${x} ÷ ${y}) × 100 = ${(x / y).toFixed(4)} × 100 = ${result.toFixed(2)}%`;
+      } else if (currentMode === '3') {
+        const v1 = parseFloat(m3Initial?.value || '0');
+        const v2 = parseFloat(m3Final?.value || '0');
+        const diff = v2 - v1;
+        result = v1 !== 0 ? (diff / Math.abs(v1)) * 100 : 0;
+        suffix = '%';
+        const direction = result >= 0 ? 'increase' : 'decrease';
+        summaryText = `${Math.abs(result).toFixed(2)}% ${direction} from ${v1} to ${v2}`;
+        stepFormula = `Step: ((${v2} - ${v1}) ÷ |${v1}|) × 100 = (${diff} ÷ ${Math.abs(v1)}) × 100 = ${result.toFixed(2)}%`;
+      }
+
+      if (suffixBadge) suffixBadge.textContent = suffix;
+      if (secondaryText) secondaryText.textContent = summaryText;
+      if (liveBreakdown) liveBreakdown.textContent = stepFormula;
+
+      if (window.facAnimateNumber) {
+        window.facAnimateNumber('pct-result', result, { decimals: 2 });
+      }
+
+      // Record to history debounced
+      clearTimeout(window.__pctHistoryTimeout);
+      window.__pctHistoryTimeout = setTimeout(() => {
+        if (typeof window.facAddHistory === 'function') {
+          window.facAddHistory({
+            label: currentMode === '1' ? 'X% of Y' : currentMode === '2' ? 'X is % of Y' : '% Change',
+            summary: summaryText,
+            result: result.toFixed(2) + suffix,
+            mode: currentMode,
+            inputs: {
+              m1X: m1X?.value,
+              m1Y: m1Y?.value,
+              m2X: m2X?.value,
+              m2Y: m2Y?.value,
+              m3Initial: m3Initial?.value,
+              m3Final: m3Final?.value,
+            },
+          });
+        }
+      }, 1500);
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      tabs.forEach((tab) => {
+        if (tab.getAttribute('data-mode') === mode) {
+          tab.classList.add('bg-primary', 'text-on-primary', 'active');
+          tab.classList.remove('bg-canvas', 'text-ink');
+        } else {
+          tab.classList.remove('bg-primary', 'text-on-primary', 'active');
+          tab.classList.add('bg-canvas', 'text-ink');
+        }
+      });
+
+      if (panel1) panel1.classList.toggle('hidden', mode !== '1');
+      if (panel2) panel2.classList.toggle('hidden', mode !== '2');
+      if (panel3) panel3.classList.toggle('hidden', mode !== '3');
+
+      calculate();
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const mode = tab.getAttribute('data-mode') || '1';
+        switchMode(mode);
+      });
+    });
+
+    [m1X, m1Y, m2X, m2Y, m3Initial, m3Final].forEach((input) => {
+      if (input) {
+        input.addEventListener('input', calculate);
+      }
+    });
+
+    // URL State Serialization
+    window.facSyncUrlState = function () {
+      const params = new URLSearchParams(window.location.search);
+      params.set('mode', currentMode);
+      if (currentMode === '1') {
+        params.set('x', m1X?.value || '15');
+        params.set('y', m1Y?.value || '250');
+      } else if (currentMode === '2') {
+        params.set('x', m2X?.value || '45');
+        params.set('y', m2Y?.value || '180');
+      } else if (currentMode === '3') {
+        params.set('v1', m3Initial?.value || '100');
+        params.set('v2', m3Final?.value || '125');
+      }
+      window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+    };
+
+    // Restore URL state if present on load
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('mode')) {
+      const mode = urlParams.get('mode') || '1';
+      switchMode(mode);
+      if (mode === '1') {
+        if (m1X && urlParams.has('x')) m1X.value = urlParams.get('x') || '15';
+        if (m1Y && urlParams.has('y')) m1Y.value = urlParams.get('y') || '250';
+      } else if (mode === '2') {
+        if (m2X && urlParams.has('x')) m2X.value = urlParams.get('x') || '45';
+        if (m2Y && urlParams.has('y')) m2Y.value = urlParams.get('y') || '180';
+      } else if (mode === '3') {
+        if (m3Initial && urlParams.has('v1')) m3Initial.value = urlParams.get('v1') || '100';
+        if (m3Final && urlParams.has('v2')) m3Final.value = urlParams.get('v2') || '125';
+      }
+    }
+
+    // History Restore callback
+    window.facRestoreHistoryItem = function (item) {
+      if (item.mode) switchMode(item.mode);
+      if (item.inputs) {
+        if (m1X && item.inputs.m1X) m1X.value = item.inputs.m1X;
+        if (m1Y && item.inputs.m1Y) m1Y.value = item.inputs.m1Y;
+        if (m2X && item.inputs.m2X) m2X.value = item.inputs.m2X;
+        if (m2Y && item.inputs.m2Y) m2Y.value = item.inputs.m2Y;
+        if (m3Initial && item.inputs.m3Initial) m3Initial.value = item.inputs.m3Initial;
+        if (m3Final && item.inputs.m3Final) m3Final.value = item.inputs.m3Final;
+      }
+      calculate();
+    };
+
+    // Initial calculation
+    calculate();
+  })();
+</script>

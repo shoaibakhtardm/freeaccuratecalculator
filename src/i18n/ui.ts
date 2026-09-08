@@ -1,0 +1,128 @@
+// src/i18n/ui.ts
+
+export const languages = {
+  en: {
+    code: 'en',
+    label: 'English',
+    short: 'EN',
+  },
+  es: {
+    code: 'es',
+    label: 'Español',
+    short: 'ES',
+  },
+  fr: {
+    code: 'fr',
+    label: 'Français',
+    short: 'FR',
+  },
+  hi: {
+    code: 'hi',
+    label: 'हिन्दी',
+    short: 'HI',
+  },
+} as const;
+
+export type SupportedLanguage = keyof typeof languages;
+export const defaultLang: SupportedLanguage = 'en';
+
+export const ui = {
+  en: {
+    'nav.finance': 'Finance',
+    'nav.health': 'Health',
+    'nav.math': 'Math',
+    'nav.everyday': 'Everyday',
+    'action.calculate': 'Calculate',
+    'action.share': 'Share Result',
+    'action.copied': 'Link Copied!',
+    'action.history': 'Recent Calculation History (Private / Local)',
+    'action.clear_history': 'Clear History',
+    'action.no_history': 'No previous calculations recorded yet.',
+    'label.advertisement': 'Advertisement',
+    'label.formula': 'Formula & Mathematical Foundation',
+    'label.example': 'Step-by-Step Worked Example',
+    'label.faq': 'Frequently Asked Questions',
+    'label.presets': 'Presets:',
+    'label.notation': 'Number Notation:',
+    'label.unit_system': 'Unit System:',
+    'unit.metric': 'Metric (kg, cm)',
+    'unit.imperial': 'Imperial (lbs, ft/in)',
+    'footer.disclaimer': 'All calculations provided by Free Accurate Calculator are intended strictly for educational, informational, and general planning purposes. Calculations do not constitute formal financial, tax, legal, or medical advice.',
+    'footer.rights': 'All rights reserved.',
+  },
+  es: {
+    'nav.finance': 'Finanzas',
+    'nav.health': 'Salud',
+    'nav.math': 'Matemáticas',
+    'nav.everyday': 'Cotidiano',
+    'action.calculate': 'Calcular',
+    'action.share': 'Compartir Resultado',
+    'action.copied': '¡Enlace Copiado!',
+    'action.history': 'Historial Reciente (Privado / Local)',
+    'action.clear_history': 'Borrar Historial',
+    'action.no_history': 'No hay cálculos previos registrados todavía.',
+    'label.advertisement': 'Publicidad',
+    'label.formula': 'Fórmula y Fundamento Matemático',
+    'label.example': 'Ejemplo Práctico Paso a Paso',
+    'label.faq': 'Preguntas Frecuentes',
+    'label.presets': 'Valores Rápidos:',
+    'label.notation': 'Notación Numérica:',
+    'label.unit_system': 'Sistema de Unidades:',
+    'unit.metric': 'Métrico (kg, cm)',
+    'unit.imperial': 'Imperial (libras, pies/pulg)',
+    'footer.disclaimer': 'Todos los cálculos proporcionados por Free Accurate Calculator tienen fines educativos e informativos. No constituyen asesoramiento financiero, tributario o médico formal.',
+    'footer.rights': 'Todos los derechos reservados.',
+  },
+  fr: {
+    'nav.finance': 'Finances',
+    'nav.health': 'Santé',
+    'nav.math': 'Maths',
+    'nav.everyday': 'Quotidien',
+    'action.calculate': 'Calculer',
+    'action.share': 'Partager le Résultat',
+    'action.copied': 'Lien Copié !',
+    'action.history': 'Historique Récent (Privé / Local)',
+    'action.clear_history': "Effacer l'Historique",
+    'action.no_history': 'Aucun calcul enregistré pour le moment.',
+    'label.advertisement': 'Publicité',
+    'label.formula': 'Formule et Fondement Mathématique',
+    'label.example': 'Exemple Pratique Étape par Étape',
+    'label.faq': 'Foire Aux Questions',
+    'label.presets': 'Préréglages :',
+    'label.notation': 'Notation Numérique :',
+    'label.unit_system': "Système d'Unités :",
+    'unit.metric': 'Métrique (kg, cm)',
+    'unit.imperial': 'Impérial (livres, pieds/pouces)',
+    'footer.disclaimer': 'Tous les calculs fournis par Free Accurate Calculator sont destinés à des fins éducatives et informatives. Ils ne constituent pas un avis financier, fiscal ou médical formel.',
+    'footer.rights': 'Tous droits réservés.',
+  },
+  hi: {
+    'nav.finance': 'वित्त (फाइनेंस)',
+    'nav.health': 'स्वास्थ्य',
+    'nav.math': 'गणित',
+    'nav.everyday': 'दैनिक उपयोग',
+    'action.calculate': 'गणना करें',
+    'action.share': 'परिणाम शेयर करें',
+    'action.copied': 'लिंक कॉपी हो गया!',
+    'action.history': 'हालिया गणना इतिहास (निजी / लोकल)',
+    'action.clear_history': 'इतिहास मिटाएं',
+    'action.no_history': 'अभी तक कोई पिछला हिसाब दर्ज नहीं है।',
+    'label.advertisement': 'विज्ञापन',
+    'label.formula': 'सूत्र एवं गणितीय आधार',
+    'label.example': 'चरण-दर-चरण उदाहरण',
+    'label.faq': 'अक्सर पूछे जाने वाले प्रश्न (FAQ)',
+    'label.presets': 'त्वरित विकल्प:',
+    'label.notation': 'संख्या प्रारूप:',
+    'label.unit_system': 'इकाई प्रणाली:',
+    'unit.metric': 'मीट्रिक (किग्रा, सेमी)',
+    'unit.imperial': 'इंपीरियल (पाउंड, फीट/इंच)',
+    'footer.disclaimer': 'Free Accurate Calculator द्वारा प्रदान की गई सभी गणनाएं केवल शैक्षणिक, सूचनात्मक और सामान्य योजना उद्देश्यों के लिए हैं। ये किसी औपचारिक वित्तीय, कर, कानूनी या चिकित्सीय सलाह का गठन नहीं करती हैं।',
+    'footer.rights': 'सर्वाधिकार सुरक्षित।',
+  },
+} as const;
+
+export function useTranslations(lang: SupportedLanguage = defaultLang) {
+  return function t(key: keyof (typeof ui)[typeof defaultLang]): string {
+    return ui[lang]?.[key] || ui[defaultLang][key] || key;
+  };
+}

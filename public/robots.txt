@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /dev-preview/
+Disallow: /api/
+
+Sitemap: https://freeaccuratecalculator.com/sitemap.xml

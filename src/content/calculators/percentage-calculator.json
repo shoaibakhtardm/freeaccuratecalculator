@@ -1,0 +1,108 @@
+{
+  "id": "percentage-calculator",
+  "category": "math",
+  "title": "Free Percentage Calculator — Instant, Accurate, Step-by-Step",
+  "shortTitle": "Percentage Calculator",
+  "description": "Calculate percentages instantly with step-by-step mathematical breakdowns. Calculate percentage of a number, percentage increase or decrease, and what percentage X is of Y.",
+  "type": "universal",
+  "supportedLocales": ["en", "es", "fr", "hi"],
+  "formula": {
+    "name": "Percentage Formula",
+    "expression": "P = (X / Y) × 100",
+    "variables": {
+      "P": "Percentage result (%)",
+      "X": "Part or numerator value",
+      "Y": "Total or denominator base value"
+    },
+    "explanation": "To determine what percentage one number is of another, divide the part (X) by the whole (Y) and multiply the quotient by 100. For percentage changes, subtract the original value from the new value, divide by the absolute original value, and multiply by 100."
+  },
+  "example": {
+    "problem": "Calculate what percentage 45 is of 150.",
+    "steps": [
+      "Divide the part (45) by the whole (150): 45 ÷ 150 = 0.30",
+      "Multiply by 100 to convert the decimal fraction to a percentage: 0.30 × 100 = 30%"
+    ],
+    "solution": "45 is exactly 30% of 150."
+  },
+  "faqs": [
+    {
+      "question": "How do you calculate a percentage increase?",
+      "answer": "To find a percentage increase, subtract the starting value from the final value, divide the difference by the starting value, and multiply by 100. Formula: ((New - Old) / Old) × 100."
+    },
+    {
+      "question": "Can a percentage exceed 100%?",
+      "answer": "Yes. When a quantity is greater than the original comparison base, the resulting percentage is greater than 100%. For instance, 250 is 250% of 100."
+    },
+    {
+      "question": "Is this percentage calculator free and private?",
+      "answer": "Yes. All computations are performed locally inside your browser using client-side JavaScript. No input numbers or financial values are ever uploaded to an external server."
+    }
+  ],
+  "relatedCalculators": ["emi-calculator", "bmi-calculator"],
+  "relatedBlogSlugs": ["how-to-calculate-percentages-accurately"],
+  "translations": {
+    "es": {
+      "title": "Calculadora de Porcentajes Gratuita — Instantánea y Precisa",
+      "description": "Calcula porcentajes al instante con desglose paso a paso. Calcula el porcentaje de un número, aumentos, disminuciones y diferencias porcentuales.",
+      "formulaExplanation": "Para determinar qué porcentaje representa un número de otro, divide la parte (X) por el total (Y) y multiplica el cociente por 100.",
+      "exampleProblem": "Calcula qué porcentaje representa 45 de 150.",
+      "exampleSteps": [
+        "Divide la parte (45) por el total (150): 45 ÷ 150 = 0.30",
+        "Multiplica por 100 para convertir la fracción decimal en porcentaje: 0.30 × 100 = 30%"
+      ],
+      "exampleSolution": "45 es exactamente el 30% de 150.",
+      "faqs": [
+        {
+          "question": "¿Cómo se calcula un aumento porcentual?",
+          "answer": "Resta el valor inicial del valor final, divide la diferencia entre el valor inicial y multiplica por 100."
+        },
+        {
+          "question": "¿Esta calculadora es gratuita y privada?",
+          "answer": "Sí. Todos los cálculos se realizan localmente en tu navegador sin enviar datos a servidores externos."
+        }
+      ]
+    },
+    "fr": {
+      "title": "Calculateur de Pourcentage Gratuit — Instantané et Précis",
+      "description": "Calculez des pourcentages instantanément avec des explications mathématiques étape par étape. Calculez un pourcentage d'un nombre, des hausses et baisses.",
+      "formulaExplanation": "Pour déterminer le pourcentage d'un nombre par rapport à un autre, divisez la partie (X) par le total (Y) et multipliez le quotient par 100.",
+      "exampleProblem": "Calculer le pourcentage que représente 45 sur 150.",
+      "exampleSteps": [
+        "Divisez la partie (45) par le total (150) : 45 ÷ 150 = 0,30",
+        "Multipliez par 100 pour convertir la fraction décimale en pourcentage : 0,30 × 100 = 30%"
+      ],
+      "exampleSolution": "45 représente exactement 30% de 150.",
+      "faqs": [
+        {
+          "question": "Comment calculer une augmentation en pourcentage ?",
+          "answer": "Soustrayez la valeur initiale de la valeur finale, divisez la différence par la valeur initiale et multipliez par 100."
+        },
+        {
+          "question": "Ce calculateur est-il gratuit et confidentiel ?",
+          "answer": "Oui. Tous les calculs sont effectués localement dans votre navigateur sans transfert de données vers des serveurs externes."
+        }
+      ]
+    },
+    "hi": {
+      "title": "मुफ़्त प्रतिशत कैलकुलेटर — तुरंत, सटीक और चरण-दर-चरण",
+      "description": "चरण-दर-चरण गणितीय विवरण के साथ तुरंत प्रतिशत की गणना करें। किसी संख्या का प्रतिशत, प्रतिशत वृद्धि या कमी, और X, Y का कितना प्रतिशत है, यह निकालें।",
+      "formulaExplanation": "किसी संख्या का दूसरी संख्या से प्रतिशत ज्ञात करने के लिए, भाग (X) को कुल (Y) से विभाजित करें और 100 से गुणा करें।",
+      "exampleProblem": "गणना करें कि 45, 150 का कितना प्रतिशत है।",
+      "exampleSteps": [
+        "भाग (45) को कुल (150) से विभाजित करें: 45 ÷ 150 = 0.30",
+        "दशमलव भिन्न को प्रतिशत में बदलने के लिए 100 से गुणा करें: 0.30 × 100 = 30%"
+      ],
+      "exampleSolution": "45, 150 का ठीक 30% है।",
+      "faqs": [
+        {
+          "question": "प्रतिशत वृद्धि की गणना कैसे की जाती है?",
+          "answer": "प्रारंभिक मान को अंतिम मान से घटाएं, अंतर को प्रारंभिक मान से विभाजित करें और 100 से गुणा करें। सूत्र: ((नया मान - पुराना मान) / पुराना मान) × 100।"
+        },
+        {
+          "question": "क्या यह प्रतिशत कैलकुलेटर मुफ़्त और सुरक्षित है?",
+          "answer": "हाँ। सभी गणनाएँ क्लाइंट-साइड जावास्क्रिप्ट का उपयोग करके आपके ब्राउज़र में स्थानीय रूप से की जाती हैं। कोई डेटा सर्वर पर नहीं भेजा जाता है।"
+        }
+      ]
+    }
+  }
+}

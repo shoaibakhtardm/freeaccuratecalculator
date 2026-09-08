@@ -1,0 +1,54 @@
+---
+// src/components/calculator/ShareButton.astro
+interface Props {
+  className?: string;
+}
+
+const { className = '' } = Astro.props;
+---
+
+<button
+  id="fac-share-btn"
+  type="button"
+  class={`inline-flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[38px] rounded-[6px] border border-hairline bg-canvas-elevated px-3.5 py-2 sm:py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft transition-colors cursor-pointer shadow-whisper ${className}`}
+  title="Share or bookmark this calculation"
+>
+  <svg class="h-3.5 w-3.5 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+  </svg>
+  <span id="fac-share-text">Share Result</span>
+</button>
+
+<script is:inline>
+  (function () {
+    const btn = document.getElementById('fac-share-btn');
+    const text = document.getElementById('fac-share-text');
+    if (!btn || !text) return;
+
+    btn.addEventListener('click', async () => {
+      // Trigger url state sync if defined by active calculator
+      if (typeof window.facSyncUrlState === 'function') {
+        window.facSyncUrlState();
+      }
+
+      const url = window.location.href;
+
+      try {
+        if (navigator.clipboard) {
+          await navigator.clipboard.writeText(url);
+          const original = text.textContent;
+          text.textContent = 'Link Copied!';
+          btn.classList.add('border-cyan', 'text-cyan');
+          setTimeout(() => {
+            text.textContent = original;
+            btn.classList.remove('border-cyan', 'text-cyan');
+          }, 2000);
+        } else {
+          prompt('Copy this shareable calculation URL:', url);
+        }
+      } catch (err) {
+        prompt('Copy this shareable calculation URL:', url);
+      }
+    });
+  })();
+</script>

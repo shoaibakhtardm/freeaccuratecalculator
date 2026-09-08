@@ -1,0 +1,46 @@
+---
+// src/components/calculator/FormulaSection.astro
+interface Props {
+  formula: string;
+  explanation: string;
+  variables?: Array<{ symbol: string; meaning: string }>;
+  title?: string;
+}
+
+const { formula, explanation, variables = [], title = 'Formula & Mathematical Foundation' } = Astro.props;
+---
+
+<section class="mt-8 rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-4">
+  <div class="flex items-center gap-2">
+    <span class="mono-eyebrow text-link">Mathematical Definition</span>
+    <span class="h-1.5 w-1.5 rounded-full bg-hairline"></span>
+    <span class="text-xs text-mute font-mono">Standard Formula</span>
+  </div>
+
+  <h2 class="heading-md text-ink">{title}</h2>
+
+  <!-- Monospace Formula Display -->
+  <div class="max-w-full overflow-x-auto rounded-[8px] border border-hairline bg-canvas p-3 sm:p-4 text-center">
+    <code class="text-xs sm:text-base font-mono font-semibold text-ink tracking-wide whitespace-pre-wrap sm:whitespace-nowrap break-words inline-block">
+      {formula}
+    </code>
+  </div>
+
+  <p class="text-xs sm:text-sm text-body leading-relaxed">
+    {explanation}
+  </p>
+
+  {variables.length > 0 && (
+    <div class="pt-2">
+      <h3 class="text-xs font-semibold text-ink uppercase font-mono mb-2">Variables:</h3>
+      <dl class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+        {variables.map((v) => (
+          <div class="flex items-start gap-2 rounded-[6px] border border-hairline-soft bg-canvas p-2.5">
+            <dt class="font-mono font-bold text-ink shrink-0">{v.symbol}</dt>
+            <dd class="text-body">{v.meaning}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  )}
+</section>
