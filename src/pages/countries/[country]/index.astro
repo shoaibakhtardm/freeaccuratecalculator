@@ -1,0 +1,193 @@
+---
+// src/pages/countries/[country]/index.astro
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/common/Breadcrumbs.astro';
+import AdSlot from '../../../components/common/AdSlot.astro';
+import { COUNTRY_LIST, type CountryConfig } from '../../../data/countries';
+import { CALCULATORS } from '../../../data/calculatorRegistry';
+
+export async function getStaticPaths() {
+  return COUNTRY_LIST.map((country) => ({
+    params: { country: country.slug },
+    props: { country },
+  }));
+}
+
+interface Props {
+  country: CountryConfig;
+}
+
+const { country } = Astro.props;
+
+// Calculators relevant for this country (popular IDs first, followed by remaining finance & general tools)
+const popularSet = new Set(country.popularCalculators);
+const matchedPopular = CALCULATORS.filter((c) => popularSet.has(c.id));
+const otherCalculators = CALCULATORS.filter((c) => !popularSet.has(c.id)).slice(0, 16);
+const countryCalculators = [...matchedPopular, ...otherCalculators];
+
+const title = `${country.name} Calculators — Free Online Finance, Tax & Utility Tools (${country.currencySymbol})`;
+const description = `Mathematically verified online calculators for ${country.name}. Customized with ${country.currency} (${country.currencySymbol}) currency, ${country.numberSystem === 'lakh-crore' ? 'Lakh/Crore numbering' : 'standard grouping'}, and local financial rules.`;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: title,
+  description: description,
+  url: `https://freeaccuratecalculator.com/countries/${country.slug}/`,
+};
+---
+
+<Layout title={title} description={description} jsonLd={schema}>
+  <div class="max-w-7xl mx-auto space-y-10">
+    <!-- Breadcrumbs -->
+    <Breadcrumbs
+      items={[
+        { label: 'Countries', href: '/countries/' },
+        { label: country.name },
+      ]}
+    />
+
+    <!-- Country Hero -->
+    <section class="relative overflow-hidden rounded-[16px] border border-hairline bg-canvas-elevated/70 px-4 py-8 sm:p-12 hero-mesh-gradient shadow-whisper">
+      <div class="max-w-3xl space-y-4">
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-3xl" role="img" aria-label={country.name}>{country.flag}</span>
+          <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas/80 px-3 py-1 text-xs text-body shadow-whisper">
+            <span class="font-mono text-[11px] font-medium tracking-wide uppercase">
+              {country.name} Edition • {country.currency} ({country.currencySymbol})
+            </span>
+          </div>
+          <span class="rounded-full border border-hairline-soft bg-canvas px-2.5 py-0.5 text-[11px] font-mono text-mute">
+            {country.numberSystem === 'lakh-crore' ? 'Lakh/Crore Grouping' : 'Standard Grouping'}
+          </span>
+          <span class="rounded-full border border-hairline-soft bg-canvas px-2.5 py-0.5 text-[11px] font-mono text-mute">
+            {country.unitSystem === 'metric' ? 'Metric Units' : 'Imperial Units'}
+          </span>
+        </div>
+
+        <h1 class="display-hero text-ink">{country.name} Calculators</h1>
+        <p class="text-base text-body leading-relaxed">
+          High-precision financial, tax, loan, and everyday calculators tailored for {country.name}. Every calculation automatically formats in {country.currency} ({country.currencySymbol}) with zero cold starts and instant client-side execution.
+        </p>
+
+        <!-- Search in Country -->
+        <div class="pt-2 max-w-md">
+          <div class="relative flex items-center">
+            <svg class="absolute left-3.5 h-4 w-4 text-mute pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              id="calc-search"
+              type="search"
+              placeholder={`Search ${country.name} tools (e.g. tax, mortgage, loan)...`}
+              class="w-full min-h-[44px] rounded-[100px] border border-hairline bg-canvas py-2.5 pl-10 pr-4 text-base sm:text-sm text-ink placeholder-faint shadow-whisper focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-all"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top AdSlot -->
+    <AdSlot slotId={`country-${country.slug}-top`} format="horizontal" />
+
+    <!-- Popular Tools Spotlight -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between border-b border-hairline pb-3">
+        <div>
+          <span class="mono-eyebrow text-link">Recommended For {country.name}</span>
+          <h2 class="heading-md text-ink mt-0.5">Top Calculators</h2>
+        </div>
+        <span class="text-xs font-mono text-mute">{matchedPopular.length} Priority Tools</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {matchedPopular.map((calc) => (
+          <a
+            href={`/countries/${country.slug}/${calc.id}/`}
+            class="calc-card group relative flex flex-col justify-between rounded-[12px] border border-hairline bg-canvas-elevated p-5 shadow-whisper transition-all duration-200 hover:-translate-y-0.5 hover:border-hairline-focus hover:shadow-card"
+            data-title={calc.name.toLowerCase()}
+            data-desc={calc.description.toLowerCase()}
+          >
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2.5">
+                <h3 class="text-sm font-semibold text-ink group-hover:text-link transition-colors">
+                  {calc.name}
+                </h3>
+                <span class={`rounded-full border px-2 py-0.5 text-[10px] font-mono font-medium ${calc.badgeColor}`}>
+                  {calc.badge}
+                </span>
+              </div>
+              <p class="text-xs text-body leading-relaxed line-clamp-2">
+                {calc.description}
+              </p>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-hairline-soft flex items-center justify-between text-xs font-medium text-link">
+              <span>Calculate with {country.currencySymbol}</span>
+              <svg class="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Additional Tools for this Nation -->
+    <section class="space-y-4 pt-4">
+      <div class="border-b border-hairline pb-3">
+        <span class="mono-eyebrow text-link">Explore More</span>
+        <h2 class="heading-md text-ink mt-0.5">Universal & Financial Utilities</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {otherCalculators.map((calc) => (
+          <a
+            href={`/countries/${country.slug}/${calc.id}/`}
+            class="calc-card group flex flex-col justify-between rounded-[12px] border border-hairline bg-canvas-elevated p-4 text-xs shadow-whisper hover:border-mute transition-colors"
+            data-title={calc.name.toLowerCase()}
+            data-desc={calc.description.toLowerCase()}
+          >
+            <div>
+              <span class="font-semibold text-ink group-hover:text-link transition-colors block mb-1">
+                {calc.name}
+              </span>
+              <p class="text-[11px] text-body line-clamp-2">
+                {calc.description}
+              </p>
+            </div>
+            <div class="mt-3 pt-2 border-t border-hairline-soft flex items-center justify-between text-[11px] text-mute group-hover:text-ink">
+              <span>Calculate now</span>
+              <span>→</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Country Educational Guidance -->
+    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-3 shadow-whisper">
+      <h3 class="heading-md text-ink">Financial & Calculation Standards in {country.name}</h3>
+      <p class="text-xs sm:text-sm text-body leading-relaxed">
+        {country.name} utilizes {country.currency} ({country.currencySymbol}) with {country.numberSystem === 'lakh-crore' ? 'the South Asian Lakh/Crore grouping convention (e.g. 10,00,000)' : 'standard international groupings (e.g. 1,000,000)'}. All formulas on this page execute client-side using IEEE 754 precision, adhering strictly to regional financial conventions and date formats ({country.dateFormat}).
+      </p>
+    </section>
+  </div>
+</Layout>
+
+<script is:inline>
+  const searchInput = document.getElementById('calc-search');
+  const cards = document.querySelectorAll('.calc-card');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase().trim();
+      cards.forEach((card) => {
+        const title = card.getAttribute('data-title') || '';
+        const desc = card.getAttribute('data-desc') || '';
+        const matches = !q || title.includes(q) || desc.includes(q);
+        card.style.display = matches ? 'flex' : 'none';
+      });
+    });
+  }
+</script>

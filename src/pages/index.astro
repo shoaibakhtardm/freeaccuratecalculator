@@ -4,8 +4,9 @@ import Layout from '../layouts/Layout.astro';
 import AdSlot from '../components/common/AdSlot.astro';
 
 import { CALCULATORS, CATEGORY_METADATA } from '../data/calculatorRegistry';
+import { POPULAR_COUNTRIES } from '../data/countries';
 
-// Build the complete list of 41 calculators across all 4 categories
+// Build the complete list of calculators across all categories
 const masterList = [
   ...CALCULATORS.map((c) => ({
     name: c.name,
@@ -102,7 +103,7 @@ const websiteSchema = {
           <input
             id="search-input"
             type="search"
-            placeholder="Search calculators (e.g., 'percentage', 'emi', 'bmi')..."
+            placeholder="Search calculators (e.g., 'sip', 'mortgage', 'emi', 'ppf', '401k')..."
             class="w-full rounded-[100px] border border-hairline bg-canvas py-3.5 pl-11 pr-4 text-base sm:text-sm text-ink placeholder-faint shadow-whisper focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-all"
             aria-label="Search all calculators"
           />
@@ -127,6 +128,41 @@ const websiteSchema = {
           </button>
         </div>
       </div>
+    </div>
+  </section>
+
+  <!-- Popular Countries Navigation Strip -->
+  <section class="mt-8 rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-6 shadow-whisper space-y-3">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-hairline-soft pb-3">
+      <div>
+        <span class="mono-eyebrow text-link">Global Editions</span>
+        <h2 class="text-sm font-semibold text-ink mt-0.5">Popular National Calculators</h2>
+      </div>
+      <a href="/countries/" class="text-xs font-medium text-mute hover:text-ink transition-colors flex items-center gap-1">
+        Browse 100+ countries
+        <svg class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
+        </svg>
+      </a>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-2 pt-1">
+      {POPULAR_COUNTRIES.slice(0, 10).map((c) => (
+        <a
+          href={`/countries/${c.slug}/`}
+          class="inline-flex items-center gap-1.5 min-h-[36px] rounded-full border border-hairline bg-canvas px-3 py-1.5 text-xs font-medium text-body hover:text-ink hover:border-mute hover:bg-hairline-soft transition-colors"
+        >
+          <span>{c.flag}</span>
+          <span>{c.name}</span>
+          <span class="font-mono text-[10px] text-mute">({c.currencySymbol})</span>
+        </a>
+      ))}
+      <a
+        href="/countries/"
+        class="inline-flex items-center gap-1 min-h-[36px] rounded-full border border-dashed border-hairline bg-canvas px-3 py-1.5 text-xs font-medium text-link hover:underline transition-all"
+      >
+        <span>More countries...</span>
+      </a>
     </div>
   </section>
 

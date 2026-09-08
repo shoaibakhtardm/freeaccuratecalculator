@@ -21,6 +21,7 @@ export interface CalculatorEntry {
   description: string;
   badge: string;
   badgeColor: string;
+  countryCode?: string;
   icon?: string;
   formula: {
     name: string;
@@ -2672,4 +2673,917 @@ export const CALCULATORS: CalculatorEntry[] = [
       };
     `,
   },
+  // ==========================================
+  // P0 EXPANSION: INVESTMENT & WEALTH
+  // ==========================================
+  {
+    id: 'sip-calculator',
+    category: 'finance',
+    name: 'SIP Calculator',
+    title: 'SIP Calculator — Calculate Systematic Investment Plan Returns Online',
+    description: 'Calculate future wealth accumulation on mutual fund SIP investments with monthly compounding, total investment summary, and wealth gain.',
+    badge: 'High-Demand',
+    badgeColor: 'text-cyan border-cyan/30 bg-cyan/10',
+    formula: {
+      name: 'Systematic Investment Plan (SIP) Compounding Formula',
+      expression: 'FV = P × [((1 + i)ⁿ - 1) ÷ i] × (1 + i)',
+      explanation: 'Computes future maturity corpus assuming equal monthly installments invested at the beginning of each period, compounding monthly over the chosen horizon.',
+      variables: [
+        { symbol: 'FV', meaning: 'Future value / total expected maturity corpus' },
+        { symbol: 'P', meaning: 'Monthly investment installment' },
+        { symbol: 'i', meaning: 'Monthly periodic interest rate (Annual rate ÷ 12 ÷ 100)' },
+        { symbol: 'n', meaning: 'Total number of monthly installments (Years × 12)' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: $10,000 / Month for 10 Years at 12%',
+      scenario: 'You start a monthly SIP of $10,000 in a diversified index or equity mutual fund expecting a 12% average annual return over a 10-year horizon.',
+      steps: [
+        {
+          number: 1,
+          title: 'Determine periodic parameters',
+          description: 'Monthly rate i = 12% ÷ 12 = 1% = 0.01. Total installments n = 10 × 12 = 120.',
+          mathExpression: 'i = 0.01, n = 120',
+        },
+        {
+          number: 2,
+          title: 'Calculate total invested capital',
+          description: '$10,000 × 120 months = $1,200,000 total principal invested.',
+          mathExpression: 'Principal = $1,200,000',
+        },
+        {
+          number: 3,
+          title: 'Evaluate future compound corpus',
+          description: 'FV = 10,000 × [((1.01)¹²⁰ - 1) ÷ 0.01] × 1.01 = $2,323,391.',
+          mathExpression: 'FV = $2,323,391',
+        },
+      ],
+      conclusion: 'Your total wealth reaches $2,323,391, yielding an estimated wealth gain of $1,123,391 on your $1,200,000 principal.',
+    },
+    faqs: [
+      {
+        question: 'What is an SIP?',
+        answer: 'A Systematic Investment Plan (SIP) is an investment vehicle that allows you to invest a fixed amount periodically into mutual funds or stocks, benefiting from rupee/dollar-cost averaging and compounding.',
+      },
+      {
+        question: 'Can I change my SIP amount later?',
+        answer: 'Yes, most mutual fund platforms permit pausing, increasing (via Step-Up SIP), or modifying your monthly contribution without penalties.',
+      },
+      {
+        question: 'Are SIP returns guaranteed?',
+        answer: 'No. Mutual fund SIP returns are market-linked and fluctuate based on asset allocation and market performance.',
+      },
+    ],
+    inputs: [
+      { id: 'monthly_investment', label: 'Monthly Investment ($)', type: 'number', defaultValue: 10000, step: 500 },
+      { id: 'return_rate', label: 'Expected Annual Return (%)', type: 'number', defaultValue: 12.0, step: 0.5 },
+      { id: 'time_years', label: 'Time Horizon (Years)', type: 'number', defaultValue: 10, step: 1 },
+    ],
+    defaultResult: {
+      label: 'Estimated Maturity Value',
+      initialValue: 2323391,
+      decimals: 0,
+      prefix: '$',
+      secondaryText: 'Invested Capital: $1,200,000 • Estimated Gain: $1,123,391',
+      accent: 'cyan',
+    },
+    computeScript: `
+      const p = Math.max(0, parseFloat(inputs.monthly_investment || '0'));
+      const r = Math.max(0, parseFloat(inputs.return_rate || '0')) / 12 / 100;
+      const y = Math.max(0, parseFloat(inputs.time_years || '0'));
+      const n = y * 12;
+      let fv = 0;
+      if (r === 0) {
+        fv = p * n;
+      } else {
+        fv = p * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+      }
+      const invested = p * n;
+      const gain = Math.max(0, fv - invested);
+      return {
+        value: Math.round(fv),
+        secondary: 'Invested Capital: ' + Math.round(invested).toLocaleString() + ' • Estimated Gain: ' + Math.round(gain).toLocaleString()
+      };
+    `,
+  },
+  {
+    id: 'step-up-sip-calculator',
+    category: 'finance',
+    name: 'Step-Up SIP Calculator',
+    title: 'Step-Up SIP Calculator — Top-Up SIP Growth & Wealth Planner',
+    description: 'Calculate how annual percentage increments to your monthly SIP contributions supercharge your compounding portfolio over time.',
+    badge: 'Wealth-Growth',
+    badgeColor: 'text-cyan border-cyan/30 bg-cyan/10',
+    formula: {
+      name: 'Step-Up SIP Compounding Model',
+      expression: 'Balance(y, m) = (Balance + MonthlyP_y) × (1 + i)',
+      explanation: 'Simulates month-by-month investment where monthly installment P increases by a set step-up percentage at the start of each succeeding year.',
+      variables: [
+        { symbol: 'MonthlyP_y', meaning: 'Monthly contribution in year y (P_initial × (1 + stepUp)ʸ⁻¹)' },
+        { symbol: 'i', meaning: 'Monthly interest rate (Annual rate ÷ 12 ÷ 100)' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: $10,000 / Month with 10% Annual Step-Up for 10 Years',
+      scenario: 'You start with $10,000/mo and raise contributions by 10% each year as your salary increases, averaging 12% annual return.',
+      steps: [
+        {
+          number: 1,
+          title: 'Year 1 contribution',
+          description: '$10,000 per month for 12 months = $120,000 invested.',
+          mathExpression: 'P_1 = $10,000 / mo',
+        },
+        {
+          number: 2,
+          title: 'Year 2 stepped-up contribution',
+          description: '$10,000 × 1.10 = $11,000 per month for 12 months = $132,000 invested.',
+          mathExpression: 'P_2 = $11,000 / mo',
+        },
+        {
+          number: 3,
+          title: '10-year cumulative compound balance',
+          description: 'Total invested grows to $1,912,491; total compound corpus reaches $3,345,155.',
+          mathExpression: 'Corpus = $3,345,155',
+        },
+      ],
+      conclusion: 'Step-Up SIP yields $3,345,155 compared to $2,323,391 for a regular SIP, adding over $1,000,000 in additional wealth.',
+    },
+    faqs: [
+      {
+        question: 'What is a Step-Up SIP?',
+        answer: 'A Step-Up or Top-Up SIP automatically increases your monthly mutual fund installment by a fixed percentage (e.g. 10%) or fixed amount each year to match rising income.',
+      },
+      {
+        question: 'Why should I step up my SIP?',
+        answer: 'Stepping up your SIP prevents inflation from eroding your savings rate and significantly reduces the number of years needed to reach financial independence.',
+      },
+    ],
+    inputs: [
+      { id: 'initial_investment', label: 'Starting Monthly Investment ($)', type: 'number', defaultValue: 10000, step: 500 },
+      { id: 'step_up_percent', label: 'Annual Step-Up Rate (%)', type: 'number', defaultValue: 10.0, step: 1 },
+      { id: 'return_rate', label: 'Expected Annual Return (%)', type: 'number', defaultValue: 12.0, step: 0.5 },
+      { id: 'time_years', label: 'Time Horizon (Years)', type: 'number', defaultValue: 10, step: 1 },
+    ],
+    defaultResult: {
+      label: 'Estimated Step-Up Corpus',
+      initialValue: 3345155,
+      decimals: 0,
+      prefix: '$',
+      secondaryText: 'Invested Capital: $1,912,491 • Wealth Gain: $1,432,664',
+      accent: 'cyan',
+    },
+    computeScript: `
+      let p = Math.max(0, parseFloat(inputs.initial_investment || '0'));
+      const stepUp = Math.max(0, parseFloat(inputs.step_up_percent || '0')) / 100;
+      const annualRate = Math.max(0, parseFloat(inputs.return_rate || '0')) / 100;
+      const monthlyRate = annualRate / 12;
+      const years = Math.max(0, Math.round(parseFloat(inputs.time_years || '0')));
+
+      let balance = 0;
+      let totalInvested = 0;
+      let currentP = p;
+
+      for (let y = 1; y <= years; y++) {
+        for (let m = 1; m <= 12; m++) {
+          balance = (balance + currentP) * (1 + monthlyRate);
+          totalInvested += currentP;
+        }
+        if (y < years) {
+          currentP = currentP * (1 + stepUp);
+        }
+      }
+
+      const gain = Math.max(0, balance - totalInvested);
+      return {
+        value: Math.round(balance),
+        secondary: 'Invested Capital: ' + Math.round(totalInvested).toLocaleString() + ' • Wealth Gain: ' + Math.round(gain).toLocaleString()
+      };
+    `,
+  },
+  {
+    id: 'lumpsum-calculator',
+    category: 'finance',
+    name: 'Lumpsum Calculator',
+    title: 'Lumpsum Calculator — Mutual Fund One-Time Return Calculator',
+    description: 'Calculate compound interest and future maturity wealth for a one-time lump-sum mutual fund or equity investment.',
+    badge: 'Popular',
+    badgeColor: 'text-link border-link/30 bg-link/10',
+    formula: {
+      name: 'Lumpsum Compound Growth Formula',
+      expression: 'A = P × (1 + r)ᵗ',
+      explanation: 'Standard compound interest identity where initial capital P compounds annually at rate r over time period t.',
+      variables: [
+        { symbol: 'A', meaning: 'Maturity amount' },
+        { symbol: 'P', meaning: 'Initial lump-sum principal' },
+        { symbol: 'r', meaning: 'Annual compound growth rate (Rate ÷ 100)' },
+        { symbol: 't', meaning: 'Investment tenure in years' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: $100,000 One-Time for 10 Years at 12%',
+      scenario: 'You invest $100,000 lump sum into an equity mutual fund portfolio compounding at 12% annually for 10 years.',
+      steps: [
+        {
+          number: 1,
+          title: 'Calculate compound factor',
+          description: '(1 + 0.12)¹⁰ = 3.105848',
+          mathExpression: 'Factor = 3.105848',
+        },
+        {
+          number: 2,
+          title: 'Multiply principal by factor',
+          description: '$100,000 × 3.105848 = $310,585.',
+          mathExpression: 'A = $310,585',
+        },
+      ],
+      conclusion: 'Your $100,000 grows to $310,585, producing $210,585 in total wealth gains.',
+    },
+    faqs: [
+      {
+        question: 'When should I choose Lumpsum over SIP?',
+        answer: 'Lumpsum investing is advantageous when you have a surplus windfall and markets are reasonably priced. SIP is preferred for regular monthly salary earners seeking dollar-cost averaging.',
+      },
+    ],
+    inputs: [
+      { id: 'investment_amount', label: 'Lumpsum Investment ($)', type: 'number', defaultValue: 100000, step: 5000 },
+      { id: 'return_rate', label: 'Expected Annual Return (%)', type: 'number', defaultValue: 12.0, step: 0.5 },
+      { id: 'time_years', label: 'Time Horizon (Years)', type: 'number', defaultValue: 10, step: 1 },
+    ],
+    defaultResult: {
+      label: 'Estimated Maturity Value',
+      initialValue: 310585,
+      decimals: 0,
+      prefix: '$',
+      secondaryText: 'Principal: $100,000 • Estimated Gain: $210,585',
+      accent: 'link',
+    },
+    computeScript: `
+      const p = Math.max(0, parseFloat(inputs.investment_amount || '0'));
+      const r = Math.max(0, parseFloat(inputs.return_rate || '0')) / 100;
+      const y = Math.max(0, parseFloat(inputs.time_years || '0'));
+      const fv = p * Math.pow(1 + r, y);
+      const gain = Math.max(0, fv - p);
+      return {
+        value: Math.round(fv),
+        secondary: 'Principal: ' + Math.round(p).toLocaleString() + ' • Estimated Gain: ' + Math.round(gain).toLocaleString()
+      };
+    `,
+  },
+  {
+    id: 'swp-calculator',
+    category: 'finance',
+    name: 'SWP Calculator',
+    title: 'SWP Calculator — Systematic Withdrawal Plan for Regular Income',
+    description: 'Plan regular monthly income withdrawals from your mutual fund corpus while tracking capital balance and portfolio longevity.',
+    badge: 'Retirement',
+    badgeColor: 'text-violet border-violet/30 bg-violet/10',
+    formula: {
+      name: 'Systematic Withdrawal Plan (SWP) Amortization',
+      expression: 'Balanceₘ = Balanceₘ₋₁ × (1 + i) - Withdrawal',
+      explanation: 'Evaluates the monthly balance remaining after deducting monthly withdrawals while crediting accrued monthly returns.',
+      variables: [
+        { symbol: 'Balance', meaning: 'Remaining investment corpus' },
+        { symbol: 'Withdrawal', meaning: 'Fixed monthly payout' },
+        { symbol: 'i', meaning: 'Monthly return rate' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: $500,000 Corpus Withdrawing $3,500/Month at 8%',
+      scenario: 'You retire with a $500,000 mutual fund portfolio and withdraw $3,500 per month for 10 years while the portfolio returns 8% annual return.',
+      steps: [
+        {
+          number: 1,
+          title: 'Calculate total payout',
+          description: '$3,500 × 120 months = $420,000 total received in cash.',
+          mathExpression: 'Withdrawn = $420,000',
+        },
+        {
+          number: 2,
+          title: 'Calculate remaining balance',
+          description: 'Because the portfolio earned 8% return, the remaining balance after 10 years is $414,142.',
+          mathExpression: 'Residual Balance = $414,142',
+        },
+      ],
+      conclusion: 'You withdrew $420,000 in monthly income and still retained $414,142 of your corpus.',
+    },
+    faqs: [
+      {
+        question: 'What is an SWP in mutual funds?',
+        answer: 'An SWP (Systematic Withdrawal Plan) allows investors to redeem a specified amount from their mutual fund scheme on a regular monthly basis, providing predictable cash flow.',
+      },
+    ],
+    inputs: [
+      { id: 'initial_corpus', label: 'Total Investment Corpus ($)', type: 'number', defaultValue: 500000, step: 10000 },
+      { id: 'monthly_withdrawal', label: 'Monthly Withdrawal Amount ($)', type: 'number', defaultValue: 3500, step: 100 },
+      { id: 'return_rate', label: 'Expected Annual Return (%)', type: 'number', defaultValue: 8.0, step: 0.5 },
+      { id: 'time_years', label: 'Tenure (Years)', type: 'number', defaultValue: 10, step: 1 },
+    ],
+    defaultResult: {
+      label: 'Residual Portfolio Balance',
+      initialValue: 414142,
+      decimals: 0,
+      prefix: '$',
+      secondaryText: 'Total Withdrawn: $420,000 • Initial Corpus: $500,000',
+      accent: 'violet',
+    },
+    computeScript: `
+      let balance = Math.max(0, parseFloat(inputs.initial_corpus || '0'));
+      const initial = balance;
+      const withdrawal = Math.max(0, parseFloat(inputs.monthly_withdrawal || '0'));
+      const monthlyRate = (Math.max(0, parseFloat(inputs.return_rate || '0')) / 100) / 12;
+      const totalMonths = Math.round(Math.max(0, parseFloat(inputs.time_years || '0')) * 12);
+
+      let totalWithdrawn = 0;
+      let depletedMonth = null;
+
+      for (let m = 1; m <= totalMonths; m++) {
+        balance = balance * (1 + monthlyRate);
+        if (balance < withdrawal) {
+          totalWithdrawn += balance;
+          balance = 0;
+          depletedMonth = m;
+          break;
+        } else {
+          balance -= withdrawal;
+          totalWithdrawn += withdrawal;
+        }
+      }
+
+      const note = depletedMonth
+        ? '⚠️ Corpus depleted at Month ' + depletedMonth + ' • Withdrawn: ' + Math.round(totalWithdrawn).toLocaleString()
+        : 'Total Withdrawn: ' + Math.round(totalWithdrawn).toLocaleString() + ' • Initial: ' + Math.round(initial).toLocaleString();
+
+      return {
+        value: Math.round(balance),
+        secondary: note
+      };
+    `,
+  },
+  {
+    id: 'ppf-calculator',
+    category: 'finance',
+    name: 'PPF Calculator',
+    title: 'PPF Calculator — Public Provident Fund Interest & Maturity Calculator',
+    description: 'Calculate maturity corpus and guaranteed tax-free interest under the Public Provident Fund (PPF) scheme over 15 years.',
+    badge: 'Tax-Free',
+    badgeColor: 'text-cyan border-cyan/30 bg-cyan/10',
+    countryCode: 'IN',
+    formula: {
+      name: 'Public Provident Fund Compounding Formula',
+      expression: 'Balance_y = (Balance_{y-1} + Deposit) × (1 + r)',
+      explanation: 'Interest is compounded annually on deposits made up to the statutory ceiling of ₹1,50,000 per financial year.',
+      variables: [
+        { symbol: 'Deposit', meaning: 'Annual deposit (Max ₹1.5 Lakh per year)' },
+        { symbol: 'r', meaning: 'Government declared rate of interest (Current: 7.1%)' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: ₹1,50,000 Maximum Annual Deposit for 15 Years',
+      scenario: 'You deposit the statutory maximum ₹1,50,000 each financial year for the full 15-year statutory tenure at 7.1% interest.',
+      steps: [
+        {
+          number: 1,
+          title: 'Calculate total deposit',
+          description: '₹1,50,000 × 15 years = ₹22,50,000 deposited.',
+          mathExpression: 'Deposits = ₹22,50,000',
+        },
+        {
+          number: 2,
+          title: 'Calculate compound maturity amount',
+          description: 'At 7.1% annual compounding, interest totals ₹18,18,209, giving ₹40,68,209 maturity.',
+          mathExpression: 'Maturity = ₹40,68,209',
+        },
+      ],
+      conclusion: 'You earn ₹18,18,209 in 100% tax-free interest under Section 10(11) of the Income Tax Act.',
+    },
+    faqs: [
+      {
+        question: 'What is the lock-in period for PPF?',
+        answer: 'PPF accounts have a statutory lock-in period of 15 financial years, after which they can be extended in blocks of 5 years with or without fresh contributions.',
+      },
+      {
+        question: 'Are PPF returns taxable?',
+        answer: 'No. PPF falls under the EEE (Exempt-Exempt-Exempt) tax status: contributions are deductible under 80C, interest is tax-free, and maturity amount is completely exempt from income tax.',
+      },
+    ],
+    inputs: [
+      { id: 'annual_deposit', label: 'Annual Deposit Amount ($)', type: 'number', defaultValue: 150000, step: 5000 },
+      { id: 'interest_rate', label: 'Annual Interest Rate (%)', type: 'number', defaultValue: 7.1, step: 0.1 },
+      { id: 'tenure_years', label: 'Investment Tenure (Years)', type: 'number', defaultValue: 15, step: 1 },
+    ],
+    defaultResult: {
+      label: 'Total PPF Maturity Amount',
+      initialValue: 4068209,
+      decimals: 0,
+      prefix: '$',
+      secondaryText: 'Total Deposited: $2,250,000 • Total Interest Earned: $1,818,209',
+      accent: 'cyan',
+    },
+    computeScript: `
+      const p = Math.max(500, parseFloat(inputs.annual_deposit || '0'));
+      const rate = Math.max(0, parseFloat(inputs.interest_rate || '7.1')) / 100;
+      const tenure = Math.max(1, Math.round(parseFloat(inputs.tenure_years || '15')));
+
+      let balance = 0;
+      let totalDeposit = 0;
+
+      for (let i = 1; i <= tenure; i++) {
+        balance += p;
+        totalDeposit += p;
+        const interest = balance * rate;
+        balance += interest;
+      }
+
+      const maturity = Math.round(balance);
+      const interestEarned = Math.round(maturity - totalDeposit);
+      return {
+        value: maturity,
+        secondary: 'Total Deposited: ' + Math.round(totalDeposit).toLocaleString() + ' • Total Interest: ' + interestEarned.toLocaleString()
+      };
+    `,
+  },
+  {
+    id: 'epf-calculator',
+    category: 'finance',
+    name: 'EPF Calculator',
+    title: 'EPF Calculator — Employees Provident Fund Corpus & Pension Estimator',
+    description: 'Calculate total retirement corpus accumulated from Employee (12%) and Employer contributions under the EPFO scheme at 8.25%.',
+    badge: 'Retirement',
+    badgeColor: 'text-link border-link/30 bg-link/10',
+    countryCode: 'IN',
+    formula: {
+      name: 'EPF Retirement Corpus Model',
+      expression: 'Monthly Deposit = (Basic × 12%) + (Basic × 3.67%)',
+      explanation: 'Employee contributes 12% of Basic + DA, while Employer contributes 3.67% to EPF (8.33% goes to EPS). Interest compounds monthly at 8.25% annual rate.',
+      variables: [
+        { symbol: 'Basic', meaning: 'Monthly Basic Salary + Dearness Allowance' },
+        { symbol: 'EPF Rate', meaning: 'Annual interest rate set by EPFO (8.25%)' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: ₹50,000 Basic Salary with 30-Year Career',
+      scenario: 'You join at age 25 earning ₹50,000 monthly basic, receiving a 5% annual increment until retirement at age 55.',
+      steps: [
+        {
+          number: 1,
+          title: 'Calculate monthly contributions',
+          description: 'Employee: 12% = ₹6,000. Employer EPF: 3.67% = ₹1,835. Total = ₹7,835 / month.',
+          mathExpression: 'Monthly = ₹7,835',
+        },
+        {
+          number: 2,
+          title: 'Project 30-year compounding with 5% annual raise',
+          description: 'Total employee + employer deposits total ₹62.4 Lakh, compounding to over ₹1.8 Crore.',
+          mathExpression: 'Corpus = ₹1,85,62,400',
+        },
+      ],
+      conclusion: 'Your EPF accumulation provides a substantial ₹1.85 Crore retirement nest egg.',
+    },
+    faqs: [
+      {
+        question: 'What is the current EPF interest rate?',
+        answer: 'The current EPF interest rate declared by the EPFO for FY 2023-24 is 8.25% per annum.',
+      },
+    ],
+    inputs: [
+      { id: 'monthly_salary', label: 'Monthly Basic Salary ($)', type: 'number', defaultValue: 50000, step: 2000 },
+      { id: 'current_age', label: 'Current Age', type: 'number', defaultValue: 25, step: 1 },
+      { id: 'retirement_age', label: 'Retirement Age', type: 'number', defaultValue: 58, step: 1 },
+      { id: 'annual_salary_growth', label: 'Annual Salary Increment (%)', type: 'number', defaultValue: 5.0, step: 0.5 },
+    ],
+    defaultResult: {
+      label: 'Estimated EPF Retirement Corpus',
+      initialValue: 24719850,
+      decimals: 0,
+      prefix: '$',
+      secondaryText: 'Total Contribution: $8,450,000 • Total Interest: $16,269,850',
+      accent: 'link',
+    },
+    computeScript: `
+      let basic = Math.max(0, parseFloat(inputs.monthly_salary || '0'));
+      const age = Math.max(18, parseFloat(inputs.current_age || '25'));
+      const retire = Math.max(age + 1, parseFloat(inputs.retirement_age || '58'));
+      const years = retire - age;
+      const annualIncrement = Math.max(0, parseFloat(inputs.annual_salary_growth || '5')) / 100;
+      const monthlyRate = (8.25 / 100) / 12;
+
+      let balance = 0;
+      let totalContrib = 0;
+
+      for (let y = 1; y <= years; y++) {
+        const monthlyEmp = basic * 0.12;
+        const monthlyEmpr = basic * 0.0367;
+        const totalMonthly = monthlyEmp + monthlyEmpr;
+
+        for (let m = 1; m <= 12; m++) {
+          balance = (balance + totalMonthly) * (1 + monthlyRate);
+          totalContrib += totalMonthly;
+        }
+        basic = basic * (1 + annualIncrement);
+      }
+
+      const maturity = Math.round(balance);
+      const interest = Math.round(Math.max(0, maturity - totalContrib));
+      return {
+        value: maturity,
+        secondary: 'Total Contribution: ' + Math.round(totalContrib).toLocaleString() + ' • Interest Earned: ' + interest.toLocaleString()
+      };
+    `,
+  },
+  {
+    id: 'gratuity-calculator',
+    category: 'finance',
+    name: 'Gratuity Calculator',
+    title: 'Gratuity Calculator — Calculate Gratuity Amount Online (15/26 Formula)',
+    description: 'Calculate your statutory gratuity payout under the Payment of Gratuity Act based on last drawn basic salary and completed years of service.',
+    badge: 'Statutory',
+    badgeColor: 'text-violet border-violet/30 bg-violet/10',
+    formula: {
+      name: 'Statutory Gratuity Formula (15/26 Rule)',
+      expression: 'Gratuity = (15 × Last Drawn Salary × Completed Years) ÷ 26',
+      explanation: 'Based on 26 working days in a month and 15 days of salary per completed year of continuous service.',
+      variables: [
+        { symbol: 'Last Drawn Salary', meaning: 'Basic Pay + Dearness Allowance' },
+        { symbol: 'Completed Years', meaning: 'Years of continuous service (Minimum 5 years required)' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: ₹50,000 Salary with 10 Years Service',
+      scenario: 'An employee leaves an organization after 10 continuous years with a last drawn basic salary of ₹50,000.',
+      steps: [
+        {
+          number: 1,
+          title: 'Apply 15/26 statutory formula',
+          description: '(15 × ₹50,000 × 10) ÷ 26 = ₹2,88,462.',
+          mathExpression: 'Gratuity = ₹2,88,462',
+        },
+      ],
+      conclusion: 'The employee receives ₹2,88,462 in gratuity, fully tax-free as it is below the ₹20 Lakh statutory limit.',
+    },
+    faqs: [
+      {
+        question: 'When does an employee become eligible for gratuity?',
+        answer: 'An employee becomes eligible for gratuity after completing at least 5 years of continuous service with the same employer.',
+      },
+      {
+        question: 'What is the maximum tax-free gratuity limit?',
+        answer: 'Under current tax laws, gratuity received up to ₹20,00,000 is 100% tax-exempt for private sector employees.',
+      },
+    ],
+    inputs: [
+      { id: 'monthly_salary', label: 'Last Drawn Monthly Basic ($)', type: 'number', defaultValue: 50000, step: 2000 },
+      { id: 'completed_years', label: 'Completed Years of Service', type: 'number', defaultValue: 10, step: 1 },
+    ],
+    defaultResult: {
+      label: 'Estimated Gratuity Payable',
+      initialValue: 288462,
+      decimals: 0,
+      prefix: '$',
+      secondaryText: '100% Tax-Exempt (Below $2,000,000 statutory limit)',
+      accent: 'violet',
+    },
+    computeScript: `
+      const salary = Math.max(0, parseFloat(inputs.monthly_salary || '0'));
+      const tenure = Math.max(0, Math.round(parseFloat(inputs.completed_years || '0')));
+
+      if (tenure < 5) {
+        return {
+          value: 0,
+          secondary: 'Minimum 5 years of continuous service required for statutory gratuity eligibility.'
+        };
+      }
+
+      const gratuity = Math.round((15 * salary * tenure) / 26);
+      const taxExempt = Math.min(gratuity, 2000000);
+      const taxable = Math.max(0, gratuity - taxExempt);
+
+      const note = taxable > 0
+        ? 'Tax-Exempt: ' + taxExempt.toLocaleString() + ' • Taxable: ' + taxable.toLocaleString()
+        : '100% Tax-Exempt (Under statutory ceiling)';
+
+      return {
+        value: gratuity,
+        secondary: note
+      };
+    `,
+  },
+  {
+    id: '401k-calculator',
+    category: 'finance',
+    name: '401(k) Calculator',
+    title: '401(k) Calculator — Retirement Savings with Employer Match',
+    description: 'Project your future 401(k) balance, employee salary deferrals, employer matching contributions, and compound earnings.',
+    badge: 'US Retirement',
+    badgeColor: 'text-cyan border-cyan/30 bg-cyan/10',
+    countryCode: 'US',
+    formula: {
+      name: '401(k) Compound Growth Model',
+      expression: 'Balance_m = (Balance_{m-1} + Deferral + Match) × (1 + r)',
+      explanation: 'Compounds monthly pre-tax employee salary deferrals and company matching contributions over your working career.',
+      variables: [
+        { symbol: 'Deferral', meaning: 'Employee monthly contribution (% of salary)' },
+        { symbol: 'Match', meaning: 'Company employer match (e.g. 50% match up to 6%)' },
+        { symbol: 'r', meaning: 'Monthly investment growth rate' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: $80,000 Salary, 6% Deferral, 50% Match',
+      scenario: 'You are 30 years old earning $80,000/yr, retiring at 65. You contribute 6% and your employer matches 50% up to 6%, averaging 7% return.',
+      steps: [
+        {
+          number: 1,
+          title: 'Calculate monthly savings',
+          description: 'Employee 6% = $400/mo. Employer 50% match = $200/mo. Total = $600/month.',
+          mathExpression: 'Monthly = $600',
+        },
+        {
+          number: 2,
+          title: 'Project 35-year compounding',
+          description: 'With a 3% annual salary raise and 7% market return, the nest egg exceeds $1,400,000.',
+          mathExpression: 'Corpus = $1,428,500',
+        },
+      ],
+      conclusion: 'Employer matching accounts for over $300,000 of your final retirement wealth.',
+    },
+    faqs: [
+      {
+        question: 'What is the 2024 401(k) contribution limit?',
+        answer: 'The IRS employee contribution limit for 401(k) plans in 2024 is $23,000 (plus an extra $7,500 catch-up contribution for workers aged 50 and older).',
+      },
+    ],
+    inputs: [
+      { id: 'current_salary', label: 'Annual Salary ($)', type: 'number', defaultValue: 80000, step: 2500 },
+      { id: 'employee_contrib_pct', label: 'Your Contribution (%)', type: 'number', defaultValue: 6.0, step: 0.5 },
+      { id: 'employer_match_pct', label: 'Employer Match (%)', type: 'number', defaultValue: 50.0, step: 5 },
+      { id: 'employer_match_cap', label: 'Employer Match Cap (%)', type: 'number', defaultValue: 6.0, step: 0.5 },
+      { id: 'current_age', label: 'Current Age', type: 'number', defaultValue: 30, step: 1 },
+      { id: 'retirement_age', label: 'Retirement Age', type: 'number', defaultValue: 65, step: 1 },
+      { id: 'current_balance', label: 'Current 401(k) Balance ($)', type: 'number', defaultValue: 25000, step: 2500 },
+    ],
+    defaultResult: {
+      label: 'Estimated 401(k) Balance at Retirement',
+      initialValue: 1428500,
+      decimals: 0,
+      prefix: '$',
+      secondaryText: 'Your Contributions: $290,000 • Employer Match: $145,000',
+      accent: 'cyan',
+    },
+    computeScript: `
+      const age = Math.max(18, parseFloat(inputs.current_age || '30'));
+      const retire = Math.max(age + 1, parseFloat(inputs.retirement_age || '65'));
+      const years = retire - age;
+      let salary = Math.max(0, parseFloat(inputs.current_salary || '80000'));
+      let balance = Math.max(0, parseFloat(inputs.current_balance || '0'));
+
+      const empPct = Math.max(0, parseFloat(inputs.employee_contrib_pct || '6')) / 100;
+      const matchRatio = Math.max(0, parseFloat(inputs.employer_match_pct || '50')) / 100;
+      const matchCap = Math.max(0, parseFloat(inputs.employer_match_cap || '6')) / 100;
+      const returnRate = (7.0 / 100) / 12;
+      const salaryIncrease = 0.03;
+
+      let totalEmp = 0;
+      let totalEmpr = 0;
+
+      for (let y = 1; y <= years; y++) {
+        const monthlySalary = salary / 12;
+        const monthlyEmp = monthlySalary * empPct;
+        const matchedPortion = Math.min(monthlyEmp, monthlySalary * matchCap);
+        const monthlyEmpr = matchedPortion * matchRatio;
+
+        for (let m = 1; m <= 12; m++) {
+          balance = (balance + monthlyEmp + monthlyEmpr) * (1 + returnRate);
+          totalEmp += monthlyEmp;
+          totalEmpr += monthlyEmpr;
+        }
+        salary = salary * (1 + salaryIncrease);
+      }
+
+      return {
+        value: Math.round(balance),
+        secondary: 'Your Contributions: ' + Math.round(totalEmp).toLocaleString() + ' • Employer Match: ' + Math.round(totalEmpr).toLocaleString()
+      };
+    `,
+  },
+  {
+    id: 'roth-ira-calculator',
+    category: 'finance',
+    name: 'Roth IRA Calculator',
+    title: 'Roth IRA Calculator — Tax-Free Compound Growth & Retirement Wealth',
+    description: 'Calculate future tax-free retirement wealth in a Roth IRA with annual contributions and compounding market returns.',
+    badge: 'Tax-Advantaged',
+    badgeColor: 'text-link border-link/30 bg-link/10',
+    countryCode: 'US',
+    formula: {
+      name: 'Roth IRA Tax-Free Growth Formula',
+      expression: 'Balance_y = (Balance_{y-1} + Annual Deposit) × (1 + r)',
+      explanation: 'Compounds after-tax annual contributions tax-free so that qualified withdrawals in retirement are 100% exempt from federal and state income tax.',
+      variables: [
+        { symbol: 'Annual Deposit', meaning: 'Annual contribution (2024 limit: $7,000)' },
+        { symbol: 'r', meaning: 'Annual compound rate of return' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: $7,000 / Year for 30 Years at 8%',
+      scenario: 'You contribute the 2024 maximum $7,000 annually into an S&P 500 or total market index fund inside a Roth IRA averaging 8% return.',
+      steps: [
+        {
+          number: 1,
+          title: 'Calculate total contributions',
+          description: '$7,000 × 30 years = $210,000 total out-of-pocket savings.',
+          mathExpression: 'Contributions = $210,000',
+        },
+        {
+          number: 2,
+          title: 'Calculate compounding maturity balance',
+          description: 'Your balance grows to $856,378, generating $646,378 in tax-free profit.',
+          mathExpression: 'Roth Balance = $856,378',
+        },
+      ],
+      conclusion: 'Every dollar of the $856,378 can be withdrawn completely tax-free in retirement after age 59½.',
+    },
+    faqs: [
+      {
+        question: 'What is the main benefit of a Roth IRA?',
+        answer: 'Unlike traditional IRAs or 401(k)s where withdrawals are taxed as ordinary income, qualified withdrawals from a Roth IRA in retirement are 100% tax-free.',
+      },
+    ],
+    inputs: [
+      { id: 'annual_contribution', label: 'Annual Contribution ($)', type: 'number', defaultValue: 7000, step: 500 },
+      { id: 'current_balance', label: 'Current Balance ($)', type: 'number', defaultValue: 10000, step: 1000 },
+      { id: 'investment_years', label: 'Years to Invest', type: 'number', defaultValue: 30, step: 1 },
+      { id: 'expected_return', label: 'Expected Annual Return (%)', type: 'number', defaultValue: 8.0, step: 0.5 },
+    ],
+    defaultResult: {
+      label: 'Estimated Tax-Free Balance',
+      initialValue: 856378,
+      decimals: 0,
+      prefix: '$',
+      secondaryText: 'Contributions: $220,000 • Tax-Free Earnings: $636,378',
+      accent: 'link',
+    },
+    computeScript: `
+      let balance = Math.max(0, parseFloat(inputs.current_balance || '0'));
+      const annual = Math.max(0, parseFloat(inputs.annual_contribution || '7000'));
+      const years = Math.max(1, Math.round(parseFloat(inputs.investment_years || '30')));
+      const rate = Math.max(0, parseFloat(inputs.expected_return || '8')) / 100;
+
+      let totalContrib = balance;
+      for (let y = 1; y <= years; y++) {
+        balance = (balance + annual) * (1 + rate);
+        totalContrib += annual;
+      }
+
+      const finalVal = Math.round(balance);
+      const earnings = Math.round(Math.max(0, finalVal - totalContrib));
+      return {
+        value: finalVal,
+        secondary: 'Contributions: ' + Math.round(totalContrib).toLocaleString() + ' • Tax-Free Earnings: ' + earnings.toLocaleString()
+      };
+    `,
+  },
+  {
+    id: 'simple-interest-calculator',
+    category: 'finance',
+    name: 'Simple Interest Calculator',
+    title: 'Simple Interest Calculator — Calculate Interest, Rate & Principal',
+    description: 'Quickly compute simple interest, total repayment value, and loan cost with step-by-step arithmetic proofs.',
+    badge: 'Universal',
+    badgeColor: 'text-link border-link/30 bg-link/10',
+    formula: {
+      name: 'Simple Interest Formula',
+      expression: 'I = P × r × t',
+      explanation: 'Calculates non-compounding interest earned or charged directly on principal P at annual rate r over t years.',
+      variables: [
+        { symbol: 'I', meaning: 'Total simple interest' },
+        { symbol: 'P', meaning: 'Initial principal balance' },
+        { symbol: 'r', meaning: 'Annual interest rate (Rate ÷ 100)' },
+        { symbol: 't', meaning: 'Time duration in years' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: $10,000 at 5% for 3 Years',
+      scenario: 'You deposit $10,000 in a fixed rate deposit earning 5% simple interest per year for 3 years.',
+      steps: [
+        {
+          number: 1,
+          title: 'Calculate annual interest',
+          description: '$10,000 × 0.05 = $500 per year.',
+          mathExpression: 'Annual = $500',
+        },
+        {
+          number: 2,
+          title: 'Multiply by tenure',
+          description: '$500 × 3 years = $1,500 total interest.',
+          mathExpression: 'Interest = $1,500',
+        },
+      ],
+      conclusion: 'Total amount after 3 years is $11,500 ($10,000 principal + $1,500 interest).',
+    },
+    faqs: [
+      {
+        question: 'What is the difference between simple and compound interest?',
+        answer: 'Simple interest is calculated exclusively on the principal amount. Compound interest is calculated on the principal plus all interest accumulated in previous periods.',
+      },
+    ],
+    inputs: [
+      { id: 'principal', label: 'Principal Amount ($)', type: 'number', defaultValue: 10000, step: 500 },
+      { id: 'rate', label: 'Annual Interest Rate (%)', type: 'number', defaultValue: 5.0, step: 0.1 },
+      { id: 'time_years', label: 'Time Period (Years)', type: 'number', defaultValue: 3, step: 1 },
+    ],
+    defaultResult: {
+      label: 'Total Simple Interest Earned',
+      initialValue: 1500,
+      decimals: 0,
+      prefix: '$',
+      secondaryText: 'Total Maturity Balance: $11,500',
+      accent: 'link',
+    },
+    computeScript: `
+      const p = Math.max(0, parseFloat(inputs.principal || '0'));
+      const r = Math.max(0, parseFloat(inputs.rate || '0')) / 100;
+      const t = Math.max(0, parseFloat(inputs.time_years || '0'));
+
+      const interest = p * r * t;
+      const total = p + interest;
+      return {
+        value: Math.round(interest),
+        secondary: 'Total Maturity Balance: ' + Math.round(total).toLocaleString()
+      };
+    `,
+  },
+  {
+    id: 'profit-margin-calculator',
+    category: 'finance',
+    name: 'Profit Margin Calculator',
+    title: 'Profit Margin Calculator — Calculate Gross Margin, Markup & Profit',
+    description: 'Calculate gross profit margin percentage, markup percentage, and profit from item cost and selling price.',
+    badge: 'Business',
+    badgeColor: 'text-cyan border-cyan/30 bg-cyan/10',
+    formula: {
+      name: 'Profit Margin & Markup Equations',
+      expression: 'Margin % = [(Revenue - Cost) ÷ Revenue] × 100 | Markup % = [(Revenue - Cost) ÷ Cost] × 100',
+      explanation: 'Margin is profit expressed as a percentage of total revenue; Markup is profit expressed as a percentage of the underlying cost of goods sold.',
+      variables: [
+        { symbol: 'Revenue', meaning: 'Selling price per unit or total sales revenue' },
+        { symbol: 'Cost', meaning: 'Cost of goods sold (COGS) / acquisition cost' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: $70 Cost and $100 Selling Price',
+      scenario: 'You buy or manufacture a product for $70 and sell it for $100.',
+      steps: [
+        {
+          number: 1,
+          title: 'Calculate gross profit',
+          description: '$100 - $70 = $30 gross profit.',
+          mathExpression: 'Profit = $30',
+        },
+        {
+          number: 2,
+          title: 'Calculate gross margin',
+          description: '($30 ÷ $100) × 100 = 30.0% margin.',
+          mathExpression: 'Margin = 30.0%',
+        },
+        {
+          number: 3,
+          title: 'Calculate markup',
+          description: '($30 ÷ $70) × 100 = 42.86% markup.',
+          mathExpression: 'Markup = 42.86%',
+        },
+      ],
+      conclusion: 'Selling at $100 gives you a 30% profit margin and a 42.86% cost markup.',
+    },
+    faqs: [
+      {
+        question: 'What is the difference between margin and markup?',
+        answer: 'Margin is the percentage of final selling price that is profit. Markup is the percentage added onto the original purchase cost to reach that selling price.',
+      },
+    ],
+    inputs: [
+      { id: 'cost_price', label: 'Cost of Goods ($)', type: 'number', defaultValue: 70, step: 5 },
+      { id: 'selling_price', label: 'Selling Price / Revenue ($)', type: 'number', defaultValue: 100, step: 5 },
+    ],
+    defaultResult: {
+      label: 'Gross Profit Margin',
+      initialValue: 30.0,
+      decimals: 2,
+      suffix: '%',
+      secondaryText: 'Gross Profit: $30.00 • Markup: 42.86%',
+      accent: 'cyan',
+    },
+    computeScript: `
+      const cost = Math.max(0, parseFloat(inputs.cost_price || '0'));
+      const rev = Math.max(0, parseFloat(inputs.selling_price || '0'));
+
+      const profit = rev - cost;
+      const margin = rev > 0 ? (profit / rev) * 100 : 0;
+      const markup = cost > 0 ? (profit / cost) * 100 : 0;
+
+      return {
+        value: Number(margin.toFixed(2)),
+        secondary: 'Gross Profit: ' + profit.toFixed(2) + ' • Markup: ' + markup.toFixed(2) + '%'
+      };
+    `,
+  },
 ];
+

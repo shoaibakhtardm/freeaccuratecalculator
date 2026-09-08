@@ -1,0 +1,343 @@
+---
+// src/pages/countries/[country]/[slug].astro
+import CalculatorLayout from '../../../layouts/CalculatorLayout.astro';
+import ResultDisplay from '../../../components/calculator/ResultDisplay.astro';
+import FormulaSection from '../../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../../components/calculator/WorkedExample.astro';
+import FAQSection from '../../../components/calculator/FAQSection.astro';
+import HistoryDrawer from '../../../components/calculator/HistoryDrawer.astro';
+import CurrencySwitcher from '../../../components/common/CurrencySwitcher.astro';
+import { POPULAR_COUNTRIES, type CountryConfig } from '../../../data/countries';
+import { CALCULATORS, CATEGORY_METADATA, type CalculatorEntry } from '../../../data/calculatorRegistry';
+
+export async function getStaticPaths() {
+  const paths: Array<{
+    params: { country: string; slug: string };
+    props: { country: CountryConfig; calc: CalculatorEntry };
+  }> = [];
+
+  for (const country of POPULAR_COUNTRIES) {
+    const popularSet = new Set(country.popularCalculators);
+    // Prerender all popular calculators for this country + key priority tools
+    const calcsForCountry = CALCULATORS.filter((c) => popularSet.has(c.id));
+
+    for (const calc of calcsForCountry) {
+      paths.push({
+        params: {
+          country: country.slug,
+          slug: calc.id,
+        },
+        props: {
+          country,
+          calc,
+        },
+      });
+    }
+  }
+
+  return paths;
+}
+
+interface Props {
+  country: CountryConfig;
+  calc: CalculatorEntry;
+}
+
+const { country, calc } = Astro.props;
+const catMeta = CATEGORY_METADATA[calc.category];
+
+const isCurrencyCalculator =
+  calc.category === 'finance' ||
+  calc.inputs.some((i) => i.unit === '$' || (typeof i.label === 'string' && i.label.includes('$'))) ||
+  calc.defaultResult.prefix === '$';
+
+// Country-tailored title and metadata
+const localizedTitle = `${country.name} ${calc.name} (${country.currencySymbol}) — Free Online Calculator`;
+const localizedH1 = `${country.name} ${calc.name}`;
+const localizedDesc = `Accurate ${country.name} ${calc.name} with ${country.currency} (${country.currencySymbol}) formatting and ${country.numberSystem === 'lakh-crore' ? 'Lakh/Crore' : 'standard'} numerical precision. Free, instant client-side calculation.`;
+
+// Related calculators within this country
+const popularSet = new Set(country.popularCalculators);
+const relatedCalculators = CALCULATORS.filter((c) => popularSet.has(c.id) && c.id !== calc.id)
+  .slice(0, 4)
+  .map((c) => ({
+    title: `${c.name}`,
+    href: `/countries/${country.slug}/${c.id}/`,
+    badge: country.currencySymbol,
+  }));
+---
+
+<CalculatorLayout
+  title={localizedTitle}
+  metaDescription={localizedDesc}
+  h1={localizedH1}
+  subtitle={localizedDesc}
+  category={{ label: `${country.name} Calculators`, href: `/countries/${country.slug}/` }}
+  calculatorName={localizedH1}
+  relatedCalculators={relatedCalculators}
+>
+  <!-- Interactive Calculator Card -->
+  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+    <!-- Country & Currency Banner -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4">
+      <div class="flex items-center gap-2">
+        <span class="text-xl" role="img" aria-label={country.name}>{country.flag}</span>
+        <div>
+          <span class="mono-eyebrow text-ink">{country.name} Edition</span>
+          <span class="text-[11px] font-mono text-mute block sm:inline sm:ml-2">
+            Default: {country.currency} ({country.currencySymbol}) • {country.numberSystem === 'lakh-crore' ? 'Lakh/Crore' : 'Standard'}
+          </span>
+        </div>
+      </div>
+
+      {isCurrencyCalculator && (
+        <CurrencySwitcher selectId={`calc-currency-${country.slug}-${calc.id}`} className="w-full sm:w-auto" showFullName={true} />
+      )}
+    </div>
+
+    <!-- Form Inputs Grid -->
+    <form id="calc-form" class="space-y-4" onsubmit="return false;">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {calc.inputs.map((inp) => {
+          const isCurrencyInput =
+            isCurrencyCalculator &&
+            (inp.unit === '$' ||
+              (typeof inp.label === 'string' && inp.label.includes('$')) ||
+              inp.id.includes('price') ||
+              inp.id.includes('payment') ||
+              inp.id.includes('tax') ||
+              inp.id.includes('salary') ||
+              inp.id.includes('income') ||
+              inp.id.includes('loan') ||
+              inp.id.includes('amount') ||
+              inp.id.includes('deposit') ||
+              inp.id.includes('balance') ||
+              inp.id.includes('cost'));
+
+          const displayLabel = isCurrencyInput
+            ? inp.label.replace(/\(\$\)/g, `(${country.currencySymbol})`).replace(/\$/g, country.currencySymbol)
+            : inp.label;
+
+          return (
+            <div>
+              <label
+                for={inp.id}
+                class={`block text-xs font-semibold text-ink uppercase font-mono mb-1.5 ${isCurrencyInput ? 'calc-currency-label' : ''}`}
+                data-original-label={inp.label}
+              >
+                {displayLabel}
+              </label>
+
+              {inp.type === 'select' ? (
+                <select
+                  id={inp.id}
+                  class="calc-input w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-sm text-ink focus:border-link focus:outline-none transition-colors"
+                >
+                  {inp.options?.map((opt) => (
+                    <option value={opt.value} selected={opt.value === inp.defaultValue}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              ) : inp.type === 'date' ? (
+                <input
+                  id={inp.id}
+                  type="date"
+                  value={inp.defaultValue}
+                  class="calc-input w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-sm text-ink focus:border-link focus:outline-none transition-colors"
+                />
+              ) : (
+                <div class="relative flex items-center">
+                  {isCurrencyInput && (
+                    <span class="absolute left-3 font-mono text-sm text-mute pointer-events-none calc-currency-unit" data-original-unit="$">
+                      {country.currencySymbol}
+                    </span>
+                  )}
+                  <input
+                    id={inp.id}
+                    type="number"
+                    value={inp.defaultValue}
+                    min={inp.min}
+                    max={inp.max}
+                    step={inp.step || 'any'}
+                    class={`calc-input w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas py-2 pr-3 text-sm text-ink focus:border-link focus:outline-none transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${isCurrencyInput ? 'pl-8' : 'pl-3'}`}
+                  />
+                  {inp.unit && inp.unit !== '$' && (
+                    <span class="absolute right-3 font-mono text-xs text-mute pointer-events-none">
+                      {inp.unit}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-2">
+        <button
+          id="btn-reset"
+          type="button"
+          class="min-h-[44px] inline-flex items-center justify-center rounded-[6px] border border-hairline bg-canvas px-4 py-2 text-xs font-medium text-body hover:bg-hairline-soft hover:text-ink cursor-pointer transition-colors"
+        >
+          Reset Defaults
+        </button>
+      </div>
+    </form>
+
+    <!-- Instant Result Display Block -->
+    <ResultDisplay
+      id="primary-result"
+      label={calc.defaultResult.label}
+      initialValue={calc.defaultResult.initialValue}
+      decimals={calc.defaultResult.decimals}
+      secondaryText={calc.defaultResult.secondaryText.replace(/\$/g, country.currencySymbol)}
+      accent={calc.defaultResult.accent || 'cyan'}
+      prefix={isCurrencyCalculator ? `${country.currencySymbol} ` : calc.defaultResult.prefix}
+      suffix={calc.defaultResult.suffix}
+      isIndian={country.numberSystem === 'lakh-crore'}
+    />
+
+    <!-- LocalStorage Calculation History Drawer -->
+    <HistoryDrawer calculatorId={`${country.slug}-${calc.id}`} />
+  </div>
+
+  <!-- Educational Deep-Dive Content (Slot) -->
+  <div slot="content" class="space-y-8">
+    <FormulaSection
+      formula={calc.formula.expression}
+      explanation={calc.formula.explanation}
+      variables={calc.formula.variables}
+    />
+
+    <WorkedExample
+      title={calc.example.title}
+      scenario={calc.example.scenario.replace(/\$/g, country.currencySymbol)}
+      steps={calc.example.steps}
+      conclusion={calc.example.conclusion.replace(/\$/g, country.currencySymbol)}
+    />
+
+    <FAQSection faqs={calc.faqs} />
+  </div>
+</CalculatorLayout>
+
+<!-- Client-side calculation execution script with country-aware currency synchronization -->
+<script is:inline define:vars={{
+  computeScript: calc.computeScript,
+  defaultCurrency: country.currency,
+  defaultSymbol: country.currencySymbol,
+  defaultIsIndian: country.numberSystem === 'lakh-crore',
+  isCurrencyCalc: isCurrencyCalculator,
+  decimals: calc.defaultResult.decimals,
+  prefix: calc.defaultResult.prefix || '',
+}}>
+  (function () {
+    const form = document.getElementById('calc-form');
+    const inputs = document.querySelectorAll('.calc-input');
+    const secondaryText = document.getElementById('primary-result-secondary');
+    const primaryResultPrefix = document.getElementById('primary-result-prefix');
+    const primaryResult = document.getElementById('primary-result');
+
+    // Compile dynamic compute function
+    const computeFn = new Function('inputs', computeScript);
+
+    function getActiveCurrencyState() {
+      const code = typeof window.facGetActiveCurrency === 'function'
+        ? window.facGetActiveCurrency()
+        : defaultCurrency;
+
+      const info = typeof window.facGetCurrencyInfo === 'function'
+        ? window.facGetCurrencyInfo(code)
+        : { symbol: defaultSymbol, isIndian: defaultIsIndian };
+
+      return {
+        code,
+        symbol: info.symbol || defaultSymbol,
+        isIndian: info.isIndian !== undefined ? info.isIndian : defaultIsIndian,
+      };
+    }
+
+    function syncCurrencyUI(currState) {
+      if (!isCurrencyCalc) return;
+      const { symbol, isIndian } = currState;
+
+      document.querySelectorAll('.calc-currency-label').forEach((lbl) => {
+        const orig = lbl.getAttribute('data-original-label') || lbl.textContent;
+        lbl.textContent = orig.replace(/\(\$\)/g, `(${symbol})`).replace(/\$/g, symbol);
+      });
+
+      document.querySelectorAll('.calc-currency-unit').forEach((unit) => {
+        unit.textContent = symbol;
+      });
+
+      if (primaryResultPrefix) {
+        primaryResultPrefix.textContent = `${symbol} `;
+      }
+      if (primaryResult) {
+        primaryResult.setAttribute('data-prefix', `${symbol} `);
+        primaryResult.setAttribute('data-indian', isIndian ? 'true' : 'false');
+      }
+    }
+
+    function calculate() {
+      const inputVals = {};
+      inputs.forEach((inp) => {
+        inputVals[inp.id] = inp.value;
+      });
+
+      const currState = getActiveCurrencyState();
+
+      try {
+        const outcome = computeFn(inputVals);
+        if (outcome && typeof outcome.value === 'number' && !isNaN(outcome.value) && isFinite(outcome.value)) {
+          if (typeof window.facUpdateResult === 'function') {
+            window.facUpdateResult('primary-result', outcome.value, outcome.secondary || '');
+          } else if (primaryResult) {
+            primaryResult.textContent = outcome.value.toFixed(decimals);
+            if (secondaryText && outcome.secondary) {
+              secondaryText.textContent = outcome.secondary;
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Calculation error:', err);
+      }
+    }
+
+    // Attach input listeners
+    inputs.forEach((inp) => {
+      inp.addEventListener('input', calculate);
+      inp.addEventListener('change', calculate);
+    });
+
+    const resetBtn = document.getElementById('btn-reset');
+    if (resetBtn && form) {
+      resetBtn.addEventListener('click', () => {
+        form.reset();
+        calculate();
+      });
+    }
+
+    // Set default country currency if none chosen
+    if (typeof window.facSetActiveCurrency === 'function') {
+      const current = window.facGetActiveCurrency();
+      if (!current || current === 'USD') {
+        window.facSetActiveCurrency(defaultCurrency);
+      }
+    }
+
+    window.addEventListener('currencychange', (e) => {
+      const detail = e.detail || {};
+      syncCurrencyUI({
+        code: detail.currency || defaultCurrency,
+        symbol: detail.symbol || defaultSymbol,
+        isIndian: detail.isIndian !== undefined ? detail.isIndian : defaultIsIndian,
+      });
+      calculate();
+    });
+
+    // Initial sync
+    syncCurrencyUI(getActiveCurrencyState());
+    calculate();
+  })();
+</script>

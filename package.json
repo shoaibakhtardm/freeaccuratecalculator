@@ -10,7 +10,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "node --experimental-strip-types --test tests/formula-correctness.test.mjs tests/mobile-responsiveness.test.mjs tests/currency-system.test.mjs"
+    "test": "node --experimental-strip-types --test tests/formula-correctness.test.mjs tests/mobile-responsiveness.test.mjs tests/currency-system.test.mjs tests/country-architecture.test.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.3.0",
