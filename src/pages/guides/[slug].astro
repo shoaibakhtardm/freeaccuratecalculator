@@ -1,20 +1,25 @@
 ---
-// src/pages/blog/[slug].astro
+// src/pages/guides/[slug].astro
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
 import { CALCULATORS } from '../../data/calculatorRegistry';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  return posts.map((post) => ({
-    params: { slug: post.id.replace(/\.(md|mdx)$/, '') },
-    props: { post },
-  }));
+  const posts = await getCollection('guides');
+  return posts
+    .filter((post) => post.data.lang === 'en' && !post.id.includes('/'))
+    .map((post) => ({
+      params: { slug: post.id.replace(/\.(md|mdx)$/, '') },
+      props: { post },
+    }));
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+
+// Filter meaningful H2 headings for Table of Contents
+const tocHeadings = headings.filter((h) => h.depth === 2);
 
 // Map related calculators from registry
 const relatedCalcs = (post.data.relatedCalculators || [])
@@ -28,6 +33,15 @@ const relatedCalcs = (post.data.relatedCalculators || [])
         href: `/${found.category}/${found.id}/`,
         description: found.description,
         badge: found.badge,
+      };
+    }
+    if (calcId === 'compound-interest-calculator') {
+      return {
+        id: 'compound-interest-calculator',
+        name: 'Compound Interest Calculator',
+        href: '/finance/compound-interest-calculator/',
+        description: 'Calculate compound growth with customizable frequencies and regular contributions.',
+        badge: 'High-Demand',
       };
     }
     if (calcId === 'percentage-calculator') {
@@ -65,7 +79,7 @@ const relatedCalcs = (post.data.relatedCalculators || [])
 const articleSchema = {
   '@context': 'https://schema.org',
   '@type': 'Article',
-  headline: post.data.title,
+  headline: post.data.h1 || post.data.title,
   description: post.data.description,
   author: {
     '@type': 'Organization',
@@ -84,20 +98,56 @@ const articleSchema = {
     '@id': Astro.url.href,
   },
 };
+
+// FAQPage Schema for eligible guides with visible FAQs
+const isCompoundInterest = post.id.includes('how-compound-interest-works');
+const faqSchema = isCompoundInterest
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'How often is compound interest calculated on standard savings accounts?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'In most retail banking institutions across the US, UK, Canada, and Australia, savings account interest compounds daily based on the end-of-day ledger balance, but is credited to the account on a monthly basis.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is the difference between simple interest and compound interest?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Simple interest is calculated solely on the original principal throughout the entire duration. Compound interest is calculated on the principal plus all interest that has previously accrued, leading to exponential growth over time.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Does compounding frequency matter more than the interest rate?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'The interest rate generally has a larger impact on final returns than compounding frequency. However, higher compounding frequencies provide an incremental boost. For example, on a $10,000 deposit at 7% over 10 years, shifting from annual to daily compounding adds $464.67 in total interest.',
+          },
+        },
+      ],
+    }
+  : null;
+
+const schemas = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
 ---
 
 <Layout
-  title={post.data.title}
+  title={post.data.seoTitle || post.data.title}
   description={post.data.description}
-  jsonLd={articleSchema}
+  jsonLd={schemas}
   lang={post.data.lang}
 >
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
-    <!-- Breadcrumbs -->
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+    <!-- Breadcrumbs: Home → Guides → Title -->
     <Breadcrumbs
       items={[
-        { label: 'Blog', href: '/blog/' },
-        { label: post.data.category.toUpperCase(), href: `/${post.data.category}/` },
+        { label: 'Guides', href: '/guides/' },
         { label: post.data.title },
       ]}
     />
@@ -115,7 +165,7 @@ const articleSchema = {
       </div>
 
       <h1 class="display-hero text-ink tracking-tight mb-4">
-        {post.data.title}
+        {post.data.h1 || post.data.title}
       </h1>
 
       <p class="text-base sm:text-lg text-body leading-relaxed max-w-3xl">
@@ -133,26 +183,49 @@ const articleSchema = {
       )}
     </header>
 
-    <!-- Main Content Area -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-      <!-- Article Prose (8/12 cols) -->
+    <!-- Main Grid: Article Content (8 cols) + Sidebar (4 cols) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      <!-- Article Prose -->
       <article class="lg:col-span-8 prose dark:prose-invert max-w-none text-body leading-relaxed">
         <div class="article-content space-y-6">
           <Content />
         </div>
       </article>
 
-      <!-- Sidebar (4/12 cols): Related Calculators & Tools -->
-      <aside class="lg:col-span-4 space-y-6">
+      <!-- Sticky Sidebar: Table of Contents & Related Tools -->
+      <aside class="lg:col-span-4 space-y-6 sticky top-20">
+        {tocHeadings.length > 0 && (
+          <nav aria-label="Table of Contents" class="rounded-xl border border-hairline bg-canvas-elevated p-5 shadow-whisper">
+            <div class="flex items-center gap-2 mb-3 pb-2 border-b border-hairline">
+              <svg class="h-3.5 w-3.5 text-link" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
+              </svg>
+              <h2 class="text-xs font-semibold uppercase tracking-wider text-ink">Contents</h2>
+            </div>
+            <ul class="space-y-1.5 text-xs">
+              {tocHeadings.map((h) => (
+                <li>
+                  <a
+                    href={`#${h.slug}`}
+                    class="block py-1 text-body hover:text-link transition-colors truncate"
+                  >
+                    {h.text}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+
         {relatedCalcs.length > 0 && (
-          <div class="rounded-xl border border-hairline bg-canvas-elevated p-5 shadow-whisper sticky top-20">
+          <div class="rounded-xl border border-hairline bg-canvas-elevated p-5 shadow-whisper">
             <div class="flex items-center gap-2 mb-4 pb-3 border-b border-hairline">
               <svg class="h-4 w-4 text-link" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <rect x="4" y="2" width="16" height="20" rx="3" stroke-width="2"></rect>
                 <line x1="8" y1="6" x2="16" y2="6" stroke-width="2"></line>
                 <line x1="16" y1="14" x2="16" y2="18" stroke-width="2"></line>
               </svg>
-              <h3 class="text-xs font-semibold uppercase tracking-wider text-ink">Related Tools</h3>
+              <h2 class="text-xs font-semibold uppercase tracking-wider text-ink">Related Calculators</h2>
             </div>
 
             <div class="space-y-3">
@@ -198,10 +271,11 @@ const articleSchema = {
     font-weight: 600;
     letter-spacing: -0.02em;
     color: var(--color-ink);
-    margin-top: 2rem;
+    margin-top: 2.25rem;
     margin-bottom: 0.75rem;
     padding-bottom: 0.5rem;
     border-bottom: 1px solid var(--color-hairline);
+    scroll-margin-top: 5rem;
   }
 
   .article-content h3 {
@@ -211,6 +285,7 @@ const articleSchema = {
     color: var(--color-ink);
     margin-top: 1.5rem;
     margin-bottom: 0.5rem;
+    scroll-margin-top: 5rem;
   }
 
   .article-content p {
@@ -245,14 +320,18 @@ const articleSchema = {
 
   .article-content blockquote {
     border-left: 3px solid var(--color-link);
-    padding-left: 1rem;
+    padding: 0.85rem 1.15rem;
     margin: 1.5rem 0;
-    font-style: italic;
-    color: var(--color-mute);
+    font-style: normal;
+    color: var(--color-ink);
     background: var(--color-hairline-soft);
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
     border-radius: 0 8px 8px 0;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .article-content blockquote strong {
+    color: var(--color-link);
   }
 
   .article-content code {
@@ -301,6 +380,10 @@ const articleSchema = {
     color: var(--color-link);
     text-decoration: underline;
     text-underline-offset: 2px;
+  }
+
+  .article-content a:hover {
+    color: var(--color-link-deep);
   }
 
   .article-content hr {

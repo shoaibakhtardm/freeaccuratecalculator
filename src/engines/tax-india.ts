@@ -1,4 +1,9 @@
 // src/engines/tax-india.ts
+import {
+  INDIA_TAX_CONFIG_2026,
+  type TaxBracketConfig,
+  type SurchargeTier,
+} from '../data/countries.ts';
 
 export interface IndiaIncomeTaxInput {
   annualSalary: number;
@@ -16,6 +21,7 @@ export interface RegimeTaxBreakdown {
   taxableIncome: number;
   taxBeforeCess: number;
   rebate87A: number;
+  surcharge?: number;
   cess: number;
   netTaxPayable: number;
   effectiveTaxRate: number;
@@ -30,50 +36,73 @@ export interface IndiaTaxComparisonResult {
 }
 
 /**
- * Computes India Income Tax comparison between Old and New Regime (Budget FY 2024-25 / FY 2025-26)
+ * Computes progressive tax across structured bracket slices.
+ * Eliminates hardcoded magic numbers.
+ */
+function computeProgressiveTax(taxableIncome: number, brackets: TaxBracketConfig[]): number {
+  if (taxableIncome <= 0 || !brackets || brackets.length === 0) return 0;
+  let tax = 0;
+  for (const b of brackets) {
+    if (taxableIncome > b.min) {
+      const span = b.max !== null ? Math.min(taxableIncome, b.max) - b.min : taxableIncome - b.min;
+      if (span > 0) {
+        tax += span * b.rate;
+      }
+    }
+  }
+  return tax;
+}
+
+/**
+ * Evaluates tiered surcharges according to statutory thresholds.
+ */
+function computeSurcharge(tax: number, taxableIncome: number, tiers?: SurchargeTier[]): number {
+  if (!tiers || tiers.length === 0 || taxableIncome <= 0 || tax <= 0) return 0;
+  let surchargeRate = 0;
+  for (const tier of tiers) {
+    if (taxableIncome > tier.min) {
+      surchargeRate = tier.rate;
+    }
+  }
+  return tax * surchargeRate;
+}
+
+/**
+ * Computes India Income Tax comparison between Old and New Regime for FY 2026–27 (AY 2027–28).
+ * Uses authoritative rules from INDIA_TAX_CONFIG_2026:
+ * - Verified Section 115BAC slabs
+ * - Salaried Standard Deduction (₹75,000 New / ₹50,000 Old)
+ * - Section 87A rebate rules
+ * - Statutory Surcharge tiers
+ * - Mandatory 4% Health & Education Cess
  */
 export function calculateIndiaIncomeTax(input: IndiaIncomeTaxInput): IndiaTaxComparisonResult {
   const grossSalary = Math.max(0, Number(input.annualSalary) || 0);
   const otherIncome = Math.max(0, Number(input.otherIncome) || 0);
   const grossTotal = grossSalary + otherIncome;
 
+  const cessRate = INDIA_TAX_CONFIG_2026.cessRate ?? 0.04;
+  const newRegimeConfig = INDIA_TAX_CONFIG_2026.regimes!.new;
+  const oldRegimeConfig = INDIA_TAX_CONFIG_2026.regimes!.old;
+
   // 1. NEW REGIME COMPUTATION
-  // Standard Deduction: ₹75,000
-  const newStdDeduction = grossSalary > 0 ? Math.min(75000, grossSalary) : 0;
+  const newStdLimit = newRegimeConfig.standardDeduction; // ₹75,000
+  const newStdDeduction = grossSalary > 0 ? Math.min(newStdLimit, grossSalary) : 0;
   const newTaxableIncome = Math.max(0, grossTotal - newStdDeduction);
 
-  let newTax = 0;
-  if (newTaxableIncome > 1500000) {
-    newTax += (newTaxableIncome - 1500000) * 0.30;
-    newTax += 300000 * 0.20; // 12L to 15L
-    newTax += 200000 * 0.15; // 10L to 12L
-    newTax += 300000 * 0.10; // 7L to 10L
-    newTax += 400000 * 0.05; // 3L to 7L
-  } else if (newTaxableIncome > 1200000) {
-    newTax += (newTaxableIncome - 1200000) * 0.20;
-    newTax += 200000 * 0.15;
-    newTax += 300000 * 0.10;
-    newTax += 400000 * 0.05;
-  } else if (newTaxableIncome > 1000000) {
-    newTax += (newTaxableIncome - 1000000) * 0.15;
-    newTax += 300000 * 0.10;
-    newTax += 400000 * 0.05;
-  } else if (newTaxableIncome > 700000) {
-    newTax += (newTaxableIncome - 700000) * 0.10;
-    newTax += 400000 * 0.05;
-  } else if (newTaxableIncome > 300000) {
-    newTax += (newTaxableIncome - 300000) * 0.05;
-  }
+  let newTaxBeforeRebate = computeProgressiveTax(newTaxableIncome, newRegimeConfig.brackets);
 
-  // Section 87A rebate for New Regime: up to ₹7,00,000 taxable income receives 100% rebate (up to ₹25,000)
+  // Section 87A rebate for New Regime: taxable income up to threshold gets full rebate
   let newRebate = 0;
-  if (newTaxableIncome <= 700000) {
-    newRebate = newTax;
-    newTax = 0;
+  let newTaxAfterRebate = newTaxBeforeRebate;
+  if (newRegimeConfig.rebate && newTaxableIncome <= newRegimeConfig.rebate.threshold) {
+    newRebate = Math.min(newTaxBeforeRebate, newRegimeConfig.rebate.maxAmount);
+    newTaxAfterRebate = Math.max(0, newTaxBeforeRebate - newRebate);
   }
 
-  const newCess = Math.round(newTax * 0.04);
-  const newNetTax = Math.round(newTax + newCess);
+  const newSurcharge = computeSurcharge(newTaxAfterRebate, newTaxableIncome, newRegimeConfig.surchargeTiers);
+  const newCess = Math.round((newTaxAfterRebate + newSurcharge) * cessRate);
+  const newNetTax = Math.round(newTaxAfterRebate + newSurcharge + newCess);
   const newMonthlyTakeHome = Math.round((grossTotal - newNetTax) / 12);
 
   const newBreakdown: RegimeTaxBreakdown = {
@@ -81,8 +110,9 @@ export function calculateIndiaIncomeTax(input: IndiaIncomeTaxInput): IndiaTaxCom
     grossTotalIncome: Math.round(grossTotal),
     totalDeductions: Math.round(newStdDeduction),
     taxableIncome: Math.round(newTaxableIncome),
-    taxBeforeCess: Math.round(newTax),
+    taxBeforeCess: Math.round(newTaxAfterRebate + newSurcharge),
     rebate87A: Math.round(newRebate),
+    surcharge: Math.round(newSurcharge),
     cess: newCess,
     netTaxPayable: newNetTax,
     effectiveTaxRate: grossTotal > 0 ? Number(((newNetTax / grossTotal) * 100).toFixed(2)) : 0,
@@ -90,36 +120,33 @@ export function calculateIndiaIncomeTax(input: IndiaIncomeTaxInput): IndiaTaxCom
   };
 
   // 2. OLD REGIME COMPUTATION
-  const oldStdDeduction = grossSalary > 0 ? Math.min(50000, grossSalary) : 0;
-  const sec80C = Math.min(150000, Math.max(0, Number(input.section80C) || 0));
-  const sec80D = Math.min(100000, Math.max(0, Number(input.section80D) || 0));
+  const oldStdLimit = oldRegimeConfig.standardDeduction; // ₹50,000
+  const oldStdDeduction = grossSalary > 0 ? Math.min(oldStdLimit, grossSalary) : 0;
+
+  const sec80CLimit = INDIA_TAX_CONFIG_2026.limits?.section80C ?? 150000;
+  const sec80DLimit = INDIA_TAX_CONFIG_2026.limits?.section80D ?? 100000;
+
+  const sec80C = Math.min(sec80CLimit, Math.max(0, Number(input.section80C) || 0));
+  const sec80D = Math.min(sec80DLimit, Math.max(0, Number(input.section80D) || 0));
   const hra = Math.max(0, Number(input.hraExemption) || 0);
   const otherDed = Math.max(0, Number(input.otherDeductions) || 0);
 
   const totalOldDeductions = oldStdDeduction + sec80C + sec80D + hra + otherDed;
   const oldTaxableIncome = Math.max(0, grossTotal - totalOldDeductions);
 
-  let oldTax = 0;
-  if (oldTaxableIncome > 1000000) {
-    oldTax += (oldTaxableIncome - 1000000) * 0.30;
-    oldTax += 500000 * 0.20; // 5L to 10L
-    oldTax += 250000 * 0.05; // 2.5L to 5L
-  } else if (oldTaxableIncome > 500000) {
-    oldTax += (oldTaxableIncome - 500000) * 0.20;
-    oldTax += 250000 * 0.05;
-  } else if (oldTaxableIncome > 250000) {
-    oldTax += (oldTaxableIncome - 250000) * 0.05;
-  }
+  let oldTaxBeforeRebate = computeProgressiveTax(oldTaxableIncome, oldRegimeConfig.brackets);
 
-  // Section 87A rebate for Old Regime: up to ₹5,00,000 taxable income receives 100% rebate (up to ₹12,500)
+  // Section 87A rebate for Old Regime
   let oldRebate = 0;
-  if (oldTaxableIncome <= 500000) {
-    oldRebate = oldTax;
-    oldTax = 0;
+  let oldTaxAfterRebate = oldTaxBeforeRebate;
+  if (oldRegimeConfig.rebate && oldTaxableIncome <= oldRegimeConfig.rebate.threshold) {
+    oldRebate = Math.min(oldTaxBeforeRebate, oldRegimeConfig.rebate.maxAmount);
+    oldTaxAfterRebate = Math.max(0, oldTaxBeforeRebate - oldRebate);
   }
 
-  const oldCess = Math.round(oldTax * 0.04);
-  const oldNetTax = Math.round(oldTax + oldCess);
+  const oldSurcharge = computeSurcharge(oldTaxAfterRebate, oldTaxableIncome, oldRegimeConfig.surchargeTiers);
+  const oldCess = Math.round((oldTaxAfterRebate + oldSurcharge) * cessRate);
+  const oldNetTax = Math.round(oldTaxAfterRebate + oldSurcharge + oldCess);
   const oldMonthlyTakeHome = Math.round((grossTotal - oldNetTax) / 12);
 
   const oldBreakdown: RegimeTaxBreakdown = {
@@ -127,8 +154,9 @@ export function calculateIndiaIncomeTax(input: IndiaIncomeTaxInput): IndiaTaxCom
     grossTotalIncome: Math.round(grossTotal),
     totalDeductions: Math.round(totalOldDeductions),
     taxableIncome: Math.round(oldTaxableIncome),
-    taxBeforeCess: Math.round(oldTax),
+    taxBeforeCess: Math.round(oldTaxAfterRebate + oldSurcharge),
     rebate87A: Math.round(oldRebate),
+    surcharge: Math.round(oldSurcharge),
     cess: oldCess,
     netTaxPayable: oldNetTax,
     effectiveTaxRate: grossTotal > 0 ? Number(((oldNetTax / grossTotal) * 100).toFixed(2)) : 0,
@@ -161,7 +189,8 @@ export function calculatePPF(
   interestRate: number = 7.1,
   years: number = 15
 ): PPFResult {
-  const p = Math.min(150000, Math.max(500, Number(annualDeposit) || 0));
+  const maxDeposit = INDIA_TAX_CONFIG_2026.limits?.section80C ?? 150000;
+  const p = Math.min(maxDeposit, Math.max(500, Number(annualDeposit) || 0));
   const rate = Math.max(0, Number(interestRate) || 7.1) / 100;
   const tenure = Math.max(15, Math.round(Number(years) || 15));
 
@@ -194,7 +223,7 @@ export interface EPFResult {
 
 /**
  * Calculates Employees' Provident Fund (EPF)
- * 12% employee + 3.67% employer EPF at 8.25% interest rate with annual salary increase
+ * 12% employee + 3.67% employer EPF at statutory interest rate with annual salary increase
  */
 export function calculateEPF(
   monthlyBasicDA: number,

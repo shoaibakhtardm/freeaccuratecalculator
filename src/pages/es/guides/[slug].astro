@@ -1,0 +1,162 @@
+---
+// src/pages/es/guides/[slug].astro
+import { getCollection, render } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/common/Breadcrumbs.astro';
+import { CALCULATORS } from '../../../data/calculatorRegistry';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('guides');
+  return posts
+    .filter((post) => post.data.lang === 'es' || post.id.startsWith('es/'))
+    .map((post) => ({
+      params: { slug: post.id.replace(/\.(md|mdx)$/, '').replace(/^es\//, '') },
+      props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+
+// Filter meaningful H2 headings for Table of Contents
+const tocHeadings = headings.filter((h) => h.depth === 2);
+
+// Map related calculators
+const relatedCalcs = (post.data.relatedCalculators || [])
+  .map((calcId: string) => {
+    const found = CALCULATORS.find((c) => c.id === calcId);
+    if (found) {
+      return {
+        id: found.id,
+        name: found.name,
+        href: `/${found.category}/${found.id}/`,
+        description: found.description,
+        badge: found.badge,
+      };
+    }
+    return null;
+  })
+  .filter(Boolean);
+
+// Structured Data: Article Schema
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: post.data.h1 || post.data.title,
+  description: post.data.description,
+  inLanguage: 'es',
+  author: {
+    '@type': 'Organization',
+    name: post.data.author || 'Free Accurate Calculator',
+    url: 'https://freeaccuratecalculator.com/about/',
+  },
+  publisher: {
+    '@type': 'Organization',
+    name: 'Free Accurate Calculator',
+    url: 'https://freeaccuratecalculator.com/',
+  },
+  datePublished: post.data.pubDate.toISOString(),
+  dateModified: (post.data.updatedDate || post.data.pubDate).toISOString(),
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': Astro.url.href,
+  },
+};
+---
+
+<Layout
+  title={post.data.seoTitle || post.data.title}
+  description={post.data.description}
+  jsonLd={articleSchema}
+  lang="es"
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <!-- Breadcrumbs -->
+    <Breadcrumbs
+      items={[
+        { label: 'Inicio', href: '/es/' },
+        { label: 'Guías', href: '/es/guides/' },
+        { label: post.data.title },
+      ]}
+    />
+
+    <!-- Header Section -->
+    <header class="mt-6 mb-8 border-b border-hairline pb-8">
+      <div class="flex items-center gap-2 mb-3">
+        <span class="mono-eyebrow text-link font-semibold uppercase text-xs">
+          {post.data.category}
+        </span>
+        <span class="h-1 w-1 rounded-full bg-faint"></span>
+        <span class="text-xs text-mute font-mono">
+          {new Intl.DateTimeFormat('es-ES', { month: 'long', day: 'numeric', year: 'numeric' }).format(post.data.pubDate)}
+        </span>
+      </div>
+
+      <h1 class="display-hero text-ink tracking-tight mb-4 text-2xl sm:text-4xl font-bold">
+        {post.data.h1 || post.data.title}
+      </h1>
+
+      <p class="text-base sm:text-lg text-body leading-relaxed max-w-3xl">
+        {post.data.description}
+      </p>
+
+      <div class="mt-4 flex items-center gap-3 text-xs text-mute font-mono">
+        <span>Por {post.data.author}</span>
+      </div>
+    </header>
+
+    <!-- Table of Contents -->
+    {tocHeadings.length > 0 && (
+      <div class="mb-10 rounded-xl border border-hairline bg-canvas-elevated p-6 shadow-whisper">
+        <h2 class="text-sm font-semibold uppercase tracking-wider text-ink font-mono mb-3">
+          Índice de Contenidos
+        </h2>
+        <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-body">
+          {tocHeadings.map((heading) => (
+            <li>
+              <a
+                href={`#${heading.slug}`}
+                class="hover:text-link transition-colors flex items-center gap-1.5"
+              >
+                <span class="text-mute text-xs">#</span> {heading.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+
+    <!-- Markdown Content Body -->
+    <article class="prose prose-slate dark:prose-invert max-w-none prose-headings:scroll-mt-20 prose-headings:tracking-tight prose-a:text-link hover:prose-a:underline prose-code:font-mono text-body leading-relaxed space-y-6">
+      <Content />
+    </article>
+
+    <!-- Related Calculators -->
+    {relatedCalcs.length > 0 && (
+      <div class="mt-16 border-t border-hairline pt-10">
+        <h2 class="text-xl font-bold text-ink mb-6">Calculadoras Relacionadas</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {relatedCalcs.map((calc) => (
+            <a
+              href={calc.href}
+              class="group rounded-xl border border-hairline bg-canvas-elevated p-4 hover:border-link/40 transition-all flex flex-col justify-between shadow-whisper"
+            >
+              <div>
+                <span class="text-[10px] font-mono uppercase text-link font-semibold">{calc.badge}</span>
+                <h3 class="text-sm font-semibold text-ink group-hover:text-link transition-colors mt-1">
+                  {calc.name}
+                </h3>
+                <p class="text-xs text-mute mt-1.5 line-clamp-2 leading-relaxed">
+                  {calc.description}
+                </p>
+              </div>
+              <span class="text-xs font-semibold text-link mt-3 flex items-center gap-1">
+                Abrir Calculadora →
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+  </div>
+</Layout>

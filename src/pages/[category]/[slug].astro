@@ -11,7 +11,7 @@ import { CALCULATORS, CATEGORY_METADATA, type CalculatorEntry } from '../../data
 
 export async function getStaticPaths() {
   // Exclude calculators that already have custom dedicated page files
-  const dedicatedPages = new Set(['percentage-calculator', 'emi-calculator', 'bmi-calculator']);
+  const dedicatedPages = new Set(['percentage-calculator', 'emi-calculator', 'bmi-calculator', 'income-tax-calculator', 'sip-calculator']);
 
   return CALCULATORS.filter((c) => !dedicatedPages.has(c.id)).map((calc) => {
     return {
@@ -124,7 +124,8 @@ const relatedCalculators = CALCULATORS.filter((c) => c.category === calc.categor
                     min={inp.min}
                     max={inp.max}
                     value={inp.defaultValue}
-                    class="calc-input w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+                    data-is-currency={isCurrencyInput ? 'true' : 'false'}
+                    class={`calc-input w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link ${isCurrencyInput ? 'calc-currency-input' : ''}`}
                   />
                   {inp.unit && (
                     <span
@@ -314,12 +315,32 @@ const relatedCalculators = CALCULATORS.filter((c) => c.category === calc.categor
       inp.addEventListener('change', calculate);
     });
 
+    let lastCurrency = getActiveCurrencyState().code;
+
     // Listen for global currency changes
     window.addEventListener('currencychange', (e) => {
+      const detail = e.detail || {};
+      const newCurrency = detail.currency;
+      const prevCurrency = detail.prevCurrency || lastCurrency;
+
+      // Real numeric conversion on currency input values
+      if (isCurrencyCalc && prevCurrency && newCurrency && prevCurrency !== newCurrency && typeof window.facConvertCurrency === 'function') {
+        document.querySelectorAll('.calc-currency-input').forEach((inp) => {
+          const rawVal = parseFloat(inp.value);
+          if (!isNaN(rawVal) && rawVal > 0) {
+            const converted = window.facConvertCurrency(rawVal, prevCurrency, newCurrency);
+            const dec = newCurrency === 'JPY' ? 0 : 2;
+            inp.value = Number(converted.toFixed(dec));
+          }
+        });
+      }
+
+      lastCurrency = newCurrency;
+
       syncCurrencyUI({
-        code: e.detail.currency,
-        symbol: e.detail.symbol,
-        isIndian: e.detail.isIndian,
+        code: detail.currency,
+        symbol: detail.symbol,
+        isIndian: detail.isIndian,
       });
       calculate();
     });

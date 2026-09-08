@@ -50,23 +50,30 @@ const calculators = defineCollection({
   }),
 });
 
-// Blog Collection
-const blog = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
+// Guides Collection (Educational Guides & Mathematical Proofs)
+const guides = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/guides' }),
   schema: z.object({
     title: z.string(),
+    seoTitle: z.string().optional(),
+    h1: z.string().optional(),
     description: z.string(),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
-    author: z.string().default('Editorial Team'),
+    author: z.string().default('Quantitative Editorial Team'),
     category: z.enum(['math', 'finance', 'health', 'everyday', 'guides']),
     tags: z.array(z.string()).default([]),
     lang: z.enum(['en', 'es', 'fr', 'hi']).default('en'),
     relatedCalculators: z.array(z.string()).default([]),
+    faqs: z.array(z.object({
+      question: z.string(),
+      answer: z.string(),
+    })).optional(),
   }),
 });
 
 export const collections = {
   calculators,
-  blog,
+  guides,
+  blog: guides, // Backward-compatibility alias
 };

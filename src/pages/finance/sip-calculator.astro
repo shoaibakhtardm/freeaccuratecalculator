@@ -1,0 +1,540 @@
+---
+// src/pages/finance/sip-calculator.astro
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import ResultDisplay from '../../components/calculator/ResultDisplay.astro';
+import FormulaSection from '../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../components/calculator/WorkedExample.astro';
+import FAQSection from '../../components/calculator/FAQSection.astro';
+import HistoryDrawer from '../../components/calculator/HistoryDrawer.astro';
+import CurrencySwitcher from '../../components/common/CurrencySwitcher.astro';
+
+const faqs = [
+  {
+    question: 'What is a Systematic Investment Plan (SIP)?',
+    answer:
+      'A Systematic Investment Plan (SIP) is a disciplined investment strategy where you deposit a fixed sum at regular intervals (typically monthly) into a mutual fund scheme. SIPs take advantage of rupee/dollar-cost averaging and compounding over long horizons.',
+  },
+  {
+    question: 'Why does contribution timing matter (Beginning vs End of month)?',
+    answer:
+      'When contributions are made at the beginning of each month (Annuity Due), every installment earns an additional full month of compounding growth compared to contributions made at the end of the month (Ordinary Annuity). In India, mutual fund SIPs standardly debit on scheduled dates near the beginning of the cycle, compounding as Annuity Due.',
+  },
+  {
+    question: 'How is the SIP future value calculated?',
+    answer:
+      'For beginning-of-period deposits (Annuity Due): FV = P × [((1 + i)ⁿ - 1) ÷ i] × (1 + i). For end-of-period deposits (Ordinary Annuity): FV = P × [((1 + i)ⁿ - 1) ÷ i], where P is monthly installment, i is monthly return rate, and n is total months.',
+  },
+  {
+    question: 'What expected return rate should I use for equity mutual funds?',
+    answer:
+      'Historical long-term annualized returns for broad-market equity index funds have averaged between 11% and 14% in emerging markets like India (Nifty 50) and 8% to 10% in mature markets like the US (S&P 500). Market returns are not guaranteed.',
+  },
+];
+
+const relatedCalculators = [
+  { title: 'Step-Up SIP Calculator', href: '/finance/step-up-sip-calculator/', badge: 'Wealth' },
+  { title: 'Compound Interest', href: '/finance/compound-interest-calculator/' },
+  { title: 'Lumpsum Calculator', href: '/finance/lumpsum-calculator/' },
+  { title: 'EMI Calculator', href: '/finance/emi-calculator/' },
+];
+
+const formulaVariables = [
+  { symbol: 'FV', meaning: 'Future Value (accumulated maturity corpus)' },
+  { symbol: 'P', meaning: 'Monthly periodic investment installment' },
+  { symbol: 'i', meaning: 'Monthly periodic interest rate (Annual rate ÷ 12 ÷ 100)' },
+  { symbol: 'n', meaning: 'Total number of monthly installments (Years × 12)' },
+  { symbol: '(1 + i)', meaning: 'Annuity Due factor applied when contributions occur at the beginning of the period' },
+];
+---
+
+<CalculatorLayout
+  title="SIP Calculator — Mutual Fund Systematic Investment Plan Growth Online"
+  metaDescription="Calculate your SIP maturity corpus, invested capital, and wealth gain with flexible beginning vs end of month contribution timing and international currency support."
+  h1="SIP Calculator"
+  subtitle="Calculate projected maturity wealth, invested capital, and compounding returns on monthly mutual fund investments."
+  category={{ label: 'Finance', href: '/finance/' }}
+  calculatorName="SIP Calculator"
+  relatedCalculators={relatedCalculators}
+>
+  <!-- Transparency Notice Card -->
+  <div class="rounded-[12px] border border-cyan/30 bg-cyan/5 p-4 sm:p-5 text-xs space-y-2">
+    <div class="flex items-center gap-2 font-semibold text-cyan">
+      <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span class="font-mono uppercase tracking-wider text-[11px]">Compounding Transparency & Regional Timing Standards</span>
+    </div>
+    <p class="text-body leading-relaxed">
+      Calculations utilize strict compound interest annuity mechanics with explicit <strong>Contribution Timing</strong> configuration. In India, mutual fund SIPs standardly execute at the <strong>beginning of the month</strong> (Annuity Due), which maximizes compounding by capturing a full month's return on every installment. In the US and international markets, periodic contributions conventionally occur at the <strong>end of the month</strong> (Ordinary Annuity). You can freely toggle between both modes below.
+    </p>
+    <div class="flex flex-wrap items-center gap-4 text-[11px] font-mono text-mute pt-1">
+      <span>Zero Division Safe</span>
+      <span>•</span>
+      <span>SEBI / AMFI Mutual Fund Mathematical Standards</span>
+      <span>•</span>
+      <span>Pure Client-Side Execution</span>
+    </div>
+  </div>
+
+  <!-- Calculator Main Box -->
+  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+    <!-- Country & Currency Bar -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4 text-xs">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-2">
+          <label for="sip-country-select" class="mono-eyebrow text-mute">Country:</label>
+          <select
+            id="sip-country-select"
+            class="rounded-[6px] border border-hairline bg-canvas px-3 py-1.5 min-h-[44px] sm:min-h-[32px] font-mono text-xs text-ink focus:border-link focus:outline-none"
+          >
+            <option value="IN" selected>🇮🇳 India (INR ₹) — Defaults to Beginning of Month</option>
+            <option value="US">🇺🇸 United States (USD $) — Defaults to End of Month</option>
+            <option value="GB">🇬🇧 United Kingdom (GBP £)</option>
+            <option value="EU">🇪🇺 Eurozone (EUR €)</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="mono-eyebrow text-mute">Currency:</span>
+          <CurrencySwitcher selectId="sip-currency-select" className="w-auto" showFullName={false} />
+        </div>
+      </div>
+
+      <!-- Quick Preset Chips -->
+      <div id="sip-presets" class="flex items-center gap-1.5 overflow-x-auto text-[11px] font-medium text-mute pb-1 sm:pb-0">
+        <span class="select-none shrink-0">Presets:</span>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="2500">₹2.5k</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="5000">₹5k</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="10000">₹10k</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="25000">₹25k</button>
+      </div>
+    </div>
+
+    <!-- Inputs Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <!-- 1. Monthly Investment Amount -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
+          <label for="sip-monthly-amount">Monthly Investment</label>
+          <span id="sip-amount-display" class="font-mono text-link text-sm">₹ 10,000</span>
+        </div>
+        <div class="relative flex items-center">
+          <span id="sip-symbol-addon" class="absolute left-3.5 text-sm font-mono text-mute select-none">₹</span>
+          <input
+            id="sip-monthly-amount"
+            type="number"
+            min="100"
+            step="500"
+            value="10000"
+            class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas py-2.5 pl-8 pr-3 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+        <input
+          id="sip-amount-slider"
+          type="range"
+          min="500"
+          max="100000"
+          step="500"
+          value="10000"
+          class="w-full accent-link cursor-pointer h-5"
+        />
+      </div>
+
+      <!-- 2. Expected Annual Return Rate (%) -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
+          <label for="sip-return-rate">Expected Return Rate (% P.A.)</label>
+          <span id="sip-rate-display" class="font-mono text-cyan text-sm">12.00%</span>
+        </div>
+        <div class="relative flex items-center">
+          <input
+            id="sip-return-rate"
+            type="number"
+            min="0"
+            max="30"
+            step="0.5"
+            value="12.0"
+            class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas py-2.5 pl-3 pr-8 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+          <span class="absolute right-3.5 text-sm font-mono text-mute select-none">%</span>
+        </div>
+        <input
+          id="sip-rate-slider"
+          type="range"
+          min="1"
+          max="30"
+          step="0.5"
+          value="12.0"
+          class="w-full accent-cyan cursor-pointer h-5"
+        />
+      </div>
+
+      <!-- 3. Investment Horizon (Years) -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
+          <label for="sip-years">Investment Horizon (Years)</label>
+          <span id="sip-years-display" class="font-mono text-violet text-sm">10 Years (120 Mo)</span>
+        </div>
+        <input
+          id="sip-years"
+          type="number"
+          min="1"
+          max="40"
+          step="1"
+          value="10"
+          class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas py-2.5 px-3 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+        />
+        <input
+          id="sip-years-slider"
+          type="range"
+          min="1"
+          max="40"
+          step="1"
+          value="10"
+          class="w-full accent-violet cursor-pointer h-5"
+        />
+      </div>
+
+      <!-- 4. Contribution Timing Selector (Strict Rule 4) -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
+          <label for="sip-timing-select">Contribution Timing</label>
+          <span id="timing-badge" class="rounded bg-link/10 text-link px-2 py-0.5 text-[11px] font-mono">Annuity Due (India Standard)</span>
+        </div>
+        <select
+          id="sip-timing-select"
+          class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none"
+        >
+          <option value="beginning" selected>Beginning of Month (Annuity Due — Higher Return)</option>
+          <option value="end">End of Month (Ordinary Annuity — US Convention)</option>
+        </select>
+        <p class="text-[11px] text-mute leading-tight">
+          Beginning-of-month deposits earn return across all 30 days of the first month.
+        </p>
+      </div>
+    </div>
+
+    <!-- Primary Results Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+      <ResultDisplay
+        id="sip-total-result"
+        label="Expected Maturity Corpus"
+        prefix="₹ "
+        initialValue={2323391}
+        decimals={0}
+        secondary="Total Accumulated Wealth"
+        accent="cyan"
+      />
+      <ResultDisplay
+        id="sip-invested-result"
+        label="Total Capital Invested"
+        prefix="₹ "
+        initialValue={1200000}
+        decimals={0}
+        secondary="120 Monthly Installments"
+        accent="link"
+      />
+      <ResultDisplay
+        id="sip-gain-result"
+        label="Estimated Wealth Gain"
+        prefix="₹ "
+        initialValue={1123391}
+        decimals={0}
+        secondary="Pure Compounded Growth"
+        accent="violet"
+      />
+    </div>
+
+    <!-- Growth Distribution Spectrum Bar -->
+    <div class="space-y-2 pt-1">
+      <div class="flex items-center justify-between text-xs font-mono">
+        <span class="text-link">Invested: <span id="bar-invested-label">₹ 12,00,000 (51.6%)</span></span>
+        <span class="text-cyan">Wealth Gain: <span id="bar-gain-label">₹ 11,23,391 (48.4%)</span></span>
+      </div>
+      <div class="h-3 w-full overflow-hidden rounded-full bg-canvas border border-hairline flex">
+        <div id="spectrum-invested" class="h-full bg-link transition-all duration-300" style="width: 51.6%;"></div>
+        <div id="spectrum-gain" class="h-full bg-cyan transition-all duration-300" style="width: 48.4%;"></div>
+      </div>
+    </div>
+
+    <!-- Annual Accumulation Schedule Table -->
+    <div class="space-y-3 pt-2">
+      <h3 class="text-xs font-semibold uppercase font-mono tracking-wider text-mute">Year-by-Year Wealth Progression</h3>
+      <div class="overflow-x-auto rounded-[8px] border border-hairline bg-canvas">
+        <table class="w-full text-left text-xs font-mono">
+          <thead class="border-b border-hairline bg-canvas-elevated text-mute">
+            <tr>
+              <th class="py-2.5 px-3">Year</th>
+              <th class="py-2.5 px-3 text-right">Annual Deposit</th>
+              <th class="py-2.5 px-3 text-right">Total Invested</th>
+              <th class="py-2.5 px-3 text-right">Interest Earned</th>
+              <th class="py-2.5 px-3 text-right">Ending Corpus</th>
+            </tr>
+          </thead>
+          <tbody id="sip-schedule-body" class="divide-y divide-hairline text-ink">
+            <!-- Dynamic rows populated by script -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <FormulaSection
+    title="SIP Compounding Mathematics & Annuity Mechanics"
+    expression="Annuity Due: FV = P × [((1 + i)ⁿ - 1) ÷ i] × (1 + i) | Ordinary Annuity: FV = P × [((1 + i)ⁿ - 1) ÷ i]"
+    explanation="For beginning-of-period investments (India standard), the entire series receives an extra period of compounding interest (1 + i). For end-of-period investments (US standard), deposits begin accruing return only in subsequent months. Zero-interest scenarios safely reduce to total invested capital P × n."
+    variables={formulaVariables}
+  />
+
+  <WorkedExample
+    title="Worked Example: ₹10,000 Monthly SIP for 10 Years at 12%"
+    scenario="An investor commits ₹10,000 on the 1st day of each month (Annuity Due) for 10 continuous years into a diversified equity fund averaging 12% annual return."
+    steps={[
+      {
+        number: 1,
+        title: 'Calculate Installment Parameters',
+        description: 'Monthly interest rate i = 12% ÷ 12 = 1% = 0.01. Total number of installments n = 10 × 12 = 120.',
+        mathExpression: 'i = 0.01, n = 120',
+      },
+      {
+        number: 2,
+        title: 'Compute Total Principal Invested',
+        description: '120 payments × ₹10,000 = ₹12,00,000 total capital contributed.',
+        mathExpression: 'Total Invested = ₹12,00,000',
+      },
+      {
+        number: 3,
+        title: 'Apply Annuity Due Compounding Formula',
+        description: 'FV = 10,000 × [((1.01)¹²⁰ - 1) ÷ 0.01] × 1.01 = ₹23,23,391.',
+        mathExpression: 'Maturity Corpus = ₹23,23,391',
+      },
+    ]}
+    conclusion="Total accumulated wealth is ₹23,23,391, generating ₹11,23,391 in compounded wealth gain (+93.6% gain on invested capital)."
+  />
+
+  <FAQSection faqs={faqs} />
+  <HistoryDrawer />
+</CalculatorLayout>
+
+<script>
+  import { calculateSIP, type ContributionTiming, getDefaultContributionTiming } from '../../engines/investment';
+  import { promptCurrencyConversion } from '../../utils/currency';
+  import { getCountryByCode } from '../../data/countries';
+
+  let activeCountryCode = 'IN';
+  let activeCurrencyCode = 'INR';
+
+  const countrySelect = document.getElementById('sip-country-select') as HTMLSelectElement;
+  const currencySelect = document.getElementById('sip-currency-select') as HTMLSelectElement;
+  const timingSelect = document.getElementById('sip-timing-select') as HTMLSelectElement;
+  const timingBadge = document.getElementById('timing-badge');
+  const amountInput = document.getElementById('sip-monthly-amount') as HTMLInputElement;
+  const amountSlider = document.getElementById('sip-amount-slider') as HTMLInputElement;
+  const rateInput = document.getElementById('sip-return-rate') as HTMLInputElement;
+  const rateSlider = document.getElementById('sip-rate-slider') as HTMLInputElement;
+  const yearsInput = document.getElementById('sip-years') as HTMLInputElement;
+  const yearsSlider = document.getElementById('sip-years-slider') as HTMLInputElement;
+
+  const amountDisplay = document.getElementById('sip-amount-display');
+  const rateDisplay = document.getElementById('sip-rate-display');
+  const yearsDisplay = document.getElementById('sip-years-display');
+  const symbolAddon = document.getElementById('sip-symbol-addon');
+  const presetsContainer = document.getElementById('sip-presets');
+  const scheduleBody = document.getElementById('sip-schedule-body');
+
+  function updatePresets() {
+    if (!presetsContainer) return;
+    if (activeCountryCode === 'IN') {
+      presetsContainer.innerHTML = `
+        <span class="select-none shrink-0">Presets:</span>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="2500">₹2.5k</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="5000">₹5k</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="10000">₹10k</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="25000">₹25k</button>
+      `;
+    } else {
+      presetsContainer.innerHTML = `
+        <span class="select-none shrink-0">Presets:</span>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="250">$250</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="500">$500</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="1000">$1k</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="2500">$2.5k</button>
+      `;
+    }
+
+    presetsContainer.querySelectorAll('.preset-chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const val = (chip as HTMLElement).dataset.amount || '0';
+        if (amountInput) {
+          amountInput.value = val;
+          if (amountSlider) amountSlider.value = val;
+          recalculate();
+        }
+      });
+    });
+  }
+
+  function handleCountrySwitch(newCode: string) {
+    const targetCountry = getCountryByCode(newCode);
+    const prevCurrency = activeCurrencyCode;
+    const nextCurrency = targetCountry.currency;
+
+    const currentAmount = parseFloat(amountInput.value) || 0;
+
+    // Strict Rule 5 Prompt Pattern
+    const decision = promptCurrencyConversion({
+      currentValue: currentAmount,
+      previousCurrency: prevCurrency,
+      newCurrency: nextCurrency,
+    });
+
+    amountInput.value = decision.value.toString();
+    if (amountSlider) amountSlider.value = decision.value.toString();
+
+    activeCountryCode = newCode;
+    activeCurrencyCode = nextCurrency;
+
+    if (symbolAddon) {
+      symbolAddon.textContent = targetCountry.currencySymbol;
+    }
+
+    if (currencySelect) {
+      currencySelect.value = nextCurrency;
+    }
+
+    // Strict Rule 4: Default timing to 'beginning' for India, 'end' for US/others
+    const defaultTiming = getDefaultContributionTiming(newCode);
+    if (timingSelect) {
+      timingSelect.value = defaultTiming;
+    }
+    updateTimingBadge();
+    updatePresets();
+    recalculate();
+  }
+
+  function updateTimingBadge() {
+    if (!timingBadge || !timingSelect) return;
+    const isBeg = timingSelect.value === 'beginning';
+    timingBadge.textContent = isBeg ? 'Annuity Due (India Standard)' : 'Ordinary Annuity (US Standard)';
+    timingBadge.className = isBeg
+      ? 'rounded bg-link/10 text-link px-2 py-0.5 text-[11px] font-mono'
+      : 'rounded bg-violet/10 text-violet px-2 py-0.5 text-[11px] font-mono';
+  }
+
+  function recalculate() {
+    const p = Math.max(0, parseFloat(amountInput?.value || '0') || 0);
+    const rate = Math.max(0, parseFloat(rateInput?.value || '0') || 0);
+    const years = Math.max(0, parseFloat(yearsInput?.value || '0') || 0);
+    const timing = (timingSelect?.value || 'beginning') as ContributionTiming;
+
+    const country = getCountryByCode(activeCountryCode);
+    const sym = country.currencySymbol;
+
+    if (amountDisplay) amountDisplay.textContent = `${sym} ${p.toLocaleString()}`;
+    if (rateDisplay) rateDisplay.textContent = `${rate.toFixed(2)}%`;
+    if (yearsDisplay) yearsDisplay.textContent = `${years} Years (${Math.round(years * 12)} Mo)`;
+
+    const res = calculateSIP(p, rate, years, timing);
+
+    updateElementText('sip-total-result-value', `${sym} ${res.totalValue.toLocaleString()}`);
+    updateElementText('sip-invested-result-value', `${sym} ${res.investedAmount.toLocaleString()}`);
+    updateElementText('sip-gain-result-value', `${sym} ${res.estimatedReturns.toLocaleString()}`);
+
+    // Update spectrum bar
+    const total = res.totalValue || 1;
+    const investedPct = Math.min(100, Math.max(0, (res.investedAmount / total) * 100));
+    const gainPct = Math.max(0, 100 - investedPct);
+
+    const specInvested = document.getElementById('spectrum-invested');
+    const specGain = document.getElementById('spectrum-gain');
+    if (specInvested) specInvested.style.width = `${investedPct.toFixed(1)}%`;
+    if (specGain) specGain.style.width = `${gainPct.toFixed(1)}%`;
+
+    updateElementText('bar-invested-label', `${sym} ${res.investedAmount.toLocaleString()} (${investedPct.toFixed(1)}%)`);
+    updateElementText('bar-gain-label', `${sym} ${res.estimatedReturns.toLocaleString()} (${gainPct.toFixed(1)}%)`);
+
+    // Render schedule table
+    renderSchedule(p, rate, years, timing, sym);
+  }
+
+  function renderSchedule(p: number, annualRate: number, years: number, timing: ContributionTiming, sym: string) {
+    if (!scheduleBody) return;
+    const monthlyRate = annualRate / 12 / 100;
+    const isBeg = timing === 'beginning';
+    let balance = 0;
+    let totalDeposited = 0;
+    let html = '';
+
+    const maxRows = Math.min(years, 30);
+    for (let y = 1; y <= maxRows; y++) {
+      let annualDeposit = 0;
+      let startYearBalance = balance;
+
+      for (let m = 1; m <= 12; m++) {
+        if (isBeg) {
+          balance = (balance + p) * (1 + monthlyRate);
+        } else {
+          balance = balance * (1 + monthlyRate) + p;
+        }
+        annualDeposit += p;
+        totalDeposited += p;
+      }
+
+      const interestEarnedThisYear = Math.max(0, balance - startYearBalance - annualDeposit);
+
+      html += `
+        <tr>
+          <td class="py-2 px-3 font-semibold text-link">Year ${y}</td>
+          <td class="py-2 px-3 text-right">${sym} ${annualDeposit.toLocaleString()}</td>
+          <td class="py-2 px-3 text-right">${sym} ${totalDeposited.toLocaleString()}</td>
+          <td class="py-2 px-3 text-right text-violet">${sym} ${Math.round(interestEarnedThisYear).toLocaleString()}</td>
+          <td class="py-2 px-3 text-right font-semibold text-cyan">${sym} ${Math.round(balance).toLocaleString()}</td>
+        </tr>
+      `;
+    }
+
+    scheduleBody.innerHTML = html;
+  }
+
+  function updateElementText(id: string, text: string) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  }
+
+  // Two-way slider-input binding
+  amountInput?.addEventListener('input', () => {
+    if (amountSlider) amountSlider.value = amountInput.value;
+    recalculate();
+  });
+  amountSlider?.addEventListener('input', () => {
+    if (amountInput) amountInput.value = amountSlider.value;
+    recalculate();
+  });
+
+  rateInput?.addEventListener('input', () => {
+    if (rateSlider) rateSlider.value = rateInput.value;
+    recalculate();
+  });
+  rateSlider?.addEventListener('input', () => {
+    if (rateInput) rateInput.value = rateSlider.value;
+    recalculate();
+  });
+
+  yearsInput?.addEventListener('input', () => {
+    if (yearsSlider) yearsSlider.value = yearsInput.value;
+    recalculate();
+  });
+  yearsSlider?.addEventListener('input', () => {
+    if (yearsInput) yearsInput.value = yearsSlider.value;
+    recalculate();
+  });
+
+  countrySelect?.addEventListener('change', () => handleCountrySwitch(countrySelect.value));
+  timingSelect?.addEventListener('change', () => {
+    updateTimingBadge();
+    recalculate();
+  });
+
+  updatePresets();
+  updateTimingBadge();
+  recalculate();
+</script>

@@ -4,3 +4,5 @@
 /calculator/bmi-calculator         /health/bmi-calculator        301
 /terms                             /terms-of-use                 301
 /privacy                           /privacy-policy               301
+/blog                             /guides                       301
+/blog/*                           /guides/:splat                301

@@ -126,3 +126,149 @@ export function formatCurrency(
   // Symbol placement: most currencies prefix, some suffix or space
   return `${currency.symbol} ${formattedNumber}`.trim();
 }
+
+/**
+ * Authoritative centralized exchange rate snapshot against base currency USD (1 USD = rate * Currency).
+ *
+ * HOW TO UPDATE VIA BUILD SCRIPT:
+ * To refresh rates during automated CI/CD builds or nightly GitHub Actions workflows:
+ * 1. Run a pre-build script (e.g., `node scripts/fetch-exchange-rates.mjs`).
+ * 2. Fetch live benchmark rates from an authoritative free API (e.g., European Central Bank, open.er-api.com, or Frankfurter API).
+ * 3. Write the updated JSON to `src/data/exchangeRates.json` or rewrite this `EXCHANGE_RATES` object.
+ * 4. The static Astro build bundles the latest verified snapshot, ensuring sub-millisecond edge calculation without runtime third-party API dependencies or user privacy tracking.
+ */
+export const EXCHANGE_RATES: Record<string, number> = {
+  USD: 1.0,
+  INR: 83.95,
+  EUR: 0.925,
+  GBP: 0.785,
+  CAD: 1.365,
+  AUD: 1.515,
+  JPY: 147.50,
+  CNY: 7.12,
+  SGD: 1.315,
+  AED: 3.6725,
+  SAR: 3.7510,
+  CHF: 0.8520,
+  NZD: 1.6350,
+  ZAR: 18.25,
+};
+
+/**
+ * Converts a monetary amount between any two supported currencies using the centralized EXCHANGE_RATES object.
+ * Uses USD as the base normalization pivot:
+ *   amountInUSD = amount / rate[fromCurrency]
+ *   targetAmount = amountInUSD * rate[toCurrency]
+ *
+ * Safe against NaN, non-finite values, zero, and unknown currencies.
+ */
+export function convertCurrency(
+  amount: number,
+  fromCurrency: string = 'USD',
+  toCurrency: string = 'USD',
+  customRates?: Record<string, number>
+): number {
+  if (isNaN(amount) || !isFinite(amount)) return 0;
+  if (amount === 0) return 0;
+
+  const from = (fromCurrency || 'USD').toUpperCase();
+  const to = (toCurrency || 'USD').toUpperCase();
+
+  if (from === to) return amount;
+
+  const rates = customRates || EXCHANGE_RATES;
+  const fromRate = rates[from] ?? EXCHANGE_RATES[from];
+  const toRate = rates[to] ?? EXCHANGE_RATES[to];
+
+  if (!fromRate || !toRate) {
+    console.warn(`Missing exchange rate for ${from} or ${to}. Returning original amount.`);
+    return amount;
+  }
+
+  // 1. Normalize from source currency to USD base
+  const amountInUSD = amount / fromRate;
+
+  // 2. Convert from USD base to destination currency
+  const converted = amountInUSD * toRate;
+
+  return converted;
+}
+
+/**
+ * Converts value between currencies using centralized EXCHANGE_RATES.
+ * Adheres to rule #5: centralized conversion utility.
+ */
+export function convertValue(
+  amount: number,
+  fromCurrency: string = 'USD',
+  toCurrency: string = 'USD',
+  customRates?: Record<string, number>
+): number {
+  return convertCurrency(amount, fromCurrency, toCurrency, customRates);
+}
+
+export interface CurrencyConversionPromptResult {
+  action: 'keep' | 'convert';
+  value: number;
+}
+
+export interface CurrencyConversionPromptOptions {
+  currentValue: number;
+  previousCurrency: string;
+  newCurrency: string;
+  confirmFn?: (message: string) => boolean;
+}
+
+/**
+ * Client-side logic pattern to prompt the user when country or currency changes:
+ * "Keep numeric value (1,000) or convert equivalent value?"
+ *
+ * Client-side Astro implementation pattern:
+ * ```astro
+ * <script>
+ *   import { promptCurrencyConversion } from '../../utils/currency';
+ *   import { getCountryByCode } from '../../data/countries';
+ *
+ *   let activeCurrency = 'USD';
+ *   const amountInput = document.getElementById('principal-input') as HTMLInputElement;
+ *   const countrySelect = document.getElementById('country-select') as HTMLSelectElement;
+ *
+ *   countrySelect?.addEventListener('change', () => {
+ *     const targetCountry = getCountryByCode(countrySelect.value);
+ *     const currentVal = parseFloat(amountInput.value) || 0;
+ *     const decision = promptCurrencyConversion({
+ *       currentValue: currentVal,
+ *       previousCurrency: activeCurrency,
+ *       newCurrency: targetCountry.currency,
+ *     });
+ *
+ *     amountInput.value = decision.value.toString();
+ *     activeCurrency = targetCountry.currency;
+ *     recalculate();
+ *   });
+ * </script>
+ * ```
+ */
+export function promptCurrencyConversion(options: CurrencyConversionPromptOptions): CurrencyConversionPromptResult {
+  const { currentValue, previousCurrency, newCurrency, confirmFn } = options;
+  if (!currentValue || isNaN(currentValue) || !isFinite(currentValue) || previousCurrency === newCurrency) {
+    return { action: 'keep', value: currentValue || 0 };
+  }
+
+  const converted = convertCurrency(currentValue, previousCurrency, newCurrency);
+  const formattedConverted = Math.round(converted);
+
+  const message = `Keep numeric value (${currentValue.toLocaleString()}) or convert equivalent value (${newCurrency} ${formattedConverted.toLocaleString()})?`;
+
+  const shouldConvert = confirmFn
+    ? confirmFn(message)
+    : (typeof window !== 'undefined' && typeof window.confirm === 'function' ? window.confirm(message) : false);
+
+  if (shouldConvert) {
+    return { action: 'convert', value: formattedConverted };
+  }
+  return { action: 'keep', value: currentValue };
+}
+
+export { formatConvertedCurrency, getExchangeRateMetadata } from './currencyEngine.ts';
+

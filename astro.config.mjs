@@ -7,6 +7,7 @@ const isDev = process.argv.includes('dev');
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://freeaccuratecalculator.com',
   output: 'static',
   i18n: {
     defaultLocale: 'en',
@@ -14,6 +15,10 @@ export default defineConfig({
     routing: {
       prefixDefaultLocale: false,
     },
+  },
+  redirects: {
+    '/blog': '/guides',
+    '/blog/[slug]': '/guides/[slug]',
   },
   adapter: !isDev
     ? cloudflare({

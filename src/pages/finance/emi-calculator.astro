@@ -601,8 +601,31 @@ const relatedCalculators = [
       }
     }
 
+    let lastActiveCurrency = typeof window.facGetActiveCurrency === 'function'
+      ? window.facGetActiveCurrency()
+      : (localStorage.getItem('fac_currency') || 'USD');
+
     // Currency Switcher reaction
     window.addEventListener('currencychange', (e) => {
+      const newCurr = e.detail.currency;
+      const prevCurr = e.detail.prevCurrency || lastActiveCurrency;
+
+      if (prevCurr && newCurr && prevCurr !== newCurr && typeof window.facConvertCurrency === 'function') {
+        const pVal = parseFloat(principalInput?.value || '0');
+        if (!isNaN(pVal) && pVal > 0) {
+          const convertedP = window.facConvertCurrency(pVal, prevCurr, newCurr);
+          const roundedP = Math.round(convertedP);
+          if (principalInput) principalInput.value = String(roundedP);
+          if (principalSlider) {
+            if (roundedP > parseFloat(principalSlider.max)) {
+              principalSlider.max = String(roundedP * 2);
+            }
+            principalSlider.value = String(roundedP);
+          }
+        }
+      }
+      lastActiveCurrency = newCurr;
+
       currentCurrencySymbol = e.detail.symbol;
       isIndianFormat = e.detail.isIndian;
       updateCurrencyUI();

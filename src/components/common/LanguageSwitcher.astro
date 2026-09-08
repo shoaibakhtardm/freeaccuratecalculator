@@ -28,7 +28,7 @@ const currentLocale = Astro.currentLocale || 'en';
     <select
       id={selectId}
       aria-label="Language"
-      class="fac-language-select appearance-none bg-transparent min-h-[44px] sm:min-h-[36px] h-11 sm:h-9 py-1 pl-1.5 pr-6 text-sm sm:text-xs font-medium text-ink cursor-pointer focus:outline-none w-full"
+      class="fac-language-select notranslate appearance-none bg-transparent min-h-[44px] sm:min-h-[36px] h-11 sm:h-9 py-1 pl-1.5 pr-6 text-sm sm:text-xs font-medium text-ink cursor-pointer focus:outline-none w-full"
     >
       {Object.entries(languages).map(([code, lang]) => (
         <option
@@ -63,24 +63,29 @@ const currentLocale = Astro.currentLocale || 'en';
     const selects = document.querySelectorAll('.fac-language-select');
     if (!selects || selects.length === 0) return;
 
+    function syncLanguageUI() {
+      const active = (typeof window.facGetActiveLanguage === 'function'
+        ? window.facGetActiveLanguage()
+        : localStorage.getItem('fac_locale') || 'en'
+      ).toLowerCase();
+
+      selects.forEach((sel) => {
+        if (sel.value !== active) sel.value = active;
+      });
+    }
+
+    // Sync initial state
+    syncLanguageUI();
+
     selects.forEach((select) => {
       select.addEventListener('change', (e) => {
         const targetLang = e.target.value;
-        const currentPath = window.location.pathname;
-        const search = window.location.search;
-
-        // Extract un-prefixed pathname
-        let cleanPath = currentPath.replace(/^\/(es|fr|hi)(\/|$)/, '/');
-        if (!cleanPath.startsWith('/')) cleanPath = '/' + cleanPath;
-
-        // Compute destination URL
-        let targetUrl = cleanPath;
-        if (targetLang !== 'en') {
-          targetUrl = `/${targetLang}${cleanPath.startsWith('/') ? cleanPath : '/' + cleanPath}`;
+        if (typeof window.facSetActiveLanguage === 'function') {
+          window.facSetActiveLanguage(targetLang);
+        } else {
+          localStorage.setItem('fac_locale', targetLang);
+          window.location.reload();
         }
-
-        localStorage.setItem('fac_locale', targetLang);
-        window.location.href = `${targetUrl}${search}`;
       });
     });
   })();

@@ -1,4 +1,8 @@
 // src/engines/tax-us.ts
+import {
+  US_TAX_CONFIG_2026,
+  type TaxBracketConfig,
+} from '../data/countries.ts';
 
 export interface USIncomeTaxInput {
   grossAnnualIncome: number;
@@ -21,109 +25,71 @@ export interface USIncomeTaxResult {
 }
 
 /**
- * Calculates US Federal Income Tax and FICA for Tax Year 2024 / 2025
+ * Helper to compute progressive tax across 2026 bracket tiers without magic numbers.
+ */
+function computeProgressiveTax(taxableIncome: number, brackets: TaxBracketConfig[]): number {
+  if (taxableIncome <= 0 || !brackets || brackets.length === 0) return 0;
+  let tax = 0;
+  for (const b of brackets) {
+    if (taxableIncome > b.min) {
+      const span = b.max !== null ? Math.min(taxableIncome, b.max) - b.min : taxableIncome - b.min;
+      if (span > 0) {
+        tax += span * b.rate;
+      }
+    }
+  }
+  return tax;
+}
+
+/**
+ * Calculates US Federal Income Tax and FICA for Tax Year 2026 using IRS inflation-adjusted projections.
+ * Source: US_TAX_CONFIG_2026
+ * - Single Standard Deduction: $16,100 (Married Joint: $32,200)
+ * - 401(k) Elective Deferral Cap: $24,500
+ * - Social Security Taxable Wage Base: $176,100 (6.2%)
+ * - Medicare Tax: 1.45% + 0.9% Additional Medicare above statutory threshold
  */
 export function calculateUSIncomeTax(input: USIncomeTaxInput): USIncomeTaxResult {
   const gross = Math.max(0, Number(input.grossAnnualIncome) || 0);
   const status = input.filingStatus || 'single';
-  const preTax401k = Math.min(23000, Math.max(0, Number(input.traditional401k) || 0)); // 2024 IRS limit: $23,000
+
+  const max401k = US_TAX_CONFIG_2026.limits?.traditional401k ?? 24500;
+  const preTax401k = Math.min(max401k, Math.max(0, Number(input.traditional401k) || 0));
 
   // Adjusted Gross Income (AGI)
   const agi = Math.max(0, gross - preTax401k);
 
-  // Standard Deductions 2024
-  const standardDeduction = status === 'married_joint' ? 29200 : 14600;
+  // 2026 Standard Deductions
+  const stdDeductions = US_TAX_CONFIG_2026.standardDeductions;
+  const standardDeduction = status === 'married_joint'
+    ? (stdDeductions.married_joint ?? 32200)
+    : (stdDeductions.single ?? 16100);
+
   const deduction = Math.max(standardDeduction, Math.max(0, Number(input.itemizedDeductions) || 0));
   const taxableIncome = Math.max(0, agi - deduction);
 
-  // 2024 Federal Tax Brackets (Single)
-  let federalTax = 0;
-  if (status === 'married_joint') {
-    if (taxableIncome > 731200) {
-      federalTax += (taxableIncome - 731200) * 0.37;
-      federalTax += (731200 - 487450) * 0.35;
-      federalTax += (487450 - 383900) * 0.32;
-      federalTax += (383900 - 201050) * 0.24;
-      federalTax += (201050 - 94300) * 0.22;
-      federalTax += (94300 - 23200) * 0.12;
-      federalTax += 23200 * 0.10;
-    } else if (taxableIncome > 487450) {
-      federalTax += (taxableIncome - 487450) * 0.35;
-      federalTax += (487450 - 383900) * 0.32;
-      federalTax += (383900 - 201050) * 0.24;
-      federalTax += (201050 - 94300) * 0.22;
-      federalTax += (94300 - 23200) * 0.12;
-      federalTax += 23200 * 0.10;
-    } else if (taxableIncome > 383900) {
-      federalTax += (taxableIncome - 383900) * 0.32;
-      federalTax += (383900 - 201050) * 0.24;
-      federalTax += (201050 - 94300) * 0.22;
-      federalTax += (94300 - 23200) * 0.12;
-      federalTax += 23200 * 0.10;
-    } else if (taxableIncome > 201050) {
-      federalTax += (taxableIncome - 201050) * 0.24;
-      federalTax += (201050 - 94300) * 0.22;
-      federalTax += (94300 - 23200) * 0.12;
-      federalTax += 23200 * 0.10;
-    } else if (taxableIncome > 94300) {
-      federalTax += (taxableIncome - 94300) * 0.22;
-      federalTax += (94300 - 23200) * 0.12;
-      federalTax += 23200 * 0.10;
-    } else if (taxableIncome > 23200) {
-      federalTax += (taxableIncome - 23200) * 0.12;
-      federalTax += 23200 * 0.10;
-    } else if (taxableIncome > 0) {
-      federalTax += taxableIncome * 0.10;
-    }
-  } else {
-    // Single
-    if (taxableIncome > 609350) {
-      federalTax += (taxableIncome - 609350) * 0.37;
-      federalTax += (609350 - 243725) * 0.35;
-      federalTax += (243725 - 191950) * 0.32;
-      federalTax += (191950 - 100525) * 0.24;
-      federalTax += (100525 - 47150) * 0.22;
-      federalTax += (47150 - 11600) * 0.12;
-      federalTax += 11600 * 0.10;
-    } else if (taxableIncome > 243725) {
-      federalTax += (taxableIncome - 243725) * 0.35;
-      federalTax += (243725 - 191950) * 0.32;
-      federalTax += (191950 - 100525) * 0.24;
-      federalTax += (100525 - 47150) * 0.22;
-      federalTax += (47150 - 11600) * 0.12;
-      federalTax += 11600 * 0.10;
-    } else if (taxableIncome > 191950) {
-      federalTax += (taxableIncome - 191950) * 0.32;
-      federalTax += (191950 - 100525) * 0.24;
-      federalTax += (100525 - 47150) * 0.22;
-      federalTax += (47150 - 11600) * 0.12;
-      federalTax += 11600 * 0.10;
-    } else if (taxableIncome > 100525) {
-      federalTax += (taxableIncome - 100525) * 0.24;
-      federalTax += (100525 - 47150) * 0.22;
-      federalTax += (47150 - 11600) * 0.12;
-      federalTax += 11600 * 0.10;
-    } else if (taxableIncome > 47150) {
-      federalTax += (taxableIncome - 47150) * 0.22;
-      federalTax += (47150 - 11600) * 0.12;
-      federalTax += 11600 * 0.10;
-    } else if (taxableIncome > 11600) {
-      federalTax += (taxableIncome - 11600) * 0.12;
-      federalTax += 11600 * 0.10;
-    } else if (taxableIncome > 0) {
-      federalTax += taxableIncome * 0.10;
-    }
-  }
+  // 2026 Federal Progressive Tax Brackets
+  const brackets = (US_TAX_CONFIG_2026.brackets && US_TAX_CONFIG_2026.brackets[status])
+    ? US_TAX_CONFIG_2026.brackets[status]
+    : (US_TAX_CONFIG_2026.brackets?.single ?? []);
 
-  // FICA Taxes (FICA applies to gross minus certain pre-tax benefits; 401k is NOT exempt from FICA)
-  const ssWageCap = 168600; // 2024 Social Security wage base limit
-  const socialSecurity = Math.min(gross, ssWageCap) * 0.062;
+  const federalTax = computeProgressiveTax(taxableIncome, brackets);
 
-  // Medicare: 1.45% + 0.9% additional over $200,000 ($250k for joint)
-  let medicare = gross * 0.0145;
-  const medicareThreshold = status === 'married_joint' ? 250000 : 200000;
+  // 2026 FICA Taxes (FICA applies to gross; 401(k) is not exempt from FICA)
+  const ssWageCap = US_TAX_CONFIG_2026.limits?.socialSecurityWageBase ?? 176100;
+  const ssRate = US_TAX_CONFIG_2026.limits?.socialSecurityRate ?? 0.062;
+  const socialSecurity = Math.min(gross, ssWageCap) * ssRate;
+
+  // Medicare: 1.45% base + 0.9% additional over statutory threshold ($200k single, $250k joint)
+  const medRate = US_TAX_CONFIG_2026.limits?.medicareRate ?? 0.0145;
+  const addMedRate = US_TAX_CONFIG_2026.limits?.additionalMedicareRate ?? 0.009;
+  const medicareThreshold = status === 'married_joint'
+    ? (US_TAX_CONFIG_2026.limits?.additionalMedicareThresholdJoint ?? 250000)
+    : (US_TAX_CONFIG_2026.limits?.additionalMedicareThresholdSingle ?? 200000);
+
+  let medicare = gross * medRate;
   if (gross > medicareThreshold) {
-    medicare += (gross - medicareThreshold) * 0.009;
+    medicare += (gross - medicareThreshold) * addMedRate;
   }
 
   const totalFica = Math.round(socialSecurity + medicare);
@@ -216,16 +182,17 @@ export interface RothIraResult {
 }
 
 /**
- * Calculates Roth IRA Compounding (Tax-Free Growth)
+ * Calculates Roth IRA Compounding (Tax-Free Growth) using 2026 limits
  */
 export function calculateRothIra(
   currentBalance: number,
-  annualContribution: number = 7000,
+  annualContribution: number = 7500,
   years: number = 30,
   expectedReturnRate: number = 7
 ): RothIraResult {
   let balance = Math.max(0, Number(currentBalance) || 0);
-  const annualContrib = Math.min(8000, Math.max(0, Number(annualContribution) || 0)); // 2024 IRS limit
+  const statutoryLimit = US_TAX_CONFIG_2026.limits?.iraContributionLimit ?? 7500;
+  const annualContrib = Math.min(statutoryLimit, Math.max(0, Number(annualContribution) || 0));
   const rate = Math.max(0, Number(expectedReturnRate) || 0) / 100;
   const totalYears = Math.max(1, Math.round(Number(years) || 1));
 

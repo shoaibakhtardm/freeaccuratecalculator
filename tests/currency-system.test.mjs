@@ -13,6 +13,9 @@ import {
   formatCurrency,
   getCurrency,
   getCurrencySymbol,
+  convertCurrency,
+  formatConvertedCurrency,
+  getExchangeRateMetadata,
 } from '../src/utils/currency.ts';
 import { CALCULATORS } from '../src/data/calculatorRegistry.ts';
 
@@ -148,23 +151,84 @@ test('Global Currency System — Intl.NumberFormat Formatting', async (t) => {
   });
 });
 
-test('Global Currency System — Zero Fake Conversion Guarantee', async (t) => {
-  await t.test('Switching currencies changes display symbol/grouping without altering numeric values', () => {
-    const originalValue = 10000;
+test('Global Currency System — Real Bidirectional Currency Conversion', async (t) => {
+  await t.test('Centralized snapshot contains valid metadata and non-live transparent timestamp', () => {
+    const meta = getExchangeRateMetadata();
+    assert.equal(meta.base, 'USD');
+    assert.ok(meta.timestamp.includes('2026'));
+    assert.ok(meta.source.includes('Benchmark') || meta.source.includes('Central Bank'));
+    assert.equal(meta.verifiedAt, '2026-09-09');
+  });
 
-    const formattedUSD = formatCurrency(originalValue, 'USD');
-    const formattedINR = formatCurrency(originalValue, 'INR');
-    const formattedEUR = formatCurrency(originalValue, 'EUR');
+  await t.test('Converts USD to INR accurately (1000 USD -> 83,950 INR)', () => {
+    const inr = convertCurrency(1000, 'USD', 'INR');
+    assert.equal(Number(inr.toFixed(2)), 83950.00);
+  });
 
-    // Extract digits only
-    const digitsUSD = formattedUSD.replace(/[^\d]/g, '');
-    const digitsINR = formattedINR.replace(/[^\d]/g, '');
-    const digitsEUR = formattedEUR.replace(/[^\d]/g, '');
+  await t.test('Converts INR to USD accurately (83,950 INR -> 1,000 USD)', () => {
+    const usd = convertCurrency(83950, 'INR', 'USD');
+    assert.equal(Number(usd.toFixed(2)), 1000.00);
+  });
 
-    // Numeric value must remain 1000000 (10000.00) or 10000; never converted by exchange rate!
-    assert.equal(digitsUSD.slice(0, 5), '10000');
-    assert.equal(digitsINR.slice(0, 5), '10000');
-    assert.equal(digitsEUR.slice(0, 5), '10000');
+  await t.test('Converts EUR to USD accurately (925 EUR -> 1,000 USD)', () => {
+    const usd = convertCurrency(925, 'EUR', 'USD');
+    assert.equal(Number(usd.toFixed(2)), 1000.00);
+  });
+
+  await t.test('Converts GBP to USD accurately (785 GBP -> 1,000 USD)', () => {
+    const usd = convertCurrency(785, 'GBP', 'USD');
+    assert.equal(Number(usd.toFixed(2)), 1000.00);
+  });
+
+  await t.test('Converts USD to JPY with 0 decimal convention (1000 USD -> 147,500 JPY)', () => {
+    const jpy = convertCurrency(1000, 'USD', 'JPY');
+    assert.equal(Math.round(jpy), 147500);
+  });
+
+  await t.test('Cross-currency: Converts AED to INR (1000 AED -> ~22,859.09 INR)', () => {
+    const inr = convertCurrency(1000, 'AED', 'INR');
+    // 1000 / 3.6725 * 83.95 = 22859.0878
+    assert.ok(inr > 22850 && inr < 22865);
+  });
+
+  await t.test('Cross-currency: Converts SAR to INR (1000 SAR -> ~22,380.70 INR)', () => {
+    const inr = convertCurrency(1000, 'SAR', 'INR');
+    // 1000 / 3.7510 * 83.95 = 22380.698
+    assert.ok(inr > 22370 && inr < 22390);
+  });
+
+  await t.test('Reversible round-trip conversions approximately restore original value', () => {
+    const pairs = [
+      ['USD', 'INR'],
+      ['USD', 'EUR'],
+      ['USD', 'GBP'],
+      ['USD', 'JPY'],
+      ['AED', 'INR'],
+      ['SAR', 'INR'],
+      ['CAD', 'AUD'],
+    ];
+
+    const original = 5000;
+    for (const [from, to] of pairs) {
+      const converted = convertCurrency(original, from, to);
+      const restored = convertCurrency(converted, to, from);
+      assert.ok(
+        Math.abs(restored - original) < 0.01,
+        `Round-trip ${from} -> ${to} -> ${from} failed: expected ${original}, got ${restored}`
+      );
+    }
+  });
+
+  await t.test('formatConvertedCurrency produces formatted string with correct symbol and decimals', () => {
+    const formatted = formatConvertedCurrency(1000, 'USD', 'INR');
+    assert.ok(formatted.includes('₹'), 'Formatted output should contain ₹');
+    assert.ok(formatted.includes('83,950'), 'Formatted output should contain converted numeric digits');
+  });
+
+  await t.test('Handles zero, NaN, and negative amounts safely without crash', () => {
+    assert.equal(convertCurrency(0, 'USD', 'INR'), 0);
+    assert.equal(convertCurrency(NaN, 'USD', 'INR'), 0);
+    assert.equal(convertCurrency(-100, 'USD', 'USD'), -100);
   });
 });
 

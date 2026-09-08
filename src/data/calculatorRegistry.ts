@@ -382,6 +382,30 @@ export const CALCULATORS: CalculatorEntry[] = [
       { id: 'monthly_contribution', label: 'Monthly Contribution ($)', type: 'number', defaultValue: 200, step: 50 },
       { id: 'annual_rate', label: 'Estimated Annual Return (%)', type: 'number', defaultValue: 8.0, step: 0.1 },
       { id: 'investment_years', label: 'Investment Horizon (Years)', type: 'number', defaultValue: 10, step: 1 },
+      {
+        id: 'compounding_frequency',
+        label: 'Compounding Frequency',
+        type: 'select',
+        defaultValue: '12',
+        options: [
+          { label: 'Annually (Once per year)', value: '1' },
+          { label: 'Semi-Annually (2x per year)', value: '2' },
+          { label: 'Quarterly (4x per year)', value: '4' },
+          { label: 'Monthly (12x per year)', value: '12' },
+          { label: 'Daily (365x per year)', value: '365' },
+          { label: 'Continuous (eʳᵗ)', value: 'continuous' },
+        ],
+      },
+      {
+        id: 'deposit_timing',
+        label: 'Contribution Timing',
+        type: 'select',
+        defaultValue: 'end',
+        options: [
+          { label: 'End of Month (Ordinary Annuity)', value: 'end' },
+          { label: 'Beginning of Month (Annuity Due)', value: 'beginning' },
+        ],
+      },
     ],
     defaultResult: {
       label: 'Total Future Balance',
@@ -392,25 +416,47 @@ export const CALCULATORS: CalculatorEntry[] = [
       prefix: '$',
     },
     computeScript: `
-      const P = parseFloat(inputs.initial_deposit || '0');
-      const PMT = parseFloat(inputs.monthly_contribution || '0');
-      const r = parseFloat(inputs.annual_rate || '0') / 100;
-      const t = parseFloat(inputs.investment_years || '0');
-      const n = 12; // Monthly compounding
-      const ratePerPeriod = r / n;
-      const totalPeriods = n * t;
+      const P = Math.max(0, parseFloat(inputs.initial_deposit || '0') || 0);
+      const PMT = Math.max(0, parseFloat(inputs.monthly_contribution || '0') || 0);
+      const r = Math.max(0, parseFloat(inputs.annual_rate || '0') || 0) / 100;
+      const t = Math.max(0, parseFloat(inputs.investment_years || '0') || 0);
+      const freq = inputs.compounding_frequency || '12';
+      const isBeginning = (inputs.deposit_timing || 'end') === 'beginning';
+      
       let balance = 0;
-      if (ratePerPeriod > 0) {
-        const factor = Math.pow(1 + ratePerPeriod, totalPeriods);
-        balance = P * factor + PMT * ((factor - 1) / ratePerPeriod);
+      const totalDeposits = P + PMT * 12 * t;
+
+      if (freq === 'continuous') {
+        const principalGrowth = P * Math.exp(r * t);
+        let pmtGrowth = 0;
+        if (r > 0) {
+          const effectiveMonthlyR = Math.exp(r / 12) - 1;
+          const months = 12 * t;
+          const annuityFactor = (Math.pow(1 + effectiveMonthlyR, months) - 1) / effectiveMonthlyR;
+          pmtGrowth = PMT * annuityFactor * (isBeginning ? (1 + effectiveMonthlyR) : 1);
+        } else {
+          pmtGrowth = PMT * 12 * t;
+        }
+        balance = principalGrowth + pmtGrowth;
       } else {
-        balance = P + PMT * totalPeriods;
+        const n = parseFloat(freq) || 12;
+        const principalGrowth = P * Math.pow(1 + r / n, n * t);
+        let pmtGrowth = 0;
+        if (r > 0) {
+          const effM = Math.pow(1 + r / n, n / 12) - 1;
+          const months = 12 * t;
+          const factor = (Math.pow(1 + effM, months) - 1) / effM;
+          pmtGrowth = PMT * factor * (isBeginning ? (1 + effM) : 1);
+        } else {
+          pmtGrowth = PMT * 12 * t;
+        }
+        balance = principalGrowth + pmtGrowth;
       }
-      const totalDeposits = P + PMT * totalPeriods;
-      const interest = balance - totalDeposits;
+
+      const interest = Math.max(0, balance - totalDeposits);
       return {
         value: balance,
-        secondary: 'Total Deposits: $' + totalDeposits.toFixed(2) + ' | Pure Interest: $' + interest.toFixed(2)
+        secondary: 'Total Deposits: $' + totalDeposits.toFixed(2) + ' | Interest Earned: $' + interest.toFixed(2)
       };
     `,
   },
@@ -887,37 +933,180 @@ export const CALCULATORS: CalculatorEntry[] = [
       },
     ],
     inputs: [
+      {
+        id: 'tax_system',
+        label: 'Tax Jurisdiction & Regime',
+        type: 'select',
+        defaultValue: 'us_single',
+        options: [
+          { label: 'United States (Federal Single 2025/2026)', value: 'us_single' },
+          { label: 'United States (Federal Married Joint 2025/2026)', value: 'us_joint' },
+          { label: 'India (FY 2025–26 / AY 2026–27 New Regime)', value: 'in_new' },
+          { label: 'India (FY 2025–26 / AY 2026–27 Old Regime)', value: 'in_old' },
+          { label: 'United Kingdom (England, Wales & NI 2025–26 / 2026–27)', value: 'gb_ewni' },
+          { label: 'United Kingdom (Scotland 6-Band Tax 2025–26 / 2026–27)', value: 'gb_scotland' },
+          { label: 'Australia (Resident Individual FY 2025–26)', value: 'au_resident' },
+          { label: 'Canada (Federal Individual 2025/2026)', value: 'ca_federal' },
+          { label: 'Custom Tax Rate (% Override)', value: 'custom_flat' },
+          { label: 'Custom Progressive Tax Slabs', value: 'custom_slabs' },
+        ],
+      },
       { id: 'gross_income', label: 'Gross Annual Income ($)', type: 'number', defaultValue: 75000, step: 1000 },
-      { id: 'deductions', label: 'Standard / Itemized Deductions ($)', type: 'number', defaultValue: 14600, step: 100 },
+      { id: 'deductions', label: 'Deductions / Allowances ($)', type: 'number', defaultValue: 15000, step: 100 },
+      { id: 'custom_rate', label: 'Custom Flat Rate (%) (Optional)', type: 'number', defaultValue: 20, step: 0.5 },
+      { id: 'custom_slabs_input', label: 'Custom Slabs Format (Min-Max:Rate%)', type: 'select', defaultValue: 'default', options: [
+        { label: '0-20k: 10%, 20k-60k: 20%, 60k+: 30%', value: 'default' },
+        { label: '0-50k: 15%, 50k+: 28%', value: 'two_tier' },
+      ]},
     ],
     defaultResult: {
       label: 'Estimated Income Tax',
-      initialValue: 7016.00,
+      initialValue: 8114.00,
       decimals: 2,
-      secondaryText: 'Effective Rate: 9.35% | Net Take-Home: $67,984.00',
+      secondaryText: 'Effective Rate: 10.82% | Take-Home: $66,886.00 | US Federal Single (2025/2026)',
       accent: 'violet',
       prefix: '$',
     },
     computeScript: `
-      const gross = parseFloat(inputs.gross_income || '0');
-      const ded = parseFloat(inputs.deductions || '0');
-      const taxable = Math.max(0, gross - ded);
-      // Standard US baseline single brackets: 10% up to 11600, 12% to 47150, 22% to 100525, 24% above
+      const gross = Math.max(0, parseFloat(inputs.gross_income || '0') || 0);
+      let ded = Math.max(0, parseFloat(inputs.deductions || '0') || 0);
+      const system = inputs.tax_system || 'us_single';
+      const customRate = Math.max(0, Math.min(100, parseFloat(inputs.custom_rate || '20') || 20)) / 100;
+      
       let tax = 0;
-      if (taxable <= 11600) {
-        tax = taxable * 0.10;
-      } else if (taxable <= 47150) {
-        tax = 11600 * 0.10 + (taxable - 11600) * 0.12;
-      } else if (taxable <= 100525) {
-        tax = 11600 * 0.10 + (47150 - 11600) * 0.12 + (taxable - 47150) * 0.22;
-      } else {
-        tax = 11600 * 0.10 + (47150 - 11600) * 0.12 + (100525 - 47150) * 0.22 + (taxable - 100525) * 0.24;
+      let labelSystem = 'Custom';
+
+      function progressive(taxable, brackets) {
+        let t = 0;
+        for (let i = 0; i < brackets.length; i++) {
+          const b = brackets[i];
+          if (taxable > b.min) {
+            const span = b.max !== null ? Math.min(taxable, b.max) - b.min : taxable - b.min;
+            if (span > 0) t += span * b.rate;
+          }
+        }
+        return t;
       }
+
+      if (system === 'us_single') {
+        labelSystem = 'US Federal Single (2025/2026)';
+        ded = Math.max(ded, 15000);
+        const taxable = Math.max(0, gross - ded);
+        tax = progressive(taxable, [
+          { min: 0, max: 11925, rate: 0.10 },
+          { min: 11925, max: 48475, rate: 0.12 },
+          { min: 48475, max: 103350, rate: 0.22 },
+          { min: 103350, max: 197300, rate: 0.24 },
+          { min: 197300, max: 250525, rate: 0.32 },
+          { min: 250525, max: 626350, rate: 0.35 },
+          { min: 626350, max: null, rate: 0.37 },
+        ]);
+      } else if (system === 'us_joint') {
+        labelSystem = 'US Federal Married Joint (2025/2026)';
+        ded = Math.max(ded, 30000);
+        const taxable = Math.max(0, gross - ded);
+        tax = progressive(taxable, [
+          { min: 0, max: 23850, rate: 0.10 },
+          { min: 23850, max: 96950, rate: 0.12 },
+          { min: 96950, max: 206700, rate: 0.22 },
+          { min: 206700, max: 394600, rate: 0.24 },
+          { min: 394600, max: 501050, rate: 0.32 },
+          { min: 501050, max: 751600, rate: 0.35 },
+          { min: 751600, max: null, rate: 0.37 },
+        ]);
+      } else if (system === 'in_new') {
+        labelSystem = 'India New Regime (FY 2025–26)';
+        ded = Math.max(ded, 75000);
+        const taxable = Math.max(0, gross - ded);
+        let baseTax = progressive(taxable, [
+          { min: 0, max: 300000, rate: 0.0 },
+          { min: 300000, max: 700000, rate: 0.05 },
+          { min: 700000, max: 1000000, rate: 0.10 },
+          { min: 1000000, max: 1200000, rate: 0.15 },
+          { min: 1200000, max: 1500000, rate: 0.20 },
+          { min: 1500000, max: null, rate: 0.30 },
+        ]);
+        if (taxable <= 700000) baseTax = 0; // 87A rebate
+        tax = baseTax * 1.04; // 4% Health & Education Cess
+      } else if (system === 'in_old') {
+        labelSystem = 'India Old Regime (FY 2025–26)';
+        ded = Math.max(ded, 50000);
+        const taxable = Math.max(0, gross - ded);
+        let baseTax = progressive(taxable, [
+          { min: 0, max: 250000, rate: 0.0 },
+          { min: 250000, max: 500000, rate: 0.05 },
+          { min: 500000, max: 1000000, rate: 0.20 },
+          { min: 1000000, max: null, rate: 0.30 },
+        ]);
+        if (taxable <= 500000) baseTax = 0;
+        tax = baseTax * 1.04;
+      } else if (system === 'gb_ewni') {
+        labelSystem = 'UK England/Wales/NI (2025–26 / 2026–27)';
+        let pa = 12570;
+        if (gross > 100000) pa = Math.max(0, 12570 - (gross - 100000) * 0.5);
+        ded = Math.max(ded, pa);
+        const taxable = Math.max(0, gross - ded);
+        tax = progressive(taxable, [
+          { min: 0, max: 37700, rate: 0.20 },
+          { min: 37700, max: 112570, rate: 0.40 },
+          { min: 112570, max: null, rate: 0.45 },
+        ]);
+      } else if (system === 'gb_scotland') {
+        labelSystem = 'UK Scotland 6-Band (2025–26 / 2026–27)';
+        let pa = 12570;
+        if (gross > 100000) pa = Math.max(0, 12570 - (gross - 100000) * 0.5);
+        ded = Math.max(ded, pa);
+        const taxable = Math.max(0, gross - ded);
+        tax = progressive(taxable, [
+          { min: 0, max: 2306, rate: 0.19 },
+          { min: 2306, max: 13991, rate: 0.20 },
+          { min: 13991, max: 31092, rate: 0.21 },
+          { min: 31092, max: 62430, rate: 0.42 },
+          { min: 62430, max: 112570, rate: 0.45 },
+          { min: 112570, max: null, rate: 0.48 },
+        ]);
+      } else if (system === 'au_resident') {
+        labelSystem = 'Australia Resident (FY 2025–26)';
+        const taxable = Math.max(0, gross - ded);
+        const base = progressive(taxable, [
+          { min: 0, max: 18200, rate: 0.0 },
+          { min: 18200, max: 45000, rate: 0.16 },
+          { min: 45000, max: 135000, rate: 0.30 },
+          { min: 135000, max: 190000, rate: 0.37 },
+          { min: 190000, max: null, rate: 0.45 },
+        ]);
+        const medicare = taxable > 26000 ? taxable * 0.02 : 0;
+        tax = base + medicare;
+      } else if (system === 'ca_federal') {
+        labelSystem = 'Canada Federal (2025/2026)';
+        ded = Math.max(ded, 15705);
+        const taxable = Math.max(0, gross - ded);
+        tax = progressive(taxable, [
+          { min: 0, max: 57375, rate: 0.15 },
+          { min: 57375, max: 114750, rate: 0.205 },
+          { min: 114750, max: 177882, rate: 0.26 },
+          { min: 177882, max: 253414, rate: 0.29 },
+          { min: 253414, max: null, rate: 0.33 },
+        ]);
+      } else if (system === 'custom_flat') {
+        labelSystem = 'Custom Flat ' + (customRate * 100).toFixed(1) + '%';
+        const taxable = Math.max(0, gross - ded);
+        tax = taxable * customRate;
+      } else {
+        labelSystem = 'Custom Progressive Slabs';
+        const taxable = Math.max(0, gross - ded);
+        tax = progressive(taxable, [
+          { min: 0, max: 20000, rate: 0.10 },
+          { min: 20000, max: 60000, rate: 0.20 },
+          { min: 60000, max: null, rate: 0.30 },
+        ]);
+      }
+
       const eff = gross > 0 ? (tax / gross) * 100 : 0;
-      const takeHome = gross - tax;
+      const takeHome = Math.max(0, gross - tax);
       return {
-        value: tax,
-        secondary: 'Effective Rate: ' + eff.toFixed(2) + '% | Take-Home: $' + takeHome.toFixed(2)
+        value: Math.round(tax * 100) / 100,
+        secondary: 'Effective Rate: ' + eff.toFixed(2) + '% | Take-Home: $' + takeHome.toFixed(2) + ' | ' + labelSystem
       };
     `,
   },

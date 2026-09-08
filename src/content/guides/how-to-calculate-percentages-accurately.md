@@ -41,4 +41,4 @@ Notice that if that same portfolio subsequently drops by 20%, it returns exactly
 
 - Always verify the baseline denominator ($Y$) before dividing.
 - Never add raw percentage changes across different base periods without compounding.
-- Use our verified [Free Percentage Calculator](/math/percentage-calculator/) for instant, double-checked verification.
+- Use our [Percentage Calculator](/math/percentage-calculator/) for instant mathematical calculations.

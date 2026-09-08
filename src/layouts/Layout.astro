@@ -4,6 +4,7 @@ import '../styles/global.css';
 import Header from '../components/common/Header.astro';
 import Footer from '../components/common/Footer.astro';
 import ConsentBanner from '../components/common/ConsentBanner.astro';
+import { EXCHANGE_RATE_SNAPSHOT } from '../data/exchangeRates';
 
 interface Props {
   title: string;
@@ -14,33 +15,57 @@ interface Props {
   lang?: string;
 }
 
+const siteOrigin = 'https://freeaccuratecalculator.com';
+const pathname = Astro.url.pathname;
+const normalizedPathname = pathname.endsWith('/') ? pathname : `${pathname}/`;
+
 const {
   title,
   description,
-  canonicalUrl = Astro.url.href,
+  canonicalUrl = `${siteOrigin}${normalizedPathname}`,
   jsonLd,
   noindex = false,
   lang,
 } = Astro.props;
 
+// Ensure any passed-in canonicalUrl using localhost is normalized to production siteOrigin
+const finalCanonical = canonicalUrl.includes('localhost')
+  ? `${siteOrigin}${normalizedPathname}`
+  : canonicalUrl;
+
 const currentLocale = lang || Astro.currentLocale || 'en';
 const siteName = 'Free Accurate Calculator';
 const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 
-// Compute hreflang alternate URLs for technical SEO
-const siteOrigin = 'https://freeaccuratecalculator.com';
-const pathname = Astro.url.pathname;
-// Strip any active locale prefix to get base path
+// Compute technical SEO hreflangs
 const cleanPath = pathname.replace(/^\/(es|fr|hi)(\/|$)/, '/');
 const normalizedPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
 
-const hreflangLinks = [
-  { lang: 'en', href: `${siteOrigin}${normalizedPath}` },
-  { lang: 'es', href: `${siteOrigin}/es${normalizedPath === '/' ? '/' : normalizedPath}` },
-  { lang: 'fr', href: `${siteOrigin}/fr${normalizedPath === '/' ? '/' : normalizedPath}` },
-  { lang: 'hi', href: `${siteOrigin}/hi${normalizedPath === '/' ? '/' : normalizedPath}` },
-  { lang: 'x-default', href: `${siteOrigin}${normalizedPath}` },
-];
+// Set of verified multi-locale routes
+const multilangRoutes = new Set([
+  '/',
+  '/guides/',
+  '/guides/how-compound-interest-works/',
+  '/guides/how-to-calculate-percentages-accurately/',
+  '/math/percentage-calculator/',
+  '/finance/emi-calculator/',
+  '/health/bmi-calculator/',
+]);
+
+const isMultilangPage = multilangRoutes.has(normalizedPath);
+
+const hreflangLinks = isMultilangPage
+  ? [
+      { lang: 'en', href: `${siteOrigin}${normalizedPath}` },
+      { lang: 'es', href: `${siteOrigin}/es${normalizedPath === '/' ? '/' : normalizedPath}` },
+      { lang: 'fr', href: `${siteOrigin}/fr${normalizedPath === '/' ? '/' : normalizedPath}` },
+      { lang: 'hi', href: `${siteOrigin}/hi${normalizedPath === '/' ? '/' : normalizedPath}` },
+      { lang: 'x-default', href: `${siteOrigin}${normalizedPath}` },
+    ]
+  : [
+      { lang: currentLocale, href: finalCanonical },
+      { lang: 'x-default', href: `${siteOrigin}${normalizedPath}` },
+    ];
 ---
 
 <!doctype html>
@@ -54,7 +79,7 @@ const hreflangLinks = [
     <!-- SEO Meta Tags -->
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalUrl} />
+    <link rel="canonical" href={finalCanonical} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <!-- Multilingual Hreflang SEO -->
@@ -64,7 +89,7 @@ const hreflangLinks = [
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:url" content={finalCanonical} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content={siteName} />
@@ -89,26 +114,28 @@ const hreflangLinks = [
       })();
     </script>
 
-    <!-- Global Currency Engine: Runs synchronously before paint -->
-    <script is:inline>
+    <!-- Global Currency Engine & Live/Snapshot State -->
+    <script is:inline define:vars={{ exchangeSnapshot: EXCHANGE_RATE_SNAPSHOT }}>
       (function () {
         try {
           const currencyMap = {
-            USD: { symbol: '$', name: 'US Dollar', isIndian: false },
-            INR: { symbol: '₹', name: 'Indian Rupee', isIndian: true },
-            EUR: { symbol: '€', name: 'Euro', isIndian: false },
-            GBP: { symbol: '£', name: 'British Pound', isIndian: false },
-            CAD: { symbol: 'C$', name: 'Canadian Dollar', isIndian: false },
-            AUD: { symbol: 'A$', name: 'Australian Dollar', isIndian: false },
-            JPY: { symbol: '¥', name: 'Japanese Yen', isIndian: false },
-            CNY: { symbol: '¥', name: 'Chinese Yuan', isIndian: false },
-            SGD: { symbol: 'S$', name: 'Singapore Dollar', isIndian: false },
-            AED: { symbol: 'د.إ', name: 'UAE Dirham', isIndian: false },
-            SAR: { symbol: 'ر.س', name: 'Saudi Riyal', isIndian: false },
-            CHF: { symbol: 'CHF', name: 'Swiss Franc', isIndian: false },
-            NZD: { symbol: 'NZ$', name: 'New Zealand Dollar', isIndian: false },
-            ZAR: { symbol: 'R', name: 'South African Rand', isIndian: false },
+            USD: { symbol: '$', name: 'US Dollar', isIndian: false, decimals: 2, locale: 'en-US' },
+            INR: { symbol: '₹', name: 'Indian Rupee', isIndian: true, decimals: 2, locale: 'en-IN' },
+            EUR: { symbol: '€', name: 'Euro', isIndian: false, decimals: 2, locale: 'de-DE' },
+            GBP: { symbol: '£', name: 'British Pound', isIndian: false, decimals: 2, locale: 'en-GB' },
+            CAD: { symbol: 'C$', name: 'Canadian Dollar', isIndian: false, decimals: 2, locale: 'en-CA' },
+            AUD: { symbol: 'A$', name: 'Australian Dollar', isIndian: false, decimals: 2, locale: 'en-AU' },
+            JPY: { symbol: '¥', name: 'Japanese Yen', isIndian: false, decimals: 0, locale: 'ja-JP' },
+            CNY: { symbol: '¥', name: 'Chinese Yuan', isIndian: false, decimals: 2, locale: 'zh-CN' },
+            SGD: { symbol: 'S$', name: 'Singapore Dollar', isIndian: false, decimals: 2, locale: 'en-SG' },
+            AED: { symbol: 'د.إ', name: 'UAE Dirham', isIndian: false, decimals: 2, locale: 'ar-AE' },
+            SAR: { symbol: 'ر.स', name: 'Saudi Riyal', isIndian: false, decimals: 2, locale: 'ar-SA' },
+            CHF: { symbol: 'CHF', name: 'Swiss Franc', isIndian: false, decimals: 2, locale: 'de-CH' },
+            NZD: { symbol: 'NZ$', name: 'New Zealand Dollar', isIndian: false, decimals: 2, locale: 'en-NZ' },
+            ZAR: { symbol: 'R', name: 'South African Rand', isIndian: false, decimals: 2, locale: 'en-ZA' },
           };
+
+          window.__facExchangeSnapshot = exchangeSnapshot;
 
           function detect() {
             const langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
@@ -163,9 +190,25 @@ const hreflangLinks = [
             return currencyMap[c] || currencyMap.USD;
           };
 
+          window.facGetExchangeRates = function () {
+            return window.__facExchangeSnapshot;
+          };
+
+          window.facConvertCurrency = function (amount, fromCode, toCode) {
+            if (isNaN(amount) || !isFinite(amount) || amount === 0) return 0;
+            const from = (fromCode || 'USD').toUpperCase();
+            const to = (toCode || 'USD').toUpperCase();
+            if (from === to) return amount;
+            const rates = (window.__facExchangeSnapshot && window.__facExchangeSnapshot.rates) || {};
+            const rFrom = rates[from] || 1;
+            const rTo = rates[to] || 1;
+            return (amount / rFrom) * rTo;
+          };
+
           window.facSetActiveCurrency = function (code) {
             const upper = (code || 'USD').toUpperCase();
             if (!currencyMap[upper]) return;
+            const prev = window.__facCurrency || 'USD';
             window.__facCurrency = upper;
             localStorage.setItem('fac_currency', upper);
 
@@ -177,17 +220,56 @@ const hreflangLinks = [
               badge.textContent = currencyMap[upper].symbol;
             });
 
-            // Dispatch global event
+            // Dispatch global event with both new and previous currency
             window.dispatchEvent(
               new CustomEvent('currencychange', {
                 detail: {
                   currency: upper,
+                  prevCurrency: prev,
                   symbol: currencyMap[upper].symbol,
                   name: currencyMap[upper].name,
                   isIndian: currencyMap[upper].isIndian,
+                  decimals: currencyMap[upper].decimals,
                 },
               })
             );
+          };
+
+          // Native Locale Management (Independent from Currency)
+          let savedLocale = (localStorage.getItem('fac_locale') || '').toLowerCase();
+          const pathMatch = window.location.pathname.match(/^\/(es|fr|hi)(\/|$)/i);
+          if (pathMatch) {
+            savedLocale = pathMatch[1].toLowerCase();
+            localStorage.setItem('fac_locale', savedLocale);
+          }
+          if (!savedLocale) savedLocale = 'en';
+          window.__facLanguage = savedLocale;
+
+          window.facGetActiveLanguage = function () {
+            return window.__facLanguage || localStorage.getItem('fac_locale') || 'en';
+          };
+
+          window.facSetActiveLanguage = function (code) {
+            const target = (code || 'en').toLowerCase();
+            window.__facLanguage = target;
+            localStorage.setItem('fac_locale', target);
+
+            // Sync all language dropdowns on page
+            document.querySelectorAll('.fac-language-select').forEach((sel) => {
+              if (sel.value !== target) sel.value = target;
+            });
+
+            // Navigate to the equivalent localized page cleanly, preserving query params
+            const currentPath = window.location.pathname;
+            const cleanPath = currentPath.replace(/^\/(es|fr|hi)(\/|$)/i, '/') || '/';
+            let targetPath = '';
+            if (target === 'en') {
+              targetPath = cleanPath;
+            } else {
+              targetPath = `/${target}${cleanPath === '/' ? '/' : cleanPath}`;
+            }
+            if (!targetPath.endsWith('/')) targetPath += '/';
+            window.location.href = targetPath + window.location.search;
           };
         } catch (_) {}
       })();

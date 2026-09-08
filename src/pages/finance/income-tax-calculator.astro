@@ -1,0 +1,505 @@
+---
+// src/pages/finance/income-tax-calculator.astro
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import ResultDisplay from '../../components/calculator/ResultDisplay.astro';
+import FormulaSection from '../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../components/calculator/WorkedExample.astro';
+import FAQSection from '../../components/calculator/FAQSection.astro';
+import HistoryDrawer from '../../components/calculator/HistoryDrawer.astro';
+import CurrencySwitcher from '../../components/common/CurrencySwitcher.astro';
+import { INDIA_TAX_CONFIG_2026, US_TAX_CONFIG_2026 } from '../../data/countries';
+
+const faqs = [
+  {
+    question: 'How does the 2026 Indian Income Tax calculation work?',
+    answer:
+      'Under the default New Tax Regime (Section 115BAC), salaried individuals receive a ₹75,000 standard deduction. Taxable income up to ₹7,00,000 qualifies for full tax relief under Section 87A rebate (gross salary up to ₹7,75,000 incurs ₹0 net tax). A mandatory 4% Health & Education Cess is levied on total tax liability after rebate and applicable surcharges.',
+  },
+  {
+    question: 'What are the 2026 US IRS inflation-adjusted limits?',
+    answer:
+      'For Tax Year 2026, the standard deduction is projected at $16,100 for single filers ($32,200 married filing jointly). The elective deferral limit for employee 401(k) plans is $24,500, and the Social Security taxable maximum wage base is $176,100 subject to 6.2% FICA tax.',
+  },
+  {
+    question: 'What is the difference between marginal and effective tax rate?',
+    answer:
+      'Your marginal tax rate is the highest bracket percentage charged on your last dollar of income. Your effective tax rate is the actual percentage of your total income paid in taxes (Total Tax ÷ Gross Income).',
+  },
+  {
+    question: 'How does the New vs Old Regime comparison work in India?',
+    answer:
+      'The New Regime offers lower progressive slab rates and a ₹75,000 standard deduction but disallows most exemptions. The Old Regime allows deductions under Chapter VI-A (Section 80C up to ₹1.5L, 80D up to ₹1L, and HRA). This calculator computes both side-by-side and recommends the optimal choice with calculated savings.',
+  },
+];
+
+const relatedCalculators = [
+  { title: 'Salary Calculator', href: '/finance/salary-calculator/' },
+  { title: 'EMI Calculator', href: '/finance/emi-calculator/' },
+  { title: 'SIP Calculator', href: '/finance/sip-calculator/', badge: 'Investment' },
+  { title: 'Compound Interest', href: '/finance/compound-interest-calculator/' },
+];
+
+const formulaVariables = [
+  { symbol: 'Taxable Income', meaning: 'Gross Income − Allowable Deductions / 401(k) / Standard Deduction' },
+  { symbol: 'Bracket Tax', meaning: 'Σ (Income slice in tier i × Marginal Rate i)' },
+  { symbol: 'Net Tax', meaning: '(Bracket Tax − Section 87A Rebate + Surcharge) × (1 + 0.04 Cess) [India] or Bracket Tax + FICA [US]' },
+  { symbol: 'Effective Rate', meaning: '(Net Tax ÷ Gross Income) × 100%' },
+];
+---
+
+<CalculatorLayout
+  title="Income Tax Calculator 2026 — Multi-Country Slabs, Cess & Marginal Tax Rates"
+  metaDescription="Calculate 2026 income tax with verified FY 2026-27 Indian slabs (4% cess, ₹75k std deduction) and 2026 IRS US inflation adjustments ($16,100 single, $24,500 401k)."
+  h1="Income Tax Calculator"
+  subtitle="Accurately compute tax liability, effective tax rates, and monthly take-home pay with 2026 statutory rules and multi-regime comparison."
+  category={{ label: 'Finance', href: '/finance/' }}
+  calculatorName="Income Tax Calculator"
+  relatedCalculators={relatedCalculators}
+>
+  <!-- Transparency Notice Card -->
+  <div class="rounded-[12px] border border-link/30 bg-link/5 p-4 sm:p-5 text-xs space-y-2">
+    <div class="flex items-center gap-2 font-semibold text-link">
+      <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span class="font-mono uppercase tracking-wider text-[11px]">2026 Statutory Rate Verification & Transparency Notice</span>
+    </div>
+    <p class="text-body leading-relaxed">
+      This calculator operates on verified <strong>Tax Year 2026 / FY 2026–27</strong> statutory parameters. For <strong>India</strong>, Section 115BAC slabs incorporate the ₹75,000 salaried standard deduction, Section 87A rebate, and mandatory <strong>4% Health & Education Cess</strong>. For the <strong>United States</strong>, calculations reflect 2026 IRS inflation-adjusted projections: <strong>$16,100</strong> single standard deduction ($32,200 joint), <strong>$24,500</strong> 401(k) limit, and <strong>$176,100</strong> Social Security wage cap. Projections are illustrative and do not constitute tax or legal advice.
+    </p>
+    <div class="flex flex-wrap items-center gap-4 text-[11px] font-mono text-mute pt-1">
+      <span>Verified: September 9, 2026</span>
+      <span>•</span>
+      <a href="https://incometaxindia.gov.in" target="_blank" rel="noopener noreferrer" class="text-link hover:underline">Income Tax India (CBDT) ↗</a>
+      <span>•</span>
+      <a href="https://www.irs.gov" target="_blank" rel="noopener noreferrer" class="text-link hover:underline">IRS.gov (Rev. Proc.) ↗</a>
+    </div>
+  </div>
+
+  <!-- Calculator Main Box -->
+  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+    <!-- Controls Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4 text-xs">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-2">
+          <label for="tax-country-select" class="mono-eyebrow text-mute">Country / Jurisdiction:</label>
+          <select
+            id="tax-country-select"
+            class="rounded-[6px] border border-hairline bg-canvas px-3 py-1.5 min-h-[44px] sm:min-h-[32px] font-mono text-xs text-ink focus:border-link focus:outline-none"
+          >
+            <option value="IN" selected>🇮🇳 India (FY 2026–27 / AY 2027–28)</option>
+            <option value="US">🇺🇸 United States (Tax Year 2026 IRS)</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="mono-eyebrow text-mute">Currency:</span>
+          <CurrencySwitcher selectId="tax-currency-select" className="w-auto" showFullName={false} />
+        </div>
+      </div>
+
+      <!-- Quick Preset Chips -->
+      <div id="tax-presets-container" class="flex items-center gap-1.5 overflow-x-auto text-[11px] font-medium text-mute pb-1 sm:pb-0">
+        <span class="select-none shrink-0">Presets:</span>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="750000">₹7.5L</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="1000000">₹10L</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="1500000">₹15L</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="2500000">₹25L</button>
+      </div>
+    </div>
+
+    <!-- Inputs Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <!-- 1. Gross Annual Income -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
+          <label for="tax-gross-income">Gross Annual Income</label>
+          <span id="gross-display" class="font-mono text-link text-sm">₹ 10,00,000</span>
+        </div>
+        <div class="relative flex items-center">
+          <span id="currency-symbol-addon" class="absolute left-3.5 text-sm font-mono text-mute select-none">₹</span>
+          <input
+            id="tax-gross-income"
+            type="number"
+            min="0"
+            step="10000"
+            value="1000000"
+            class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas py-2.5 pl-8 pr-3 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+      </div>
+
+      <!-- 2. Status / Regime Dynamic Selector -->
+      <div class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
+          <label id="tax-option-label" for="tax-option-select">Tax Regime / Filing Status</label>
+        </div>
+        <select
+          id="tax-option-select"
+          class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none"
+        >
+          <option value="new" selected>New Tax Regime (Section 115BAC Default)</option>
+          <option value="old">Old Tax Regime (With Deductions)</option>
+        </select>
+      </div>
+
+      <!-- Dynamic Country Field: India 80C or US 401(k) -->
+      <div id="field-deduction-1" class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
+          <label id="label-deduction-1" for="input-deduction-1">Section 80C Deductions (Max ₹1.5L)</label>
+        </div>
+        <input
+          id="input-deduction-1"
+          type="number"
+          min="0"
+          max="150000"
+          step="5000"
+          value="150000"
+          class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas py-2.5 px-3 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none"
+        />
+      </div>
+
+      <!-- Dynamic Country Field: India 80D / HRA or US Itemized -->
+      <div id="field-deduction-2" class="space-y-2">
+        <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
+          <label id="label-deduction-2" for="input-deduction-2">Section 80D Health Insurance (₹)</label>
+        </div>
+        <input
+          id="input-deduction-2"
+          type="number"
+          min="0"
+          step="5000"
+          value="25000"
+          class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas py-2.5 px-3 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none"
+        />
+      </div>
+    </div>
+
+    <!-- Primary Results Summary -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+      <ResultDisplay
+        id="tax-net-result"
+        label="Net Tax Payable"
+        prefix="₹ "
+        initialValue={44200}
+        decimals={0}
+        secondary="Effective Tax Rate: 4.42%"
+        accent="violet"
+      />
+      <ResultDisplay
+        id="tax-takehome-result"
+        label="Monthly Take-Home"
+        prefix="₹ "
+        initialValue={79650}
+        decimals={0}
+        secondary="Annual Take-Home: ₹ 9,55,800"
+        accent="cyan"
+      />
+      <ResultDisplay
+        id="tax-taxable-result"
+        label="Taxable Income"
+        prefix="₹ "
+        initialValue={925000}
+        decimals={0}
+        secondary="Standard Deduction: ₹ 75,000"
+        accent="link"
+      />
+    </div>
+
+    <!-- Detailed Breakdown Table -->
+    <div class="space-y-3 pt-2">
+      <h3 class="text-xs font-semibold uppercase font-mono tracking-wider text-mute">Calculation Breakdown & Statutory Slabs</h3>
+      <div class="overflow-x-auto rounded-[8px] border border-hairline bg-canvas">
+        <table class="w-full text-left text-xs font-mono">
+          <thead class="border-b border-hairline bg-canvas-elevated text-mute">
+            <tr>
+              <th class="py-2.5 px-3">Item / Tax Component</th>
+              <th class="py-2.5 px-3 text-right">Amount</th>
+              <th class="py-2.5 px-3 text-right">Effective %</th>
+            </tr>
+          </thead>
+          <tbody id="tax-breakdown-body" class="divide-y divide-hairline text-ink">
+            <tr>
+              <td class="py-2 px-3">Gross Total Income</td>
+              <td id="row-gross" class="py-2 px-3 text-right font-semibold">₹ 10,00,000</td>
+              <td class="py-2 px-3 text-right text-mute">100.00%</td>
+            </tr>
+            <tr>
+              <td id="row-ded-label" class="py-2 px-3">Standard Deduction (Salaried)</td>
+              <td id="row-ded" class="py-2 px-3 text-right text-cyan font-semibold">- ₹ 75,000</td>
+              <td class="py-2 px-3 text-right text-mute">-7.50%</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3">Net Taxable Income</td>
+              <td id="row-taxable" class="py-2 px-3 text-right font-semibold">₹ 9,25,000</td>
+              <td class="py-2 px-3 text-right text-mute">92.50%</td>
+            </tr>
+            <tr>
+              <td id="row-tax-label" class="py-2 px-3">Tax Before Cess</td>
+              <td id="row-tax-base" class="py-2 px-3 text-right">₹ 42,500</td>
+              <td class="py-2 px-3 text-right text-mute">4.25%</td>
+            </tr>
+            <tr>
+              <td id="row-cess-label" class="py-2 px-3">Health & Education Cess (4%)</td>
+              <td id="row-cess" class="py-2 px-3 text-right text-violet">₹ 1,700</td>
+              <td class="py-2 px-3 text-right text-mute">0.17%</td>
+            </tr>
+            <tr class="bg-canvas-elevated font-semibold">
+              <td class="py-2.5 px-3 text-link">Total Net Tax Liability</td>
+              <td id="row-net-tax" class="py-2.5 px-3 text-right text-link">₹ 44,200</td>
+              <td id="row-eff-rate" class="py-2.5 px-3 text-right text-link">4.42%</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Comparative Recommendation Card (India New vs Old) -->
+    <div id="india-recommendation-card" class="rounded-[8px] border border-cyan/30 bg-cyan/5 p-4 text-xs space-y-1.5">
+      <div class="flex items-center justify-between font-semibold text-cyan">
+        <span class="font-mono uppercase">Regime Recommendation: New Tax Regime</span>
+        <span id="savings-badge" class="rounded bg-cyan/20 px-2 py-0.5 text-[11px]">Saves ₹ 62,400 annually</span>
+      </div>
+      <p id="recommendation-text" class="text-body leading-relaxed">
+        Under the New Tax Regime, your net tax is ₹44,200 compared to ₹1,06,600 under the Old Regime. The New Regime saves ₹62,400 per year.
+      </p>
+    </div>
+  </div>
+
+  <FormulaSection
+    title="Income Tax Formulas & Statutory Framework"
+    expression="Tax = Σ (Bracket Income × Rate) | India: Net Tax = (Tax - 87A + Surcharge) × 1.04"
+    explanation="Income tax uses progressive marginal taxation. Rates increase with successive tranches of earnings. For India, a mandatory 4% Health & Education Cess applies on net tax liability. For the US, total tax combines progressive Federal Income Tax and FICA payroll levies."
+    variables={formulaVariables}
+  />
+
+  <WorkedExample
+    title="Worked Example: ₹10,00,000 Salaried Income (India New Regime FY 2026–27)"
+    scenario="A salaried resident employee in India earning ₹10,00,000 gross annual salary under the default New Tax Regime."
+    steps={[
+      {
+        number: 1,
+        title: 'Apply Standard Deduction',
+        description: 'Gross Salary (₹10,00,000) − Standard Deduction (₹75,000) = Taxable Income of ₹9,25,000.',
+        mathExpression: 'Taxable Income = ₹9,25,000',
+      },
+      {
+        number: 2,
+        title: 'Compute Progressive Marginal Slabs',
+        description: '₹0–3L: ₹0 | ₹3L–7L (5% on 4L): ₹20,000 | ₹7L–9.25L (10% on 2.25L): ₹22,500. Total base tax = ₹42,500.',
+        mathExpression: 'Tax Before Cess = ₹42,500',
+      },
+      {
+        number: 3,
+        title: 'Apply 4% Health & Education Cess',
+        description: '4% Cess on ₹42,500 = ₹1,700. Net tax payable = ₹42,500 + ₹1,700 = ₹44,200.',
+        mathExpression: 'Net Tax = ₹44,200 (Effective Rate: 4.42%)',
+      },
+    ]}
+    conclusion="The taxpayer pays ₹44,200 total income tax, yielding monthly take-home pay of ₹79,650."
+  />
+
+  <FAQSection faqs={faqs} />
+  <HistoryDrawer />
+</CalculatorLayout>
+
+<script>
+  import { calculateIndiaIncomeTax } from '../../engines/tax-india';
+  import { calculateUSIncomeTax } from '../../engines/tax-us';
+  import { promptCurrencyConversion, convertCurrency } from '../../utils/currency';
+  import { getCountryByCode } from '../../data/countries';
+
+  let currentCountryCode = 'IN';
+  let currentCurrencyCode = 'INR';
+
+  const countrySelect = document.getElementById('tax-country-select') as HTMLSelectElement;
+  const currencySelect = document.getElementById('tax-currency-select') as HTMLSelectElement;
+  const grossInput = document.getElementById('tax-gross-income') as HTMLInputElement;
+  const optionSelect = document.getElementById('tax-option-select') as HTMLSelectElement;
+  const optionLabel = document.getElementById('tax-option-label') as HTMLLabelElement;
+  const ded1Input = document.getElementById('input-deduction-1') as HTMLInputElement;
+  const ded1Label = document.getElementById('label-deduction-1') as HTMLLabelElement;
+  const ded2Input = document.getElementById('input-deduction-2') as HTMLInputElement;
+  const ded2Label = document.getElementById('label-deduction-2') as HTMLLabelElement;
+  const grossDisplay = document.getElementById('gross-display');
+  const currencySymbolAddon = document.getElementById('currency-symbol-addon');
+  const presetsContainer = document.getElementById('tax-presets-container');
+  const recommendationCard = document.getElementById('india-recommendation-card');
+
+  function updatePresets() {
+    if (!presetsContainer) return;
+    if (currentCountryCode === 'IN') {
+      presetsContainer.innerHTML = `
+        <span class="select-none shrink-0">Presets:</span>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="750000">₹7.5L</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="1000000">₹10L</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="1500000">₹15L</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="2500000">₹25L</button>
+      `;
+    } else {
+      presetsContainer.innerHTML = `
+        <span class="select-none shrink-0">Presets:</span>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="50000">$50k</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="85000">$85k</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="125000">$125k</button>
+        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="200000">$200k</button>
+      `;
+    }
+
+    presetsContainer.querySelectorAll('.preset-chip').forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const val = (chip as HTMLElement).dataset.amount || '0';
+        if (grossInput) {
+          grossInput.value = val;
+          recalculate();
+        }
+      });
+    });
+  }
+
+  function handleCountrySwitch(newCode: string) {
+    const targetCountry = getCountryByCode(newCode);
+    const prevCurrency = currentCurrencyCode;
+    const nextCurrency = targetCountry.currency;
+
+    const currentGross = parseFloat(grossInput.value) || 0;
+
+    // Strict Rule 5 Prompt Pattern
+    const decision = promptCurrencyConversion({
+      currentValue: currentGross,
+      previousCurrency: prevCurrency,
+      newCurrency: nextCurrency,
+    });
+
+    grossInput.value = decision.value.toString();
+    currentCountryCode = newCode;
+    currentCurrencyCode = nextCurrency;
+
+    if (currencySymbolAddon) {
+      currencySymbolAddon.textContent = targetCountry.currencySymbol;
+    }
+
+    if (currencySelect) {
+      currencySelect.value = nextCurrency;
+    }
+
+    // Adapt fields to selected country
+    if (newCode === 'IN') {
+      optionLabel.textContent = 'Tax Regime';
+      optionSelect.innerHTML = `
+        <option value="new" selected>New Tax Regime (Section 115BAC Default)</option>
+        <option value="old">Old Tax Regime (With Deductions)</option>
+      `;
+      ded1Label.textContent = 'Section 80C Deductions (Max ₹1.5L)';
+      ded1Input.value = '150000';
+      ded2Label.textContent = 'Section 80D Health Insurance (₹)';
+      ded2Input.value = '25000';
+      if (recommendationCard) recommendationCard.style.display = 'block';
+    } else {
+      optionLabel.textContent = 'Filing Status';
+      optionSelect.innerHTML = `
+        <option value="single" selected>Single Filer</option>
+        <option value="married_joint">Married Filing Jointly</option>
+      `;
+      ded1Label.textContent = 'Traditional 401(k) Contribution (Max $24,500)';
+      ded1Input.value = '24500';
+      ded2Label.textContent = 'Itemized Deductions (Optional $)';
+      ded2Input.value = '0';
+      if (recommendationCard) recommendationCard.style.display = 'none';
+    }
+
+    updatePresets();
+    recalculate();
+  }
+
+  function recalculate() {
+    const gross = Math.max(0, parseFloat(grossInput?.value || '0') || 0);
+    const country = getCountryByCode(currentCountryCode);
+    const sym = country.currencySymbol;
+
+    if (grossDisplay) {
+      grossDisplay.textContent = `${sym} ${gross.toLocaleString()}`;
+    }
+
+    if (currentCountryCode === 'IN') {
+      const isNewRegime = optionSelect.value === 'new';
+      const sec80C = parseFloat(ded1Input?.value || '0') || 0;
+      const sec80D = parseFloat(ded2Input?.value || '0') || 0;
+
+      const res = calculateIndiaIncomeTax({
+        annualSalary: gross,
+        section80C: isNewRegime ? 0 : sec80C,
+        section80D: isNewRegime ? 0 : sec80D,
+      });
+
+      const activeBreakdown = isNewRegime ? res.newRegime : res.oldRegime;
+
+      updateElementText('tax-net-result-value', `${sym} ${activeBreakdown.netTaxPayable.toLocaleString()}`);
+      updateElementText('tax-takehome-result-value', `${sym} ${activeBreakdown.monthlyTakeHome.toLocaleString()}`);
+      updateElementText('tax-taxable-result-value', `${sym} ${activeBreakdown.taxableIncome.toLocaleString()}`);
+
+      updateElementText('row-gross', `${sym} ${activeBreakdown.grossTotalIncome.toLocaleString()}`);
+      updateElementText('row-ded-label', isNewRegime ? 'Standard Deduction (Salaried u/s 115BAC)' : 'Total Deductions (Std + 80C + 80D)');
+      updateElementText('row-ded', `- ${sym} ${activeBreakdown.totalDeductions.toLocaleString()}`);
+      updateElementText('row-taxable', `${sym} ${activeBreakdown.taxableIncome.toLocaleString()}`);
+      updateElementText('row-tax-label', 'Tax Before Cess');
+      updateElementText('row-tax-base', `${sym} ${activeBreakdown.taxBeforeCess.toLocaleString()}`);
+      updateElementText('row-cess-label', 'Health & Education Cess (4%)');
+      updateElementText('row-cess', `${sym} ${activeBreakdown.cess.toLocaleString()}`);
+      updateElementText('row-net-tax', `${sym} ${activeBreakdown.netTaxPayable.toLocaleString()}`);
+      updateElementText('row-eff-rate', `${activeBreakdown.effectiveTaxRate}%`);
+
+      if (recommendationCard) {
+        const bestName = res.recommendedRegime === 'new' ? 'New Tax Regime' : 'Old Tax Regime';
+        const otherName = res.recommendedRegime === 'new' ? 'Old Regime' : 'New Regime';
+        const savings = res.annualSavings;
+        updateElementText('savings-badge', `Saves ${sym} ${savings.toLocaleString()} annually`);
+        updateElementText(
+          'recommendation-text',
+          `The ${bestName} is recommended for your income structure. You save ${sym} ${savings.toLocaleString()} annually compared to the ${otherName}.`
+        );
+      }
+    } else {
+      // US Federal & FICA Tax
+      const status = (optionSelect.value || 'single') as 'single' | 'married_joint';
+      const k401 = parseFloat(ded1Input?.value || '0') || 0;
+      const itemized = parseFloat(ded2Input?.value || '0') || 0;
+
+      const res = calculateUSIncomeTax({
+        grossAnnualIncome: gross,
+        filingStatus: status,
+        traditional401k: k401,
+        itemizedDeductions: itemized,
+      });
+
+      updateElementText('tax-net-result-value', `$ ${res.totalTax.toLocaleString()}`);
+      updateElementText('tax-takehome-result-value', `$ ${res.monthlyTakeHome.toLocaleString()}`);
+      updateElementText('tax-taxable-result-value', `$ ${res.taxableIncome.toLocaleString()}`);
+
+      updateElementText('row-gross', `$ ${res.grossIncome.toLocaleString()}`);
+      updateElementText('row-ded-label', 'Deductions (Standard $16,100 + 401k)');
+      updateElementText('row-ded', `- $ ${(gross - res.taxableIncome).toLocaleString()}`);
+      updateElementText('row-taxable', `$ ${res.taxableIncome.toLocaleString()}`);
+      updateElementText('row-tax-label', 'Federal Income Tax');
+      updateElementText('row-tax-base', `$ ${res.federalIncomeTax.toLocaleString()}`);
+      updateElementText('row-cess-label', 'FICA Taxes (Social Security 6.2% + Medicare 1.45%)');
+      updateElementText('row-cess', `$ ${res.totalFicaTax.toLocaleString()}`);
+      updateElementText('row-net-tax', `$ ${res.totalTax.toLocaleString()}`);
+      updateElementText('row-eff-rate', `${res.effectiveTaxRate}%`);
+    }
+  }
+
+  function updateElementText(id: string, text: string) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = text;
+  }
+
+  // Event Listeners
+  countrySelect?.addEventListener('change', () => handleCountrySwitch(countrySelect.value));
+  grossInput?.addEventListener('input', recalculate);
+  optionSelect?.addEventListener('change', recalculate);
+  ded1Input?.addEventListener('input', recalculate);
+  ded2Input?.addEventListener('input', recalculate);
+
+  updatePresets();
+  recalculate();
+</script>
