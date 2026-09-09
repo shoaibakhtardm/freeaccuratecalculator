@@ -10,6 +10,12 @@
     "binding": "ASSETS",
     "directory": "./dist/client"
   },
+  "kv_namespaces": [
+    {
+      "binding": "SESSION",
+      "id": "39ed9d1a7a964b9ea44e9f168e9f1590"
+    }
+  ],
   "observability": {
     "enabled": true
   }
