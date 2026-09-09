@@ -1,0 +1,64 @@
+---
+// src/components/Header.astro
+import Logo from './Logo.astro';
+import ThemeToggle from './ThemeToggle.astro';
+import LanguageSelector from './LanguageSelector.astro';
+
+interface Props {
+  className?: string;
+}
+
+const { className = '' } = Astro.props;
+---
+
+<header
+  id="main-header"
+  class={`sticky top-0 left-0 right-0 z-50 w-full bg-white/90 dark:bg-gray-950/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80 transition-all duration-300 ${className}`}
+>
+  <!-- Royal Jewel Ribbon at Top -->
+  <div
+    class="h-[2.5px] w-full bg-gradient-to-r from-blue-600 via-indigo-600 via-purple-600 to-pink-500 shadow-[0_1px_6px_rgba(99,102,241,0.4)]"
+    aria-hidden="true"
+  ></div>
+
+  <div
+    class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between h-[66px] sm:h-20 gap-2 sm:gap-4"
+  >
+    <!-- [LEFT SECTION]: Logo -->
+    <div class="flex items-center shrink-0">
+      <Logo />
+    </div>
+
+    <!-- [RIGHT SECTION]: Language Selector + Sun/Moon Button -->
+    <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+      <!-- Language Selector with globe icon and flag options -->
+      <LanguageSelector
+        selectId="language-select"
+        className="inline-flex"
+      />
+
+      <!-- Theme Toggle: Sun ☀️ / Moon 🌙 button -->
+      <ThemeToggle id="theme-toggle" />
+    </div>
+  </div>
+</header>
+
+<!-- Scroll Detection Script -->
+<script is:inline>
+  (function () {
+    const header = document.getElementById('main-header');
+
+    // Subtle shadow on scroll
+    function onScroll() {
+      if (!header) return;
+      if (window.scrollY > 8) {
+        header.classList.add('shadow-md', 'dark:shadow-gray-950/60');
+      } else {
+        header.classList.remove('shadow-md', 'dark:shadow-gray-950/60');
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  })();
+</script>

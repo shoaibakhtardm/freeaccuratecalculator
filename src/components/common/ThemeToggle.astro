@@ -81,9 +81,6 @@ const { className = '' } = Astro.props;
         const isDark = document.documentElement.classList.toggle('dark');
         localStorage.setItem('theme', isDark ? 'dark' : 'light');
         updateIcons();
-        if (typeof window.facShowToast === 'function') {
-          window.facShowToast(`Theme set to ${isDark ? 'Dark' : 'Light'} mode`, 'info', 2000);
-        }
         window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: isDark ? 'dark' : 'light' } }));
       });
     }

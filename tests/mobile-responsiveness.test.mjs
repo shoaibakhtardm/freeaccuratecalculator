@@ -19,22 +19,13 @@ test('Mobile Responsiveness Verification — HTML & CSS Audit', async (t) => {
     assert.ok(cssContent.includes('overflow-x:hidden') || cssContent.includes('overflow-x: hidden'));
   });
 
-  await t.test('Header has mobile hamburger button and collapsible menu', () => {
-    const indexHtml = fs.readFileSync(path.join(distClient, 'index.html'), 'utf-8');
-    assert.ok(indexHtml.includes('id="mobile-menu-btn"'));
-    assert.ok(indexHtml.includes('id="mobile-menu"'));
-    assert.ok(indexHtml.includes('aria-label="Toggle navigation menu"'));
-  });
-
   await t.test('Header controls are compact to prevent overflow on 320px screens and meet 44px touch targets', () => {
     const indexHtml = fs.readFileSync(path.join(distClient, 'index.html'), 'utf-8');
     assert.ok(indexHtml.includes('id="language-select"'));
-    assert.ok(indexHtml.includes('id="currency-select"'));
     assert.ok(indexHtml.includes('id="theme-toggle"'));
     assert.ok(indexHtml.includes('min-h-[44px]') && indexHtml.includes('min-w-[44px]'));
-    assert.ok(indexHtml.includes('id="mobile-language-select"'));
-    assert.ok(indexHtml.includes('id="mobile-currency-select"'));
   });
+
 
   await t.test('Hero section has responsive text clamp and 44px filter pills', () => {
     const indexHtml = fs.readFileSync(path.join(distClient, 'index.html'), 'utf-8');
@@ -79,8 +70,8 @@ test('Mobile Responsiveness Verification — HTML & CSS Audit', async (t) => {
   });
 
   await t.test('AdSlot containers enforce max-w-full and overflow-hidden', () => {
-    const indexHtml = fs.readFileSync(path.join(distClient, 'index.html'), 'utf-8');
-    assert.ok(indexHtml.includes('max-w-full overflow-hidden'));
+    const financeHtml = fs.readFileSync(path.join(distClient, 'finance/index.html'), 'utf-8');
+    assert.ok(financeHtml.includes('max-w-full overflow-hidden'));
   });
 
   await t.test('Consent banner action buttons have 44px touch target on mobile', () => {

@@ -93,6 +93,6 @@ test('Single Sitemap.xml integrity and discovery audit', async (t) => {
     const excluded = ['/dev-preview/'];
     const missing = htmlRoutes.filter((r) => !sitemapUrls.has(r) && !excluded.includes(r));
     assert.equal(missing.length, 0, `Pages missing from sitemap.xml: ${missing.join(', ')}`);
-    assert.equal(sitemapUrls.size, 192, 'Expected 192 total URLs in sitemap.xml');
+    assert.equal(sitemapUrls.size, 274, 'Expected 274 total URLs in sitemap.xml');
   });
 });

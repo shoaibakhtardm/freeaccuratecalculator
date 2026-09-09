@@ -137,7 +137,6 @@ test('Competitive Upgrades — Dark Mode & WCAG Contrast Verification', () => {
   assert.ok(toggleContent.includes('id="theme-toggle"'), 'Theme toggle button must exist');
   assert.ok(toggleContent.includes("toggleBtn.setAttribute('aria-label'"), 'Must dynamically update aria-label for screen readers');
   assert.ok(toggleContent.includes("new CustomEvent('themechange'"), 'Must broadcast themechange event for dynamic components');
-  assert.ok(toggleContent.includes('window.facShowToast'), 'Must provide toast feedback upon theme switch');
 
   // Verify global CSS dark mode and WCAG contrast definitions
   const globalCssPath = path.join(projectRoot, 'src', 'styles', 'global.css');

@@ -1,7 +1,6 @@
 ---
 // src/pages/hi/index.astro
 import Layout from '../../layouts/Layout.astro';
-import AdSlot from '../../components/common/AdSlot.astro';
 
 const categories = [
   {
@@ -73,47 +72,69 @@ const websiteSchema = {
   jsonLd={websiteSchema}
   lang="hi"
 >
-  <!-- Hero Section -->
-  <section class="relative overflow-hidden rounded-[16px] border border-hairline bg-canvas-elevated/70 px-4 py-8 sm:p-14 lg:p-20 text-center hero-mesh-gradient shadow-whisper">
-    <div class="relative z-10 mx-auto max-w-3xl space-y-6">
-      <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas/80 px-3 py-1 text-xs text-body backdrop-blur-sm shadow-whisper">
-        <span class="flex h-2 w-2 rounded-full bg-cyan animate-pulse"></span>
-        <span class="font-mono text-[11px] font-medium tracking-wide uppercase">अंतरराष्ट्रीय संस्करण (हिन्दी)</span>
+  <!-- [STARTUP HERO SECTION]: Silicon Valley Precision Layout -->
+  <section class="relative overflow-hidden rounded-3xl sm:rounded-[36px] border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-950/70 px-4 py-10 sm:py-16 md:py-20 text-center hero-mesh-gradient shadow-xs sm:shadow-lg backdrop-blur-xl">
+    <!-- Top Ambient Studio Glow (Linear / Vercel style) -->
+    <div
+      class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 sm:w-[540px] h-44 sm:h-64 bg-gradient-to-b from-indigo-500/20 via-blue-500/10 to-transparent blur-3xl pointer-events-none"
+      aria-hidden="true"
+    ></div>
+
+    <div class="relative z-10 mx-auto max-w-3xl space-y-5 sm:space-y-6">
+      <!-- 1. The Startup Pill Badge -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-indigo-500/20 dark:border-indigo-400/30 bg-gradient-to-r from-blue-500/8 via-indigo-500/8 to-purple-500/8 dark:from-blue-500/15 dark:via-indigo-500/15 dark:to-purple-500/15 px-3.5 py-1.5 shadow-2xs backdrop-blur-md transition-all hover:border-indigo-500/40 select-none">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="font-outfit text-[11px] sm:text-xs font-bold tracking-wider uppercase text-slate-700 dark:text-slate-200">
+          अंतरराष्ट्रीय संस्करण (हिन्दी)
+        </span>
+        <span class="text-indigo-500 dark:text-indigo-400 text-xs font-bold ml-0.5">✦</span>
       </div>
 
-      <h1 class="display-hero text-ink">
+      <!-- 2. The Main H1 Headline: Outfit Font, Startup Rhythm & Gradient -->
+      <h1 class="font-outfit text-3xl sm:text-5xl lg:text-[54px] font-black tracking-[-0.03em] text-slate-900 dark:text-white leading-[1.15] sm:leading-[1.1] text-balance">
         सटीक गणना। <br class="hidden sm:inline" />
-        <span class="bg-gradient-to-r from-link via-violet to-magenta bg-clip-text text-transparent">
+        <span class="bg-gradient-to-r from-blue-600 via-indigo-600 via-purple-600 to-pink-500 dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent">
           तेज़, सही और बिल्कुल स्पष्ट।
         </span>
       </h1>
 
-      <p class="text-base sm:text-lg text-body max-w-2xl mx-auto leading-relaxed font-normal">
-        सत्यापित गणितीय शुद्धता, स्वच्छ इंटरफ़ेस और शून्य भ्रम। सीधे आपके ब्राउज़र में त्वरित परिणाम और क्लाउडफ्लेयर एज नेटवर्क द्वारा संचालित।
+      <!-- 3. Subtitle Paragraph: Refined Typography & Balanced Width -->
+      <p class="font-sans text-sm sm:text-base md:text-[17px] text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal text-balance px-2">
+        सत्यापित गणितीय शुद्धता, स्वच्छ इंटरफ़ेस और शून्य भ्रम। सीधे आपके ब्राउज़र में त्वरित परिणाम और अत्याधुनिक क्लाउडफ्लेयर एज नेटवर्क द्वारा संचालित।
       </p>
 
-      <!-- Search Input -->
+      <!-- 4. Spotlight Search Bar (Raycast / Linear Command-Bar Style) -->
       <div class="pt-2 max-w-xl mx-auto">
-        <div class="relative flex items-center">
-          <svg class="absolute left-4 h-4 w-4 text-mute pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        <div class="relative flex items-center group">
+          <div
+            class="absolute -inset-1 rounded-2xl sm:rounded-full bg-gradient-to-r from-blue-600/25 via-indigo-600/25 to-purple-600/25 opacity-0 group-focus-within:opacity-100 blur-md transition-all duration-300 pointer-events-none"
+            aria-hidden="true"
+          ></div>
+
+          <svg
+            class="absolute left-4 h-4.5 w-4.5 text-slate-400 dark:text-slate-500 group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 transition-colors pointer-events-none z-10"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2.2"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
+
           <input
             id="search-input"
             type="search"
             placeholder="कैलकुलेटर खोजें (उदा. 'प्रतिशत', 'ऋण/ईएमआई', 'बीएमआई')..."
-            class="w-full rounded-[100px] border border-hairline bg-canvas py-3.5 pl-11 pr-4 text-base sm:text-sm text-ink placeholder-faint shadow-whisper focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-all"
+            class="relative z-0 w-full rounded-2xl sm:rounded-full border border-slate-200/90 dark:border-slate-800/90 bg-white/95 dark:bg-slate-900/95 py-3.5 sm:py-4 pl-11 pr-4 text-sm sm:text-base text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-indigo-400/10 transition-all backdrop-blur-xl"
             aria-label="कैलकुलेटर खोजें"
           />
         </div>
       </div>
     </div>
   </section>
-
-  <!-- Top Reserved Ad Slot -->
-  <div class="mt-8">
-    <AdSlot slotId="home-leaderboard" format="horizontal" />
-  </div>
 
   <!-- Category Showcases -->
   <div class="mt-12 space-y-16">

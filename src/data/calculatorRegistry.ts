@@ -13,9 +13,42 @@ export interface CalculatorInput {
   helpText?: string;
 }
 
+import { ALL_EXTENDED_CALCULATORS } from './extended/index.ts';
+
+export type CategoryId =
+  | 'finance'
+  | 'insurance'
+  | 'legal'
+  | 'business'
+  | 'construction'
+  | 'real-estate'
+  | 'technology'
+  | 'health'
+  | 'statistics'
+  | 'marketing'
+  | 'math'
+  | 'automotive'
+  | 'biology'
+  | 'chemistry'
+  | 'physics'
+  | 'food'
+  | 'sports'
+  | 'ecology'
+  | 'everyday'
+  | 'converter'
+  | 'profession';
+
+export interface CategoryMeta {
+  id: CategoryId;
+  name: string;
+  eyebrow: string;
+  description: string;
+  icon: string;
+}
+
 export interface CalculatorEntry {
   id: string;
-  category: 'finance' | 'health' | 'math' | 'everyday';
+  category: CategoryId;
   name: string;
   title: string;
   description: string;
@@ -54,7 +87,7 @@ export interface CalculatorEntry {
   computeScript: string;
 }
 
-export const CATEGORY_METADATA = {
+export const CATEGORY_METADATA: Record<CategoryId, CategoryMeta> = {
   finance: {
     id: 'finance',
     name: 'Finance Calculators',
@@ -62,30 +95,149 @@ export const CATEGORY_METADATA = {
     description: 'Loan amortization, compounding interest, mortgages, salary planning, and tax calculations with international currency support.',
     icon: 'dollar-sign',
   },
+  insurance: {
+    id: 'insurance',
+    name: 'Insurance Calculators',
+    eyebrow: 'Actuarial & Risk Coverage Mathematics',
+    description: 'Term life coverage, health plan out-of-pocket estimations, annuity payouts, and auto insurance estimators.',
+    icon: 'shield',
+  },
+  legal: {
+    id: 'legal',
+    name: 'Legal Calculators',
+    eyebrow: 'Statutory Guidelines & Settlement Estimators',
+    description: 'Child support guidelines, alimony estimations, personal injury settlement multipliers, and legal fee structures.',
+    icon: 'scale',
+  },
+  business: {
+    id: 'business',
+    name: 'Business Calculators',
+    eyebrow: 'Corporate Finance & Operational Metrics',
+    description: 'Break-even volume analysis, ROI return formulas, profit margin optimization, and business valuation multiples.',
+    icon: 'briefcase',
+  },
+  construction: {
+    id: 'construction',
+    name: 'Construction Calculators',
+    eyebrow: 'Civil & Material Estimation Mathematics',
+    description: 'Concrete slab yardage, square footage, paint coverage requirements, and brick masonry counts.',
+    icon: 'hammer',
+  },
+  'real-estate': {
+    id: 'real-estate',
+    name: 'Real Estate Calculators',
+    eyebrow: 'Property Investment & Yield Analysis',
+    description: 'Rental yield percentages, capitalization rates (Cap Rate), property tax assessments, and mortgage cash flows.',
+    icon: 'home',
+  },
+  technology: {
+    id: 'technology',
+    name: 'Technology Calculators',
+    eyebrow: 'Network, Cryptographic & Computational Tools',
+    description: 'IPv4 CIDR subnetting, data transfer times, bandwidth requirements, and cryptographic password entropy.',
+    icon: 'cpu',
+  },
   health: {
     id: 'health',
-    name: 'Fitness & Health Calculators',
+    name: 'Health Calculators',
     eyebrow: 'Clinically Validated Health Metrics',
     description: 'Scientifically validated BMI, caloric intake, basal metabolic rate, pregnancy gestation, and body composition tools.',
     icon: 'activity',
   },
+  statistics: {
+    id: 'statistics',
+    name: 'Statistics Calculators',
+    eyebrow: 'Inferential & Descriptive Probability',
+    description: 'Sample standard deviation, confidence intervals, sample size requirements, and probability event distributions.',
+    icon: 'bar-chart',
+  },
+  marketing: {
+    id: 'marketing',
+    name: 'Marketing Calculators',
+    eyebrow: 'Digital Acquisition & Growth Analytics',
+    description: 'Customer acquisition cost (CAC), return on ad spend (ROAS), funnel conversion rates, and email marketing ROI.',
+    icon: 'trending-up',
+  },
   math: {
     id: 'math',
-    name: 'Math & Precision Tools',
+    name: 'Math Calculators',
     eyebrow: 'Exact Mathematical & Statistical Algorithms',
     description: 'Percentages, scientific functions, fractions, standard deviation, and geometric calculations with step-by-step proofs.',
     icon: 'calculator',
   },
+  automotive: {
+    id: 'automotive',
+    name: 'Automotive Calculators',
+    eyebrow: 'Vehicle Ownership & Operational Economics',
+    description: 'Auto loan financing, commute fuel costs, gas mileage MPG tracking, and vehicle depreciation curves.',
+    icon: 'truck',
+  },
+  biology: {
+    id: 'biology',
+    name: 'Biology Calculators',
+    eyebrow: 'Genetic & Biochemical Quantitative Models',
+    description: 'Punnett square inheritance probabilities, Hardy-Weinberg equilibrium, bacterial cell growth, and DNA/RNA molecular weights.',
+    icon: 'dna',
+  },
+  chemistry: {
+    id: 'chemistry',
+    name: 'Chemistry Calculators',
+    eyebrow: 'Stoichiometric & Solution Thermodynamics',
+    description: 'Molecular molar mass, solution dilutions (C1V1 = C2V2), pH/pOH acid-base calculations, and theoretical yields.',
+    icon: 'flask',
+  },
+  physics: {
+    id: 'physics',
+    name: 'Physics Calculators',
+    eyebrow: 'Kinematic & Electromagnetic Mechanics',
+    description: 'Kinematic velocity and acceleration, kinetic energy, Ohm’s law electrical circuits, and parabolic projectile trajectory.',
+    icon: 'zap',
+  },
+  food: {
+    id: 'food',
+    name: 'Food Calculators',
+    eyebrow: 'Culinary Formulation & Macro Partitioning',
+    description: 'Recipe scaling ratios, macronutrient caloric splits, baker’s percentage bread formulations, and per-serving nutrition.',
+    icon: 'coffee',
+  },
+  sports: {
+    id: 'sports',
+    name: 'Sports Calculators',
+    eyebrow: 'Exercise Physiology & Performance Metrics',
+    description: 'Running pace pacing splits, target heart rate zones, Brzycki one-rep max (1RM), and golf course handicap differentials.',
+    icon: 'award',
+  },
+  ecology: {
+    id: 'ecology',
+    name: 'Ecology Calculators',
+    eyebrow: 'Environmental Footprint & Renewable Power',
+    description: 'Carbon footprint emissions, residential solar photovoltaic generation, water conservation savings, and compost C:N ratios.',
+    icon: 'feather',
+  },
   everyday: {
     id: 'everyday',
-    name: 'Everyday & Utility Calculators',
+    name: 'Everyday Life Calculators',
     eyebrow: 'Practical Everyday Productivity Tools',
     description: 'Chronological age, timesheets, date intervals, GPA grades, concrete volume, IP subnets, and secure cryptographic tools.',
     icon: 'clock',
   },
-} as const;
+  converter: {
+    id: 'converter',
+    name: 'Converter Calculators',
+    eyebrow: 'Standardized International Unit Conversions',
+    description: 'Precision metric and imperial conversions for length, mass, temperature, volume, and data units with exact factors.',
+    icon: 'refresh-cw',
+  },
+  profession: {
+    id: 'profession',
+    name: 'Profession Calculators',
+    eyebrow: 'Specialized Career & Industry Algorithms',
+    description: 'Calculators engineered for doctors, engineers, lawyers, nurses, architects, accountants, developers, and industry specialists.',
+    icon: 'briefcase',
+  },
+};
 
-export const CALCULATORS: CalculatorEntry[] = [
+const BASE_CALCULATORS: CalculatorEntry[] = [
   // ==========================================
   // FINANCE (15 Tools)
   // ==========================================
@@ -3791,4 +3943,10 @@ export const CALCULATORS: CalculatorEntry[] = [
     `,
   },
 ];
+
+export const CALCULATORS: CalculatorEntry[] = [
+  ...BASE_CALCULATORS,
+  ...ALL_EXTENDED_CALCULATORS,
+];
+
 

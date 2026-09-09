@@ -1,0 +1,208 @@
+---
+// src/pages/[category]/index.astro
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
+import AdSlot from '../../components/common/AdSlot.astro';
+import {
+  CALCULATORS,
+  CATEGORY_METADATA,
+  type CategoryId,
+  type CategoryMeta,
+} from '../../data/calculatorRegistry';
+
+export async function getStaticPaths() {
+  const categoryKeys = Object.keys(CATEGORY_METADATA) as CategoryId[];
+  return categoryKeys.map((catId) => ({
+    params: { category: catId },
+    props: {
+      categoryKey: catId,
+      meta: CATEGORY_METADATA[catId],
+    },
+  }));
+}
+
+interface Props {
+  categoryKey: CategoryId;
+  meta: CategoryMeta;
+}
+
+const { categoryKey, meta } = Astro.props;
+
+// Additional dedicated calculators per category that have custom standalone pages
+const EXTRA_DEDICATED_CALCS: Record<string, any[]> = {
+  finance: [
+    {
+      id: 'emi-calculator',
+      category: 'finance',
+      name: 'EMI Calculator',
+      description: 'Equated Monthly Installment with reducing balance interest, Lakh/Crore support & amortization schedule.',
+      badge: 'Country-Aware',
+      badgeColor: 'text-cyan border-cyan/30 bg-cyan/10',
+    },
+  ],
+  health: [
+    {
+      id: 'bmi-calculator',
+      category: 'health',
+      name: 'BMI Calculator',
+      description: 'Body Mass Index with instant Metric (kg/cm) & Imperial (lbs/ft-in) switch and WHO classification.',
+      badge: 'Unit-Aware',
+      badgeColor: 'text-violet border-violet/30 bg-violet/10',
+    },
+  ],
+  math: [
+    {
+      id: 'percentage-calculator',
+      category: 'math',
+      name: 'Percentage Calculator',
+      description: 'Calculate percentages, increases, decreases, differences, fractions to percentage, and reverse percentage.',
+      badge: 'Step-by-Step',
+      badgeColor: 'text-link border-link/30 bg-link/10',
+    },
+  ],
+};
+
+const categoryCalcs = CALCULATORS.filter((c) => c.category === categoryKey);
+const dedicated = EXTRA_DEDICATED_CALCS[categoryKey] || [];
+
+// Combine and deduplicate by id
+const seenIds = new Set<string>();
+const allCalcs: any[] = [];
+
+[...categoryCalcs, ...dedicated].forEach((c) => {
+  if (!seenIds.has(c.id)) {
+    seenIds.add(c.id);
+    allCalcs.push(c);
+  }
+});
+
+allCalcs.sort((a, b) => a.name.localeCompare(b.name));
+
+const categorySchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: meta.name,
+  description: meta.description,
+  url: `https://freeaccuratecalculator.com/${categoryKey}/`,
+};
+---
+
+<Layout
+  title={`${meta.name} — Free, Accurate & Instant Precision Calculations`}
+  description={meta.description}
+  jsonLd={categorySchema}
+>
+  <div class="max-w-7xl mx-auto space-y-8">
+    <!-- Breadcrumbs -->
+    <Breadcrumbs items={[{ label: meta.name }]} />
+
+    <!-- Category Header Hero -->
+    <section class="relative overflow-hidden rounded-[16px] border border-hairline bg-canvas-elevated/70 px-4 py-8 sm:p-12 hero-mesh-gradient shadow-whisper">
+      <div class="max-w-3xl space-y-4">
+        <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas/80 px-3 py-1 text-xs text-body shadow-whisper">
+          <span class="flex h-2 w-2 rounded-full bg-cyan animate-pulse"></span>
+          <span class="font-mono text-[11px] font-medium tracking-wide uppercase">
+            {allCalcs.length} Verified {meta.name}
+          </span>
+        </div>
+
+        <!-- Exact Headline Requested by User -->
+        <h1 class="display-hero text-ink">{meta.name}</h1>
+        <p class="text-base text-body leading-relaxed">{meta.description}</p>
+
+        <!-- Category Instant Filter Search -->
+        <div class="pt-2 max-w-lg">
+          <div class="relative flex items-center">
+            <svg class="absolute left-3.5 h-4 w-4 text-mute pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            <input
+              id="category-search"
+              type="search"
+              placeholder={`Filter ${meta.name.toLowerCase()}...`}
+              class="w-full min-h-[44px] rounded-[100px] border border-hairline bg-canvas py-2.5 pl-10 pr-4 text-base sm:text-sm text-ink placeholder-faint shadow-whisper focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-all"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Top Reserved Ad Slot -->
+    <AdSlot slotId={`category-${categoryKey}-top`} format="horizontal" />
+
+    <!-- Calculator Cards Grid -->
+    <div id="calculator-grid" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {allCalcs.map((calc) => (
+        <a
+          href={`/${calc.category}/${calc.id}/`}
+          class="calc-card group relative flex flex-col justify-between rounded-[12px] border border-hairline bg-canvas-elevated p-5 shadow-whisper transition-all duration-200 hover:-translate-y-0.5 hover:border-hairline-focus hover:shadow-card"
+          data-name={calc.name.toLowerCase()}
+          data-desc={(calc.description || '').toLowerCase()}
+        >
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class={`rounded-full border px-2 py-0.5 text-[10px] font-mono font-medium ${calc.badgeColor || 'text-cyan border-cyan/30 bg-cyan/10'}`}>
+                {calc.badge || 'Verified'}
+              </span>
+              <span class="text-[11px] font-mono text-mute">Instant Client-Side</span>
+            </div>
+            <h2 class="text-base font-semibold text-ink group-hover:text-link transition-colors">
+              {calc.name}
+            </h2>
+            <p class="text-xs leading-relaxed text-body line-clamp-2">
+              {calc.description}
+            </p>
+          </div>
+          <div class="mt-4 flex items-center text-xs font-medium text-link">
+            <span>Calculate now</span>
+            <svg class="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <!-- Bottom Reserved Ad Slot for Category Hub -->
+    <AdSlot slotId={`category-${categoryKey}-bottom`} format="horizontal" className="my-6" />
+
+    <!-- Educational Footer Overview -->
+    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper">
+      <h3 class="heading-md text-ink">Understanding {meta.name}</h3>
+      <p class="text-xs sm:text-sm text-body leading-relaxed">
+        {meta.description} All algorithms execute strictly client-side using IEEE 754 floating-point precision, ensuring zero latency, maximum computational accuracy, and 100% data privacy without transmitting inputs across external servers.
+      </p>
+    </section>
+  </div>
+</Layout>
+
+<script is:inline>
+  (function () {
+    const searchInput = document.getElementById('category-search');
+    const cards = document.querySelectorAll('.calc-card');
+
+    function filterCards(q) {
+      cards.forEach((card) => {
+        const name = card.dataset.name || '';
+        const desc = card.dataset.desc || '';
+        const matches = !q || name.includes(q) || desc.includes(q);
+        card.style.display = matches ? 'flex' : 'none';
+      });
+    }
+
+    if (searchInput) {
+      // Check query param from URL (e.g. ?q=search)
+      const params = new URLSearchParams(window.location.search);
+      const initialQuery = params.get('q');
+      if (initialQuery) {
+        searchInput.value = initialQuery;
+        filterCards(initialQuery.toLowerCase().trim());
+      }
+
+      searchInput.addEventListener('input', (e) => {
+        const q = e.target.value.toLowerCase().trim();
+        filterCards(q);
+      });
+    }
+  })();
+</script>
