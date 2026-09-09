@@ -1,5 +1,11 @@
 // src/engines/investment.ts
 
+/**
+ * Robust financial rounding helper to eradicate JS IEEE-754 floating-point drift.
+ * Rounds standard monetary amounts to 2 decimal places (cents) with Number.EPSILON protection.
+ */
+export const roundToCents = (num: number): number => Math.round((num + Number.EPSILON) * 100) / 100;
+
 export type ContributionTiming = 'beginning' | 'end';
 
 /**
@@ -34,7 +40,7 @@ export interface SIPResult {
  * - End of period (Ordinary Annuity / US standard):
  *     FV = P * [((1 + i)^n - 1) / i]
  *
- * Robustly protected against division-by-zero (when return rate is 0%).
+ * Robustly protected against division-by-zero (when return rate is 0%) and floating-point drift.
  */
 export function calculateSIP(
   monthlyInvestment: number,
@@ -42,7 +48,7 @@ export function calculateSIP(
   timeHorizonYears: number,
   contributionTiming: ContributionTiming = 'beginning'
 ): SIPResult {
-  const p = Math.max(0, Number(monthlyInvestment) || 0);
+  const p = roundToCents(Math.max(0, Number(monthlyInvestment) || 0));
   const annualRate = Math.max(0, Number(expectedReturnRate) || 0);
   const years = Math.max(0, Number(timeHorizonYears) || 0);
 
@@ -66,7 +72,7 @@ export function calculateSIP(
 
   const months = Math.round(years * 12);
   const monthlyRate = annualRate / 12 / 100;
-  const investedAmount = p * months;
+  const investedAmount = roundToCents(p * months);
 
   let totalValue = 0;
 
@@ -81,8 +87,8 @@ export function calculateSIP(
       const ordinaryAnnuity = p * ((compoundFactor - 1) / monthlyRate);
 
       totalValue = contributionTiming === 'beginning'
-        ? ordinaryAnnuity * (1 + monthlyRate)
-        : ordinaryAnnuity;
+        ? roundToCents(ordinaryAnnuity * (1 + monthlyRate))
+        : roundToCents(ordinaryAnnuity);
     }
   }
 
@@ -90,12 +96,14 @@ export function calculateSIP(
     totalValue = investedAmount;
   }
 
-  const estimatedReturns = Math.max(0, totalValue - investedAmount);
+  const roundedInvested = Math.round(investedAmount);
+  const roundedTotal = Math.round(totalValue);
+  const roundedReturns = Math.max(0, roundedTotal - roundedInvested);
 
   return {
-    investedAmount: Math.round(investedAmount),
-    estimatedReturns: Math.round(estimatedReturns),
-    totalValue: Math.round(totalValue),
+    investedAmount: roundedInvested,
+    estimatedReturns: roundedReturns,
+    totalValue: roundedInvested + roundedReturns,
     contributionTiming,
   };
 }
@@ -106,7 +114,7 @@ export interface StepUpSIPResult extends SIPResult {
 
 /**
  * Calculates Step-Up SIP returns where monthly investment increases annually.
- * Accommodates beginning vs end of period deposit timing.
+ * Accommodates beginning vs end of period deposit timing with roundToCents precision at every month.
  */
 export function calculateStepUpSIP(
   initialMonthlyInvestment: number,
@@ -115,7 +123,7 @@ export function calculateStepUpSIP(
   timeHorizonYears: number,
   contributionTiming: ContributionTiming = 'beginning'
 ): StepUpSIPResult {
-  const p = Math.max(0, Number(initialMonthlyInvestment) || 0);
+  const p = roundToCents(Math.max(0, Number(initialMonthlyInvestment) || 0));
   const stepUp = Math.max(0, Number(annualStepUpPercent) || 0) / 100;
   const annualRate = Math.max(0, Number(expectedReturnRate) || 0) / 100;
   const monthlyRate = annualRate / 12;
@@ -149,16 +157,14 @@ export function calculateStepUpSIP(
   for (let y = 1; y <= years; y++) {
     for (let m = 1; m <= 12; m++) {
       if (contributionTiming === 'beginning') {
-        // Deposited at the start: earns monthly interest in full
-        balance = (balance + currentMonthlyP) * (1 + monthlyRate);
+        balance = roundToCents((balance + currentMonthlyP) * (1 + monthlyRate));
       } else {
-        // Deposited at the end: existing balance earns interest, then installment added
-        balance = balance * (1 + monthlyRate) + currentMonthlyP;
+        balance = roundToCents(balance * (1 + monthlyRate) + currentMonthlyP);
       }
-      totalInvested += currentMonthlyP;
+      totalInvested = roundToCents(totalInvested + currentMonthlyP);
     }
     if (y < years) {
-      currentMonthlyP = currentMonthlyP * (1 + stepUp);
+      currentMonthlyP = roundToCents(currentMonthlyP * (1 + stepUp));
     }
   }
 
@@ -166,10 +172,14 @@ export function calculateStepUpSIP(
     balance = totalInvested;
   }
 
+  const roundedInvested = Math.round(totalInvested);
+  const roundedBalance = Math.round(balance);
+  const roundedReturns = Math.max(0, roundedBalance - roundedInvested);
+
   return {
-    investedAmount: Math.round(totalInvested),
-    estimatedReturns: Math.round(Math.max(0, balance - totalInvested)),
-    totalValue: Math.round(balance),
+    investedAmount: roundedInvested,
+    estimatedReturns: roundedReturns,
+    totalValue: roundedInvested + roundedReturns,
     finalMonthlyInvestment: Math.round(currentMonthlyP),
     contributionTiming,
   };
@@ -196,11 +206,11 @@ export interface CompoundInterestResult {
 /**
  * Calculates compound interest across all discrete frequencies and continuous compounding.
  * Supports annuity due (beginning) vs ordinary annuity (end).
- * Zero-division protected.
+ * Cents rounded and zero-division protected.
  */
 export function calculateCompoundInterest(input: CompoundInterestInput): CompoundInterestResult {
-  const p = Math.max(0, Number(input.principal) || 0);
-  const pmt = Math.max(0, Number(input.monthlyContribution) || 0);
+  const p = roundToCents(Math.max(0, Number(input.principal) || 0));
+  const pmt = roundToCents(Math.max(0, Number(input.monthlyContribution) || 0));
   const r = Math.max(0, Number(input.annualRate) || 0) / 100;
   const t = Math.max(0, Number(input.years) || 0);
   const freq = input.compoundingFrequency ?? 12;
@@ -227,8 +237,8 @@ export function calculateCompoundInterest(input: CompoundInterestInput): Compoun
     };
   }
 
-  const totalContributions = pmt * 12 * t;
-  const totalInvested = p + totalContributions;
+  const totalContributions = roundToCents(pmt * 12 * t);
+  const totalInvested = roundToCents(p + totalContributions);
 
   if (t === 0) {
     return {
@@ -245,10 +255,10 @@ export function calculateCompoundInterest(input: CompoundInterestInput): Compoun
   if (r <= 0 || !isFinite(r) || Math.abs(r) < 1e-12) {
     return {
       investedPrincipal: p,
-      totalContributions,
-      totalInvested,
+      totalContributions: Math.round(totalContributions),
+      totalInvested: Math.round(totalInvested),
       interestEarned: 0,
-      futureValue: totalInvested,
+      futureValue: roundToCents(totalInvested),
       contributionTiming: timing,
     };
   }
@@ -256,17 +266,17 @@ export function calculateCompoundInterest(input: CompoundInterestInput): Compoun
   let futureValue = 0;
 
   if (freq === 'continuous') {
-    const principalGrowth = p * Math.exp(r * t);
+    const principalGrowth = roundToCents(p * Math.exp(r * t));
     const effectiveMonthlyR = Math.exp(r / 12) - 1;
     const months = 12 * t;
     const annuityFactor = (effectiveMonthlyR > 0 && isFinite(effectiveMonthlyR))
       ? (Math.pow(1 + effectiveMonthlyR, months) - 1) / effectiveMonthlyR
       : months;
-    const pmtGrowth = pmt * annuityFactor * (isBeginning ? (1 + effectiveMonthlyR) : 1);
-    futureValue = principalGrowth + pmtGrowth;
+    const pmtGrowth = roundToCents(pmt * annuityFactor * (isBeginning ? (1 + effectiveMonthlyR) : 1));
+    futureValue = roundToCents(principalGrowth + pmtGrowth);
   } else {
     const n = Math.max(1, typeof freq === 'number' ? freq : (parseFloat(String(freq)) || 12));
-    const principalGrowth = p * Math.pow(1 + r / n, n * t);
+    const principalGrowth = roundToCents(p * Math.pow(1 + r / n, n * t));
 
     // Monthly contributions with frequency n compounding
     const effectiveMonthlyR = Math.pow(1 + r / n, n / 12) - 1;
@@ -274,18 +284,18 @@ export function calculateCompoundInterest(input: CompoundInterestInput): Compoun
     let pmtGrowth = 0;
     if (effectiveMonthlyR > 0 && isFinite(effectiveMonthlyR)) {
       const annuityFactor = (Math.pow(1 + effectiveMonthlyR, months) - 1) / effectiveMonthlyR;
-      pmtGrowth = pmt * annuityFactor * (isBeginning ? (1 + effectiveMonthlyR) : 1);
+      pmtGrowth = roundToCents(pmt * annuityFactor * (isBeginning ? (1 + effectiveMonthlyR) : 1));
     } else {
       pmtGrowth = totalContributions;
     }
-    futureValue = principalGrowth + pmtGrowth;
+    futureValue = roundToCents(principalGrowth + pmtGrowth);
   }
 
   if (isNaN(futureValue) || !isFinite(futureValue)) {
     futureValue = totalInvested;
   }
 
-  const interestEarned = Math.max(0, futureValue - totalInvested);
+  const interestEarned = Math.max(0, roundToCents(futureValue - totalInvested));
 
   return {
     investedPrincipal: p,
@@ -312,7 +322,7 @@ export function calculateLumpsum(
   expectedReturnRate: number,
   timeHorizonYears: number
 ): LumpsumResult {
-  const p = Math.max(0, Number(investmentAmount) || 0);
+  const p = roundToCents(Math.max(0, Number(investmentAmount) || 0));
   const rate = Math.max(0, Number(expectedReturnRate) || 0) / 100;
   const years = Math.max(0, Number(timeHorizonYears) || 0);
 
@@ -330,8 +340,8 @@ export function calculateLumpsum(
   }
 
   const factor = Math.pow(1 + rate, years);
-  const totalValue = isFinite(factor) ? p * factor : p;
-  const estimatedReturns = Math.max(0, totalValue - p);
+  const totalValue = isFinite(factor) ? roundToCents(p * factor) : p;
+  const estimatedReturns = Math.max(0, roundToCents(totalValue - p));
 
   return {
     investedAmount: Math.round(p),
@@ -351,6 +361,7 @@ export interface SWPResult {
 
 /**
  * Calculates Systematic Withdrawal Plan (SWP) returns
+ * Uses roundToCents on balance and withdrawals at every month.
  */
 export function calculateSWP(
   initialInvestment: number,
@@ -359,8 +370,8 @@ export function calculateSWP(
   timeHorizonYears: number,
   withdrawalTiming: ContributionTiming = 'beginning'
 ): SWPResult {
-  let balance = Math.max(0, Number(initialInvestment) || 0);
-  const withdrawal = Math.max(0, Number(monthlyWithdrawal) || 0);
+  let balance = roundToCents(Math.max(0, Number(initialInvestment) || 0));
+  const withdrawal = roundToCents(Math.max(0, Number(monthlyWithdrawal) || 0));
   const monthlyRate = (Math.max(0, Number(expectedReturnRate) || 0) / 100) / 12;
   const totalMonths = Math.round(Math.max(0, Number(timeHorizonYears) || 0) * 12);
 
@@ -389,35 +400,40 @@ export function calculateSWP(
 
   for (let m = 1; m <= totalMonths; m++) {
     if (withdrawalTiming === 'beginning') {
-      if (balance < withdrawal) {
-        totalWithdrawn += balance;
+      if (roundToCents(balance) < withdrawal) {
+        totalWithdrawn = roundToCents(totalWithdrawn + balance);
         balance = 0;
         depletedEarly = true;
         depletedAtMonth = m;
         break;
       }
-      balance -= withdrawal;
-      totalWithdrawn += withdrawal;
-      balance = balance * (1 + monthlyRate);
+      balance = roundToCents(balance - withdrawal);
+      totalWithdrawn = roundToCents(totalWithdrawn + withdrawal);
+      balance = roundToCents(balance * (1 + monthlyRate));
     } else {
       // Accrue interest first, then withdraw
-      balance = balance * (1 + monthlyRate);
-      if (balance < withdrawal) {
-        totalWithdrawn += balance;
+      balance = roundToCents(balance * (1 + monthlyRate));
+      if (roundToCents(balance) < withdrawal) {
+        totalWithdrawn = roundToCents(totalWithdrawn + balance);
         balance = 0;
         depletedEarly = true;
         depletedAtMonth = m;
         break;
       }
-      balance -= withdrawal;
-      totalWithdrawn += withdrawal;
+      balance = roundToCents(balance - withdrawal);
+      totalWithdrawn = roundToCents(totalWithdrawn + withdrawal);
+    }
+
+    if (roundToCents(balance) <= 0) {
+      balance = 0;
+      break;
     }
   }
 
   return {
     totalInvested: Math.round(initialInvestment),
     totalWithdrawn: Math.round(totalWithdrawn),
-    finalBalance: Math.round(balance),
+    finalBalance: roundToCents(balance),
     depletedEarly,
     depletedAtMonth,
     withdrawalTiming,

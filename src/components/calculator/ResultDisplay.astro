@@ -37,6 +37,8 @@ const accentClasses = {
 <div
   class={`fac-result-card relative overflow-hidden rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-6 shadow-whisper transition-all ${className}`}
   data-result-card={id}
+  aria-live="polite"
+  aria-atomic="true"
 >
   <div class="flex items-center justify-between gap-2 mb-2">
     <span class="mono-eyebrow text-mute">{label}</span>
@@ -192,28 +194,87 @@ const accentClasses = {
       const num = numEl.textContent.trim();
       const suffix = suffixEl ? suffixEl.textContent.trim() : '';
 
-      const fullVal = `${prefix ? prefix + ' ' : ''}${num}${suffix ? ' ' + suffix : ''}`.trim();
+      const card = btn.closest('.fac-result-card');
+      const labelEl = card ? card.querySelector('.mono-eyebrow') : null;
+      const label = labelEl ? labelEl.textContent.trim() : '';
+
+      const formattedNumber = `${prefix ? prefix + ' ' : ''}${num}${suffix ? ' ' + suffix : ''}`.trim();
+      const copyText = label ? `${label}: ${formattedNumber}` : formattedNumber;
+
+      function onCopySuccess() {
+        if (typeof window.facShowToast === 'function') {
+          window.facShowToast(`Copied: ${copyText}`, 'success');
+        } else {
+          // Toast fallback
+          let toast = document.getElementById('fac-clipboard-toast');
+          if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'fac-clipboard-toast';
+            toast.setAttribute('role', 'status');
+            toast.className = 'fixed bottom-5 right-5 z-50 rounded-md bg-ink px-4 py-2 text-xs font-mono text-canvas shadow-lg transition-all duration-300 opacity-0 translate-y-2 pointer-events-none';
+            document.body.appendChild(toast);
+          }
+          toast.textContent = `Copied: ${copyText}`;
+          toast.classList.remove('opacity-0', 'translate-y-2');
+          toast.classList.add('opacity-100', 'translate-y-0');
+          clearTimeout(window.__facToastTimeout);
+          window.__facToastTimeout = setTimeout(() => {
+            toast.classList.remove('opacity-100', 'translate-y-0');
+            toast.classList.add('opacity-0', 'translate-y-2');
+          }, 2500);
+        }
+
+        const copyIcon = btn.querySelector('.copy-icon');
+        const checkIcon = btn.querySelector('.check-icon');
+        if (copyIcon && checkIcon) {
+          copyIcon.classList.add('hidden');
+          checkIcon.classList.remove('hidden');
+          setTimeout(() => {
+            copyIcon.classList.remove('hidden');
+            checkIcon.classList.add('hidden');
+          }, 2000);
+        }
+      }
+
+      function onCopyError() {
+        if (typeof window.facShowToast === 'function') {
+          window.facShowToast('Could not copy to clipboard', 'error');
+        }
+      }
 
       if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(fullVal).then(() => {
-          if (typeof window.facShowToast === 'function') {
-            window.facShowToast(`Copied ${fullVal} to clipboard!`, 'success');
-          }
-          const copyIcon = btn.querySelector('.copy-icon');
-          const checkIcon = btn.querySelector('.check-icon');
-          if (copyIcon && checkIcon) {
-            copyIcon.classList.add('hidden');
-            checkIcon.classList.remove('hidden');
-            setTimeout(() => {
-              copyIcon.classList.remove('hidden');
-              checkIcon.classList.add('hidden');
-            }, 2000);
-          }
-        }).catch(() => {
-          if (typeof window.facShowToast === 'function') {
-            window.facShowToast('Could not copy to clipboard', 'error');
+        navigator.clipboard.writeText(copyText).then(onCopySuccess).catch(() => {
+          // Fallback to execCommand
+          try {
+            const ta = document.createElement('textarea');
+            ta.value = copyText;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            const ok = document.execCommand('copy');
+            document.body.removeChild(ta);
+            if (ok) onCopySuccess();
+            else onCopyError();
+          } catch {
+            onCopyError();
           }
         });
+      } else {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = copyText;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          const ok = document.execCommand('copy');
+          document.body.removeChild(ta);
+          if (ok) onCopySuccess();
+          else onCopyError();
+        } catch {
+          onCopyError();
+        }
       }
     });
   }

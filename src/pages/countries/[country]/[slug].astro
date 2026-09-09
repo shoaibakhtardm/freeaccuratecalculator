@@ -169,6 +169,7 @@ const relatedCalculators = CALCULATORS.filter((c) => popularSet.has(c.id) && c.i
                   )}
                 </div>
               )}
+              <p id={`${inp.id}-error`} class="hidden text-[11px] text-red-500 font-mono mt-1" role="alert"></p>
             </div>
           );
         })}
@@ -281,9 +282,61 @@ const relatedCalculators = CALCULATORS.filter((c) => popularSet.has(c.id) && c.i
 
     function calculate() {
       const inputVals = {};
+      let hasValidationError = false;
+
       inputs.forEach((inp) => {
+        const rawVal = inp.value != null ? String(inp.value).trim() : '';
+        const errorEl = document.getElementById(`${inp.id}-error`);
+
+        if (inp.tagName === 'SELECT' || inp.getAttribute('type') === 'date') {
+          inputVals[inp.id] = inp.value;
+          return;
+        }
+
+        const minAttr = inp.getAttribute('min');
+        const maxAttr = inp.getAttribute('max');
+        const minVal = minAttr !== null && minAttr !== '' ? parseFloat(minAttr) : -Infinity;
+        const maxVal = maxAttr !== null && maxAttr !== '' ? parseFloat(maxAttr) : 1e12;
+
+        let errorMsg = '';
+        if (rawVal === '') {
+          errorMsg = 'Please enter a value';
+        } else {
+          const num = Number(rawVal);
+          if (isNaN(num) || !isFinite(num)) {
+            errorMsg = 'Please enter a valid finite number';
+          } else if (minVal !== -Infinity && num < minVal) {
+            errorMsg = `Value must be at least ${minVal}`;
+          } else if (num > maxVal) {
+            errorMsg = `Value exceeds maximum limit (${maxVal.toLocaleString()})`;
+          }
+        }
+
+        if (errorMsg) {
+          hasValidationError = true;
+          inp.setAttribute('aria-invalid', 'true');
+          inp.classList.add('border-red-500');
+          if (errorEl) {
+            errorEl.textContent = errorMsg;
+            errorEl.classList.remove('hidden');
+          }
+        } else {
+          inp.removeAttribute('aria-invalid');
+          inp.classList.remove('border-red-500');
+          if (errorEl) {
+            errorEl.textContent = '';
+            errorEl.classList.add('hidden');
+          }
+        }
+
         inputVals[inp.id] = inp.value;
       });
+
+      if (hasValidationError) {
+        if (primaryResult) primaryResult.textContent = '--';
+        if (secondaryText) secondaryText.textContent = 'Please correct the invalid input fields above';
+        return;
+      }
 
       const currState = getActiveCurrencyState();
 

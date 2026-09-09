@@ -4,6 +4,7 @@ import Layout from './Layout.astro';
 import Breadcrumbs from '../components/common/Breadcrumbs.astro';
 import AdSlot from '../components/common/AdSlot.astro';
 import ShareButton from '../components/calculator/ShareButton.astro';
+import { generateFAQPageSchema } from '../utils/seoSchema';
 
 interface RelatedCalc {
   title: string;
@@ -20,6 +21,7 @@ interface Props {
   calculatorName: string;
   relatedCalculators?: RelatedCalc[];
   jsonLd?: Record<string, any> | Array<Record<string, any>>;
+  faqs?: Array<{ question: string; answer: string }>;
   lang?: string;
 }
 
@@ -75,11 +77,18 @@ const softwareAppSchema = {
   description: metaDescription,
 };
 
-const combinedSchemas = jsonLd
+const extraSchemas = jsonLd
   ? Array.isArray(jsonLd)
-    ? [softwareAppSchema, ...jsonLd]
-    : [softwareAppSchema, jsonLd]
-  : [softwareAppSchema];
+    ? jsonLd
+    : [jsonLd]
+  : [];
+
+const faqSchema = generateFAQPageSchema(faqs);
+if (faqSchema) {
+  extraSchemas.push(faqSchema);
+}
+
+const combinedSchemas = [softwareAppSchema, ...extraSchemas];
 ---
 
 <Layout

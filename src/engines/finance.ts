@@ -1,5 +1,11 @@
 // src/engines/finance.ts
 
+/**
+ * Robust financial rounding helper to eradicate JS IEEE-754 floating-point drift.
+ * Rounds standard monetary amounts to 2 decimal places (cents) with Number.EPSILON protection.
+ */
+export const roundToCents = (num: number): number => Math.round((num + Number.EPSILON) * 100) / 100;
+
 export interface PrepaymentEMIResult {
   regularEMI: number;
   totalInterestWithoutPrepayment: number;
@@ -10,10 +16,28 @@ export interface PrepaymentEMIResult {
   originalTenureMonths: number;
   newTenureMonths: number;
   monthsSaved: number;
+  finalBalance: number;
+}
+
+export interface AmortizationScheduleRow {
+  month: number;
+  payment: number;
+  principalPaid: number;
+  interestPaid: number;
+  remainingBalance: number;
+}
+
+export interface LoanAmortizationResult {
+  regularEMI: number;
+  totalInterest: number;
+  totalPayment: number;
+  finalBalance: number;
+  schedule: AmortizationScheduleRow[];
 }
 
 /**
- * Calculates Loan EMI with optional monthly extra prepayment or one-time lump-sum prepayment
+ * Calculates Loan EMI with optional monthly extra prepayment or one-time lump-sum prepayment.
+ * Uses roundToCents at every arithmetic step and safely eliminates floating point drift.
  */
 export function calculateEMIWithPrepayment(
   loanAmount: number,
@@ -47,14 +71,15 @@ export function calculateEMIWithPrepayment(
       originalTenureMonths: 0,
       newTenureMonths: 0,
       monthsSaved: 0,
+      finalBalance: 0,
     };
   }
 
-  const p = Math.max(0, Number(loanAmount) || 0);
+  const p = roundToCents(Math.max(0, Number(loanAmount) || 0));
   const annualRate = Math.max(0, Number(annualInterestRate) || 0);
   const years = Math.max(0, Number(tenureYears) || 0);
-  const extraMonthly = Math.max(0, Number(extraMonthlyPayment) || 0);
-  const lumpSum = Math.max(0, Number(lumpSumPrepayment) || 0);
+  const extraMonthly = roundToCents(Math.max(0, Number(extraMonthlyPayment) || 0));
+  const lumpSum = roundToCents(Math.max(0, Number(lumpSumPrepayment) || 0));
   const lumpMonth = Math.max(1, Math.round(Number(lumpSumMonth) || 12));
 
   if (p === 0 || years === 0) {
@@ -68,6 +93,7 @@ export function calculateEMIWithPrepayment(
       originalTenureMonths: 0,
       newTenureMonths: 0,
       monthsSaved: 0,
+      finalBalance: 0,
     };
   }
 
@@ -77,14 +103,14 @@ export function calculateEMIWithPrepayment(
   // Standard EMI: [P * r * (1 + r)^n] / [(1 + r)^n - 1]
   let regularEMI = 0;
   if (monthlyRate === 0 || !isFinite(monthlyRate)) {
-    regularEMI = originalMonths > 0 ? p / originalMonths : 0;
+    regularEMI = originalMonths > 0 ? roundToCents(p / originalMonths) : 0;
   } else {
     const factor = Math.pow(1 + monthlyRate, originalMonths);
     const denom = factor - 1;
     if (denom <= 0 || !isFinite(factor)) {
-      regularEMI = originalMonths > 0 ? p / originalMonths : 0;
+      regularEMI = originalMonths > 0 ? roundToCents(p / originalMonths) : 0;
     } else {
-      regularEMI = (p * monthlyRate * factor) / denom;
+      regularEMI = roundToCents((p * monthlyRate * factor) / denom);
     }
   }
 
@@ -92,48 +118,163 @@ export function calculateEMIWithPrepayment(
     regularEMI = 0;
   }
 
-  const totalPaymentWithout = regularEMI * originalMonths;
-  const totalInterestWithout = Math.max(0, totalPaymentWithout - p);
+  const totalPaymentWithout = roundToCents(regularEMI * originalMonths);
+  const totalInterestWithout = Math.max(0, roundToCents(totalPaymentWithout - p));
 
-  // Simulation with prepayment
+  // Simulation with prepayment using strict cents rounding and safe zero checks
   let balance = p;
   let totalInterestWith = 0;
   let totalPaidWith = 0;
   let month = 0;
 
-  while (balance > 0.01 && month < originalMonths * 2) {
+  while (roundToCents(balance) > 0 && month < originalMonths * 2) {
     month++;
-    const interest = balance * monthlyRate;
-    totalInterestWith += interest;
+    const interest = roundToCents(balance * monthlyRate);
+    totalInterestWith = roundToCents(totalInterestWith + interest);
 
-    let payment = regularEMI + extraMonthly;
+    let payment = roundToCents(regularEMI + extraMonthly);
     if (month === lumpMonth) {
-      payment += lumpSum;
+      payment = roundToCents(payment + lumpSum);
     }
 
-    const principalPaid = Math.min(balance, payment - interest);
-    balance -= principalPaid;
-    totalPaidWith += principalPaid + interest;
+    let principalPaid = roundToCents(payment - interest);
+    if (principalPaid >= balance || (month === originalMonths && extraMonthly === 0 && lumpSum === 0)) {
+      principalPaid = balance;
+      payment = roundToCents(principalPaid + interest);
+      balance = 0;
+    } else {
+      balance = roundToCents(balance - principalPaid);
+    }
 
-    if (balance <= 0.01) {
+    totalPaidWith = roundToCents(totalPaidWith + payment);
+
+    if (roundToCents(balance) <= 0) {
+      balance = 0;
       break;
     }
   }
 
   const newMonths = month;
-  const interestSaved = Math.max(0, totalInterestWithout - totalInterestWith);
+  const interestSaved = Math.max(0, roundToCents(totalInterestWithout - totalInterestWith));
   const monthsSaved = Math.max(0, originalMonths - newMonths);
 
   return {
-    regularEMI: Math.round(regularEMI),
-    totalInterestWithoutPrepayment: Math.round(totalInterestWithout),
-    totalPaymentWithoutPrepayment: Math.round(totalPaymentWithout),
-    totalInterestWithPrepayment: Math.round(totalInterestWith),
-    totalPaymentWithPrepayment: Math.round(totalPaidWith),
-    interestSaved: Math.round(interestSaved),
+    regularEMI,
+    totalInterestWithoutPrepayment: roundToCents(totalInterestWithout),
+    totalPaymentWithoutPrepayment: roundToCents(totalPaymentWithout),
+    totalInterestWithPrepayment: roundToCents(totalInterestWith),
+    totalPaymentWithPrepayment: roundToCents(totalPaidWith),
+    interestSaved: roundToCents(interestSaved),
     originalTenureMonths: originalMonths,
     newTenureMonths: newMonths,
     monthsSaved,
+    finalBalance: roundToCents(balance),
+  };
+}
+
+/**
+ * Calculates complete month-by-month loan amortization schedule.
+ * Accurately reduces balance to $0.00 without floating-point residual drift.
+ */
+export function calculateLoanAmortization(
+  loanAmount: number,
+  annualInterestRate: number,
+  tenureMonths: number,
+  extraMonthlyPayment: number = 0
+): LoanAmortizationResult {
+  if (
+    isNaN(loanAmount) ||
+    !isFinite(loanAmount) ||
+    isNaN(annualInterestRate) ||
+    !isFinite(annualInterestRate) ||
+    isNaN(tenureMonths) ||
+    !isFinite(tenureMonths) ||
+    isNaN(extraMonthlyPayment) ||
+    !isFinite(extraMonthlyPayment)
+  ) {
+    return {
+      regularEMI: 0,
+      totalInterest: 0,
+      totalPayment: 0,
+      finalBalance: 0,
+      schedule: [],
+    };
+  }
+
+  const p = roundToCents(Math.max(0, Number(loanAmount) || 0));
+  const annualRate = Math.max(0, Number(annualInterestRate) || 0);
+  const totalMonths = Math.max(0, Math.round(Number(tenureMonths) || 0));
+  const extraMonthly = roundToCents(Math.max(0, Number(extraMonthlyPayment) || 0));
+
+  if (p === 0 || totalMonths === 0) {
+    return {
+      regularEMI: 0,
+      totalInterest: 0,
+      totalPayment: 0,
+      finalBalance: 0,
+      schedule: [],
+    };
+  }
+
+  const monthlyRate = annualRate / 12 / 100;
+  let regularEMI = 0;
+
+  if (monthlyRate === 0 || !isFinite(monthlyRate)) {
+    regularEMI = roundToCents(p / totalMonths);
+  } else {
+    const factor = Math.pow(1 + monthlyRate, totalMonths);
+    const denom = factor - 1;
+    if (denom <= 0 || !isFinite(factor)) {
+      regularEMI = roundToCents(p / totalMonths);
+    } else {
+      regularEMI = roundToCents((p * monthlyRate * factor) / denom);
+    }
+  }
+
+  const schedule: AmortizationScheduleRow[] = [];
+  let balance = p;
+  let totalInterest = 0;
+  let totalPayment = 0;
+  let month = 0;
+
+  while (roundToCents(balance) > 0 && month < totalMonths * 2) {
+    month++;
+    const interest = roundToCents(balance * monthlyRate);
+    totalInterest = roundToCents(totalInterest + interest);
+
+    let payment = roundToCents(regularEMI + extraMonthly);
+
+    let principalPaid = roundToCents(payment - interest);
+    if (principalPaid >= balance || (month === totalMonths && extraMonthly === 0)) {
+      principalPaid = balance;
+      payment = roundToCents(principalPaid + interest);
+      balance = 0;
+    } else {
+      balance = roundToCents(balance - principalPaid);
+    }
+
+    totalPayment = roundToCents(totalPayment + payment);
+
+    schedule.push({
+      month,
+      payment,
+      principalPaid,
+      interestPaid: interest,
+      remainingBalance: balance,
+    });
+
+    if (roundToCents(balance) <= 0) {
+      balance = 0;
+      break;
+    }
+  }
+
+  return {
+    regularEMI,
+    totalInterest,
+    totalPayment,
+    finalBalance: roundToCents(balance),
+    schedule,
   };
 }
 
@@ -146,7 +287,7 @@ export interface ProfitMarginResult {
 }
 
 /**
- * Calculates Profit Margin and Markup
+ * Calculates Profit Margin and Markup with cents precision.
  */
 export function calculateProfitMargin(cost: number, revenue: number): ProfitMarginResult {
   if (isNaN(cost) || isNaN(revenue) || !isFinite(cost) || !isFinite(revenue)) {
@@ -159,19 +300,19 @@ export function calculateProfitMargin(cost: number, revenue: number): ProfitMarg
     };
   }
 
-  const c = Math.max(0, Number(cost) || 0);
-  const r = Math.max(0, Number(revenue) || 0);
+  const c = roundToCents(Math.max(0, Number(cost) || 0));
+  const r = roundToCents(Math.max(0, Number(revenue) || 0));
 
-  const grossProfit = r - c;
-  const grossMarginPercent = r > 0 ? (grossProfit / r) * 100 : 0;
-  const markupPercent = c > 0 ? (grossProfit / c) * 100 : 0;
+  const grossProfit = roundToCents(r - c);
+  const grossMarginPercent = r > 0 ? roundToCents((grossProfit / r) * 100) : 0;
+  const markupPercent = c > 0 ? roundToCents((grossProfit / c) * 100) : 0;
 
   return {
-    cost: Number(c.toFixed(2)),
-    revenue: Number(r.toFixed(2)),
-    grossProfit: Number(grossProfit.toFixed(2)),
-    grossMarginPercent: isFinite(grossMarginPercent) ? Number(grossMarginPercent.toFixed(2)) : 0,
-    markupPercent: isFinite(markupPercent) ? Number(markupPercent.toFixed(2)) : 0,
+    cost: c,
+    revenue: r,
+    grossProfit,
+    grossMarginPercent: isFinite(grossMarginPercent) ? grossMarginPercent : 0,
+    markupPercent: isFinite(markupPercent) ? markupPercent : 0,
   };
 }
 
@@ -183,7 +324,7 @@ export interface BreakEvenResult {
 }
 
 /**
- * Calculates Break-Even Point in Units and Revenue
+ * Calculates Break-Even Point in Units and Revenue with cents precision.
  */
 export function calculateBreakEven(
   fixedCosts: number,
@@ -206,11 +347,11 @@ export function calculateBreakEven(
     };
   }
 
-  const fc = Math.max(0, Number(fixedCosts) || 0);
-  const price = Math.max(0, Number(salesPricePerUnit) || 0);
-  const vc = Math.max(0, Number(variableCostPerUnit) || 0);
+  const fc = roundToCents(Math.max(0, Number(fixedCosts) || 0));
+  const price = roundToCents(Math.max(0, Number(salesPricePerUnit) || 0));
+  const vc = roundToCents(Math.max(0, Number(variableCostPerUnit) || 0));
 
-  const contributionMargin = price - vc;
+  const contributionMargin = roundToCents(price - vc);
   if (contributionMargin <= 0 || price <= 0) {
     return {
       breakEvenUnits: 0,
@@ -222,12 +363,12 @@ export function calculateBreakEven(
 
   const breakEvenUnits = Math.ceil(fc / contributionMargin);
   const contributionMarginRatio = price > 0 ? contributionMargin / price : 0;
-  const breakEvenRevenue = contributionMarginRatio > 0 ? Math.round(fc / contributionMarginRatio) : 0;
+  const breakEvenRevenue = contributionMarginRatio > 0 ? roundToCents(fc / contributionMarginRatio) : 0;
 
   return {
     breakEvenUnits: isFinite(breakEvenUnits) ? breakEvenUnits : 0,
     breakEvenRevenue: isFinite(breakEvenRevenue) ? breakEvenRevenue : 0,
-    contributionMargin: Number(contributionMargin.toFixed(2)),
-    contributionMarginRatio: Number((contributionMarginRatio * 100).toFixed(2)),
+    contributionMargin,
+    contributionMarginRatio: roundToCents(contributionMarginRatio * 100),
   };
 }

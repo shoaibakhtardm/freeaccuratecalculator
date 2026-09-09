@@ -44,21 +44,28 @@ export default defineConfig({
           return item;
         }
 
-        // 2. Category Hubs: /finance/, /math/, /health/, /calculators/
-        if (/^\/(?:(?:en|es|fr|hi)\/)?(finance|math|health|calculators)\/?$/.test(pathname)) {
+        // 2. High-traffic finance and health calculators (Priority 0.8)
+        if (/^\/(?:(?:en|es|fr|hi)\/)?(finance|health)\/[a-z0-9-]+-calculator\/?$/.test(pathname)) {
           item.priority = 0.8;
           item.changefreq = 'weekly';
           return item;
         }
 
-        // 3. Individual Calculator Pages
-        if (pathname.includes('-calculator')) {
-          item.priority = 0.7;
+        // 3. Category Hubs: /finance/, /math/, /health/, /calculators/
+        if (/^\/(?:(?:en|es|fr|hi)\/)?(finance|math|health|calculators|insurance|business|construction|real-estate|technology|statistics|marketing|automotive|biology|chemistry|physics|food|sports|ecology|everyday|converter|profession)\/?$/.test(pathname)) {
+          item.priority = 0.8;
           item.changefreq = 'weekly';
           return item;
         }
 
-        // 4. Default / Utility Pages (e.g., about, contact, legal)
+        // 4. Standard and Utility Calculators (Priority 0.6)
+        if (pathname.includes('-calculator') || pathname.includes('-converter') || pathname.includes('-generator')) {
+          item.priority = 0.6;
+          item.changefreq = 'weekly';
+          return item;
+        }
+
+        // 5. Default / Informational Pages (e.g., about, contact, legal)
         item.priority = 0.5;
         item.changefreq = 'monthly';
         return item;

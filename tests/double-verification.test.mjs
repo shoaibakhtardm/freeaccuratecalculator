@@ -4,8 +4,11 @@ import assert from 'node:assert/strict';
 import { CALCULATORS } from '../src/data/calculatorRegistry.ts';
 import { convertCurrency } from '../src/utils/currencyEngine.ts';
 import { calculateCountryTax } from '../src/engines/taxEngine.ts';
-import { calculateBreakEven, calculateProfitMargin } from '../src/engines/finance.ts';
+import { calculateBreakEven, calculateProfitMargin, calculateLoanAmortization, calculateEMIWithPrepayment, roundToCents } from '../src/engines/finance.ts';
 import { calculateCAGR, calculateSIP } from '../src/engines/investment.ts';
+import { sanitizeInput, validateInput } from '../src/utils/validation.ts';
+import { parseQueryToState, serializeStateToQuery, formatResultForClipboard } from '../src/utils/urlState.ts';
+import { generateWebApplicationSchema, generateFAQPageSchema } from '../src/utils/seoSchema.ts';
 
 // Helper to execute calculator computeScript directly from registry
 function executeCalculator(calcId, inputs) {
@@ -185,5 +188,117 @@ test('Double Verification — Golden Test Cases Across Engines', async (t) => {
     assert.equal(sipZeroRate.totalValue, 5000 * 60);
     assert.equal(sipZeroRate.estimatedReturns, 0);
   });
+
+  // Golden Case 9: Floating-Point Precision Eradication & Amortization Exact Zero Resolution
+  await t.test('Golden Case 9: $1,000,000 Loan at 0.1% for 360 Months Resolves to Exactly $0.00 Balance', () => {
+    // 1. Amortization schedule resolution test
+    const amort = calculateLoanAmortization(1000000, 0.1, 360);
+    assert.equal(amort.schedule.length, 360, 'Must complete in exactly 360 months');
+    assert.equal(amort.finalBalance, 0, 'Final loan balance must be exactly 0');
+    assert.equal(amort.schedule[359].remainingBalance, 0, 'Last month remaining balance must be 0');
+    
+    // Validate every month has non-negative balance and positive payments
+    for (const row of amort.schedule) {
+      assert.ok(row.remainingBalance >= 0, `Month ${row.month} has negative balance`);
+      assert.ok(row.principalPaid > 0, `Month ${row.month} has non-positive principal`);
+      assert.ok(row.interestPaid > 0, `Month ${row.month} has non-positive interest`);
+    }
+
+    // 2. Prepayment simulation test
+    const emiRes = calculateEMIWithPrepayment(1000000, 0.1, 30);
+    assert.equal(emiRes.originalTenureMonths, 360);
+    assert.equal(emiRes.newTenureMonths, 360);
+    assert.equal(emiRes.finalBalance, 0);
+    assert.equal(emiRes.regularEMI, 2819.77);
+
+    // 3. Floating-point arithmetic rounding tests
+    assert.equal(roundToCents(0.1 + 0.2), 0.3);
+    assert.equal(roundToCents(1.005), 1.01);
+    assert.equal(roundToCents(0.0000001), 0);
+  });
+
+  // Golden Case 10: Input Validation & Edge Case Neutralization ("1e100", "abc", "")
+  await t.test('Golden Case 10: Safe Neutralization of Extreme Values ("1e100", "abc", "")', () => {
+    // 1. Extreme exponential input "1e100"
+    assert.equal(sanitizeInput('1e100', 1e12), 0, '1e100 must safely return 0 when exceeding max');
+    assert.equal(sanitizeInput('1e100', 1e12, 500), 500, '1e100 must return defined fallback');
+
+    // 2. Non-numeric string "abc"
+    assert.equal(sanitizeInput('abc', 1e12), 0, '"abc" must safely return 0');
+    assert.equal(sanitizeInput('abc', 1e12, 99), 99, '"abc" must return defined fallback');
+    assert.equal(sanitizeInput('!@#$%^&*()', 1e12, 0), 0, 'Special characters must safely return 0');
+
+    // 3. Empty string ""
+    assert.equal(sanitizeInput('', 1e12), 0, '"" must safely return 0');
+    assert.equal(sanitizeInput('', 1e12, -1), -1, '"" must return defined fallback');
+    assert.equal(sanitizeInput('   ', 1e12, 0), 0, 'Whitespace string must safely return 0');
+
+    // 4. NaN, Infinity, -Infinity, null, undefined
+    assert.equal(sanitizeInput(NaN), 0);
+    assert.equal(sanitizeInput(Infinity), 0);
+    assert.equal(sanitizeInput(-Infinity), 0);
+    assert.equal(sanitizeInput(null), 0);
+    assert.equal(sanitizeInput(undefined), 0);
+
+    // 5. validateInput boundaries
+    const valValid = validateInput('5000', { min: 100, max: 10000 });
+    assert.equal(valValid.isValid, true);
+    assert.equal(valValid.value, 5000);
+
+    const valBad = validateInput('1e100', { min: 100, max: 10000 });
+    assert.equal(valBad.isValid, false);
+    assert.ok(valBad.errorMessage?.includes('cannot exceed'));
+  });
+
+  // Golden Case 11: URL State Sharing & Clipboard Result Formatting
+  await t.test('Golden Case 11: URL State Sharing & Clipboard Result Formatting', () => {
+    // 1. URL State serialization
+    const state = { amount: 20000, rate: 9, months: 48 };
+    const query = serializeStateToQuery(state);
+    assert.equal(query, 'amount=20000&rate=9&months=48');
+
+    // 2. URL State restoration on page load
+    const parsed = parseQueryToState('?amount=20000&rate=9&months=48');
+    assert.equal(parsed.amount, '20000');
+    assert.equal(parsed.rate, '9');
+    assert.equal(parsed.months, '48');
+
+    // 3. Clipboard result string formatting
+    const clipboardText = formatResultForClipboard('Monthly Payment', '$497.70');
+    assert.equal(clipboardText, 'Monthly Payment: $497.70');
+
+    const withPrefix = formatResultForClipboard('Total Payment', '23,889.60', '$');
+    assert.equal(withPrefix, 'Total Payment: $ 23,889.60');
+  });
+
+  // Golden Case 12: SEO Structured Data (WebApplication & FAQPage) Verification
+  await t.test('Golden Case 12: Dynamic Schema.org Generator & WCAG Accessibility Verification', () => {
+    const loanCalcInput = {
+      name: 'Loan Calculator',
+      description: 'Calculate monthly loan EMI payments and amortization schedules.',
+      url: 'https://freeaccuratecalculator.com/finance/loan-calculator/',
+      category: 'finance',
+    };
+
+    const webApp = generateWebApplicationSchema(loanCalcInput);
+    assert.equal(webApp['@context'], 'https://schema.org');
+    assert.ok(webApp['@type'].includes('WebApplication'));
+    assert.equal(webApp.applicationCategory, 'FinanceApplication');
+    assert.equal(webApp.operatingSystem, 'All');
+    assert.equal(webApp.offers.price, '0.00');
+
+    const faqSchema = generateFAQPageSchema([
+      { question: 'What is EMI?', answer: 'Equated Monthly Installment.' }
+    ]);
+    assert.ok(faqSchema);
+    assert.equal(faqSchema['@type'], 'FAQPage');
+    assert.equal(faqSchema.mainEntity.length, 1);
+    assert.equal(faqSchema.mainEntity[0].name, 'What is EMI?');
+    assert.equal(faqSchema.mainEntity[0].acceptedAnswer.text, 'Equated Monthly Installment.');
+  });
 });
+
+
+
+
 
