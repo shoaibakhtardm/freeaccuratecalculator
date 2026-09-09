@@ -75,6 +75,11 @@ const relatedCalcs = (post.data.relatedCalculators || [])
   })
   .filter(Boolean);
 
+const siteOrigin = 'https://freeaccuratecalculator.com';
+const pathname = Astro.url.pathname;
+const normalizedPathname = pathname.endsWith('/') ? pathname : `${pathname}/`;
+const canonicalUrl = `${siteOrigin}${normalizedPathname}`;
+
 // Structured Data: Article Schema
 const articleSchema = {
   '@context': 'https://schema.org',
@@ -84,18 +89,19 @@ const articleSchema = {
   author: {
     '@type': 'Organization',
     name: post.data.author || 'Free Accurate Calculator Quantitative Editorial Team',
-    url: 'https://freeaccuratecalculator.com/about/',
+    url: `${siteOrigin}/about/`,
   },
   publisher: {
     '@type': 'Organization',
     name: 'Free Accurate Calculator',
-    url: 'https://freeaccuratecalculator.com/',
+    url: `${siteOrigin}/`,
+    logo: `${siteOrigin}/favicon.svg`,
   },
   datePublished: post.data.pubDate.toISOString(),
   dateModified: (post.data.updatedDate || post.data.pubDate).toISOString(),
   mainEntityOfPage: {
     '@type': 'WebPage',
-    '@id': Astro.url.href,
+    '@id': canonicalUrl,
   },
 };
 
@@ -124,7 +130,7 @@ const faqSchema = isCompoundInterest
         },
         {
           '@type': 'Question',
-          name: 'Does compounding frequency matter more than the interest rate?',
+          name: 'Does higher compounding frequency significantly increase returns?',
           acceptedAnswer: {
             '@type': 'Answer',
             text: 'The interest rate generally has a larger impact on final returns than compounding frequency. However, higher compounding frequencies provide an incremental boost. For example, on a $10,000 deposit at 7% over 10 years, shifting from annual to daily compounding adds $464.67 in total interest.',
@@ -140,6 +146,7 @@ const schemas = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
 <Layout
   title={post.data.seoTitle || post.data.title}
   description={post.data.description}
+  canonicalUrl={canonicalUrl}
   jsonLd={schemas}
   lang={post.data.lang}
 >

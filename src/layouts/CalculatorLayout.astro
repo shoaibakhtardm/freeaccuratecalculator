@@ -35,19 +35,42 @@ const {
   lang,
 } = Astro.props;
 
-// Auto-generate SoftwareApplication Schema.org structured data
+const siteOrigin = 'https://freeaccuratecalculator.com';
+const pathname = Astro.url.pathname;
+const normalizedPathname = pathname.endsWith('/') ? pathname : `${pathname}/`;
+const canonicalUrl = `${siteOrigin}${normalizedPathname}`;
+
+// Map internal category to standard Schema.org ApplicationCategory
+let appCategory = 'UtilityApplication';
+const catKey = (category.href || category.label || '').toLowerCase();
+if (catKey.includes('finance')) {
+  appCategory = 'FinanceApplication';
+} else if (catKey.includes('health')) {
+  appCategory = 'HealthApplication';
+} else if (catKey.includes('math')) {
+  appCategory = 'EducationalApplication';
+}
+
+// Auto-generate WebApplication & SoftwareApplication Schema.org structured data
 const softwareAppSchema = {
   '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
+  '@type': ['SoftwareApplication', 'WebApplication'],
   name: calculatorName,
-  applicationCategory: 'UtilityApplication',
-  operatingSystem: 'Any',
-  browserRequirements: 'Requires JavaScript',
-  url: Astro.url.href,
+  applicationCategory: appCategory,
+  operatingSystem: 'All',
+  browserRequirements: 'Requires JavaScript. Requires HTML5.',
+  url: canonicalUrl,
+  inLanguage: lang || Astro.currentLocale || 'en',
+  softwareVersion: '2026.1',
   offers: {
     '@type': 'Offer',
     price: '0.00',
     priceCurrency: 'USD',
+  },
+  author: {
+    '@type': 'Organization',
+    name: 'Free Accurate Calculator',
+    url: 'https://freeaccuratecalculator.com/',
   },
   description: metaDescription,
 };
@@ -62,6 +85,7 @@ const combinedSchemas = jsonLd
 <Layout
   title={title}
   description={metaDescription}
+  canonicalUrl={canonicalUrl}
   jsonLd={combinedSchemas}
   lang={lang}
 >

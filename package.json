@@ -11,13 +11,13 @@
     "preview": "astro preview",
     "astro": "astro",
     "deploy": "astro build && node scripts/sync-sitemap.mjs && wrangler deploy",
-    "test": "node --experimental-strip-types --test tests/formula-correctness.test.mjs tests/currency-system.test.mjs tests/tax-engine.test.mjs tests/compound-interest.test.mjs tests/double-verification.test.mjs tests/country-architecture.test.mjs tests/mobile-responsiveness.test.mjs tests/sitemap.test.mjs"
+    "test": "node --experimental-strip-types --test tests/formula-correctness.test.mjs tests/currency-system.test.mjs tests/tax-engine.test.mjs tests/compound-interest.test.mjs tests/double-verification.test.mjs tests/country-architecture.test.mjs tests/mobile-responsiveness.test.mjs tests/sitemap.test.mjs tests/seo-schema.test.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.3.0",
     "@astrojs/sitemap": "^3.7.4",
     "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.3.1",
+    "astro": "^7.3.2",
     "tailwindcss": "^4.3.3"
   },
   "allowScripts": {

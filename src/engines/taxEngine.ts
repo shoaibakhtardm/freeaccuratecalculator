@@ -30,8 +30,8 @@ export function calculateProgressiveTax(
   taxableAmount: number,
   brackets: TaxBracket[]
 ): { tax: number; marginalRate: number } {
-  const taxable = Math.max(0, taxableAmount);
-  if (taxable === 0 || !brackets || brackets.length === 0) {
+  const taxable = Math.max(0, Number(taxableAmount) || 0);
+  if (isNaN(taxable) || !isFinite(taxable) || taxable === 0 || !brackets || brackets.length === 0) {
     return { tax: 0, marginalRate: 0 };
   }
 
@@ -70,6 +70,30 @@ export function calculateCountryTax(
 
   const gross = Math.max(0, Number(grossIncome) || 0);
   let totalDeductions = Math.max(0, Number(userDeductions) || 0);
+
+  if (isNaN(gross) || !isFinite(gross)) {
+    return {
+      ruleKey,
+      countryName: rule.countryName,
+      jurisdiction: rule.jurisdiction,
+      taxYear: rule.taxYear,
+      grossIncome: 0,
+      totalDeductions: 0,
+      taxableIncome: 0,
+      taxBeforeCess: 0,
+      rebate: 0,
+      cessOrLevy: 0,
+      netTaxPayable: 0,
+      effectiveTaxRate: 0,
+      marginalTaxRate: 0,
+      annualTakeHome: 0,
+      monthlyTakeHome: 0,
+      officialSource: rule.sourceAuthority,
+      sourceUrl: rule.sourceUrl,
+      lastVerified: rule.lastVerifiedDate,
+      notes: rule.notes,
+    };
+  }
 
   // Apply rule standard deductions if present and greater
   if (rule.standardDeductions) {
@@ -118,9 +142,9 @@ export function calculateCountryTax(
   }
 
   const netTaxPayable = Math.round(taxAfterRebate + cessOrLevy);
-  const effectiveRate = gross > 0 ? Number(((netTaxPayable / gross) * 100).toFixed(2)) : 0;
+  const effectiveRate = (gross > 0 && isFinite(netTaxPayable)) ? Number(((netTaxPayable / gross) * 100).toFixed(2)) : 0;
   const annualTakeHome = Math.max(0, gross - netTaxPayable);
-  const monthlyTakeHome = Math.round((annualTakeHome / 12) * 100) / 100;
+  const monthlyTakeHome = isFinite(annualTakeHome) ? Math.round((annualTakeHome / 12) * 100) / 100 : 0;
 
   return {
     ruleKey,
@@ -134,7 +158,7 @@ export function calculateCountryTax(
     rebate: Math.round(rebate),
     cessOrLevy,
     netTaxPayable,
-    effectiveTaxRate: effectiveRate,
+    effectiveTaxRate: isFinite(effectiveRate) ? effectiveRate : 0,
     marginalTaxRate: Number(marginalRate.toFixed(1)),
     annualTakeHome: Math.round(annualTakeHome),
     monthlyTakeHome,
@@ -158,8 +182,25 @@ export function calculateCustomRateTax(
   const taxableIncome = Math.max(0, gross - totalDeductions);
   const rate = Math.max(0, Math.min(100, Number(flatRatePercent) || 0)) / 100;
 
+  if (isNaN(gross) || !isFinite(gross) || isNaN(totalDeductions) || !isFinite(totalDeductions)) {
+    return {
+      grossIncome: 0,
+      totalDeductions: 0,
+      taxableIncome: 0,
+      taxBeforeCess: 0,
+      rebate: 0,
+      cessOrLevy: 0,
+      netTaxPayable: 0,
+      effectiveTaxRate: 0,
+      marginalTaxRate: 0,
+      annualTakeHome: 0,
+      monthlyTakeHome: 0,
+      notes: 'Please enter valid numbers',
+    };
+  }
+
   const netTax = Math.round(taxableIncome * rate);
-  const effectiveRate = gross > 0 ? Number(((netTax / gross) * 100).toFixed(2)) : 0;
+  const effectiveRate = (gross > 0 && isFinite(netTax)) ? Number(((netTax / gross) * 100).toFixed(2)) : 0;
   const annualTakeHome = Math.max(0, gross - netTax);
 
   return {
@@ -170,10 +211,10 @@ export function calculateCustomRateTax(
     rebate: 0,
     cessOrLevy: 0,
     netTaxPayable: netTax,
-    effectiveTaxRate: effectiveRate,
+    effectiveTaxRate: isFinite(effectiveRate) ? effectiveRate : 0,
     marginalTaxRate: flatRatePercent,
     annualTakeHome: Math.round(annualTakeHome),
-    monthlyTakeHome: Math.round((annualTakeHome / 12) * 100) / 100,
+    monthlyTakeHome: isFinite(annualTakeHome) ? Math.round((annualTakeHome / 12) * 100) / 100 : 0,
     notes: `Calculated using custom flat rate of ${flatRatePercent}%.`,
   };
 }
@@ -190,9 +231,26 @@ export function calculateCustomSlabsTax(
   const totalDeductions = Math.max(0, Number(deductions) || 0);
   const taxableIncome = Math.max(0, gross - totalDeductions);
 
+  if (isNaN(gross) || !isFinite(gross) || isNaN(totalDeductions) || !isFinite(totalDeductions)) {
+    return {
+      grossIncome: 0,
+      totalDeductions: 0,
+      taxableIncome: 0,
+      taxBeforeCess: 0,
+      rebate: 0,
+      cessOrLevy: 0,
+      netTaxPayable: 0,
+      effectiveTaxRate: 0,
+      marginalTaxRate: 0,
+      annualTakeHome: 0,
+      monthlyTakeHome: 0,
+      notes: 'Please enter valid numbers',
+    };
+  }
+
   const { tax, marginalRate } = calculateProgressiveTax(taxableIncome, brackets);
   const netTax = Math.round(tax);
-  const effectiveRate = gross > 0 ? Number(((netTax / gross) * 100).toFixed(2)) : 0;
+  const effectiveRate = (gross > 0 && isFinite(netTax)) ? Number(((netTax / gross) * 100).toFixed(2)) : 0;
   const annualTakeHome = Math.max(0, gross - netTax);
 
   return {
@@ -203,10 +261,10 @@ export function calculateCustomSlabsTax(
     rebate: 0,
     cessOrLevy: 0,
     netTaxPayable: netTax,
-    effectiveTaxRate: effectiveRate,
+    effectiveTaxRate: isFinite(effectiveRate) ? effectiveRate : 0,
     marginalTaxRate: Number(marginalRate.toFixed(1)),
     annualTakeHome: Math.round(annualTakeHome),
-    monthlyTakeHome: Math.round((annualTakeHome / 12) * 100) / 100,
+    monthlyTakeHome: isFinite(annualTakeHome) ? Math.round((annualTakeHome / 12) * 100) / 100 : 0,
     notes: 'Calculated using user-defined custom tax brackets.',
   };
 }

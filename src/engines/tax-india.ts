@@ -79,6 +79,29 @@ function computeSurcharge(tax: number, taxableIncome: number, tiers?: SurchargeT
 export function calculateIndiaIncomeTax(input: IndiaIncomeTaxInput): IndiaTaxComparisonResult {
   const grossSalary = Math.max(0, Number(input.annualSalary) || 0);
   const otherIncome = Math.max(0, Number(input.otherIncome) || 0);
+
+  if (isNaN(grossSalary) || !isFinite(grossSalary) || isNaN(otherIncome) || !isFinite(otherIncome)) {
+    const emptyBreakdown: RegimeTaxBreakdown = {
+      regime: 'new',
+      grossTotalIncome: 0,
+      totalDeductions: 0,
+      taxableIncome: 0,
+      taxBeforeCess: 0,
+      rebate87A: 0,
+      surcharge: 0,
+      cess: 0,
+      netTaxPayable: 0,
+      effectiveTaxRate: 0,
+      monthlyTakeHome: 0,
+    };
+    return {
+      newRegime: emptyBreakdown,
+      oldRegime: { ...emptyBreakdown, regime: 'old' },
+      recommendedRegime: 'new',
+      annualSavings: 0,
+    };
+  }
+
   const grossTotal = grossSalary + otherIncome;
 
   const cessRate = INDIA_TAX_CONFIG_2026.cessRate ?? 0.04;
@@ -103,7 +126,7 @@ export function calculateIndiaIncomeTax(input: IndiaIncomeTaxInput): IndiaTaxCom
   const newSurcharge = computeSurcharge(newTaxAfterRebate, newTaxableIncome, newRegimeConfig.surchargeTiers);
   const newCess = Math.round((newTaxAfterRebate + newSurcharge) * cessRate);
   const newNetTax = Math.round(newTaxAfterRebate + newSurcharge + newCess);
-  const newMonthlyTakeHome = Math.round((grossTotal - newNetTax) / 12);
+  const newMonthlyTakeHome = isFinite(grossTotal - newNetTax) ? Math.round((grossTotal - newNetTax) / 12) : 0;
 
   const newBreakdown: RegimeTaxBreakdown = {
     regime: 'new',
@@ -115,7 +138,7 @@ export function calculateIndiaIncomeTax(input: IndiaIncomeTaxInput): IndiaTaxCom
     surcharge: Math.round(newSurcharge),
     cess: newCess,
     netTaxPayable: newNetTax,
-    effectiveTaxRate: grossTotal > 0 ? Number(((newNetTax / grossTotal) * 100).toFixed(2)) : 0,
+    effectiveTaxRate: (grossTotal > 0 && isFinite(newNetTax)) ? Number(((newNetTax / grossTotal) * 100).toFixed(2)) : 0,
     monthlyTakeHome: newMonthlyTakeHome,
   };
 
@@ -147,7 +170,7 @@ export function calculateIndiaIncomeTax(input: IndiaIncomeTaxInput): IndiaTaxCom
   const oldSurcharge = computeSurcharge(oldTaxAfterRebate, oldTaxableIncome, oldRegimeConfig.surchargeTiers);
   const oldCess = Math.round((oldTaxAfterRebate + oldSurcharge) * cessRate);
   const oldNetTax = Math.round(oldTaxAfterRebate + oldSurcharge + oldCess);
-  const oldMonthlyTakeHome = Math.round((grossTotal - oldNetTax) / 12);
+  const oldMonthlyTakeHome = isFinite(grossTotal - oldNetTax) ? Math.round((grossTotal - oldNetTax) / 12) : 0;
 
   const oldBreakdown: RegimeTaxBreakdown = {
     regime: 'old',
@@ -159,7 +182,7 @@ export function calculateIndiaIncomeTax(input: IndiaIncomeTaxInput): IndiaTaxCom
     surcharge: Math.round(oldSurcharge),
     cess: oldCess,
     netTaxPayable: oldNetTax,
-    effectiveTaxRate: grossTotal > 0 ? Number(((oldNetTax / grossTotal) * 100).toFixed(2)) : 0,
+    effectiveTaxRate: (grossTotal > 0 && isFinite(oldNetTax)) ? Number(((oldNetTax / grossTotal) * 100).toFixed(2)) : 0,
     monthlyTakeHome: oldMonthlyTakeHome,
   };
 
@@ -170,7 +193,7 @@ export function calculateIndiaIncomeTax(input: IndiaIncomeTaxInput): IndiaTaxCom
     newRegime: newBreakdown,
     oldRegime: oldBreakdown,
     recommendedRegime,
-    annualSavings: savings,
+    annualSavings: isFinite(savings) ? savings : 0,
   };
 }
 
@@ -194,6 +217,10 @@ export function calculatePPF(
   const rate = Math.max(0, Number(interestRate) || 7.1) / 100;
   const tenure = Math.max(15, Math.round(Number(years) || 15));
 
+  if (isNaN(p) || !isFinite(p) || isNaN(rate) || !isFinite(rate) || isNaN(tenure) || !isFinite(tenure)) {
+    return { totalDeposit: 0, totalInterestEarned: 0, maturityAmount: 0 };
+  }
+
   let balance = 0;
   let totalDeposit = 0;
 
@@ -204,8 +231,8 @@ export function calculatePPF(
     balance += interest;
   }
 
-  const maturityAmount = Math.round(balance);
-  const totalInterestEarned = Math.round(maturityAmount - totalDeposit);
+  const maturityAmount = isFinite(balance) ? Math.round(balance) : 0;
+  const totalInterestEarned = Math.round(Math.max(0, maturityAmount - totalDeposit));
 
   return {
     totalDeposit: Math.round(totalDeposit),
@@ -239,6 +266,27 @@ export function calculateEPF(
   const annualIncrement = Math.max(0, Number(annualSalaryIncreasePercent) || 0) / 100;
   const monthlyRate = (Math.max(0, Number(interestRate) || 8.25) / 100) / 12;
 
+  if (
+    isNaN(basic) ||
+    !isFinite(basic) ||
+    isNaN(age) ||
+    !isFinite(age) ||
+    isNaN(retire) ||
+    !isFinite(retire) ||
+    isNaN(annualIncrement) ||
+    !isFinite(annualIncrement) ||
+    isNaN(monthlyRate) ||
+    !isFinite(monthlyRate) ||
+    years <= 0
+  ) {
+    return {
+      employeeContribution: 0,
+      employerContribution: 0,
+      totalInterestEarned: 0,
+      maturityCorpus: 0,
+    };
+  }
+
   let balance = 0;
   let totalEmployee = 0;
   let totalEmployer = 0;
@@ -257,7 +305,7 @@ export function calculateEPF(
     basic = basic * (1 + annualIncrement);
   }
 
-  const maturityCorpus = Math.round(balance);
+  const maturityCorpus = isFinite(balance) ? Math.round(balance) : 0;
   const totalContributed = totalEmployee + totalEmployer;
   const totalInterestEarned = Math.round(Math.max(0, maturityCorpus - totalContributed));
 
@@ -286,7 +334,7 @@ export function calculateGratuity(
   const salary = Math.max(0, Number(monthlyLastDrawnSalary) || 0);
   const tenure = Math.max(0, Math.round(Number(completedYearsOfService) || 0));
 
-  if (salary === 0 || tenure < 5) {
+  if (isNaN(salary) || !isFinite(salary) || isNaN(tenure) || !isFinite(tenure) || salary === 0 || tenure < 5) {
     // Under the Act, minimum 5 years of continuous service required (except in case of death/disability)
     return {
       totalGratuity: 0,
@@ -301,8 +349,8 @@ export function calculateGratuity(
   const taxableAmount = Math.max(0, gratuity - taxExemptAmount);
 
   return {
-    totalGratuity: gratuity,
-    taxExemptAmount,
-    taxableAmount,
+    totalGratuity: isFinite(gratuity) ? gratuity : 0,
+    taxExemptAmount: isFinite(taxExemptAmount) ? taxExemptAmount : 0,
+    taxableAmount: isFinite(taxableAmount) ? taxableAmount : 0,
   };
 }

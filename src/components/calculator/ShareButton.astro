@@ -10,6 +10,7 @@ const { className = '' } = Astro.props;
 <button
   id="fac-share-btn"
   type="button"
+  aria-label="Share calculation result"
   class={`inline-flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[38px] rounded-[6px] border border-hairline bg-canvas-elevated px-3.5 py-2 sm:py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft transition-colors cursor-pointer shadow-whisper ${className}`}
   title="Share or bookmark this calculation"
 >
@@ -39,6 +40,9 @@ const { className = '' } = Astro.props;
           const original = text.textContent;
           text.textContent = 'Link Copied!';
           btn.classList.add('border-cyan', 'text-cyan');
+          if (typeof window.facShowToast === 'function') {
+            window.facShowToast('Calculation link copied to clipboard!', 'success');
+          }
           setTimeout(() => {
             text.textContent = original;
             btn.classList.remove('border-cyan', 'text-cyan');

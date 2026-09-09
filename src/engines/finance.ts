@@ -23,6 +23,33 @@ export function calculateEMIWithPrepayment(
   lumpSumPrepayment: number = 0,
   lumpSumMonth: number = 12
 ): PrepaymentEMIResult {
+  if (
+    isNaN(loanAmount) ||
+    !isFinite(loanAmount) ||
+    isNaN(annualInterestRate) ||
+    !isFinite(annualInterestRate) ||
+    isNaN(tenureYears) ||
+    !isFinite(tenureYears) ||
+    isNaN(extraMonthlyPayment) ||
+    !isFinite(extraMonthlyPayment) ||
+    isNaN(lumpSumPrepayment) ||
+    !isFinite(lumpSumPrepayment) ||
+    isNaN(lumpSumMonth) ||
+    !isFinite(lumpSumMonth)
+  ) {
+    return {
+      regularEMI: 0,
+      totalInterestWithoutPrepayment: 0,
+      totalPaymentWithoutPrepayment: 0,
+      totalInterestWithPrepayment: 0,
+      totalPaymentWithPrepayment: 0,
+      interestSaved: 0,
+      originalTenureMonths: 0,
+      newTenureMonths: 0,
+      monthsSaved: 0,
+    };
+  }
+
   const p = Math.max(0, Number(loanAmount) || 0);
   const annualRate = Math.max(0, Number(annualInterestRate) || 0);
   const years = Math.max(0, Number(tenureYears) || 0);
@@ -49,15 +76,24 @@ export function calculateEMIWithPrepayment(
 
   // Standard EMI: [P * r * (1 + r)^n] / [(1 + r)^n - 1]
   let regularEMI = 0;
-  if (monthlyRate === 0) {
-    regularEMI = p / originalMonths;
+  if (monthlyRate === 0 || !isFinite(monthlyRate)) {
+    regularEMI = originalMonths > 0 ? p / originalMonths : 0;
   } else {
     const factor = Math.pow(1 + monthlyRate, originalMonths);
-    regularEMI = (p * monthlyRate * factor) / (factor - 1);
+    const denom = factor - 1;
+    if (denom <= 0 || !isFinite(factor)) {
+      regularEMI = originalMonths > 0 ? p / originalMonths : 0;
+    } else {
+      regularEMI = (p * monthlyRate * factor) / denom;
+    }
+  }
+
+  if (isNaN(regularEMI) || !isFinite(regularEMI)) {
+    regularEMI = 0;
   }
 
   const totalPaymentWithout = regularEMI * originalMonths;
-  const totalInterestWithout = totalPaymentWithout - p;
+  const totalInterestWithout = Math.max(0, totalPaymentWithout - p);
 
   // Simulation with prepayment
   let balance = p;
@@ -113,6 +149,16 @@ export interface ProfitMarginResult {
  * Calculates Profit Margin and Markup
  */
 export function calculateProfitMargin(cost: number, revenue: number): ProfitMarginResult {
+  if (isNaN(cost) || isNaN(revenue) || !isFinite(cost) || !isFinite(revenue)) {
+    return {
+      cost: 0,
+      revenue: 0,
+      grossProfit: 0,
+      grossMarginPercent: 0,
+      markupPercent: 0,
+    };
+  }
+
   const c = Math.max(0, Number(cost) || 0);
   const r = Math.max(0, Number(revenue) || 0);
 
@@ -124,8 +170,8 @@ export function calculateProfitMargin(cost: number, revenue: number): ProfitMarg
     cost: Number(c.toFixed(2)),
     revenue: Number(r.toFixed(2)),
     grossProfit: Number(grossProfit.toFixed(2)),
-    grossMarginPercent: Number(grossMarginPercent.toFixed(2)),
-    markupPercent: Number(markupPercent.toFixed(2)),
+    grossMarginPercent: isFinite(grossMarginPercent) ? Number(grossMarginPercent.toFixed(2)) : 0,
+    markupPercent: isFinite(markupPercent) ? Number(markupPercent.toFixed(2)) : 0,
   };
 }
 
@@ -144,12 +190,28 @@ export function calculateBreakEven(
   salesPricePerUnit: number,
   variableCostPerUnit: number
 ): BreakEvenResult {
+  if (
+    isNaN(fixedCosts) ||
+    isNaN(salesPricePerUnit) ||
+    isNaN(variableCostPerUnit) ||
+    !isFinite(fixedCosts) ||
+    !isFinite(salesPricePerUnit) ||
+    !isFinite(variableCostPerUnit)
+  ) {
+    return {
+      breakEvenUnits: 0,
+      breakEvenRevenue: 0,
+      contributionMargin: 0,
+      contributionMarginRatio: 0,
+    };
+  }
+
   const fc = Math.max(0, Number(fixedCosts) || 0);
   const price = Math.max(0, Number(salesPricePerUnit) || 0);
   const vc = Math.max(0, Number(variableCostPerUnit) || 0);
 
   const contributionMargin = price - vc;
-  if (contributionMargin <= 0) {
+  if (contributionMargin <= 0 || price <= 0) {
     return {
       breakEvenUnits: 0,
       breakEvenRevenue: 0,
@@ -160,11 +222,11 @@ export function calculateBreakEven(
 
   const breakEvenUnits = Math.ceil(fc / contributionMargin);
   const contributionMarginRatio = price > 0 ? contributionMargin / price : 0;
-  const breakEvenRevenue = Math.round(fc / contributionMarginRatio);
+  const breakEvenRevenue = contributionMarginRatio > 0 ? Math.round(fc / contributionMarginRatio) : 0;
 
   return {
-    breakEvenUnits,
-    breakEvenRevenue,
+    breakEvenUnits: isFinite(breakEvenUnits) ? breakEvenUnits : 0,
+    breakEvenRevenue: isFinite(breakEvenRevenue) ? breakEvenRevenue : 0,
     contributionMargin: Number(contributionMargin.toFixed(2)),
     contributionMarginRatio: Number((contributionMarginRatio * 100).toFixed(2)),
   };

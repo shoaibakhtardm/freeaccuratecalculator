@@ -62,6 +62,8 @@ const relatedCalculators = [
             <button
               id="format-standard-btn"
               type="button"
+              aria-label="Use Standard Million notation"
+              aria-pressed="false"
               class="rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors"
             >
               Standard (Million)
@@ -69,6 +71,8 @@ const relatedCalculators = [
             <button
               id="format-indian-btn"
               type="button"
+              aria-label="Use Indian Lakh and Crore notation"
+              aria-pressed="true"
               class="rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors"
             >
               Indian (Lakh/Crore)
@@ -80,19 +84,19 @@ const relatedCalculators = [
       <!-- Quick Preset Chips -->
       <div class="flex items-center gap-1.5 overflow-x-auto text-[11px] font-medium text-mute pb-1 sm:pb-0">
         <span class="select-none shrink-0">Presets:</span>
-        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="500000">
+        <button type="button" aria-label="Set loan amount to 5 Lakhs" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="500000">
           5L
         </button>
-        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="1500000">
+        <button type="button" aria-label="Set loan amount to 15 Lakhs" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="1500000">
           15L
         </button>
-        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="2500000">
+        <button type="button" aria-label="Set loan amount to 25 Lakhs" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="2500000">
           25L
         </button>
-        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="5000000">
+        <button type="button" aria-label="Set loan amount to 50 Lakhs" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="5000000">
           50L
         </button>
-        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="10000000">
+        <button type="button" aria-label="Set loan amount to 1 Crore" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="10000000">
           1Cr
         </button>
       </div>
@@ -125,6 +129,7 @@ const relatedCalculators = [
           max="10000000"
           step="50000"
           value="2500000"
+          aria-label="Loan principal amount slider"
           class="w-full accent-link cursor-pointer h-5"
         />
       </div>
@@ -154,6 +159,7 @@ const relatedCalculators = [
           max="20"
           step="0.1"
           value="8.5"
+          aria-label="Interest rate slider"
           class="w-full accent-cyan cursor-pointer h-5"
         />
       </div>
@@ -165,8 +171,8 @@ const relatedCalculators = [
           <div class="flex items-center gap-2">
             <span id="tenure-display" class="font-mono text-violet text-sm">20 Years (240 Mo)</span>
             <div class="inline-flex rounded border border-hairline bg-canvas p-0.5 text-xs sm:text-[10px]">
-              <button id="tenure-yr-btn" type="button" class="rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium bg-primary text-on-primary">Yr</button>
-              <button id="tenure-mo-btn" type="button" class="rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium text-ink">Mo</button>
+              <button id="tenure-yr-btn" type="button" aria-label="Tenure in years" aria-pressed="true" class="rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium bg-primary text-on-primary">Yr</button>
+              <button id="tenure-mo-btn" type="button" aria-label="Tenure in months" aria-pressed="false" class="rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium text-ink">Mo</button>
             </div>
           </div>
         </div>
@@ -185,6 +191,7 @@ const relatedCalculators = [
           max="30"
           step="1"
           value="20"
+          aria-label="Loan tenure slider"
           class="w-full accent-violet cursor-pointer h-5"
         />
       </div>
@@ -393,22 +400,39 @@ const relatedCalculators = [
         }
       }
 
-      if (P <= 0 || totalMonths <= 0) return;
+      if (
+        isNaN(P) ||
+        !isFinite(P) ||
+        isNaN(annualRate) ||
+        !isFinite(annualRate) ||
+        isNaN(tenure) ||
+        !isFinite(tenure) ||
+        P <= 0 ||
+        totalMonths <= 0
+      ) {
+        if (tenureDisplay) tenureDisplay.textContent = 'Please enter valid numbers';
+        return;
+      }
 
       const r = annualRate / 12 / 100;
       let emi = 0;
       let totalPayment = 0;
       let totalInterest = 0;
 
-      if (r === 0) {
-        emi = P / totalMonths;
+      if (r === 0 || !isFinite(r)) {
+        emi = totalMonths > 0 ? P / totalMonths : 0;
         totalPayment = P;
         totalInterest = 0;
       } else {
         const factor = Math.pow(1 + r, totalMonths);
-        emi = (P * r * factor) / (factor - 1);
+        const denom = factor - 1;
+        if (denom <= 0 || !isFinite(factor)) {
+          emi = totalMonths > 0 ? P / totalMonths : 0;
+        } else {
+          emi = (P * r * factor) / denom;
+        }
         totalPayment = emi * totalMonths;
-        totalInterest = totalPayment - P;
+        totalInterest = Math.max(0, totalPayment - P);
       }
 
       // Animate Results
@@ -527,8 +551,10 @@ const relatedCalculators = [
     // Tenure Toggle
     tenureYrBtn?.addEventListener('click', () => {
       tenureIsYears = true;
-      tenureYrBtn.className = 'rounded px-2 py-0.5 font-medium bg-primary text-on-primary';
-      tenureMoBtn.className = 'rounded px-2 py-0.5 font-medium text-ink';
+      tenureYrBtn.className = 'rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium bg-primary text-on-primary';
+      tenureMoBtn.className = 'rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium text-ink';
+      tenureYrBtn.setAttribute('aria-pressed', 'true');
+      tenureMoBtn.setAttribute('aria-pressed', 'false');
       if (tenureSlider) {
         tenureSlider.max = '30';
         tenureSlider.value = '20';
@@ -539,8 +565,10 @@ const relatedCalculators = [
 
     tenureMoBtn?.addEventListener('click', () => {
       tenureIsYears = false;
-      tenureMoBtn.className = 'rounded px-2 py-0.5 font-medium bg-primary text-on-primary';
-      tenureYrBtn.className = 'rounded px-2 py-0.5 font-medium text-ink';
+      tenureMoBtn.className = 'rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium bg-primary text-on-primary';
+      tenureYrBtn.className = 'rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium text-ink';
+      tenureMoBtn.setAttribute('aria-pressed', 'true');
+      tenureYrBtn.setAttribute('aria-pressed', 'false');
       if (tenureSlider) {
         tenureSlider.max = '360';
         tenureSlider.value = '240';
@@ -552,15 +580,19 @@ const relatedCalculators = [
     // Format Toggle
     formatStdBtn?.addEventListener('click', () => {
       isIndianFormat = false;
-      formatStdBtn.className = 'rounded-[4px] bg-primary px-2.5 py-1 text-xs font-medium text-on-primary cursor-pointer';
-      formatIndBtn.className = 'rounded-[4px] px-2.5 py-1 text-xs font-medium text-ink cursor-pointer';
+      formatStdBtn.className = 'rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors';
+      formatIndBtn.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors';
+      formatStdBtn.setAttribute('aria-pressed', 'true');
+      formatIndBtn.setAttribute('aria-pressed', 'false');
       calculate();
     });
 
     formatIndBtn?.addEventListener('click', () => {
       isIndianFormat = true;
-      formatIndBtn.className = 'rounded-[4px] bg-primary px-2.5 py-1 text-xs font-medium text-on-primary cursor-pointer';
-      formatStdBtn.className = 'rounded-[4px] px-2.5 py-1 text-xs font-medium text-ink cursor-pointer';
+      formatIndBtn.className = 'rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors';
+      formatStdBtn.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors';
+      formatIndBtn.setAttribute('aria-pressed', 'true');
+      formatStdBtn.setAttribute('aria-pressed', 'false');
       calculate();
     });
 

@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <defs>
+    <radialGradient id="bgGlow" cx="50%" cy="30%" r="80%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.8" />
+      <stop offset="50%" stop-color="#0f172a" stop-opacity="0.95" />
+      <stop offset="100%" stop-color="#020617" stop-opacity="1" />
+    </radialGradient>
+    <linearGradient id="primaryGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.8" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background Base -->
+  <rect width="1200" height="630" fill="#020617" />
+  <rect width="1200" height="630" fill="url(#bgGlow)" />
+
+  <!-- Subtle Blueprint Grid Pattern -->
+  <g opacity="0.12" stroke="#94a3b8" stroke-width="1">
+    <line x1="0" y1="105" x2="1200" y2="105" />
+    <line x1="0" y1="210" x2="1200" y2="210" />
+    <line x1="0" y1="315" x2="1200" y2="315" />
+    <line x1="0" y1="420" x2="1200" y2="420" />
+    <line x1="0" y1="525" x2="1200" y2="525" />
+    <line x1="200" y1="0" x2="200" y2="630" />
+    <line x1="400" y1="0" x2="400" y2="630" />
+    <line x1="600" y1="0" x2="600" y2="630" />
+    <line x1="800" y1="0" x2="800" y2="630" />
+    <line x1="1000" y1="0" x2="1000" y2="630" />
+  </g>
+
+  <!-- Central Card -->
+  <rect x="120" y="80" width="960" height="470" rx="24" fill="url(#cardGrad)" stroke="#334155" stroke-width="1.5" filter="url(#shadow)" />
+
+  <!-- App Logo Icon -->
+  <g transform="translate(190, 150)">
+    <rect width="84" height="84" rx="20" fill="#0f172a" stroke="#3b82f6" stroke-width="2" />
+    <!-- Calculator Vector Graphic -->
+    <rect x="22" y="16" width="40" height="52" rx="6" fill="none" stroke="#38bdf8" stroke-width="3" />
+    <line x1="28" y1="28" x2="56" y2="28" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" />
+    <circle cx="32" cy="40" r="3" fill="#38bdf8" />
+    <circle cx="42" cy="40" r="3" fill="#38bdf8" />
+    <circle cx="52" cy="40" r="3" fill="#38bdf8" />
+    <circle cx="32" cy="50" r="3" fill="#38bdf8" />
+    <circle cx="42" cy="50" r="3" fill="#38bdf8" />
+    <circle cx="52" cy="50" r="3" fill="#38bdf8" />
+    <circle cx="32" cy="60" r="3" fill="#38bdf8" />
+    <line x1="42" y1="60" x2="52" y2="60" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" />
+  </g>
+
+  <!-- Brand Wordmark -->
+  <text x="300" y="195" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="22" font-weight="700" letter-spacing="2" fill="#38bdf8" text-transform="uppercase">
+    FREEACCURATECALCULATOR.COM
+  </text>
+  <text x="300" y="235" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="38" font-weight="800" fill="#f8fafc">
+    Fast, Mathematically Verified Calculators
+  </text>
+
+  <!-- Tagline / Value Proposition -->
+  <text x="190" y="310" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="400" fill="#94a3b8">
+    Industrial-grade precision for global taxation, loan amortization, health metrics, and compounding interest.
+  </text>
+  <text x="190" y="340" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="400" fill="#94a3b8">
+    Instant client-side calculation with zero tracking and full regional format awareness.
+  </text>
+
+  <!-- Feature Pills -->
+  <g transform="translate(190, 410)">
+    <!-- Pill 1: Finance -->
+    <rect x="0" y="0" width="165" height="42" rx="10" fill="#0f172a" stroke="#3b82f6" stroke-width="1.5" />
+    <text x="82" y="26" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="600" fill="#38bdf8" text-anchor="middle">💰 Finance Engine</text>
+
+    <!-- Pill 2: Health -->
+    <rect x="185" y="0" width="160" height="42" rx="10" fill="#0f172a" stroke="#10b981" stroke-width="1.5" />
+    <text x="265" y="26" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="600" fill="#34d399" text-anchor="middle">🩺 Health &amp; BMI</text>
+
+    <!-- Pill 3: Math -->
+    <rect x="365" y="0" width="160" height="42" rx="10" fill="#0f172a" stroke="#a855f7" stroke-width="1.5" />
+    <text x="445" y="26" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="600" fill="#c084fc" text-anchor="middle">📐 Math &amp; Ratio</text>
+
+    <!-- Pill 4: Zero Cold Start -->
+    <rect x="545" y="0" width="220" height="42" rx="10" fill="#0f172a" stroke="#64748b" stroke-width="1.5" />
+    <text x="655" y="26" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="15" font-weight="600" fill="#e2e8f0" text-anchor="middle">⚡ Instant Edge Delivery</text>
+  </g>
+</svg>

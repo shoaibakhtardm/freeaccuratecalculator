@@ -46,7 +46,16 @@ export function calculateSIP(
   const annualRate = Math.max(0, Number(expectedReturnRate) || 0);
   const years = Math.max(0, Number(timeHorizonYears) || 0);
 
-  if (p === 0 || years === 0) {
+  if (
+    isNaN(p) ||
+    !isFinite(p) ||
+    isNaN(annualRate) ||
+    !isFinite(annualRate) ||
+    isNaN(years) ||
+    !isFinite(years) ||
+    p === 0 ||
+    years === 0
+  ) {
     return {
       investedAmount: 0,
       estimatedReturns: 0,
@@ -66,11 +75,15 @@ export function calculateSIP(
     totalValue = investedAmount;
   } else {
     const compoundFactor = Math.pow(1 + monthlyRate, months);
-    const ordinaryAnnuity = p * ((compoundFactor - 1) / monthlyRate);
+    if (!isFinite(compoundFactor)) {
+      totalValue = investedAmount;
+    } else {
+      const ordinaryAnnuity = p * ((compoundFactor - 1) / monthlyRate);
 
-    totalValue = contributionTiming === 'beginning'
-      ? ordinaryAnnuity * (1 + monthlyRate)
-      : ordinaryAnnuity;
+      totalValue = contributionTiming === 'beginning'
+        ? ordinaryAnnuity * (1 + monthlyRate)
+        : ordinaryAnnuity;
+    }
   }
 
   if (isNaN(totalValue) || !isFinite(totalValue)) {
@@ -108,7 +121,18 @@ export function calculateStepUpSIP(
   const monthlyRate = annualRate / 12;
   const years = Math.max(0, Math.round(Number(timeHorizonYears) || 0));
 
-  if (p === 0 || years === 0) {
+  if (
+    isNaN(p) ||
+    !isFinite(p) ||
+    isNaN(stepUp) ||
+    !isFinite(stepUp) ||
+    isNaN(annualRate) ||
+    !isFinite(annualRate) ||
+    isNaN(years) ||
+    !isFinite(years) ||
+    p === 0 ||
+    years === 0
+  ) {
     return {
       investedAmount: 0,
       estimatedReturns: 0,
@@ -183,6 +207,26 @@ export function calculateCompoundInterest(input: CompoundInterestInput): Compoun
   const timing: ContributionTiming = input.contributionTiming ?? 'end';
   const isBeginning = timing === 'beginning';
 
+  if (
+    isNaN(p) ||
+    !isFinite(p) ||
+    isNaN(pmt) ||
+    !isFinite(pmt) ||
+    isNaN(r) ||
+    !isFinite(r) ||
+    isNaN(t) ||
+    !isFinite(t)
+  ) {
+    return {
+      investedPrincipal: 0,
+      totalContributions: 0,
+      totalInvested: 0,
+      interestEarned: 0,
+      futureValue: 0,
+      contributionTiming: timing,
+    };
+  }
+
   const totalContributions = pmt * 12 * t;
   const totalInvested = p + totalContributions;
 
@@ -215,18 +259,20 @@ export function calculateCompoundInterest(input: CompoundInterestInput): Compoun
     const principalGrowth = p * Math.exp(r * t);
     const effectiveMonthlyR = Math.exp(r / 12) - 1;
     const months = 12 * t;
-    const annuityFactor = (Math.pow(1 + effectiveMonthlyR, months) - 1) / effectiveMonthlyR;
+    const annuityFactor = (effectiveMonthlyR > 0 && isFinite(effectiveMonthlyR))
+      ? (Math.pow(1 + effectiveMonthlyR, months) - 1) / effectiveMonthlyR
+      : months;
     const pmtGrowth = pmt * annuityFactor * (isBeginning ? (1 + effectiveMonthlyR) : 1);
     futureValue = principalGrowth + pmtGrowth;
   } else {
-    const n = Math.max(1, typeof freq === 'number' ? freq : (parseFloat(freq) || 12));
+    const n = Math.max(1, typeof freq === 'number' ? freq : (parseFloat(String(freq)) || 12));
     const principalGrowth = p * Math.pow(1 + r / n, n * t);
 
     // Monthly contributions with frequency n compounding
     const effectiveMonthlyR = Math.pow(1 + r / n, n / 12) - 1;
     const months = 12 * t;
     let pmtGrowth = 0;
-    if (effectiveMonthlyR > 0) {
+    if (effectiveMonthlyR > 0 && isFinite(effectiveMonthlyR)) {
       const annuityFactor = (Math.pow(1 + effectiveMonthlyR, months) - 1) / effectiveMonthlyR;
       pmtGrowth = pmt * annuityFactor * (isBeginning ? (1 + effectiveMonthlyR) : 1);
     } else {
@@ -270,11 +316,21 @@ export function calculateLumpsum(
   const rate = Math.max(0, Number(expectedReturnRate) || 0) / 100;
   const years = Math.max(0, Number(timeHorizonYears) || 0);
 
-  if (p === 0 || years === 0) {
+  if (
+    isNaN(p) ||
+    !isFinite(p) ||
+    isNaN(rate) ||
+    !isFinite(rate) ||
+    isNaN(years) ||
+    !isFinite(years) ||
+    p === 0 ||
+    years === 0
+  ) {
     return { investedAmount: p, estimatedReturns: 0, totalValue: p };
   }
 
-  const totalValue = p * Math.pow(1 + rate, years);
+  const factor = Math.pow(1 + rate, years);
+  const totalValue = isFinite(factor) ? p * factor : p;
   const estimatedReturns = Math.max(0, totalValue - p);
 
   return {
@@ -307,6 +363,25 @@ export function calculateSWP(
   const withdrawal = Math.max(0, Number(monthlyWithdrawal) || 0);
   const monthlyRate = (Math.max(0, Number(expectedReturnRate) || 0) / 100) / 12;
   const totalMonths = Math.round(Math.max(0, Number(timeHorizonYears) || 0) * 12);
+
+  if (
+    isNaN(balance) ||
+    !isFinite(balance) ||
+    isNaN(withdrawal) ||
+    !isFinite(withdrawal) ||
+    isNaN(monthlyRate) ||
+    !isFinite(monthlyRate) ||
+    isNaN(totalMonths) ||
+    !isFinite(totalMonths)
+  ) {
+    return {
+      totalInvested: 0,
+      totalWithdrawn: 0,
+      finalBalance: 0,
+      depletedEarly: false,
+      withdrawalTiming,
+    };
+  }
 
   let totalWithdrawn = 0;
   let depletedEarly = false;
@@ -362,10 +437,23 @@ export function calculateCAGR(
   const ev = Number(endingValue);
   const y = Number(years);
 
-  if (bv <= 0 || ev <= 0 || y <= 0 || !isFinite(bv) || !isFinite(ev) || !isFinite(y)) {
+  if (
+    isNaN(bv) ||
+    isNaN(ev) ||
+    isNaN(y) ||
+    !isFinite(bv) ||
+    !isFinite(ev) ||
+    !isFinite(y) ||
+    bv <= 0 ||
+    ev <= 0 ||
+    y <= 0
+  ) {
     return 0;
   }
 
   const cagr = (Math.pow(ev / bv, 1 / y) - 1) * 100;
+  if (isNaN(cagr) || !isFinite(cagr)) {
+    return 0;
+  }
   return Number(cagr.toFixed(2));
 }

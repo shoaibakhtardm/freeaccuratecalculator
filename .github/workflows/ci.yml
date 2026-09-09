@@ -1,0 +1,50 @@
+name: CI & Deployment Sanity
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Test & Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Test Suite (Formula, Tax, SEO & Responsiveness)
+        run: npm run test
+
+      - name: Build Production Bundle (Astro & Cloudflare Worker)
+        run: npm run build
+
+      - name: Verify Build Artifacts
+        run: |
+          test -d dist/client || { echo "❌ dist/client directory missing"; exit 1; }
+          test -d dist/server || { echo "❌ dist/server directory missing"; exit 1; }
+          test -f dist/client/index.html || { echo "❌ dist/client/index.html missing"; exit 1; }
+          test -f dist/client/sitemap.xml || { echo "❌ dist/client/sitemap.xml missing"; exit 1; }
+          test -f dist/client/robots.txt || { echo "❌ dist/client/robots.txt missing"; exit 1; }
+          test -f dist/client/og-image.svg || { echo "❌ dist/client/og-image.svg missing"; exit 1; }
+          test -f dist/server/entry.mjs || { echo "❌ dist/server/entry.mjs missing"; exit 1; }
+          echo "✅ All production build artifacts verified successfully."

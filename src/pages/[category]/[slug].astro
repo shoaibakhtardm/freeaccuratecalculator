@@ -106,6 +106,7 @@ const relatedCalculators = CALCULATORS.filter((c) => c.category === calc.categor
                 <select
                   id={inp.id}
                   name={inp.id}
+                  aria-describedby={inp.helpText ? `${inp.id}-help` : undefined}
                   class="calc-input w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
                 >
                   {inp.options?.map((opt) => (
@@ -125,6 +126,7 @@ const relatedCalculators = CALCULATORS.filter((c) => c.category === calc.categor
                     max={inp.max}
                     value={inp.defaultValue}
                     data-is-currency={isCurrencyInput ? 'true' : 'false'}
+                    aria-describedby={inp.helpText ? `${inp.id}-help` : undefined}
                     class={`calc-input w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink placeholder-faint focus:border-link focus:outline-none focus:ring-1 focus:ring-link ${isCurrencyInput ? 'calc-currency-input' : ''}`}
                   />
                   {inp.unit && (
@@ -138,7 +140,7 @@ const relatedCalculators = CALCULATORS.filter((c) => c.category === calc.categor
                 </div>
               )}
               {inp.helpText && (
-                <p class="text-[11px] text-mute mt-1">{inp.helpText}</p>
+                <p id={`${inp.id}-help`} class="text-[11px] text-mute mt-1">{inp.helpText}</p>
               )}
             </div>
           );
@@ -252,7 +254,12 @@ const relatedCalculators = CALCULATORS.filter((c) => c.category === calc.categor
 
       try {
         const res = computeFn(inputVals);
-        if (res && typeof res.value === 'number' && !isNaN(res.value)) {
+        if (res && res.error) {
+          if (primaryResult) primaryResult.textContent = '--';
+          if (secondaryText) secondaryText.textContent = res.error;
+          return;
+        }
+        if (res && typeof res.value === 'number' && !isNaN(res.value) && isFinite(res.value)) {
           if (window.facAnimateNumber) {
             window.facAnimateNumber('primary-result', res.value, {
               decimals: decimals,
@@ -282,9 +289,14 @@ const relatedCalculators = CALCULATORS.filter((c) => c.category === calc.categor
               });
             }
           }, 800);
+        } else {
+          if (primaryResult) primaryResult.textContent = '--';
+          if (secondaryText) secondaryText.textContent = 'Please enter valid numbers';
         }
       } catch (err) {
         console.error('Calculation error:', err);
+        if (primaryResult) primaryResult.textContent = '--';
+        if (secondaryText) secondaryText.textContent = 'Please enter valid numbers';
       }
     }
 

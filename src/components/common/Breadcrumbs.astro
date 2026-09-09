@@ -11,6 +11,10 @@ interface Props {
 
 const { items } = Astro.props;
 
+const siteOrigin = 'https://freeaccuratecalculator.com';
+const currentPath = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const currentUrl = `${siteOrigin}${currentPath}`;
+
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -19,14 +23,21 @@ const breadcrumbSchema = {
       '@type': 'ListItem',
       position: 1,
       name: 'Home',
-      item: 'https://freeaccuratecalculator.com/',
+      item: `${siteOrigin}/`,
     },
-    ...items.map((crumb, idx) => ({
-      '@type': 'ListItem',
-      position: idx + 2,
-      name: crumb.label,
-      ...(crumb.href ? { item: `https://freeaccuratecalculator.com${crumb.href}` } : {}),
-    })),
+    ...items.map((crumb, idx) => {
+      let itemUrl = currentUrl;
+      if (crumb.href) {
+        const href = crumb.href.endsWith('/') ? crumb.href : `${crumb.href}/`;
+        itemUrl = href.startsWith('http') ? href : `${siteOrigin}${href.startsWith('/') ? href : `/${href}`}`;
+      }
+      return {
+        '@type': 'ListItem',
+        position: idx + 2,
+        name: crumb.label,
+        item: itemUrl,
+      };
+    }),
   ],
 };
 ---

@@ -26,10 +26,10 @@
   --color-warning-soft: #ffefcf;
   --color-warning-deep: #ab570a;
 
-  --color-violet: #7928ca;
-  --color-violet-soft: #d8ccf1;
-  --color-cyan: #50e3c2;
-  --color-cyan-soft: #aaffec;
+  --color-violet: var(--color-violet);
+  --color-violet-soft: var(--color-violet-soft);
+  --color-cyan: var(--color-cyan);
+  --color-cyan-soft: var(--color-cyan-soft);
   --color-pink: #ff0080;
   --color-magenta: #eb367f;
 
@@ -61,6 +61,10 @@
   --color-link: #0070f3;
   --color-link-deep: #0761d1;
   --color-link-soft: #d3e5ff;
+  --color-violet: #7928ca;
+  --color-violet-soft: #f1ecfc;
+  --color-cyan: #0f766e;
+  --color-cyan-soft: #ccfbf1;
 }
 
 .dark {
@@ -68,7 +72,7 @@
   --color-canvas-elevated: #141414;
   --color-ink: #ededed;
   --color-body: #a1a1a1;
-  --color-mute: #707070;
+  --color-mute: #8e8e8e;
   --color-faint: #454545;
   --color-hairline: #262626;
   --color-hairline-soft: #171717;
@@ -77,6 +81,10 @@
   --color-link: #3291ff;
   --color-link-deep: #0051b3;
   --color-link-soft: #002454;
+  --color-violet: #a78bfa;
+  --color-violet-soft: #2e1065;
+  --color-cyan: #50e3c2;
+  --color-cyan-soft: #042f2e;
 }
 
 /* Base typography and body reset */
@@ -199,4 +207,17 @@ body {
 }
 .goog-te-spinner-pos {
   display: none !important;
+}
+
+/* Ad Placeholder CLS Prevention */
+.ad-placeholder {
+  min-height: 250px;
+  background-color: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dark .ad-placeholder {
+  background-color: #1a1a1a;
 }

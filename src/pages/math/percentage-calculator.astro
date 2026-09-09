@@ -50,10 +50,14 @@ const relatedCalculators = [
   <!-- Calculator Card -->
   <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
     <!-- Mode Selector Tabs -->
-    <div class="flex flex-wrap gap-2 border-b border-hairline pb-4">
+    <div class="flex flex-wrap gap-2 border-b border-hairline pb-4" role="tablist" aria-label="Percentage calculation modes">
       <button
         id="mode-btn-1"
         type="button"
+        role="tab"
+        aria-selected="true"
+        aria-controls="mode-1-container"
+        aria-label="Calculate what is X percent of Y"
         class="pct-mode-tab active inline-flex items-center justify-center min-h-[44px] sm:min-h-[34px] rounded-[6px] bg-primary px-3.5 py-2 sm:py-1.5 text-xs font-medium text-on-primary cursor-pointer transition-all"
         data-mode="1"
       >
@@ -62,6 +66,10 @@ const relatedCalculators = [
       <button
         id="mode-btn-2"
         type="button"
+        role="tab"
+        aria-selected="false"
+        aria-controls="mode-2-container"
+        aria-label="Calculate X is what percent of Y"
         class="pct-mode-tab inline-flex items-center justify-center min-h-[44px] sm:min-h-[34px] rounded-[6px] border border-hairline bg-canvas px-3.5 py-2 sm:py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft cursor-pointer transition-all"
         data-mode="2"
       >
@@ -70,6 +78,10 @@ const relatedCalculators = [
       <button
         id="mode-btn-3"
         type="button"
+        role="tab"
+        aria-selected="false"
+        aria-controls="mode-3-container"
+        aria-label="Calculate percentage increase or decrease"
         class="pct-mode-tab inline-flex items-center justify-center min-h-[44px] sm:min-h-[34px] rounded-[6px] border border-hairline bg-canvas px-3.5 py-2 sm:py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft cursor-pointer transition-all"
         data-mode="3"
       >
@@ -78,7 +90,7 @@ const relatedCalculators = [
     </div>
 
     <!-- Mode 1: What is X% of Y? -->
-    <div id="mode-1-container" class="mode-panel space-y-4">
+    <div id="mode-1-container" role="tabpanel" aria-labelledby="mode-btn-1" class="mode-panel space-y-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label for="m1-x" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
@@ -112,7 +124,7 @@ const relatedCalculators = [
     </div>
 
     <!-- Mode 2: X is what % of Y? -->
-    <div id="mode-2-container" class="mode-panel hidden space-y-4">
+    <div id="mode-2-container" role="tabpanel" aria-labelledby="mode-btn-2" class="mode-panel hidden space-y-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label for="m2-x" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
@@ -143,7 +155,7 @@ const relatedCalculators = [
     </div>
 
     <!-- Mode 3: % Increase / Decrease -->
-    <div id="mode-3-container" class="mode-panel hidden space-y-4">
+    <div id="mode-3-container" role="tabpanel" aria-labelledby="mode-btn-3" class="mode-panel hidden space-y-4">
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label for="m3-initial" class="block text-xs font-semibold text-ink uppercase font-mono mb-1.5">
@@ -265,6 +277,11 @@ const relatedCalculators = [
       if (currentMode === '1') {
         const x = parseFloat(m1X?.value || '0');
         const y = parseFloat(m1Y?.value || '0');
+        if (isNaN(x) || isNaN(y) || !isFinite(x) || !isFinite(y)) {
+          if (secondaryText) secondaryText.textContent = 'Please enter valid numbers';
+          if (liveBreakdown) liveBreakdown.textContent = 'Please enter valid numbers';
+          return;
+        }
         result = (x / 100) * y;
         suffix = '';
         summaryText = `${x}% of ${y} = ${result.toFixed(2)}`;
@@ -272,15 +289,35 @@ const relatedCalculators = [
       } else if (currentMode === '2') {
         const x = parseFloat(m2X?.value || '0');
         const y = parseFloat(m2Y?.value || '1');
-        result = y !== 0 ? (x / y) * 100 : 0;
+        if (isNaN(x) || isNaN(y) || !isFinite(x) || !isFinite(y)) {
+          if (secondaryText) secondaryText.textContent = 'Please enter valid numbers';
+          if (liveBreakdown) liveBreakdown.textContent = 'Please enter valid numbers';
+          return;
+        }
+        if (y === 0) {
+          if (secondaryText) secondaryText.textContent = 'Please enter valid numbers (denominator cannot be 0)';
+          if (liveBreakdown) liveBreakdown.textContent = 'Division by zero is undefined';
+          return;
+        }
+        result = (x / y) * 100;
         suffix = '%';
         summaryText = `${x} is ${result.toFixed(2)}% of ${y}`;
         stepFormula = `Step: (${x} ÷ ${y}) × 100 = ${(x / y).toFixed(4)} × 100 = ${result.toFixed(2)}%`;
       } else if (currentMode === '3') {
         const v1 = parseFloat(m3Initial?.value || '0');
         const v2 = parseFloat(m3Final?.value || '0');
+        if (isNaN(v1) || isNaN(v2) || !isFinite(v1) || !isFinite(v2)) {
+          if (secondaryText) secondaryText.textContent = 'Please enter valid numbers';
+          if (liveBreakdown) liveBreakdown.textContent = 'Please enter valid numbers';
+          return;
+        }
+        if (v1 === 0) {
+          if (secondaryText) secondaryText.textContent = 'Please enter valid numbers (initial value cannot be 0)';
+          if (liveBreakdown) liveBreakdown.textContent = 'Percentage change from zero is undefined';
+          return;
+        }
         const diff = v2 - v1;
-        result = v1 !== 0 ? (diff / Math.abs(v1)) * 100 : 0;
+        result = (diff / Math.abs(v1)) * 100;
         suffix = '%';
         const direction = result >= 0 ? 'increase' : 'decrease';
         summaryText = `${Math.abs(result).toFixed(2)}% ${direction} from ${v1} to ${v2}`;
@@ -320,7 +357,9 @@ const relatedCalculators = [
     function switchMode(mode) {
       currentMode = mode;
       tabs.forEach((tab) => {
-        if (tab.getAttribute('data-mode') === mode) {
+        const isSelected = tab.getAttribute('data-mode') === mode;
+        tab.setAttribute('aria-selected', isSelected ? 'true' : 'false');
+        if (isSelected) {
           tab.classList.add('bg-primary', 'text-on-primary', 'active');
           tab.classList.remove('bg-canvas', 'text-ink');
         } else {

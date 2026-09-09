@@ -53,6 +53,21 @@ export function calculateUSIncomeTax(input: USIncomeTaxInput): USIncomeTaxResult
   const gross = Math.max(0, Number(input.grossAnnualIncome) || 0);
   const status = input.filingStatus || 'single';
 
+  if (isNaN(gross) || !isFinite(gross)) {
+    return {
+      grossIncome: 0,
+      taxableIncome: 0,
+      federalIncomeTax: 0,
+      socialSecurityTax: 0,
+      medicareTax: 0,
+      totalFicaTax: 0,
+      totalTax: 0,
+      effectiveTaxRate: 0,
+      annualTakeHome: 0,
+      monthlyTakeHome: 0,
+    };
+  }
+
   const max401k = US_TAX_CONFIG_2026.limits?.traditional401k ?? 24500;
   const preTax401k = Math.min(max401k, Math.max(0, Number(input.traditional401k) || 0));
 
@@ -105,9 +120,9 @@ export function calculateUSIncomeTax(input: USIncomeTaxInput): USIncomeTaxResult
     medicareTax: Math.round(medicare),
     totalFicaTax: totalFica,
     totalTax,
-    effectiveTaxRate: gross > 0 ? Number(((totalTax / gross) * 100).toFixed(2)) : 0,
+    effectiveTaxRate: (gross > 0 && isFinite(totalTax)) ? Number(((totalTax / gross) * 100).toFixed(2)) : 0,
     annualTakeHome: Math.round(netTakeHome),
-    monthlyTakeHome: Math.round(netTakeHome / 12),
+    monthlyTakeHome: isFinite(netTakeHome) ? Math.round(netTakeHome / 12) : 0,
   };
 }
 
@@ -144,6 +159,25 @@ export function calculate401k(
   const returnRate = (Math.max(0, Number(expectedAnnualReturn) || 0) / 100) / 12;
   const salaryIncrease = Math.max(0, Number(annualSalaryIncreasePercent) || 0) / 100;
 
+  if (
+    isNaN(salary) ||
+    !isFinite(salary) ||
+    isNaN(balance) ||
+    !isFinite(balance) ||
+    isNaN(empPct) ||
+    !isFinite(empPct) ||
+    isNaN(returnRate) ||
+    !isFinite(returnRate) ||
+    years <= 0
+  ) {
+    return {
+      totalBalance: 0,
+      employeeContributions: 0,
+      employerContributions: 0,
+      totalInterestEarned: 0,
+    };
+  }
+
   let totalEmp = 0;
   let totalEmpr = 0;
 
@@ -163,7 +197,7 @@ export function calculate401k(
     salary = salary * (1 + salaryIncrease);
   }
 
-  const finalBalance = Math.round(balance);
+  const finalBalance = isFinite(balance) ? Math.round(balance) : 0;
   const totalContrib = totalEmp + totalEmpr + currentBalance;
   const interestEarned = Math.round(Math.max(0, finalBalance - totalContrib));
 
@@ -171,7 +205,7 @@ export function calculate401k(
     totalBalance: finalBalance,
     employeeContributions: Math.round(totalEmp),
     employerContributions: Math.round(totalEmpr),
-    totalInterestEarned: interestEarned,
+    totalInterestEarned: isFinite(interestEarned) ? interestEarned : 0,
   };
 }
 
@@ -196,6 +230,23 @@ export function calculateRothIra(
   const rate = Math.max(0, Number(expectedReturnRate) || 0) / 100;
   const totalYears = Math.max(1, Math.round(Number(years) || 1));
 
+  if (
+    isNaN(balance) ||
+    !isFinite(balance) ||
+    isNaN(annualContrib) ||
+    !isFinite(annualContrib) ||
+    isNaN(rate) ||
+    !isFinite(rate) ||
+    isNaN(totalYears) ||
+    !isFinite(totalYears)
+  ) {
+    return {
+      totalBalance: 0,
+      totalContributions: 0,
+      taxFreeEarnings: 0,
+    };
+  }
+
   let totalContrib = balance;
 
   for (let y = 1; y <= totalYears; y++) {
@@ -203,12 +254,12 @@ export function calculateRothIra(
     totalContrib += annualContrib;
   }
 
-  const finalBalance = Math.round(balance);
+  const finalBalance = isFinite(balance) ? Math.round(balance) : 0;
   const earnings = Math.round(Math.max(0, finalBalance - totalContrib));
 
   return {
     totalBalance: finalBalance,
     totalContributions: Math.round(totalContrib),
-    taxFreeEarnings: earnings,
+    taxFreeEarnings: isFinite(earnings) ? earnings : 0,
   };
 }

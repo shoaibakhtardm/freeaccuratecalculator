@@ -30,6 +30,7 @@ const { calculatorId } = Astro.props;
         <button
           id="history-clear-btn"
           type="button"
+          aria-label="Clear calculation history"
           class="inline-flex items-center min-h-[44px] sm:min-h-[32px] text-xs sm:text-[11px] font-medium text-mute hover:text-error transition-colors cursor-pointer py-1.5 px-3 rounded hover:bg-hairline-soft"
         >
           Clear History
@@ -111,6 +112,9 @@ const { calculatorId } = Astro.props;
       clearBtn.addEventListener('click', () => {
         localStorage.removeItem(storageKey);
         renderHistory();
+        if (typeof window.facShowToast === 'function') {
+          window.facShowToast('Calculation history cleared', 'info');
+        }
       });
     }
 

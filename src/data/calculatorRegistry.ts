@@ -2280,16 +2280,23 @@ export const CALCULATORS: CalculatorEntry[] = [
       const y = parseInt(inputs.birth_year || '2000');
       const m = parseInt(inputs.birth_month || '1') - 1;
       const d = parseInt(inputs.birth_day || '1');
+      if (isNaN(y) || isNaN(m) || isNaN(d) || y <= 0 || m < 0 || m > 11 || d < 1 || d > 31) {
+        return { error: 'Please enter valid numbers', value: 0, secondary: 'Please enter a valid birth date' };
+      }
       const birth = new Date(y, m, d);
       const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      if (birth > today) {
+        return { error: 'Birth date cannot be in the future', value: 0, secondary: 'Please select a date on or before today' };
+      }
       let ageYears = now.getFullYear() - birth.getFullYear();
       let mDiff = now.getMonth() - birth.getMonth();
       if (mDiff < 0 || (mDiff === 0 && now.getDate() < birth.getDate())) {
         ageYears--;
       }
-      const totalDays = Math.floor((now - birth) / (1000 * 60 * 60 * 24));
+      const totalDays = Math.max(0, Math.floor((now - birth) / (1000 * 60 * 60 * 24)));
       return {
-        value: ageYears,
+        value: Math.max(0, ageYears),
         secondary: 'Lived: ' + totalDays.toLocaleString() + ' days | ' + (totalDays * 24).toLocaleString() + ' hours'
       };
     `,
@@ -2328,11 +2335,11 @@ export const CALCULATORS: CalculatorEntry[] = [
     ],
     inputs: [
       { id: 'start_year', label: 'Start Year', type: 'number', defaultValue: 2026, step: 1 },
-      { id: 'start_month', label: 'Start Month (1-12)', type: 'number', defaultValue: 1, step: 1 },
-      { id: 'start_day', label: 'Start Day', type: 'number', defaultValue: 1, step: 1 },
+      { id: 'start_month', label: 'Start Month (1-12)', type: 'number', defaultValue: 1, min: 1, max: 12, step: 1 },
+      { id: 'start_day', label: 'Start Day (1-31)', type: 'number', defaultValue: 1, min: 1, max: 31, step: 1 },
       { id: 'end_year', label: 'End Year', type: 'number', defaultValue: 2026, step: 1 },
-      { id: 'end_month', label: 'End Month (1-12)', type: 'number', defaultValue: 12, step: 1 },
-      { id: 'end_day', label: 'End Day', type: 'number', defaultValue: 31, step: 1 },
+      { id: 'end_month', label: 'End Month (1-12)', type: 'number', defaultValue: 12, min: 1, max: 12, step: 1 },
+      { id: 'end_day', label: 'End Day (1-31)', type: 'number', defaultValue: 31, min: 1, max: 31, step: 1 },
     ],
     defaultResult: {
       label: 'Calendar Days Difference',
@@ -2343,14 +2350,23 @@ export const CALCULATORS: CalculatorEntry[] = [
       suffix: ' days',
     },
     computeScript: `
-      const d1 = new Date(parseInt(inputs.start_year || '2026'), parseInt(inputs.start_month || '1') - 1, parseInt(inputs.start_day || '1'));
-      const d2 = new Date(parseInt(inputs.end_year || '2026'), parseInt(inputs.end_month || '1') - 1, parseInt(inputs.end_day || '1'));
-      const diffMs = Math.abs(d2 - d1);
+      const y1 = parseInt(inputs.start_year || '2026');
+      const m1 = parseInt(inputs.start_month || '1') - 1;
+      const d1 = parseInt(inputs.start_day || '1');
+      const y2 = parseInt(inputs.end_year || '2026');
+      const m2 = parseInt(inputs.end_month || '1') - 1;
+      const d2 = parseInt(inputs.end_day || '1');
+      if (isNaN(y1) || isNaN(m1) || isNaN(d1) || isNaN(y2) || isNaN(m2) || isNaN(d2)) {
+        return { error: 'Please enter valid numbers', value: 0, secondary: 'Please enter valid calendar dates' };
+      }
+      const dt1 = new Date(y1, m1, d1);
+      const dt2 = new Date(y2, m2, d2);
+      const diffMs = Math.abs(dt2 - dt1);
       const days = Math.round(diffMs / (1000 * 60 * 60 * 24));
       const weeks = (days / 7).toFixed(1);
       return {
-        value: days,
-        secondary: 'Spans: ' + weeks + ' weeks | ' + (days * 24).toLocaleString() + ' hours'
+        value: isNaN(days) ? 0 : days,
+        secondary: 'Spans: ' + (isNaN(days) ? 0 : weeks) + ' weeks | ' + (isNaN(days) ? 0 : (days * 24)).toLocaleString() + ' hours'
       };
     `,
   },

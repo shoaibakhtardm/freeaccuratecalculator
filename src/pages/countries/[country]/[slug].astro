@@ -289,6 +289,11 @@ const relatedCalculators = CALCULATORS.filter((c) => popularSet.has(c.id) && c.i
 
       try {
         const outcome = computeFn(inputVals);
+        if (outcome && outcome.error) {
+          if (primaryResult) primaryResult.textContent = '--';
+          if (secondaryText) secondaryText.textContent = outcome.error;
+          return;
+        }
         if (outcome && typeof outcome.value === 'number' && !isNaN(outcome.value) && isFinite(outcome.value)) {
           if (typeof window.facUpdateResult === 'function') {
             window.facUpdateResult('primary-result', outcome.value, outcome.secondary || '');
@@ -298,9 +303,14 @@ const relatedCalculators = CALCULATORS.filter((c) => popularSet.has(c.id) && c.i
               secondaryText.textContent = outcome.secondary;
             }
           }
+        } else {
+          if (primaryResult) primaryResult.textContent = '--';
+          if (secondaryText) secondaryText.textContent = 'Please enter valid numbers';
         }
       } catch (err) {
         console.error('Calculation error:', err);
+        if (primaryResult) primaryResult.textContent = '--';
+        if (secondaryText) secondaryText.textContent = 'Please enter valid numbers';
       }
     }
 

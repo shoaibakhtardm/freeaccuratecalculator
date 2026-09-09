@@ -65,6 +65,8 @@ const relatedCalculators = [
             <button
               id="format-standard-btn"
               type="button"
+              aria-label="मानक मिलियन प्रारूप चुनें (Use Standard Million notation)"
+              aria-pressed="false"
               class="rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors"
             >
               मानक (Million)
@@ -72,6 +74,8 @@ const relatedCalculators = [
             <button
               id="format-indian-btn"
               type="button"
+              aria-label="भारतीय लाख/करोड़ प्रारूप चुनें (Use Indian Lakh/Crore notation)"
+              aria-pressed="true"
               class="rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors"
             >
               भारतीय (Lakh/Crore)
@@ -83,19 +87,19 @@ const relatedCalculators = [
       <!-- Quick Preset Chips -->
       <div class="flex items-center gap-1.5 overflow-x-auto text-[11px] font-medium text-mute pb-1 sm:pb-0">
         <span class="select-none shrink-0">त्वरित:</span>
-        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="500000">
+        <button type="button" aria-label="ऋण राशि 5 लाख सेट करें" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="500000">
           5 लाख
         </button>
-        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="1500000">
+        <button type="button" aria-label="ऋण राशि 15 लाख सेट करें" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="1500000">
           15 लाख
         </button>
-        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="2500000">
+        <button type="button" aria-label="ऋण राशि 25 लाख सेट करें" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="2500000">
           25 लाख
         </button>
-        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="5000000">
+        <button type="button" aria-label="ऋण राशि 50 लाख सेट करें" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="5000000">
           50 लाख
         </button>
-        <button type="button" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="10000000">
+        <button type="button" aria-label="ऋण राशि 1 करोड़ सेट करें" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer flex items-center justify-center" data-amount="10000000">
           1 करोड़
         </button>
       </div>
@@ -128,6 +132,7 @@ const relatedCalculators = [
           max="10000000"
           step="50000"
           value="2500000"
+          aria-label="ऋण मूलधन राशि स्लाइडर (Loan principal amount slider)"
           class="w-full accent-link cursor-pointer h-5"
         />
       </div>
@@ -157,6 +162,7 @@ const relatedCalculators = [
           max="20"
           step="0.1"
           value="8.5"
+          aria-label="ब्याज दर स्लाइडर (Interest rate slider)"
           class="w-full accent-cyan cursor-pointer h-5"
         />
       </div>
@@ -168,8 +174,8 @@ const relatedCalculators = [
           <div class="flex items-center gap-2">
             <span id="tenure-display" class="font-mono text-violet text-sm">20 वर्ष (240 माह)</span>
             <div class="inline-flex rounded border border-hairline bg-canvas p-0.5 text-xs sm:text-[10px]">
-              <button id="tenure-yr-btn" type="button" class="rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium bg-primary text-on-primary">वर्ष</button>
-              <button id="tenure-mo-btn" type="button" class="rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium text-ink">माह</button>
+              <button id="tenure-yr-btn" type="button" aria-label="अवधि वर्षों में" aria-pressed="true" class="rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium bg-primary text-on-primary">वर्ष</button>
+              <button id="tenure-mo-btn" type="button" aria-label="अवधि महीनों में" aria-pressed="false" class="rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium text-ink">माह</button>
             </div>
           </div>
         </div>
@@ -188,6 +194,7 @@ const relatedCalculators = [
           max="30"
           step="1"
           value="20"
+          aria-label="ऋण अवधि स्लाइडर (Loan tenure slider)"
           class="w-full accent-violet cursor-pointer h-5"
         />
       </div>
