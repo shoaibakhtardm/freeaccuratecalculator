@@ -15,6 +15,11 @@ const faqs = [
       'EMI stands for Equated Monthly Installment. It is a fixed payment amount made by a borrower to a lender at a specified date each calendar month. EMIs are calculated using the reducing balance method: E = P × r × (1 + r)ⁿ / ((1 + r)ⁿ - 1), where P is principal, r is the monthly interest rate, and n is the tenure in months.',
   },
   {
+    question: 'How does an Extra Monthly Payment reduce loan tenure and interest?',
+    answer:
+      'Any extra monthly payment goes 100% toward principal repayment rather than interest. This accelerates the reduction of your outstanding loan balance, drastically lowering subsequent monthly interest charges, saving thousands in cumulative interest and cutting years off your total loan schedule.',
+  },
+  {
     question: 'How does the reducing balance method differ from a flat interest rate?',
     answer:
       'In a reducing balance loan, interest is calculated each month solely on the outstanding principal. As you pay off principal each month, the interest portion of your EMI decreases while the principal portion increases. A flat rate loan calculates interest on the entire original principal for the full duration, resulting in a significantly higher effective APR.',
@@ -25,9 +30,9 @@ const faqs = [
       'In India, South Asia, and regional banking, large currency figures are grouped in Lakhs and Crores rather than millions and billions. 1 Lakh equals 100,000 (written as 1,00,000) and 1 Crore equals 100 Lakhs or 10,000,000 (written as 1,00,00,000). Our calculator dynamically supports both formats.',
   },
   {
-    question: 'How do prepayments impact loan tenure and total interest?',
+    question: 'How does real-time double verification work?',
     answer:
-      'Making partial prepayments directly reduces your outstanding principal balance. Because subsequent monthly interest is computed on this smaller balance, prepaying even a single extra installment annually can save thousands in interest and shave years off your loan tenure.',
+      'Our engine cross-checks the closed-form algebraic formula against an independent iterative month-by-month compounding simulation loop. Both results must converge within 0.01 currency units, guaranteeing absolute mathematical precision without approximation drift.',
   },
 ];
 
@@ -39,10 +44,10 @@ const relatedCalculators = [
 ---
 
 <CalculatorLayout
-  title="EMI Calculator — Equated Monthly Installment with Reducing Balance & Lakh/Crore Support"
-  metaDescription="Calculate your exact loan EMI, total interest payable, and amortization schedule. Features Indian Lakh/Crore and standard Million formatting with reducing balance math."
+  title="EMI Calculator — Equated Monthly Installment with Prepayment & Lakh/Crore Support"
+  metaDescription="Calculate your exact loan EMI, extra payment savings, and multi-tab amortization schedule. Features real-time what-if reactivity, step-by-step mathematical proof, and Indian Lakh/Crore formatting."
   h1="EMI Calculator"
-  subtitle="Calculate equated monthly installments for home loans, personal loans, and car financing with instant reducing balance math."
+  subtitle="Calculate equated monthly installments for home loans, personal loans, and car financing with instant reducing balance math and prepayment analysis."
   category={{ label: 'Finance', href: '/finance/' }}
   calculatorName="EMI Calculator"
   relatedCalculators={relatedCalculators}
@@ -114,11 +119,10 @@ const relatedCalculators = [
           <span id="principal-symbol" class="absolute left-3.5 text-sm font-mono text-mute select-none">₹</span>
           <input
             id="emi-principal"
-            type="number"
-            min="1000"
-            max="100000000"
-            step="10000"
+            type="text"
+            inputmode="text"
             value="2500000"
+            placeholder="e.g. 2500000, 25L, 1.5Cr"
             class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas py-2.5 pl-8 pr-3 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
           />
         </div>
@@ -132,6 +136,7 @@ const relatedCalculators = [
           aria-label="Loan principal amount slider"
           class="w-full accent-link cursor-pointer h-5"
         />
+        <p class="text-[11px] text-mute font-mono">Smart shorthand supported: e.g. "25L", "1.5Cr", "50k", or raw numbers.</p>
       </div>
 
       <!-- 2. Annual Interest Rate -->
@@ -195,6 +200,39 @@ const relatedCalculators = [
           class="w-full accent-violet cursor-pointer h-5"
         />
       </div>
+
+      <!-- 4. Extra Monthly Prepayment (Calculator.net feature) -->
+      <div class="space-y-2 rounded-[8px] border border-hairline bg-canvas p-3 sm:p-4">
+        <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
+          <label for="emi-extra" class="flex items-center gap-1.5">
+            <span>Extra Monthly Payment (Optional)</span>
+            <span class="rounded bg-cyan/15 px-1.5 py-0.5 text-[10px] font-medium text-cyan lowercase">what-if</span>
+          </label>
+          <span id="extra-display" class="font-mono text-cyan text-sm">₹ 0</span>
+        </div>
+        <div class="relative flex items-center">
+          <span id="extra-symbol" class="absolute left-3.5 text-sm font-mono text-mute select-none">₹</span>
+          <input
+            id="emi-extra"
+            type="text"
+            inputmode="text"
+            value="0"
+            placeholder="e.g. 5000, 5k, 10k"
+            class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas-elevated py-2.5 pl-8 pr-3 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+        <input
+          id="emi-extra-slider"
+          type="range"
+          min="0"
+          max="50000"
+          step="500"
+          value="0"
+          aria-label="Extra monthly prepayment slider"
+          class="w-full accent-cyan cursor-pointer h-5"
+        />
+        <p class="text-[11px] text-mute font-mono">Simulate prepaying an extra amount each month to discover time & interest savings.</p>
+      </div>
     </div>
 
     <!-- Primary Results Grid -->
@@ -205,7 +243,7 @@ const relatedCalculators = [
         prefix="₹ "
         initialValue={21696}
         decimals={0}
-        secondaryText="Equated Monthly Installment"
+        secondaryText="Baseline monthly installment"
         accent="link"
       />
 
@@ -215,7 +253,7 @@ const relatedCalculators = [
         prefix="₹ "
         initialValue={2706935}
         decimals={0}
-        secondaryText="Total interest across tenure"
+        secondaryText="Total interest with prepayments"
         accent="violet"
       />
 
@@ -225,13 +263,44 @@ const relatedCalculators = [
         prefix="₹ "
         initialValue={5206935}
         decimals={0}
-        secondaryText="Principal plus total interest"
+        secondaryText="Principal plus lifetime interest"
         accent="ink"
       />
     </div>
 
-    <!-- Principal vs Interest Breakdown Visual Ratio Bar -->
-    <div class="space-y-2 pt-2">
+    <!-- Extra Payment Savings Callout (Live Reactivity) -->
+    <div id="extra-savings-panel" class="hidden rounded-[8px] border border-hairline bg-canvas p-4 space-y-3" aria-live="polite" aria-atomic="true">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-hairline pb-2.5">
+        <span class="mono-eyebrow text-cyan flex items-center gap-1.5">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+          Prepayment Payoff Acceleration
+        </span>
+        <span id="double-verification-badge" class="font-mono text-[11px] text-mute flex items-center gap-1">
+          <span class="h-1.5 w-1.5 rounded-full bg-link"></span>
+          Double-Verified Math
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
+        <div>
+          <span class="text-mute block">Total Interest Saved:</span>
+          <span id="savings-interest-text" class="text-base font-semibold text-cyan">₹ 0</span>
+        </div>
+        <div>
+          <span class="text-mute block">Payoff Time Saved:</span>
+          <span id="savings-time-text" class="text-base font-semibold text-link">0 Months</span>
+        </div>
+        <div>
+          <span class="text-mute block">New Loan Tenure:</span>
+          <span id="savings-new-tenure-text" class="text-base font-semibold text-ink">20 Years</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visual Breakdown Section (OmniCalculator lightweight CSS/SVG visual feedback) -->
+    <div class="space-y-3 pt-2">
       <div class="flex items-center justify-between text-xs font-mono">
         <span class="flex items-center gap-1.5 text-link">
           <span class="h-2 w-2 rounded-full bg-link"></span>
@@ -241,45 +310,106 @@ const relatedCalculators = [
           <span class="h-2 w-2 rounded-full bg-violet"></span>
           Interest: <span id="interest-pct-label">52.0%</span>
         </span>
+        <span id="savings-pct-container" class="hidden sm:flex items-center gap-1.5 text-cyan">
+          <span class="h-2 w-2 rounded-full bg-cyan"></span>
+          Savings: <span id="savings-pct-label">0.0%</span>
+        </span>
       </div>
 
-      <div class="flex h-3 w-full overflow-hidden rounded-full bg-canvas border border-hairline">
+      <div class="flex h-3.5 w-full overflow-hidden rounded-full bg-canvas border border-hairline">
         <div id="bar-principal" class="h-full bg-link transition-all duration-300" style="width: 48%;"></div>
         <div id="bar-interest" class="h-full bg-violet transition-all duration-300" style="width: 52%;"></div>
       </div>
     </div>
 
-    <!-- Amortization Schedule Accordion Preview -->
-    <div class="border-t border-hairline pt-4">
-      <details class="group rounded-[8px] border border-hairline bg-canvas">
+    <!-- Multi-Tab Amortization Schedule (Calculator.net Feature) -->
+    <div class="border-t border-hairline pt-4 space-y-3">
+      <details class="group rounded-[8px] border border-hairline bg-canvas" open>
         <summary class="flex min-h-[44px] items-center justify-between p-3.5 cursor-pointer list-none text-xs font-semibold text-ink hover:text-link transition-colors">
           <span class="flex items-center gap-2">
             <svg class="h-4 w-4 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
             </svg>
-            <span class="pr-2">View Amortization Schedule (Yearly Breakdown)</span>
+            <span class="pr-2">Amortization Schedule & Breakdown</span>
+          </span>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-mute group-open:rotate-180 transition-transform">▼</span>
+          </div>
+        </summary>
+
+        <div class="p-3.5 pt-0 space-y-3">
+          <!-- Schedule View Multi-Tab Switcher -->
+          <div class="flex items-center justify-between border-b border-hairline pb-2.5">
+            <div class="inline-flex rounded-[6px] border border-hairline bg-canvas-elevated p-0.5 text-xs font-medium font-mono">
+              <button
+                id="amort-tab-yearly"
+                type="button"
+                aria-label="Show Yearly Amortization Breakdown"
+                aria-pressed="true"
+                class="rounded-[4px] bg-primary px-3 py-1 min-h-[32px] sm:min-h-[26px] text-on-primary cursor-pointer transition-colors"
+              >
+                Yearly Breakdown
+              </button>
+              <button
+                id="amort-tab-monthly"
+                type="button"
+                aria-label="Show Monthly Amortization Breakdown"
+                aria-pressed="false"
+                class="rounded-[4px] px-3 py-1 min-h-[32px] sm:min-h-[26px] text-ink hover:text-ink cursor-pointer transition-colors"
+              >
+                Monthly Breakdown
+              </button>
+            </div>
+            <span id="schedule-counter-badge" class="text-[11px] font-mono text-mute">20 Years Total</span>
+          </div>
+
+          <div class="overflow-x-auto max-w-full">
+            <p class="sm:hidden text-[11px] text-mute mb-2 flex items-center gap-1 font-mono">
+              <span>⇄ Swipe schedule horizontally</span>
+            </p>
+            <table class="w-full min-w-[480px] text-left text-xs font-mono">
+              <thead>
+                <tr class="border-b border-hairline text-mute">
+                  <th class="py-2 pr-3">Period</th>
+                  <th class="py-2 pr-3">Principal Paid</th>
+                  <th class="py-2 pr-3">Interest Paid</th>
+                  <th id="th-extra" class="py-2 pr-3 hidden text-cyan">Extra Paid</th>
+                  <th class="py-2 pr-3">Total Payment</th>
+                  <th class="py-2">Remaining Balance</th>
+                </tr>
+              </thead>
+              <tbody id="amortization-table-body" class="divide-y divide-hairline-soft">
+                <!-- Dynamically rendered -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- Step-by-Step Mathematical Proof Generation (CalculatorSoup Feature) -->
+    <div class="border-t border-hairline pt-4">
+      <details class="group rounded-[8px] border border-hairline bg-canvas">
+        <summary class="flex min-h-[44px] items-center justify-between p-3.5 cursor-pointer list-none text-xs font-semibold text-ink hover:text-link transition-colors">
+          <span class="flex items-center gap-2">
+            <svg class="h-4 w-4 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+            </svg>
+            <span class="pr-2">Step-by-Step Mathematical Proof (Formula Substitution)</span>
           </span>
           <span class="text-xs text-mute group-open:rotate-180 transition-transform">▼</span>
         </summary>
 
-        <div class="p-3.5 pt-0 overflow-x-auto max-w-full">
-          <p class="sm:hidden text-[11px] text-mute mb-2 flex items-center gap-1 font-mono">
-            <span>⇄ Swipe schedule horizontally</span>
+        <div class="p-3.5 pt-0 space-y-4 font-mono text-xs text-body" id="proof-container">
+          <p class="text-mute leading-relaxed">
+            Reducing balance amortization evaluates loan payments through the following exact closed-form algebraic formula:
           </p>
-          <table class="w-full min-w-[480px] text-left text-xs font-mono">
-            <thead>
-              <tr class="border-b border-hairline text-mute">
-                <th class="py-2 pr-3">Year</th>
-                <th class="py-2 pr-3">Principal Paid</th>
-                <th class="py-2 pr-3">Interest Paid</th>
-                <th class="py-2 pr-3">Total Payment</th>
-                <th class="py-2">Remaining Balance</th>
-              </tr>
-            </thead>
-            <tbody id="amortization-table-body" class="divide-y divide-hairline-soft">
-              <!-- Dynamically rendered -->
-            </tbody>
-          </table>
+          <div class="rounded-[6px] border border-hairline bg-canvas-elevated p-3 text-center text-ink font-semibold">
+            E = [ P × r × (1 + r)ⁿ ] ÷ [ (1 + r)ⁿ - 1 ]
+          </div>
+          <div id="proof-steps-body" class="space-y-3 divide-y divide-hairline-soft">
+            <!-- Dynamically rendered step substitutions -->
+          </div>
         </div>
       </details>
     </div>
@@ -337,7 +467,12 @@ const relatedCalculators = [
   </div>
 </CalculatorLayout>
 
-<script is:inline>
+<script>
+  import { parseSmartInput } from '../../utils/smartParser';
+  import { calculateAdvancedEMI, generateEMIProof, verifyMath } from '../../utils/financialMath';
+
+  declare const window: any;
+
   (function () {
     const activeCode = typeof window.facGetActiveCurrency === 'function'
       ? window.facGetActiveCurrency()
@@ -349,19 +484,32 @@ const relatedCalculators = [
     let currentCurrencySymbol = activeInfo?.symbol || (activeCode === 'INR' ? '₹' : '$');
     let isIndianFormat = activeInfo ? !!activeInfo.isIndian : (activeCode === 'INR');
     let tenureIsYears = true;
+    let scheduleTabMode: 'yearly' | 'monthly' = 'yearly';
 
-    const principalInput = document.getElementById('emi-principal');
-    const principalSlider = document.getElementById('emi-principal-slider');
+    const principalInput = document.getElementById('emi-principal') as HTMLInputElement | null;
+    const principalSlider = document.getElementById('emi-principal-slider') as HTMLInputElement | null;
     const principalDisplay = document.getElementById('principal-display');
     const principalSymbol = document.getElementById('principal-symbol');
 
-    const rateInput = document.getElementById('emi-rate');
-    const rateSlider = document.getElementById('emi-rate-slider');
+    const rateInput = document.getElementById('emi-rate') as HTMLInputElement | null;
+    const rateSlider = document.getElementById('emi-rate-slider') as HTMLInputElement | null;
     const rateDisplay = document.getElementById('rate-display');
 
-    const tenureInput = document.getElementById('emi-tenure');
-    const tenureSlider = document.getElementById('emi-tenure-slider');
+    const tenureInput = document.getElementById('emi-tenure') as HTMLInputElement | null;
+    const tenureSlider = document.getElementById('emi-tenure-slider') as HTMLInputElement | null;
     const tenureDisplay = document.getElementById('tenure-display');
+
+    const extraInput = document.getElementById('emi-extra') as HTMLInputElement | null;
+    const extraSlider = document.getElementById('emi-extra-slider') as HTMLInputElement | null;
+    const extraDisplay = document.getElementById('extra-display');
+    const extraSymbol = document.getElementById('extra-symbol');
+
+    const extraSavingsPanel = document.getElementById('extra-savings-panel');
+    const savingsInterestText = document.getElementById('savings-interest-text');
+    const savingsTimeText = document.getElementById('savings-time-text');
+    const savingsNewTenureText = document.getElementById('savings-new-tenure-text');
+    const savingsPctContainer = document.getElementById('savings-pct-container');
+    const savingsPctLabel = document.getElementById('savings-pct-label');
 
     const tenureYrBtn = document.getElementById('tenure-yr-btn');
     const tenureMoBtn = document.getElementById('tenure-mo-btn');
@@ -369,105 +517,114 @@ const relatedCalculators = [
     const formatStdBtn = document.getElementById('format-standard-btn');
     const formatIndBtn = document.getElementById('format-indian-btn');
 
+    const amortTabYearly = document.getElementById('amort-tab-yearly');
+    const amortTabMonthly = document.getElementById('amort-tab-monthly');
+    const scheduleCounterBadge = document.getElementById('schedule-counter-badge');
+    const thExtra = document.getElementById('th-extra');
+
     const barPrincipal = document.getElementById('bar-principal');
     const barInterest = document.getElementById('bar-interest');
     const principalPctLabel = document.getElementById('principal-pct-label');
     const interestPctLabel = document.getElementById('interest-pct-label');
 
     const amortTableBody = document.getElementById('amortization-table-body');
+    const proofStepsBody = document.getElementById('proof-steps-body');
 
-    function formatVal(num, decimals = 0) {
-      if (window.facFormatNumber) {
-        return window.facFormatNumber(num, decimals, isIndianFormat);
+    let currentCalculationData: ReturnType<typeof calculateAdvancedEMI> | null = null;
+
+    function formatVal(num: number, decimals: number = 0): string {
+      if ((window as any).facFormatNumber) {
+        return (window as any).facFormatNumber(num, decimals, isIndianFormat);
       }
       return num.toLocaleString();
     }
 
     function calculate() {
-      const P = parseFloat(principalInput?.value || '0');
+      const pParsed = parseSmartInput(principalInput?.value || '0');
+      const P = isNaN(pParsed) ? 0 : pParsed;
       const annualRate = parseFloat(rateInput?.value || '0');
-      let tenure = parseFloat(tenureInput?.value || '0');
+      const tenureVal = parseFloat(tenureInput?.value || '0');
+      const extraParsed = parseSmartInput(extraInput?.value || '0');
+      const extraMonthly = isNaN(extraParsed) ? 0 : extraParsed;
 
-      const totalMonths = tenureIsYears ? Math.round(tenure * 12) : Math.round(tenure);
+      const totalMonths = tenureIsYears ? Math.round(tenureVal * 12) : Math.round(tenureVal);
 
       if (principalDisplay) principalDisplay.textContent = `${currentCurrencySymbol} ${formatVal(P, 0)}`;
       if (rateDisplay) rateDisplay.textContent = `${annualRate.toFixed(2)}%`;
+      if (extraDisplay) extraDisplay.textContent = `${currentCurrencySymbol} ${formatVal(extraMonthly, 0)}`;
+
       if (tenureDisplay) {
         if (tenureIsYears) {
-          tenureDisplay.textContent = `${tenure} Years (${totalMonths} Mo)`;
+          tenureDisplay.textContent = `${tenureVal} Years (${totalMonths} Mo)`;
         } else {
-          tenureDisplay.textContent = `${tenure} Months (${(tenure / 12).toFixed(1)} Yr)`;
+          tenureDisplay.textContent = `${tenureVal} Months (${(tenureVal / 12).toFixed(1)} Yr)`;
         }
       }
 
-      if (
-        isNaN(P) ||
-        !isFinite(P) ||
-        isNaN(annualRate) ||
-        !isFinite(annualRate) ||
-        isNaN(tenure) ||
-        !isFinite(tenure) ||
-        P <= 0 ||
-        totalMonths <= 0
-      ) {
-        if (tenureDisplay) tenureDisplay.textContent = 'Please enter valid numbers';
+      if (P <= 0 || isNaN(annualRate) || totalMonths <= 0) {
         return;
       }
 
-      const r = annualRate / 12 / 100;
-      let emi = 0;
-      let totalPayment = 0;
-      let totalInterest = 0;
+      // Advanced Calculation with Prepayment & Double Verification
+      const res = calculateAdvancedEMI(P, annualRate, totalMonths, extraMonthly);
+      currentCalculationData = res;
 
-      if (r === 0 || !isFinite(r)) {
-        emi = totalMonths > 0 ? P / totalMonths : 0;
-        totalPayment = P;
-        totalInterest = 0;
-      } else {
-        const factor = Math.pow(1 + r, totalMonths);
-        const denom = factor - 1;
-        if (denom <= 0 || !isFinite(factor)) {
-          emi = totalMonths > 0 ? P / totalMonths : 0;
-        } else {
-          emi = (P * r * factor) / denom;
+      // Animate Main Results
+      if ((window as any).facAnimateNumber) {
+        (window as any).facAnimateNumber('emi-monthly-result', res.regularEMI, { isIndian: isIndianFormat, decimals: 0 });
+        (window as any).facAnimateNumber('emi-interest-result', res.totalInterestWithPrepayment, { isIndian: isIndianFormat, decimals: 0 });
+        (window as any).facAnimateNumber('emi-total-result', res.totalPaymentWithPrepayment, { isIndian: isIndianFormat, decimals: 0 });
+      }
+
+      // Prepayment Savings Display (Calculator.net feature)
+      if (extraMonthly > 0 && res.interestSaved > 0) {
+        if (extraSavingsPanel) extraSavingsPanel.classList.remove('hidden');
+        if (savingsInterestText) savingsInterestText.textContent = `${currentCurrencySymbol} ${formatVal(res.interestSaved, 0)}`;
+        if (savingsTimeText) {
+          const yrs = Math.floor(res.monthsSaved / 12);
+          const mos = res.monthsSaved % 12;
+          savingsTimeText.textContent = yrs > 0 ? `${yrs} Yrs ${mos} Mo (${res.monthsSaved} Mo)` : `${mos} Months`;
         }
-        totalPayment = emi * totalMonths;
-        totalInterest = Math.max(0, totalPayment - P);
+        if (savingsNewTenureText) {
+          const actualYrs = (res.actualTenureMonths / 12).toFixed(1);
+          savingsNewTenureText.textContent = `${actualYrs} Years (${res.actualTenureMonths} Mo)`;
+        }
+        if (savingsPctContainer && savingsPctLabel) {
+          savingsPctContainer.classList.remove('hidden');
+          savingsPctLabel.textContent = `${res.savingsRatio}%`;
+        }
+        if (thExtra) thExtra.classList.remove('hidden');
+      } else {
+        if (extraSavingsPanel) extraSavingsPanel.classList.add('hidden');
+        if (savingsPctContainer) savingsPctContainer.classList.add('hidden');
+        if (thExtra) thExtra.classList.add('hidden');
       }
 
-      // Animate Results
-      if (window.facAnimateNumber) {
-        window.facAnimateNumber('emi-monthly-result', emi, { isIndian: isIndianFormat, decimals: 0 });
-        window.facAnimateNumber('emi-interest-result', totalInterest, { isIndian: isIndianFormat, decimals: 0 });
-        window.facAnimateNumber('emi-total-result', totalPayment, { isIndian: isIndianFormat, decimals: 0 });
-      }
+      // Update Breakdown Progress Bar (OmniCalculator lightweight CSS visual)
+      if (barPrincipal) barPrincipal.style.width = `${res.principalRatio}%`;
+      if (barInterest) barInterest.style.width = `${res.interestRatio}%`;
+      if (principalPctLabel) principalPctLabel.textContent = `${res.principalRatio}%`;
+      if (interestPctLabel) interestPctLabel.textContent = `${res.interestRatio}%`;
 
-      // Update Breakdown Bar
-      if (totalPayment > 0) {
-        const principalPct = Math.round((P / totalPayment) * 100);
-        const interestPct = 100 - principalPct;
+      // Render Amortization Schedule Table
+      renderAmortizationTable();
 
-        if (barPrincipal) barPrincipal.style.width = `${principalPct}%`;
-        if (barInterest) barInterest.style.width = `${interestPct}%`;
-        if (principalPctLabel) principalPctLabel.textContent = `${principalPct}%`;
-        if (interestPctLabel) interestPctLabel.textContent = `${interestPct}%`;
-      }
+      // Render Step-by-Step Mathematical Proof (CalculatorSoup feature)
+      renderProof(P, annualRate, totalMonths, res.regularEMI, extraMonthly, res.interestSaved);
 
-      // Render Yearly Amortization Table
-      renderAmortization(P, r, emi, totalMonths);
-
-      // Debounced History
-      clearTimeout(window.__emiHistoryTimeout);
-      window.__emiHistoryTimeout = setTimeout(() => {
-        if (typeof window.facAddHistory === 'function') {
-          window.facAddHistory({
+      // Debounced History Storage
+      clearTimeout((window as any).__emiHistoryTimeout);
+      (window as any).__emiHistoryTimeout = setTimeout(() => {
+        if (typeof (window as any).facAddHistory === 'function') {
+          (window as any).facAddHistory({
             label: `Loan: ${currentCurrencySymbol} ${formatVal(P, 0)}`,
-            summary: `@ ${annualRate}% for ${tenureIsYears ? `${tenure} yrs` : `${tenure} mo`}`,
-            result: `EMI: ${currentCurrencySymbol} ${formatVal(emi, 0)}`,
+            summary: `@ ${annualRate}% for ${tenureIsYears ? `${tenureVal} yrs` : `${tenureVal} mo`}${extraMonthly > 0 ? ` (+${currentCurrencySymbol}${formatVal(extraMonthly, 0)}/mo)` : ''}`,
+            result: `EMI: ${currentCurrencySymbol} ${formatVal(res.regularEMI, 0)}`,
             inputs: {
               principal: P,
               rate: annualRate,
-              tenure: tenure,
+              tenure: tenureVal,
+              extra: extraMonthly,
               tenureIsYears: tenureIsYears,
               isIndianFormat: isIndianFormat,
             },
@@ -476,85 +633,194 @@ const relatedCalculators = [
       }, 1500);
     }
 
-    function renderAmortization(P, r, emi, totalMonths) {
-      if (!amortTableBody) return;
-      let balance = P;
+    function renderAmortizationTable() {
+      if (!amortTableBody || !currentCalculationData) return;
+      const data = scheduleTabMode === 'yearly'
+        ? currentCalculationData.yearlySchedule
+        : currentCalculationData.monthlySchedule;
+
+      if (scheduleCounterBadge) {
+        scheduleCounterBadge.textContent = scheduleTabMode === 'yearly'
+          ? `${data.length} Years Breakdown`
+          : `${data.length} Months Breakdown`;
+      }
+
+      const hasExtra = currentCalculationData.interestSaved > 0;
       let html = '';
-      const totalYears = Math.ceil(totalMonths / 12);
 
-      let currentYear = 1;
-      let yearlyPrincipal = 0;
-      let yearlyInterest = 0;
-
-      for (let m = 1; m <= totalMonths; m++) {
-        const interestMonth = balance * r;
-        const principalMonth = emi - interestMonth;
-        balance = Math.max(0, balance - principalMonth);
-
-        yearlyPrincipal += principalMonth;
-        yearlyInterest += interestMonth;
-
-        if (m % 12 === 0 || m === totalMonths) {
-          const yearlyTotal = yearlyPrincipal + yearlyInterest;
-          html += `
-            <tr class="hover:bg-canvas-elevated">
-              <td class="py-2 pr-3 font-semibold text-ink">Year ${currentYear}</td>
-              <td class="py-2 pr-3 text-link">${currentCurrencySymbol} ${formatVal(yearlyPrincipal, 0)}</td>
-              <td class="py-2 pr-3 text-violet">${currentCurrencySymbol} ${formatVal(yearlyInterest, 0)}</td>
-              <td class="py-2 pr-3 text-body">${currentCurrencySymbol} ${formatVal(yearlyTotal, 0)}</td>
-              <td class="py-2 text-ink font-medium">${currentCurrencySymbol} ${formatVal(balance, 0)}</td>
-            </tr>
-          `;
-          currentYear++;
-          yearlyPrincipal = 0;
-          yearlyInterest = 0;
-        }
+      for (let i = 0; i < data.length; i++) {
+        const row = data[i];
+        html += `
+          <tr class="hover:bg-canvas-elevated">
+            <td class="py-2 pr-3 font-semibold text-ink">${row.label}</td>
+            <td class="py-2 pr-3 text-link">${currentCurrencySymbol} ${formatVal(row.principalPaid, 0)}</td>
+            <td class="py-2 pr-3 text-violet">${currentCurrencySymbol} ${formatVal(row.interestPaid, 0)}</td>
+            ${hasExtra ? `<td class="py-2 pr-3 text-cyan">${currentCurrencySymbol} ${formatVal(row.extraPayment, 0)}</td>` : ''}
+            <td class="py-2 pr-3 text-body">${currentCurrencySymbol} ${formatVal(row.totalPayment, 0)}</td>
+            <td class="py-2 text-ink font-medium">${currentCurrencySymbol} ${formatVal(row.remainingBalance, 0)}</td>
+          </tr>
+        `;
       }
 
       amortTableBody.innerHTML = html;
     }
 
-    // Slider <-> Input synchronization
+    function renderProof(
+      p: number,
+      annualRate: number,
+      tenureMonths: number,
+      emi: number,
+      extraMonthly: number,
+      interestSaved: number
+    ) {
+      if (!proofStepsBody) return;
+      const proofSteps = generateEMIProof(p, annualRate, tenureMonths, emi, currentCurrencySymbol);
+
+      let html = '';
+      for (let i = 0; i < proofSteps.length; i++) {
+        const step = proofSteps[i];
+        html += `
+          <div class="pt-2">
+            <div class="flex items-center justify-between text-ink font-semibold">
+              <span>Step ${step.stepNumber}: ${step.title}</span>
+              <span class="text-link font-medium">${step.result}</span>
+            </div>
+            <p class="text-mute text-[11px] mt-0.5">${step.description}</p>
+            <div class="mt-1 rounded bg-canvas-elevated px-2 py-1 text-ink text-[11px]">
+              ${step.substitution}
+            </div>
+          </div>
+        `;
+      }
+
+      if (extraMonthly > 0 && interestSaved > 0) {
+        html += `
+          <div class="pt-2 border-t border-hairline">
+            <div class="flex items-center justify-between text-ink font-semibold">
+              <span>Step 6: Prepayment Differential Benefit</span>
+              <span class="text-cyan font-medium">Saved ${currentCurrencySymbol} ${formatVal(interestSaved, 0)}</span>
+            </div>
+            <p class="text-mute text-[11px] mt-0.5">By adding ${currentCurrencySymbol} ${formatVal(extraMonthly, 0)} directly to principal repayment each month, the total interest incurred drops from baseline to accelerated schedule.</p>
+            <div class="mt-1 rounded bg-canvas-elevated px-2 py-1 text-ink text-[11px]">
+              Interest Saved = Baseline Interest - Accelerated Interest = ${currentCurrencySymbol}${formatVal(interestSaved, 0)}
+            </div>
+          </div>
+        `;
+      }
+
+      proofStepsBody.innerHTML = html;
+    }
+
+    // 50ms Debounced Reactivity Handler (OmniCalculator feature)
+    let debounceTimer: ReturnType<typeof setTimeout> | undefined;
+    function triggerDebouncedCalculate() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        calculate();
+      }, 50);
+    }
+
+    // Slider <-> Input synchronization with Smart Parsing on Change/Blur
     if (principalInput && principalSlider) {
       principalInput.addEventListener('input', () => {
-        principalSlider.value = principalInput.value;
-        calculate();
+        const parsed = parseSmartInput(principalInput.value);
+        if (!isNaN(parsed) && parsed > 0) {
+          if (parsed > parseFloat(principalSlider.max)) {
+            principalSlider.max = String(parsed * 1.5);
+          }
+          principalSlider.value = String(parsed);
+        }
+        triggerDebouncedCalculate();
       });
+
+      principalInput.addEventListener('blur', () => {
+        const parsed = parseSmartInput(principalInput.value);
+        if (!isNaN(parsed) && parsed > 0) {
+          principalInput.value = String(parsed);
+          calculate();
+        }
+      });
+
       principalSlider.addEventListener('input', () => {
         principalInput.value = principalSlider.value;
-        calculate();
+        triggerDebouncedCalculate();
       });
     }
 
     if (rateInput && rateSlider) {
       rateInput.addEventListener('input', () => {
         rateSlider.value = rateInput.value;
-        calculate();
+        triggerDebouncedCalculate();
       });
       rateSlider.addEventListener('input', () => {
         rateInput.value = rateSlider.value;
-        calculate();
+        triggerDebouncedCalculate();
       });
     }
 
     if (tenureInput && tenureSlider) {
       tenureInput.addEventListener('input', () => {
         tenureSlider.value = tenureInput.value;
-        calculate();
+        triggerDebouncedCalculate();
       });
       tenureSlider.addEventListener('input', () => {
         tenureInput.value = tenureSlider.value;
-        calculate();
+        triggerDebouncedCalculate();
       });
     }
+
+    if (extraInput && extraSlider) {
+      extraInput.addEventListener('input', () => {
+        const parsed = parseSmartInput(extraInput.value);
+        if (!isNaN(parsed) && parsed >= 0) {
+          if (parsed > parseFloat(extraSlider.max)) {
+            extraSlider.max = String(parsed * 1.5);
+          }
+          extraSlider.value = String(parsed);
+        }
+        triggerDebouncedCalculate();
+      });
+
+      extraInput.addEventListener('blur', () => {
+        const parsed = parseSmartInput(extraInput.value);
+        if (!isNaN(parsed) && parsed >= 0) {
+          extraInput.value = String(parsed);
+          calculate();
+        }
+      });
+
+      extraSlider.addEventListener('input', () => {
+        extraInput.value = extraSlider.value;
+        triggerDebouncedCalculate();
+      });
+    }
+
+    // Multi-Tab Schedule Toggles (Calculator.net feature)
+    amortTabYearly?.addEventListener('click', () => {
+      scheduleTabMode = 'yearly';
+      amortTabYearly.className = 'rounded-[4px] bg-primary px-3 py-1 min-h-[32px] sm:min-h-[26px] text-on-primary cursor-pointer transition-colors';
+      amortTabMonthly!.className = 'rounded-[4px] px-3 py-1 min-h-[32px] sm:min-h-[26px] text-ink hover:text-ink cursor-pointer transition-colors';
+      amortTabYearly.setAttribute('aria-pressed', 'true');
+      amortTabMonthly!.setAttribute('aria-pressed', 'false');
+      renderAmortizationTable();
+    });
+
+    amortTabMonthly?.addEventListener('click', () => {
+      scheduleTabMode = 'monthly';
+      amortTabMonthly.className = 'rounded-[4px] bg-primary px-3 py-1 min-h-[32px] sm:min-h-[26px] text-on-primary cursor-pointer transition-colors';
+      amortTabYearly!.className = 'rounded-[4px] px-3 py-1 min-h-[32px] sm:min-h-[26px] text-ink hover:text-ink cursor-pointer transition-colors';
+      amortTabMonthly.setAttribute('aria-pressed', 'true');
+      amortTabYearly!.setAttribute('aria-pressed', 'false');
+      renderAmortizationTable();
+    });
 
     // Tenure Toggle
     tenureYrBtn?.addEventListener('click', () => {
       tenureIsYears = true;
       tenureYrBtn.className = 'rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium bg-primary text-on-primary';
-      tenureMoBtn.className = 'rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium text-ink';
+      tenureMoBtn!.className = 'rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium text-ink';
       tenureYrBtn.setAttribute('aria-pressed', 'true');
-      tenureMoBtn.setAttribute('aria-pressed', 'false');
+      tenureMoBtn!.setAttribute('aria-pressed', 'false');
       if (tenureSlider) {
         tenureSlider.max = '30';
         tenureSlider.value = '20';
@@ -566,9 +832,9 @@ const relatedCalculators = [
     tenureMoBtn?.addEventListener('click', () => {
       tenureIsYears = false;
       tenureMoBtn.className = 'rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium bg-primary text-on-primary';
-      tenureYrBtn.className = 'rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium text-ink';
+      tenureYrBtn!.className = 'rounded px-2.5 py-1 sm:py-0.5 min-h-[44px] sm:min-h-[26px] font-medium text-ink';
       tenureMoBtn.setAttribute('aria-pressed', 'true');
-      tenureYrBtn.setAttribute('aria-pressed', 'false');
+      tenureYrBtn!.setAttribute('aria-pressed', 'false');
       if (tenureSlider) {
         tenureSlider.max = '360';
         tenureSlider.value = '240';
@@ -581,18 +847,18 @@ const relatedCalculators = [
     formatStdBtn?.addEventListener('click', () => {
       isIndianFormat = false;
       formatStdBtn.className = 'rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors';
-      formatIndBtn.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors';
+      formatIndBtn!.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors';
       formatStdBtn.setAttribute('aria-pressed', 'true');
-      formatIndBtn.setAttribute('aria-pressed', 'false');
+      formatIndBtn!.setAttribute('aria-pressed', 'false');
       calculate();
     });
 
     formatIndBtn?.addEventListener('click', () => {
       isIndianFormat = true;
       formatIndBtn.className = 'rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors';
-      formatStdBtn.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors';
+      formatStdBtn!.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors';
       formatIndBtn.setAttribute('aria-pressed', 'true');
-      formatStdBtn.setAttribute('aria-pressed', 'false');
+      formatStdBtn!.setAttribute('aria-pressed', 'false');
       calculate();
     });
 
@@ -610,6 +876,7 @@ const relatedCalculators = [
 
     function updateCurrencyUI() {
       if (principalSymbol) principalSymbol.textContent = currentCurrencySymbol;
+      if (extraSymbol) extraSymbol.textContent = currentCurrencySymbol;
 
       ['emi-monthly-result-prefix', 'emi-interest-result-prefix', 'emi-total-result-prefix'].forEach((id) => {
         const el = document.getElementById(id);
@@ -633,19 +900,19 @@ const relatedCalculators = [
       }
     }
 
-    let lastActiveCurrency = typeof window.facGetActiveCurrency === 'function'
-      ? window.facGetActiveCurrency()
+    let lastActiveCurrency = typeof (window as any).facGetActiveCurrency === 'function'
+      ? (window as any).facGetActiveCurrency()
       : (localStorage.getItem('fac_currency') || 'USD');
 
     // Currency Switcher reaction
-    window.addEventListener('currencychange', (e) => {
+    window.addEventListener('currencychange', (e: any) => {
       const newCurr = e.detail.currency;
       const prevCurr = e.detail.prevCurrency || lastActiveCurrency;
 
-      if (prevCurr && newCurr && prevCurr !== newCurr && typeof window.facConvertCurrency === 'function') {
-        const pVal = parseFloat(principalInput?.value || '0');
+      if (prevCurr && newCurr && prevCurr !== newCurr && typeof (window as any).facConvertCurrency === 'function') {
+        const pVal = parseSmartInput(principalInput?.value || '0');
         if (!isNaN(pVal) && pVal > 0) {
-          const convertedP = window.facConvertCurrency(pVal, prevCurr, newCurr);
+          const convertedP = (window as any).facConvertCurrency(pVal, prevCurr, newCurr);
           const roundedP = Math.round(convertedP);
           if (principalInput) principalInput.value = String(roundedP);
           if (principalSlider) {
@@ -662,21 +929,22 @@ const relatedCalculators = [
       isIndianFormat = e.detail.isIndian;
       updateCurrencyUI();
       calculate();
-      if (typeof window.facSyncUrlState === 'function') {
-        window.facSyncUrlState();
+      if (typeof (window as any).facSyncUrlState === 'function') {
+        (window as any).facSyncUrlState();
       }
     });
 
     // URL State Sharing
-    window.facSyncUrlState = function () {
+    (window as any).facSyncUrlState = function () {
       const params = new URLSearchParams(window.location.search);
       params.set('p', principalInput?.value || '2500000');
       params.set('r', rateInput?.value || '8.5');
       params.set('t', tenureInput?.value || '20');
       params.set('ty', tenureIsYears ? 'yr' : 'mo');
+      params.set('ex', extraInput?.value || '0');
       params.set('fmt', isIndianFormat ? 'in' : 'std');
-      const activeCurr = typeof window.facGetActiveCurrency === 'function'
-        ? window.facGetActiveCurrency()
+      const activeCurr = typeof (window as any).facGetActiveCurrency === 'function'
+        ? (window as any).facGetActiveCurrency()
         : (localStorage.getItem('fac_currency') || 'USD');
       params.set('currency', activeCurr);
       window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
@@ -685,22 +953,26 @@ const relatedCalculators = [
     // Restore URL params
     const params = new URLSearchParams(window.location.search);
     if (params.has('p') && principalInput && principalSlider) {
-      principalInput.value = params.get('p');
-      principalSlider.value = params.get('p');
+      principalInput.value = params.get('p')!;
+      principalSlider.value = params.get('p')!;
     }
     if (params.has('r') && rateInput && rateSlider) {
-      rateInput.value = params.get('r');
-      rateSlider.value = params.get('r');
+      rateInput.value = params.get('r')!;
+      rateSlider.value = params.get('r')!;
     }
     if (params.has('t') && tenureInput && tenureSlider) {
-      tenureInput.value = params.get('t');
-      tenureSlider.value = params.get('t');
+      tenureInput.value = params.get('t')!;
+      tenureSlider.value = params.get('t')!;
+    }
+    if (params.has('ex') && extraInput && extraSlider) {
+      extraInput.value = params.get('ex')!;
+      extraSlider.value = params.get('ex')!;
     }
     if (params.get('ty') === 'mo') tenureMoBtn?.click();
     if (params.get('fmt') === 'std') formatStdBtn?.click();
 
     // History Restore callback
-    window.facRestoreHistoryItem = function (item) {
+    (window as any).facRestoreHistoryItem = function (item: any) {
       if (item.inputs) {
         if (principalInput && item.inputs.principal) {
           principalInput.value = item.inputs.principal;
@@ -713,6 +985,10 @@ const relatedCalculators = [
         if (tenureInput && item.inputs.tenure) {
           tenureInput.value = item.inputs.tenure;
           if (tenureSlider) tenureSlider.value = item.inputs.tenure;
+        }
+        if (extraInput && item.inputs.extra !== undefined) {
+          extraInput.value = item.inputs.extra;
+          if (extraSlider) extraSlider.value = item.inputs.extra;
         }
         if (item.inputs.tenureIsYears === false) {
           tenureMoBtn?.click();

@@ -88,7 +88,8 @@
 }
 
 /* Base typography and body reset */
-html, body {
+html,
+body {
   overflow-x: hidden;
   max-width: 100%;
 }
@@ -140,7 +141,7 @@ html {
 
 /* Vercel-style subtle hero mesh gradient */
 .hero-mesh-gradient {
-  background-image: 
+  background-image:
     radial-gradient(at 20% 15%, rgba(80, 227, 194, 0.12) 0px, transparent 50%),
     radial-gradient(at 80% 10%, rgba(0, 112, 243, 0.12) 0px, transparent 50%),
     radial-gradient(at 10% 60%, rgba(121, 40, 202, 0.10) 0px, transparent 50%),
@@ -149,7 +150,7 @@ html {
 }
 
 .dark .hero-mesh-gradient {
-  background-image: 
+  background-image:
     radial-gradient(at 20% 15%, rgba(80, 227, 194, 0.08) 0px, transparent 50%),
     radial-gradient(at 80% 10%, rgba(0, 112, 243, 0.10) 0px, transparent 50%),
     radial-gradient(at 10% 60%, rgba(121, 40, 202, 0.08) 0px, transparent 50%),
@@ -171,13 +172,16 @@ html {
   width: 6px;
   height: 6px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: var(--color-hairline);
   border-radius: 9999px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-mute);
 }
@@ -190,21 +194,26 @@ iframe.goog-te-banner-frame {
   visibility: hidden !important;
   height: 0 !important;
 }
+
 body {
   top: 0px !important;
   position: static !important;
 }
+
 #goog-gt-tt,
 .goog-te-balloon-frame {
   display: none !important;
 }
+
 .goog-text-highlight {
   background: none !important;
   box-shadow: none !important;
 }
+
 #google_translate_element {
   display: none !important;
 }
+
 .goog-te-spinner-pos {
   display: none !important;
 }
