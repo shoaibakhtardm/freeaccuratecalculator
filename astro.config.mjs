@@ -15,7 +15,54 @@ export default defineConfig({
       filter: (page) =>
         !page.includes('/dev-preview') &&
         !page.includes('/api/') &&
+        !page.includes('/admin/') &&
+        !page.includes('/draft/') &&
+        !page.includes('/404') &&
         !page.endsWith('/sitemap.xml'),
+      serialize(item) {
+        const url = new URL(item.url);
+        const pathname = url.pathname;
+
+        // Exclude unwanted patterns
+        if (
+          pathname.includes('/admin/') ||
+          pathname.includes('/draft/') ||
+          pathname.includes('/404') ||
+          pathname.includes('/dev-preview') ||
+          pathname.includes('/api/')
+        ) {
+          return undefined;
+        }
+
+        // Dynamic ISO 8601 build timestamp
+        item.lastmod = new Date().toISOString();
+
+        // 1. Homepage: Root and localized homepages
+        if (pathname === '/' || /^\/(en|es|fr|hi)\/?$/.test(pathname)) {
+          item.priority = 1.0;
+          item.changefreq = 'daily';
+          return item;
+        }
+
+        // 2. Category Hubs: /finance/, /math/, /health/, /calculators/
+        if (/^\/(?:(?:en|es|fr|hi)\/)?(finance|math|health|calculators)\/?$/.test(pathname)) {
+          item.priority = 0.8;
+          item.changefreq = 'weekly';
+          return item;
+        }
+
+        // 3. Individual Calculator Pages
+        if (pathname.includes('-calculator')) {
+          item.priority = 0.7;
+          item.changefreq = 'weekly';
+          return item;
+        }
+
+        // 4. Default / Utility Pages (e.g., about, contact, legal)
+        item.priority = 0.5;
+        item.changefreq = 'monthly';
+        return item;
+      },
       i18n: {
         defaultLocale: 'en',
         locales: {

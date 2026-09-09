@@ -7,68 +7,67 @@ const DIST_DIR = path.resolve('dist/client');
 const PUBLIC_DIR = path.resolve('public');
 const SRC_DIR = path.resolve('src');
 
-test('Sitemap generation and discovery audit', async (t) => {
-  await t.test('sitemap-index.xml exists and references sitemap-0.xml', () => {
-    const sitemapIndexPath = path.join(DIST_DIR, 'sitemap-index.xml');
-    assert.ok(fs.existsSync(sitemapIndexPath), 'sitemap-index.xml should exist in dist/client');
-    const content = fs.readFileSync(sitemapIndexPath, 'utf-8');
-    assert.match(content, /<sitemapindex/, 'Should have <sitemapindex> tag');
-    assert.match(content, /https:\/\/freeaccuratecalculator\.com\/sitemap-0\.xml/, 'Should link to sitemap-0.xml');
+test('Single Sitemap.xml integrity and discovery audit', async (t) => {
+  await t.test('sitemap.xml exists as the ONLY sitemap in dist/client and public', () => {
+    const distSitemap = path.join(DIST_DIR, 'sitemap.xml');
+    const publicSitemap = path.join(PUBLIC_DIR, 'sitemap.xml');
+
+    assert.ok(fs.existsSync(distSitemap), 'sitemap.xml must exist in dist/client');
+    assert.ok(fs.existsSync(publicSitemap), 'sitemap.xml must exist in public');
+
+    // Verify extra files are completely deleted
+    assert.ok(!fs.existsSync(path.join(DIST_DIR, 'sitemap-0.xml')), 'sitemap-0.xml should not exist in dist/client');
+    assert.ok(!fs.existsSync(path.join(DIST_DIR, 'sitemap-index.xml')), 'sitemap-index.xml should not exist in dist/client');
+    assert.ok(!fs.existsSync(path.join(PUBLIC_DIR, 'sitemap-0.xml')), 'sitemap-0.xml should not exist in public');
+    assert.ok(!fs.existsSync(path.join(PUBLIC_DIR, 'sitemap.xsl')), 'sitemap.xsl should not exist in public');
   });
 
-  await t.test('sitemap.xml exists and references sitemap-0.xml', () => {
-    const sitemapXmlPath = path.join(DIST_DIR, 'sitemap.xml');
-    assert.ok(fs.existsSync(sitemapXmlPath), 'sitemap.xml should exist in dist/client');
-    const content = fs.readFileSync(sitemapXmlPath, 'utf-8');
-    assert.match(content, /<sitemapindex/, 'Should have <sitemapindex> tag');
-    assert.match(content, /https:\/\/freeaccuratecalculator\.com\/sitemap-0\.xml/, 'Should link to sitemap-0.xml');
-  });
+  await t.test('sitemap.xml contains valid urlset and all core routes', () => {
+    const sitemapPath = path.join(DIST_DIR, 'sitemap.xml');
+    const content = fs.readFileSync(sitemapPath, 'utf-8');
 
-  await t.test('public/sitemap-0.xml exists so local dev server serves all pages', () => {
-    const publicSitemap0 = path.join(PUBLIC_DIR, 'sitemap-0.xml');
-    assert.ok(fs.existsSync(publicSitemap0), 'public/sitemap-0.xml should exist');
-    const content = fs.readFileSync(publicSitemap0, 'utf-8');
-    assert.match(content, /<urlset/, 'Should have <urlset> tag');
-    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/<\/loc>/);
-  });
-
-  await t.test('sitemap-0.xml contains valid urls and multilingual alternate hreflang tags', () => {
-    const sitemap0Path = path.join(DIST_DIR, 'sitemap-0.xml');
-    assert.ok(fs.existsSync(sitemap0Path), 'sitemap-0.xml should exist in dist/client');
-    const content = fs.readFileSync(sitemap0Path, 'utf-8');
-    
-    // Core routes present
+    assert.match(content, /<urlset/, 'Must have <urlset> root tag');
     assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/<\/loc>/);
     assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/math\/percentage-calculator\/<\/loc>/);
     assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/finance\/emi-calculator\/<\/loc>/);
     assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/health\/bmi-calculator\/<\/loc>/);
-    
-    // Dev-preview and API routes properly excluded
-    assert.doesNotMatch(content, /\/dev-preview\//);
-    assert.doesNotMatch(content, /\/api\//);
 
     // Multilingual alternate links
     assert.match(content, /xhtml:link[^>]+hreflang="es"/);
     assert.match(content, /xhtml:link[^>]+hreflang="fr"/);
     assert.match(content, /xhtml:link[^>]+hreflang="hi"/);
+
+    // Dev preview and API excluded
+    assert.doesNotMatch(content, /\/dev-preview\//);
+    assert.doesNotMatch(content, /\/api\//);
+
+    // Verify dynamic ISO 8601 lastmod format
+    assert.match(content, /<lastmod>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z<\/lastmod>/, 'Must have ISO 8601 timestamps');
+
+    // Verify SEO prioritization rules
+    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>daily<\/changefreq>\s*<priority>1\.0<\/priority>/);
+    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/finance\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>weekly<\/changefreq>\s*<priority>0\.8<\/priority>/);
+    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/math\/percentage-calculator\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>weekly<\/changefreq>\s*<priority>0\.7<\/priority>/);
+    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/about\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>monthly<\/changefreq>\s*<priority>0\.5<\/priority>/);
   });
 
-  await t.test('robots.txt points to sitemap-index.xml and sitemap.xml', () => {
+  await t.test('robots.txt points strictly to single sitemap.xml', () => {
     const robotsPath = path.join(PUBLIC_DIR, 'robots.txt');
     assert.ok(fs.existsSync(robotsPath), 'robots.txt should exist in public');
     const content = fs.readFileSync(robotsPath, 'utf-8');
-    assert.match(content, /Sitemap:\s*https:\/\/freeaccuratecalculator\.com\/sitemap-index\.xml/);
     assert.match(content, /Sitemap:\s*https:\/\/freeaccuratecalculator\.com\/sitemap\.xml/);
+    assert.doesNotMatch(content, /sitemap-index\.xml/);
+    assert.doesNotMatch(content, /sitemap-0\.xml/);
   });
 
-  await t.test('Layout.astro includes link rel="sitemap"', () => {
+  await t.test('Layout.astro includes link rel="sitemap" to /sitemap.xml', () => {
     const layoutPath = path.join(SRC_DIR, 'layouts', 'Layout.astro');
     assert.ok(fs.existsSync(layoutPath), 'Layout.astro should exist');
     const content = fs.readFileSync(layoutPath, 'utf-8');
-    assert.match(content, /<link rel="sitemap" href="\/sitemap-index\.xml" \/>/);
+    assert.match(content, /<link rel="sitemap" href="\/sitemap\.xml" \/>/);
   });
 
-  await t.test('100% HTML pages are present in sitemap (excluding dev-preview)', () => {
+  await t.test('100% HTML pages are present in the single sitemap.xml', () => {
     function getAllHtml(dir) {
       let files = [];
       for (const item of fs.readdirSync(dir)) {
@@ -88,12 +87,12 @@ test('Sitemap generation and discovery audit', async (t) => {
       return '/' + rel;
     });
 
-    const sitemap0Content = fs.readFileSync(path.join(DIST_DIR, 'sitemap-0.xml'), 'utf-8');
-    const sitemapUrls = new Set([...sitemap0Content.matchAll(/<loc>https:\/\/freeaccuratecalculator\.com([^<]*)<\/loc>/g)].map((m) => m[1] || '/'));
+    const sitemapContent = fs.readFileSync(path.join(DIST_DIR, 'sitemap.xml'), 'utf-8');
+    const sitemapUrls = new Set([...sitemapContent.matchAll(/<loc>https:\/\/freeaccuratecalculator\.com([^<]*)<\/loc>/g)].map((m) => m[1] || '/'));
 
     const excluded = ['/dev-preview/'];
     const missing = htmlRoutes.filter((r) => !sitemapUrls.has(r) && !excluded.includes(r));
-    assert.equal(missing.length, 0, `Pages missing from sitemap: ${missing.join(', ')}`);
-    assert.equal(sitemapUrls.size, 192, 'Expected 192 total URLs in sitemap-0.xml');
+    assert.equal(missing.length, 0, `Pages missing from sitemap.xml: ${missing.join(', ')}`);
+    assert.equal(sitemapUrls.size, 192, 'Expected 192 total URLs in sitemap.xml');
   });
 });

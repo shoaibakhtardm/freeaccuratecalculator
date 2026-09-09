@@ -4,52 +4,48 @@ import path from 'node:path';
 const distClientDir = path.resolve('dist/client');
 const publicDir = path.resolve('public');
 
-const distSitemap0Path = path.join(distClientDir, 'sitemap-0.xml');
-const publicSitemap0Path = path.join(publicDir, 'sitemap-0.xml');
-const distSitemapXmlPath = path.join(distClientDir, 'sitemap.xml');
-const publicSitemapXmlPath = path.join(publicDir, 'sitemap.xml');
-const distXslPath = path.join(distClientDir, 'sitemap.xsl');
-const publicXslPath = path.join(publicDir, 'sitemap.xsl');
+const distSitemap0 = path.join(distClientDir, 'sitemap-0.xml');
+const distSitemapIndex = path.join(distClientDir, 'sitemap-index.xml');
+const distSitemapXml = path.join(distClientDir, 'sitemap.xml');
+const publicSitemapXml = path.join(publicDir, 'sitemap.xml');
 
-// Ensure sitemap.xsl is also copied to dist/client
-if (fs.existsSync(publicXslPath) && !fs.existsSync(distXslPath)) {
-  fs.copyFileSync(publicXslPath, distXslPath);
+// Clean up any extra sitemap files from public
+const publicExtras = ['sitemap-0.xml', 'sitemap-index.xml', 'sitemap.xsl'];
+for (const extra of publicExtras) {
+  const p = path.join(publicDir, extra);
+  if (fs.existsSync(p)) fs.unlinkSync(p);
 }
 
-const sitemapIndexXmlContent = `<?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <sitemap>
-    <loc>https://freeaccuratecalculator.com/sitemap-0.xml</loc>
-  </sitemap>
-</sitemapindex>
-`;
+// Clean up any extra sitemap files from dist/client
+const distExtras = ['sitemap.xsl'];
+for (const extra of distExtras) {
+  const p = path.join(distClientDir, extra);
+  if (fs.existsSync(p)) fs.unlinkSync(p);
+}
 
-if (fs.existsSync(distSitemap0Path)) {
-  let content = fs.readFileSync(distSitemap0Path, 'utf-8');
+if (fs.existsSync(distSitemap0)) {
+  let content = fs.readFileSync(distSitemap0, 'utf-8');
 
-  // Format with clean linebreaks between URL entries for clean browser rendering
+  // Format with clean linebreaks between entries
   content = content
     .replace(/></g, '>\n<')
     .replace(/<url>/g, '  <url>')
     .replace(/<\/url>/g, '  </url>')
     .replace(/<loc>/g, '    <loc>')
+    .replace(/<lastmod>/g, '    <lastmod>')
+    .replace(/<changefreq>/g, '    <changefreq>')
+    .replace(/<priority>/g, '    <priority>')
     .replace(/<xhtml:link/g, '    <xhtml:link');
 
-  // Ensure xml-stylesheet declaration is present
-  if (!content.includes('xml-stylesheet')) {
-    content = content.replace('<?xml version="1.0" encoding="UTF-8"?>', '<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>');
-  }
+  // Save the single original sitemap.xml with all pages
+  fs.writeFileSync(distSitemapXml, content, 'utf-8');
+  fs.writeFileSync(publicSitemapXml, content, 'utf-8');
 
-  // Write formatted sitemap-0.xml to dist and public
-  fs.writeFileSync(distSitemap0Path, content, 'utf-8');
-  fs.writeFileSync(publicSitemap0Path, content, 'utf-8');
+  // Remove the temporary chunked files from dist/client so ONLY sitemap.xml remains
+  fs.unlinkSync(distSitemap0);
+  if (fs.existsSync(distSitemapIndex)) fs.unlinkSync(distSitemapIndex);
 
-  // Write sitemap.xml to dist and public
-  fs.writeFileSync(distSitemapXmlPath, sitemapIndexXmlContent, 'utf-8');
-  fs.writeFileSync(publicSitemapXmlPath, sitemapIndexXmlContent, 'utf-8');
-
-  console.log('✅ Successfully styled and synced sitemap.xml (index) and sitemap-0.xml (formatted all pages)');
+  console.log('✅ Kept ONLY ONE single sitemap.xml containing all pages. Cleaned up all extra files.');
 } else {
-  console.warn('⚠️ sitemap-0.xml not found in dist/client');
+  console.warn('⚠️ sitemap-0.xml not found during build');
 }
