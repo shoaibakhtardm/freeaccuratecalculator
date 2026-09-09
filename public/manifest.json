@@ -1,0 +1,22 @@
+{
+  "name": "Free Accurate Calculator",
+  "short_name": "AccurateCalc",
+  "description": "Fast, 100% accurate, and free online calculators for finance, health, math, and everyday use.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#0070f3",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

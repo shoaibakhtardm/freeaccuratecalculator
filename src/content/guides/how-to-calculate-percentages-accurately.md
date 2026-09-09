@@ -6,7 +6,18 @@ author: "Engineering & Editorial Team"
 category: "math"
 tags: ["percentage", "math", "formulas", "accuracy"]
 lang: "en"
+targetCalculator:
+  name: "Percentage Calculator"
+  href: "/math/percentage-calculator/"
+  description: "Calculate percentage increases, percentage differences, fractions to percentages, and reverse percentages instantly."
 relatedCalculators: ["percentage-calculator", "emi-calculator"]
+faqs:
+  - question: "What is the formula to find the percentage of a number?"
+    answer: "To find P% of a number X, multiply X by the percentage P and divide by 100: Result = (X × P) / 100."
+  - question: "How do you calculate percentage increase or decrease?"
+    answer: "Subtract the old value from the new value, divide the difference by the original old value, and multiply by 100: ((New - Old) / Old) × 100."
+  - question: "What is a reverse percentage calculation?"
+    answer: "Reverse percentage finds the original base value before a percentage increase or decrease took place. For example, if a price with 20% VAT is $120, the pre-tax base is 120 / 1.20 = $100."
 ---
 
 Percentages form the foundational language of commerce, finance, and data science. Whether analyzing investment yields, tracking inflation, or calculating discounts at retail checkout, precision matters.

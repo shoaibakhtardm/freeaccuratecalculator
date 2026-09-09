@@ -4,6 +4,12 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
 import { CALCULATORS } from '../../data/calculatorRegistry';
+import ReadingProgress from '../../components/ReadingProgress.astro';
+import TableOfContents from '../../components/TableOfContents.astro';
+import SocialProof from '../../components/SocialProof.astro';
+import CalculatorComparison, { type ComparisonItem } from '../../components/CalculatorComparison.astro';
+import FAQSection from '../../components/calculator/FAQSection.astro';
+import { calculateReadingTime } from '../../utils/readingTime';
 
 export async function getStaticPaths() {
   const posts = await getCollection('guides');
@@ -17,14 +23,144 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
+const slug = post.id.replace(/\.(md|mdx)$/, '');
 
-// Filter meaningful H2 headings for Table of Contents
-const tocHeadings = headings.filter((h) => h.depth === 2);
+// Feature 2: Calculate Reading Time
+const readingMinutes = calculateReadingTime(post.body || '');
+
+// Feature 5: Comparison Sets for Comparison Guides
+const COMPARISONS_BY_GUIDE: Record<string, ComparisonItem[]> = {
+  'how-to-calculate-sip-returns': [
+    {
+      name: 'Systematic Investment Plan (SIP)',
+      slug: '/finance/sip-calculator/',
+      description: 'Disciplined monthly installment investing with rupee-cost averaging.',
+      pros: [
+        'Averages market volatility through rupee-cost averaging',
+        'Low entry barrier (starts from ₹500 / $10/month)',
+        'Automated monthly compounding habit',
+        'Mitigates the psychological pressure of market timing',
+      ],
+      cons: [
+        'May slightly trail lump sum in sustained bull runs',
+        'Requires regular recurring monthly income stream',
+      ],
+    },
+    {
+      name: 'Lump Sum Investment',
+      slug: '/finance/compound-interest-calculator/',
+      description: 'Deploying total capital upfront into mutual funds or index funds.',
+      pros: [
+        'Full capital begins compounding on day one',
+        'Historically outperforms DCA in ~66% of long-term horizons',
+        'Single transaction execution with zero recurring effort',
+      ],
+      cons: [
+        'Exposes investor to bad short-term market timing risk',
+        'Requires substantial liquid cash reserves upfront',
+        'Higher psychological panic during sudden market corrections',
+      ],
+    },
+  ],
+  'mortgage-calculator-buy-vs-rent-analysis': [
+    {
+      name: 'Homeownership (Mortgage)',
+      slug: '/finance/mortgage-calculator/',
+      description: 'Buying residential property with an amortized mortgage loan.',
+      pros: [
+        'Forces monthly principal equity accumulation',
+        'Protection against landlord termination and rent inflation',
+        'Potential for long-term leveraged real estate appreciation',
+        'Full renovation freedom and lifestyle security',
+      ],
+      cons: [
+        'High unrecoverable costs (~5% rule: interest, property tax, maintenance)',
+        'Heavy upfront closing fees and realtor commissions (6-10%)',
+        'Severe geographic illiquidity and ongoing debt liability',
+      ],
+    },
+    {
+      name: 'Renting & Investing Difference',
+      slug: '/finance/compound-interest-calculator/',
+      description: 'Paying fixed shelter rent and investing down payment cash into index funds.',
+      pros: [
+        'Zero liabilities for property taxes, roofing, or major repairs',
+        'Full geographic mobility to relocate for career opportunities',
+        'Capital compounds in global equities averaging ~9-10% return',
+        'Predictable, fixed monthly housing cash flow',
+      ],
+      cons: [
+        'Subject to annual landlord rent increases and lease renewals',
+        'Accumulates zero real estate property equity',
+        'Requires strict personal discipline to actually invest the savings',
+      ],
+    },
+  ],
+  'income-tax-calculator-india-new-vs-old-regime': [
+    {
+      name: 'New Tax Regime (Sec 115BAC)',
+      slug: '/finance/income-tax-calculator/',
+      description: 'Concessional tax slab rates with minimal documentation and zero deductions.',
+      pros: [
+        'Significantly lower tax slab rates across middle-income brackets',
+        'Full tax rebate up to ₹7,00,000 (effective taxable zero)',
+        'Zero paperwork: no receipts, rent slips, or investment proofs required',
+        'Default tax regime with automatic standard deduction of ₹50,000',
+      ],
+      cons: [
+        'Cannot claim 80C (PPF, ELSS, EPF), 80D (Health Insurance), or HRA exemptions',
+        'No deduction for home loan interest on self-occupied properties (Sec 24b)',
+      ],
+    },
+    {
+      name: 'Old Tax Regime',
+      slug: '/finance/income-tax-calculator/',
+      description: 'Higher tax slab rates balanced by extensive deductions and exemptions.',
+      pros: [
+        'Enables substantial deductions: Section 80C (₹1.5L), 80D (₹25k-₹1L), 80CCD(1B) (₹50k)',
+        'Allows massive tax shield via HRA and home loan interest deduction up to ₹2,00,000',
+        'Highly lucrative for individuals with heavy mortgages and family health insurance',
+      ],
+      cons: [
+        'Higher baseline tax rates (20% above ₹5L, 30% above ₹10L)',
+        'Requires active proofs, certificates, rent agreements, and audit compliance',
+        'Locks capital into specific long-term instruments like tax-saving FDs and insurance',
+      ],
+    },
+  ],
+};
+
+const guideComparisons = COMPARISONS_BY_GUIDE[slug] || [];
+
+// Fallback FAQs for how-compound-interest-works if not in frontmatter
+const defaultCompoundInterestFaqs = [
+  {
+    question: 'How often is compound interest calculated on standard savings accounts?',
+    answer:
+      'In most retail banking institutions across the US, UK, Canada, and Australia, savings account interest compounds daily based on the end-of-day ledger balance, but is credited to the account on a monthly basis.',
+  },
+  {
+    question: 'What is the difference between simple interest and compound interest?',
+    answer:
+      'Simple interest is calculated solely on the original principal throughout the entire duration. Compound interest is calculated on the principal plus all interest that has previously accrued, leading to exponential growth over time.',
+  },
+  {
+    question: 'Does higher compounding frequency significantly increase returns?',
+    answer:
+      'The interest rate generally has a larger impact on final returns than compounding frequency. However, higher compounding frequencies provide an incremental boost. For example, on a $10,000 deposit at 7% over 10 years, shifting from annual to daily compounding adds $464.67 in total interest.',
+  },
+];
+
+const postFaqs =
+  post.data.faqs && post.data.faqs.length > 0
+    ? post.data.faqs
+    : post.id.includes('how-compound-interest-works')
+      ? defaultCompoundInterestFaqs
+      : [];
 
 // Map related calculators from registry
 const relatedCalcs = (post.data.relatedCalculators || [])
   .map((calcId: string) => {
-    // Check in CALCULATORS registry or handle dedicated pages
     const found = CALCULATORS.find((c) => c.id === calcId);
     if (found) {
       return {
@@ -71,6 +207,15 @@ const relatedCalcs = (post.data.relatedCalculators || [])
         badge: 'Validated',
       };
     }
+    if (calcId === 'mortgage-calculator') {
+      return {
+        id: 'mortgage-calculator',
+        name: 'Mortgage Calculator',
+        href: '/finance/mortgage-calculator/',
+        description: 'Monthly home mortgage payment with PITI breakdown and amortization schedule.',
+        badge: 'Popular',
+      };
+    }
     return null;
   })
   .filter(Boolean);
@@ -105,40 +250,22 @@ const articleSchema = {
   },
 };
 
-// FAQPage Schema for eligible guides with visible FAQs
-const isCompoundInterest = post.id.includes('how-compound-interest-works');
-const faqSchema = isCompoundInterest
-  ? {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: [
-        {
+// FAQPage Schema for all guides with FAQs
+const faqSchema =
+  postFaqs.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: postFaqs.map((faq) => ({
           '@type': 'Question',
-          name: 'How often is compound interest calculated on standard savings accounts?',
+          name: faq.question,
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'In most retail banking institutions across the US, UK, Canada, and Australia, savings account interest compounds daily based on the end-of-day ledger balance, but is credited to the account on a monthly basis.',
+            text: faq.answer,
           },
-        },
-        {
-          '@type': 'Question',
-          name: 'What is the difference between simple interest and compound interest?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'Simple interest is calculated solely on the original principal throughout the entire duration. Compound interest is calculated on the principal plus all interest that has previously accrued, leading to exponential growth over time.',
-          },
-        },
-        {
-          '@type': 'Question',
-          name: 'Does higher compounding frequency significantly increase returns?',
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: 'The interest rate generally has a larger impact on final returns than compounding frequency. However, higher compounding frequencies provide an incremental boost. For example, on a $10,000 deposit at 7% over 10 years, shifting from annual to daily compounding adds $464.67 in total interest.',
-          },
-        },
-      ],
-    }
-  : null;
+        })),
+      }
+    : null;
 
 const schemas = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
 ---
@@ -150,6 +277,9 @@ const schemas = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
   jsonLd={schemas}
   lang={post.data.lang}
 >
+  <!-- Feature 1: Reading Progress Bar -->
+  <ReadingProgress />
+
   <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
     <!-- Breadcrumbs: Home → Guides → Title -->
     <Breadcrumbs
@@ -161,14 +291,17 @@ const schemas = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
 
     <!-- Header -->
     <header class="mt-6 mb-10 pb-8 border-b border-hairline">
-      <div class="flex items-center gap-2 mb-3">
+      <div class="flex flex-wrap items-center gap-2 mb-3 text-xs text-mute font-mono">
         <span class="mono-eyebrow text-link font-semibold uppercase">{post.data.category}</span>
         <span class="h-1 w-1 rounded-full bg-faint"></span>
-        <span class="text-xs text-mute font-mono">
+        <time datetime={post.data.pubDate.toISOString()}>
           {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(post.data.pubDate)}
-        </span>
+        </time>
         <span class="h-1 w-1 rounded-full bg-faint"></span>
-        <span class="text-xs text-mute">{post.data.author}</span>
+        <!-- Feature 2: Reading Time Display -->
+        <span class="text-ink font-semibold">{readingMinutes} min read</span>
+        <span class="h-1 w-1 rounded-full bg-faint"></span>
+        <span>By {post.data.author}</span>
       </div>
 
       <h1 class="display-hero text-ink tracking-tight mb-4">
@@ -190,6 +323,33 @@ const schemas = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
       )}
     </header>
 
+    <!-- Feature 4: Companion Calculator Spotlight with Social Proof Widget -->
+    {post.data.targetCalculator && (
+      <aside aria-label="Companion Calculator" class="mb-10 rounded-xl border border-link/30 bg-canvas-elevated p-5 sm:p-6 shadow-whisper">
+        <div class="flex items-center justify-between gap-2 mb-3">
+          <span class="mono-eyebrow text-link font-semibold uppercase">Interactive Companion Tool</span>
+          <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-link/10 text-link border border-link/20">Free & Instant</span>
+        </div>
+
+        <SocialProof calculatorName={post.data.targetCalculator.name} />
+
+        <h2 class="text-lg font-bold text-ink mb-1">
+          {post.data.targetCalculator.name}
+        </h2>
+        <p class="text-xs sm:text-sm text-mute mb-4 leading-relaxed max-w-2xl">
+          {post.data.targetCalculator.description || `Run instant, accurate simulations using our client-side ${post.data.targetCalculator.name}.`}
+        </p>
+
+        <a
+          href={post.data.targetCalculator.href}
+          class="inline-flex items-center justify-center gap-2 bg-link hover:bg-link-deep text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition-colors shadow-xs"
+        >
+          <span>Open {post.data.targetCalculator.name}</span>
+          <span>→</span>
+        </a>
+      </aside>
+    )}
+
     <!-- Main Grid: Article Content (8 cols) + Sidebar (4 cols) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
       <!-- Article Prose -->
@@ -197,32 +357,30 @@ const schemas = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
         <div class="article-content space-y-6">
           <Content />
         </div>
+
+        <!-- Feature 5: Calculator Comparison Tool -->
+        {guideComparisons.length > 0 && (
+          <section class="mt-12 pt-8 border-t border-hairline">
+            <div class="mb-4">
+              <span class="mono-eyebrow text-link">Strategy Analysis</span>
+              <h2 class="heading-md text-ink mt-1">Side-by-Side Comparison</h2>
+            </div>
+            <CalculatorComparison calculators={guideComparisons} />
+          </section>
+        )}
+
+        <!-- FAQs Accordion with Rich FAQPage Schema -->
+        {postFaqs.length > 0 && (
+          <div class="mt-12">
+            <FAQSection faqs={postFaqs} title="Frequently Asked Questions" />
+          </div>
+        )}
       </article>
 
-      <!-- Sticky Sidebar: Table of Contents & Related Tools -->
+      <!-- Sticky Sidebar: Feature 3: Table of Contents & Related Tools -->
       <aside class="lg:col-span-4 space-y-6 sticky top-20">
-        {tocHeadings.length > 0 && (
-          <nav aria-label="Table of Contents" class="rounded-xl border border-hairline bg-canvas-elevated p-5 shadow-whisper">
-            <div class="flex items-center gap-2 mb-3 pb-2 border-b border-hairline">
-              <svg class="h-3.5 w-3.5 text-link" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7" />
-              </svg>
-              <h2 class="text-xs font-semibold uppercase tracking-wider text-ink">Contents</h2>
-            </div>
-            <ul class="space-y-1.5 text-xs">
-              {tocHeadings.map((h) => (
-                <li>
-                  <a
-                    href={`#${h.slug}`}
-                    class="block py-1 text-body hover:text-link transition-colors truncate"
-                  >
-                    {h.text}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        )}
+        <!-- Feature 3: Table of Contents Component with Smooth Scroll -->
+        <TableOfContents headings={headings} />
 
         {relatedCalcs.length > 0 && (
           <div class="rounded-xl border border-hairline bg-canvas-elevated p-5 shadow-whisper">
@@ -301,7 +459,8 @@ const schemas = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
     font-size: 0.95rem;
   }
 
-  .article-content ul, .article-content ol {
+  .article-content ul,
+  .article-content ol {
     margin-bottom: 1.25rem;
     padding-left: 1.5rem;
   }
@@ -371,7 +530,8 @@ const schemas = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
     overflow-x: auto;
   }
 
-  .article-content th, .article-content td {
+  .article-content th,
+  .article-content td {
     padding: 0.6rem 0.8rem;
     border: 1px solid var(--color-hairline);
     text-align: left;

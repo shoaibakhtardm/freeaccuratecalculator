@@ -3,6 +3,7 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
+import { calculateReadingTime } from '../../utils/readingTime';
 
 const posts = await getCollection('guides');
 // Filter English guides and sort by pubDate descending
@@ -42,6 +43,7 @@ const sortedPosts = posts
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       {sortedPosts.map((post) => {
         const slug = post.id.replace(/\.(md|mdx)$/, '');
+        const readingTime = calculateReadingTime(post.body || '');
         return (
           <article class="group rounded-xl border border-hairline bg-canvas-elevated p-6 hover:border-link/40 hover:shadow-whisper transition-all flex flex-col justify-between">
             <div>
@@ -49,9 +51,13 @@ const sortedPosts = posts
                 <span class="mono-eyebrow text-link font-semibold uppercase text-[10px]">
                   {post.data.category}
                 </span>
-                <span class="text-xs text-mute font-mono">
-                  {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(post.data.pubDate)}
-                </span>
+                <div class="flex items-center gap-2 text-xs text-mute font-mono">
+                  <span>{readingTime} min read</span>
+                  <span>•</span>
+                  <span>
+                    {new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(post.data.pubDate)}
+                  </span>
+                </div>
               </div>
 
               <h2 class="text-lg font-semibold text-ink group-hover:text-link transition-colors leading-snug mb-2">

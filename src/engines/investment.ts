@@ -18,17 +18,20 @@ export function getDefaultContributionTiming(countryCode?: string | null): Contr
   return countryCode.toUpperCase() === 'IN' ? 'beginning' : 'end';
 }
 
+export interface SIPYearlyBreakdown {
+  year: number;
+  investedAmount: number;      // Total invested till this year
+  estimatedReturns: number;    // Total returns till this year
+  totalValue: number;          // Total value till this year
+  yearlyGrowth: number;        // Growth in this specific year
+}
+
 export interface SIPResult {
   investedAmount: number;
   estimatedReturns: number;
   totalValue: number;
   contributionTiming: ContributionTiming;
-  yearlyBreakdown?: Array<{
-    year: number;
-    invested: number;
-    interestEarned: number;
-    balance: number;
-  }>;
+  yearlyBreakdown?: SIPYearlyBreakdown[];
 }
 
 /**
@@ -67,6 +70,7 @@ export function calculateSIP(
       estimatedReturns: 0,
       totalValue: 0,
       contributionTiming,
+      yearlyBreakdown: [],
     };
   }
 
@@ -100,11 +104,47 @@ export function calculateSIP(
   const roundedTotal = Math.round(totalValue);
   const roundedReturns = Math.max(0, roundedTotal - roundedInvested);
 
+  // Compute Year-by-Year Growth Breakdown
+  const yearlyBreakdown: SIPYearlyBreakdown[] = [];
+  let runningBalance = 0;
+  let runningInvested = 0;
+
+  for (let y = 1; y <= years; y++) {
+    const prevYearEndBalance = runningBalance;
+    let annualDeposits = 0;
+
+    for (let m = 1; m <= 12; m++) {
+      if (monthlyRate <= 0 || !isFinite(monthlyRate) || Math.abs(monthlyRate) < 1e-12) {
+        runningBalance += p;
+      } else if (contributionTiming === 'beginning') {
+        runningBalance = (runningBalance + p) * (1 + monthlyRate);
+      } else {
+        runningBalance = runningBalance * (1 + monthlyRate) + p;
+      }
+      annualDeposits += p;
+      runningInvested += p;
+    }
+
+    const roundedYearBalance = Math.round(runningBalance);
+    const roundedYearInvested = Math.round(runningInvested);
+    const roundedYearReturns = Math.max(0, roundedYearBalance - roundedYearInvested);
+    const yearlyGrowth = Math.max(0, roundedYearBalance - Math.round(prevYearEndBalance) - Math.round(annualDeposits));
+
+    yearlyBreakdown.push({
+      year: y,
+      investedAmount: roundedYearInvested,
+      estimatedReturns: roundedYearReturns,
+      totalValue: roundedYearBalance,
+      yearlyGrowth,
+    });
+  }
+
   return {
     investedAmount: roundedInvested,
     estimatedReturns: roundedReturns,
     totalValue: roundedInvested + roundedReturns,
     contributionTiming,
+    yearlyBreakdown,
   };
 }
 

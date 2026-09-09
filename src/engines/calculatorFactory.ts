@@ -132,6 +132,39 @@ export class CalculatorEngineFactory {
         };
       }
 
+      case 'salary-calculator': {
+        const rawWage = inputs.wage ?? inputs.salary;
+        const wage = typeof rawWage === 'number' ? rawWage : parseFloat(String(rawWage || '0'));
+        const hrs = sanitizeNumber(inputs.hours_per_week, 40, 1, 168);
+        const freq = String(inputs.frequency || 'hourly').toLowerCase();
+
+        if (isNaN(wage) || wage < 0) {
+          return {
+            value: 0,
+            formattedValue: '0.00',
+            error: 'Salary cannot be negative. Please enter a valid positive salary amount.',
+            secondaryText: 'Please enter a valid positive salary amount.',
+          };
+        }
+
+        let annual = 0;
+        if (freq === 'hourly') annual = wage * hrs * 52;
+        else if (freq === 'weekly') annual = wage * 52;
+        else if (freq === 'biweekly') annual = wage * 26;
+        else if (freq === 'monthly') annual = wage * 12;
+        else annual = wage;
+
+        const safeAnnual = roundToCents(annual);
+        const monthly = roundToCents(safeAnnual / 12);
+        const weekly = roundToCents(safeAnnual / 52);
+
+        return {
+          value: safeAnnual,
+          formattedValue: safeAnnual.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+          secondaryText: `Monthly: $${monthly.toLocaleString()} | Weekly: $${weekly.toLocaleString()}`,
+        };
+      }
+
       default: {
         return { value: 0, formattedValue: '0.00', secondaryText: 'Engine calculation ready' };
       }

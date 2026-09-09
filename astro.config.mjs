@@ -18,57 +18,107 @@ export default defineConfig({
         !page.includes('/admin/') &&
         !page.includes('/draft/') &&
         !page.includes('/404') &&
-        !page.endsWith('/sitemap.xml'),
+        !page.includes('/500') &&
+        !page.endsWith('/sitemap.xml') &&
+        !page.endsWith('/sitemap-index.xml'),
+      namespaces: {
+        image: true,
+        xhtml: true,
+      },
       serialize(item) {
         const url = new URL(item.url);
         const pathname = url.pathname;
 
-        // Exclude unwanted patterns
+        // Exclude unwanted and draft patterns
         if (
           pathname.includes('/admin/') ||
           pathname.includes('/draft/') ||
           pathname.includes('/404') ||
+          pathname.includes('/500') ||
           pathname.includes('/dev-preview') ||
           pathname.includes('/api/')
         ) {
           return undefined;
         }
 
-        // Dynamic ISO 8601 build timestamp
-        item.lastmod = new Date().toISOString();
-
-        // 1. Homepage: Root and localized homepages
+        // Priority assignment logic
         if (pathname === '/' || /^\/(en|es|fr|hi)\/?$/.test(pathname)) {
           item.priority = 1.0;
           item.changefreq = 'daily';
-          return item;
-        }
-
-        // 2. High-traffic finance and health calculators (Priority 0.8)
-        if (/^\/(?:(?:en|es|fr|hi)\/)?(finance|health)\/[a-z0-9-]+-calculator\/?$/.test(pathname)) {
+          item.img = [
+            {
+              url: 'https://freeaccuratecalculator.com/og-image.png',
+              title: 'Free Accurate Calculator - 100+ Free Online Calculators',
+              caption: 'Fast, precise, and free calculators for finance, health, math, and everyday use',
+            },
+          ];
+        } else if (pathname.includes('/finance/') || pathname.includes('/health/')) {
+          item.priority = 0.9;
+          item.changefreq = 'weekly';
+          const slugMatch = pathname.match(/\/([^/]+)\/?$/);
+          const slug = slugMatch ? slugMatch[1] : 'calculator';
+          const title = slug.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+          item.img = [
+            {
+              url: `https://freeaccuratecalculator.com/og/${slug}.png`,
+              title: `${title} - Free Accurate Calculator`,
+              caption: `Accurate calculation tool for ${title}`,
+            },
+          ];
+        } else if (pathname.includes('/blog/')) {
           item.priority = 0.8;
           item.changefreq = 'weekly';
-          return item;
-        }
-
-        // 3. Category Hubs: /finance/, /math/, /health/, /calculators/
-        if (/^\/(?:(?:en|es|fr|hi)\/)?(finance|math|health|calculators|insurance|business|construction|real-estate|technology|statistics|marketing|automotive|biology|chemistry|physics|food|sports|ecology|everyday|converter|profession)\/?$/.test(pathname)) {
-          item.priority = 0.8;
+          const slugMatch = pathname.match(/\/([^/]+)\/?$/);
+          const slug = slugMatch ? slugMatch[1] : 'blog';
+          const title = slug.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+          item.img = [
+            {
+              url: `https://freeaccuratecalculator.com/og/${slug}.png`,
+              title: `${title} - Financial & Health Insights`,
+              caption: `Evergreen guide for ${title}`,
+            },
+          ];
+        } else if (pathname.includes('-calculator') || pathname.includes('-converter') || pathname.includes('-generator')) {
+          item.priority = 0.7;
           item.changefreq = 'weekly';
-          return item;
+          const slugMatch = pathname.match(/\/([^/]+)\/?$/);
+          const slug = slugMatch ? slugMatch[1] : 'calculator';
+          const title = slug.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+          item.img = [
+            {
+              url: `https://freeaccuratecalculator.com/og/${slug}.png`,
+              title: `${title} - Free Accurate Calculator`,
+              caption: `Free calculation tool for ${title}`,
+            },
+          ];
+        } else {
+          item.priority = 0.5;
+          item.changefreq = 'monthly';
         }
 
-        // 4. Standard and Utility Calculators (Priority 0.6)
-        if (pathname.includes('-calculator') || pathname.includes('-converter') || pathname.includes('-generator')) {
-          item.priority = 0.6;
-          item.changefreq = 'weekly';
-          return item;
-        }
+        // Dynamic lastmod
+        item.lastmod = new Date().toISOString();
 
-        // 5. Default / Informational Pages (e.g., about, contact, legal)
-        item.priority = 0.5;
-        item.changefreq = 'monthly';
         return item;
+      },
+      // Generate separate language sitemaps indexed by sitemap-index.xml
+      chunks: {
+        en: (item) => {
+          const pathname = new URL(item.url).pathname;
+          return !/^\/(es|fr|hi)(\/|$)/.test(pathname) ? item : undefined;
+        },
+        es: (item) => {
+          const pathname = new URL(item.url).pathname;
+          return /^\/es(\/|$)/.test(pathname) ? item : undefined;
+        },
+        fr: (item) => {
+          const pathname = new URL(item.url).pathname;
+          return /^\/fr(\/|$)/.test(pathname) ? item : undefined;
+        },
+        hi: (item) => {
+          const pathname = new URL(item.url).pathname;
+          return /^\/hi(\/|$)/.test(pathname) ? item : undefined;
+        },
       },
       i18n: {
         defaultLocale: 'en',

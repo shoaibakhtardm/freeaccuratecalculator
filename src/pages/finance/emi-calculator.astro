@@ -7,6 +7,7 @@ import WorkedExample from '../../components/calculator/WorkedExample.astro';
 import FAQSection from '../../components/calculator/FAQSection.astro';
 import HistoryDrawer from '../../components/calculator/HistoryDrawer.astro';
 import CurrencySwitcher from '../../components/common/CurrencySwitcher.astro';
+import SocialProof from '../../components/SocialProof.astro';
 
 const faqs = [
   {
@@ -52,6 +53,9 @@ const relatedCalculators = [
   calculatorName="EMI Calculator"
   relatedCalculators={relatedCalculators}
 >
+  <!-- Real-time Social Proof Widget -->
+  <SocialProof calculatorName="EMI Calculator" />
+
   <!-- Calculator Main Box -->
   <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
     <!-- Country/Format Controls Bar -->

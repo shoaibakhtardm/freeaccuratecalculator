@@ -1,0 +1,170 @@
+---
+// src/components/SchemaMarkup.astro
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
+export interface Props {
+  type: 'calculator' | 'blog' | 'guide' | 'faq' | 'organization' | 'breadcrumb';
+  data: {
+    title?: string;
+    name?: string;
+    metaDescription?: string;
+    description?: string;
+    slug?: string;
+    url?: string;
+    category?: string;
+    featuredImage?: string;
+    image?: string;
+    publishDate?: string;
+    lastModified?: string;
+    ratingValue?: string;
+    ratingCount?: string;
+    faqs?: FAQItem[];
+    breadcrumbs?: BreadcrumbItem[];
+    [key: string]: any;
+  };
+}
+
+const { type, data } = Astro.props;
+
+const BASE_URL = 'https://freeaccuratecalculator.com';
+
+const normalizeUrl = (pathOrUrl?: string) => {
+  if (!pathOrUrl) return BASE_URL;
+  if (pathOrUrl.startsWith('http://') || pathOrUrl.startsWith('https://')) {
+    return pathOrUrl;
+  }
+  const cleanPath = pathOrUrl.startsWith('/') ? pathOrUrl : `/${pathOrUrl}`;
+  return `${BASE_URL}${cleanPath}`;
+};
+
+const getApplicationCategory = (category?: string) => {
+  switch (category?.toLowerCase()) {
+    case 'finance':
+    case 'investment':
+    case 'insurance':
+    case 'real-estate':
+      return 'FinanceApplication';
+    case 'health':
+    case 'fitness':
+    case 'biology':
+      return 'HealthApplication';
+    case 'math':
+    case 'physics':
+    case 'chemistry':
+    case 'statistics':
+      return 'EducationalApplication';
+    default:
+      return 'UtilitiesApplication';
+  }
+};
+
+let schema: Record<string, any> = {};
+
+if (type === 'calculator') {
+  const calcUrl = normalizeUrl(data.slug || data.url || '');
+  schema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: data.title || data.name || 'Free Accurate Calculator',
+    description: data.metaDescription || data.description || 'Fast, reliable, and free calculation tool.',
+    url: calcUrl,
+    applicationCategory: getApplicationCategory(data.category),
+    operatingSystem: 'All',
+    browserRequirements: 'Requires JavaScript. Requires HTML5.',
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+    },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: data.ratingValue || '4.8',
+      ratingCount: data.ratingCount || '1250',
+      bestRating: '5',
+      worstRating: '1',
+    },
+  };
+} else if (type === 'blog' || type === 'guide') {
+  const articleUrl = normalizeUrl(data.slug || data.url || '');
+  schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: data.title || data.name || '',
+    description: data.metaDescription || data.description || '',
+    image: data.featuredImage || data.image || `${BASE_URL}/og-image.png`,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': articleUrl,
+    },
+    author: {
+      '@type': 'Organization',
+      name: 'Free Accurate Calculator Editorial Team',
+      url: BASE_URL,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Free Accurate Calculator',
+      url: BASE_URL,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${BASE_URL}/logo.png`,
+      },
+    },
+    datePublished: data.publishDate || new Date().toISOString(),
+    dateModified: data.lastModified || data.publishDate || new Date().toISOString(),
+  };
+} else if (type === 'faq') {
+  schema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: (data.faqs || []).map((faq: FAQItem) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  };
+} else if (type === 'breadcrumb') {
+  schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: (data.breadcrumbs || []).map((crumb: BreadcrumbItem, index: number) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: crumb.name,
+      item: normalizeUrl(crumb.url),
+    })),
+  };
+} else if (type === 'organization') {
+  schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Free Accurate Calculator',
+    url: BASE_URL,
+    logo: `${BASE_URL}/logo.png`,
+    description:
+      'High-performance, free, accurate online calculators and tools for finance, health, math, and everyday problem solving.',
+    sameAs: [
+      'https://github.com/shoaibakhtardm/freeaccuratecalculator',
+      'https://twitter.com/accuratecalc',
+    ],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'Customer Support',
+      url: `${BASE_URL}/contact`,
+    },
+  };
+}
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

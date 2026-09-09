@@ -7,29 +7,12 @@ import WorkedExample from '../../components/calculator/WorkedExample.astro';
 import FAQSection from '../../components/calculator/FAQSection.astro';
 import HistoryDrawer from '../../components/calculator/HistoryDrawer.astro';
 import CurrencySwitcher from '../../components/common/CurrencySwitcher.astro';
+import SocialProof from '../../components/SocialProof.astro';
+import CalculatorComparison from '../../components/CalculatorComparison.astro';
 
-const faqs = [
-  {
-    question: 'What is a Systematic Investment Plan (SIP)?',
-    answer:
-      'A Systematic Investment Plan (SIP) is a disciplined investment strategy where you deposit a fixed sum at regular intervals (typically monthly) into a mutual fund scheme. SIPs take advantage of rupee/dollar-cost averaging and compounding over long horizons.',
-  },
-  {
-    question: 'Why does contribution timing matter (Beginning vs End of month)?',
-    answer:
-      'When contributions are made at the beginning of each month (Annuity Due), every installment earns an additional full month of compounding growth compared to contributions made at the end of the month (Ordinary Annuity). In India, mutual fund SIPs standardly debit on scheduled dates near the beginning of the cycle, compounding as Annuity Due.',
-  },
-  {
-    question: 'How is the SIP future value calculated?',
-    answer:
-      'For beginning-of-period deposits (Annuity Due): FV = P × [((1 + i)ⁿ - 1) ÷ i] × (1 + i). For end-of-period deposits (Ordinary Annuity): FV = P × [((1 + i)ⁿ - 1) ÷ i], where P is monthly installment, i is monthly return rate, and n is total months.',
-  },
-  {
-    question: 'What expected return rate should I use for equity mutual funds?',
-    answer:
-      'Historical long-term annualized returns for broad-market equity index funds have averaged between 11% and 14% in emerging markets like India (Nifty 50) and 8% to 10% in mature markets like the US (S&P 500). Market returns are not guaranteed.',
-  },
-];
+import { faqDatabase } from '../../data/faqDatabase';
+
+const faqs = faqDatabase['sip-calculator'];
 
 const relatedCalculators = [
   { title: 'Step-Up SIP Calculator', href: '/finance/step-up-sip-calculator/', badge: 'Wealth' },
@@ -75,6 +58,9 @@ const formulaVariables = [
       <span>Pure Client-Side Execution</span>
     </div>
   </div>
+
+  <!-- Real-time Social Proof Widget -->
+  <SocialProof calculatorName="SIP Calculator" />
 
   <!-- Calculator Main Box -->
   <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
@@ -314,6 +300,46 @@ const formulaVariables = [
     conclusion="Total accumulated wealth is ₹23,23,391, generating ₹11,23,391 in compounded wealth gain (+93.6% gain on invested capital)."
   />
 
+  <!-- Interactive Comparison Tool: SIP vs Lumpsum -->
+  <div class="mt-8">
+    <div class="mb-2">
+      <span class="mono-eyebrow text-link">Strategy Comparison</span>
+      <h2 class="heading-md text-ink mt-1">SIP vs. Lumpsum Investment: Which Strategy Suits You?</h2>
+    </div>
+    <CalculatorComparison
+      calculators={[
+        {
+          name: "Systematic Investment Plan (SIP)",
+          slug: "/finance/sip-calculator/",
+          description: "Invest a fixed amount periodically to average out market volatility and build wealth disciplined over time.",
+          pros: [
+            "Averages purchase cost across market dips (Rupee/Dollar Cost Averaging)",
+            "Low barrier to entry (start with as little as $10 or ₹500/month)",
+            "Removes emotional stress and market-timing guesswork"
+          ],
+          cons: [
+            "May lag behind a lump sum during persistent, uninterrupted bull markets",
+            "Requires steady, disciplined cash flow month after month"
+          ]
+        },
+        {
+          name: "Lumpsum Investment",
+          slug: "/finance/compound-interest-calculator/",
+          description: "Deploy an entire capital sum in one go to capture full-cycle compounding across the entire horizon.",
+          pros: [
+            "Puts 100% of capital to work immediately from Day 1",
+            "Maximizes total compounding during extended secular bull runs",
+            "Ideal for windfalls, bonuses, inheritance, or property sale proceeds"
+          ],
+          cons: [
+            "High vulnerability to investing right before a major market correction",
+            "Requires substantial upfront liquidity"
+          ]
+        }
+      ]}
+    />
+  </div>
+
   <FAQSection faqs={faqs} />
   <HistoryDrawer />
 </CalculatorLayout>
@@ -456,41 +482,25 @@ const formulaVariables = [
     updateElementText('bar-gain-label', `${sym} ${res.estimatedReturns.toLocaleString()} (${gainPct.toFixed(1)}%)`);
 
     // Render schedule table
-    renderSchedule(p, rate, years, timing, sym);
+    renderSchedule(res.yearlyBreakdown || [], p, sym);
   }
 
-  function renderSchedule(p: number, annualRate: number, years: number, timing: ContributionTiming, sym: string) {
+  function renderSchedule(breakdown: import('../../engines/investment').SIPYearlyBreakdown[], monthlyDeposit: number, sym: string) {
     if (!scheduleBody) return;
-    const monthlyRate = annualRate / 12 / 100;
-    const isBeg = timing === 'beginning';
-    let balance = 0;
-    let totalDeposited = 0;
     let html = '';
 
-    const maxRows = Math.min(years, 30);
-    for (let y = 1; y <= maxRows; y++) {
-      let annualDeposit = 0;
-      let startYearBalance = balance;
-
-      for (let m = 1; m <= 12; m++) {
-        if (isBeg) {
-          balance = (balance + p) * (1 + monthlyRate);
-        } else {
-          balance = balance * (1 + monthlyRate) + p;
-        }
-        annualDeposit += p;
-        totalDeposited += p;
-      }
-
-      const interestEarnedThisYear = Math.max(0, balance - startYearBalance - annualDeposit);
+    const maxRows = Math.min(breakdown.length, 30);
+    for (let i = 0; i < maxRows; i++) {
+      const row = breakdown[i];
+      const annualDeposit = monthlyDeposit * 12;
 
       html += `
         <tr>
-          <td class="py-2 px-3 font-semibold text-link">Year ${y}</td>
+          <td class="py-2 px-3 font-semibold text-link">Year ${row.year}</td>
           <td class="py-2 px-3 text-right">${sym} ${annualDeposit.toLocaleString()}</td>
-          <td class="py-2 px-3 text-right">${sym} ${totalDeposited.toLocaleString()}</td>
-          <td class="py-2 px-3 text-right text-violet">${sym} ${Math.round(interestEarnedThisYear).toLocaleString()}</td>
-          <td class="py-2 px-3 text-right font-semibold text-cyan">${sym} ${Math.round(balance).toLocaleString()}</td>
+          <td class="py-2 px-3 text-right">${sym} ${row.investedAmount.toLocaleString()}</td>
+          <td class="py-2 px-3 text-right text-violet" title="Yearly Growth">${sym} ${row.yearlyGrowth.toLocaleString()}</td>
+          <td class="py-2 px-3 text-right font-semibold text-cyan">${sym} ${row.totalValue.toLocaleString()}</td>
         </tr>
       `;
     }

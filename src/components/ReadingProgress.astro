@@ -1,0 +1,22 @@
+---
+// src/components/ReadingProgress.astro
+---
+
+<div id="reading-progress" class="fixed top-0 left-0 w-full h-1 bg-gray-200 dark:bg-gray-800 z-50">
+  <div id="progress-bar" class="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-150" style="width: 0%"></div>
+</div>
+
+<script>
+  const progressBar = document.getElementById('progress-bar');
+  
+  window.addEventListener('scroll', () => {
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight - windowHeight;
+    const scrolled = window.scrollY;
+    const progress = documentHeight > 0 ? (scrolled / documentHeight) * 100 : 0;
+    
+    if (progressBar) {
+      progressBar.style.width = `${Math.min(Math.max(progress, 0), 100)}%`;
+    }
+  }, { passive: true });
+</script>

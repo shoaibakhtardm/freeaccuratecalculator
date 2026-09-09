@@ -10,11 +10,13 @@ import {
   ALL_FRONTEND_CALCULATORS,
 } from '../../data/calculators';
 import { CALCULATORS, CATEGORY_METADATA } from '../../data/calculatorRegistry';
+import { getFaqsForCalculator } from '../../data/faqDatabase';
+import SocialProof from '../../components/SocialProof.astro';
 import type { CalculatorEntity } from '../../types/calculator';
 
 export async function getStaticPaths() {
   const programmaticList = getAllCalculators();
-  const dedicatedPages = new Set(['income-tax-calculator']);
+  const dedicatedPages = new Set(['income-tax-calculator', 'sip-calculator']);
 
   // Map programmatic calculators
   const routes = programmaticList
@@ -60,12 +62,7 @@ export async function getStaticPaths() {
         options: inp.options,
         helpText: inp.helpText,
       })),
-      faqs: (regCalc.faqs.slice(0, 5).concat(
-        Array(Math.max(0, 5 - regCalc.faqs.length)).fill({
-          question: `How does the ${regCalc.name} ensure accuracy?`,
-          answer: `Our ${regCalc.name} uses verified client-side algorithms with zero floating-point drift to compute instant results locally on your device.`,
-        })
-      ) as [any, any, any, any, any]),
+      faqs: (getFaqsForCalculator(regCalc.id, regCalc.name).slice(0, 5) as [any, any, any, any, any]),
     };
 
     routes.push({
@@ -182,6 +179,9 @@ const combinedJsonLd = [webAppSchema, faqSchema];
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
       <!-- Calculator Engine Section -->
       <div class="lg:col-span-8 space-y-8">
+        <!-- Real-time Social Proof Widget -->
+        <SocialProof calculatorName={calc.name} />
+
         <!-- Interactive Card -->
         <div class="rounded-2xl border border-hairline bg-canvas-elevated p-5 sm:p-8 shadow-whisper space-y-6">
           <div class="flex items-center justify-between border-b border-hairline pb-4">
@@ -450,6 +450,32 @@ const combinedJsonLd = [webAppSchema, faqSchema];
           formatted = resValue.toLocaleString('en-US', { maximumFractionDigits: 4 });
           secondary = `${pct}% of ${total.toLocaleString()} is ${formatted}`;
         }
+      } else if (slug === 'salary-calculator') {
+        const wage = parseFloat(raw.wage || '0');
+        const hrs = parseFloat(raw.hours_per_week || '40');
+        const freq = raw.frequency || 'hourly';
+
+        if (isNaN(wage) || wage < 0) {
+          resValue = 0;
+          formatted = '0.00';
+          secondary = 'Salary cannot be negative. Please enter a valid positive salary amount.';
+        } else if (hrs <= 0) {
+          resValue = 0;
+          formatted = '0.00';
+          secondary = 'Hours per week must be greater than zero.';
+        } else {
+          let annual = 0;
+          if (freq === 'hourly') annual = wage * hrs * 52;
+          else if (freq === 'weekly') annual = wage * 52;
+          else if (freq === 'monthly') annual = wage * 12;
+          else annual = wage;
+
+          resValue = Math.round((annual + Number.EPSILON) * 100) / 100;
+          formatted = resValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          const monthly = Math.round((annual / 12) * 100) / 100;
+          const weekly = Math.round((annual / 52) * 100) / 100;
+          secondary = `Monthly: $${monthly.toLocaleString()} | Weekly: $${weekly.toLocaleString()}`;
+        }
       } else {
         // Fallback for any other calculator
         const nums = Object.values(raw).map((v) => parseFloat(v)).filter((v) => !isNaN(v));
@@ -481,13 +507,29 @@ const combinedJsonLd = [webAppSchema, faqSchema];
 
     // Restore URL params on initial load
     const currentParams = new URLSearchParams(window.location.search);
-    let hasCustomParams = false;
     inputs.forEach((inp) => {
       if (currentParams.has(inp.id)) {
         inp.value = currentParams.get(inp.id);
-        hasCustomParams = true;
       }
-      inp.addEventListener('input', calculate);
+
+      // Disallow typing minus key or entering negative amounts
+      inp.addEventListener('keydown', (e) => {
+        if (e.key === '-' || e.key === 'Minus') {
+          e.preventDefault();
+        }
+      });
+      inp.addEventListener('paste', (e) => {
+        const text = (e.clipboardData || window.clipboardData)?.getData('text') || '';
+        if (text.includes('-')) {
+          e.preventDefault();
+        }
+      });
+      inp.addEventListener('input', () => {
+        if (inp.type === 'number' && parseFloat(inp.value) < 0) {
+          inp.value = '0';
+        }
+        calculate();
+      });
     });
 
     if (calculateBtn) {

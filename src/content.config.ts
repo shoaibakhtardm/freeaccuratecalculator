@@ -50,7 +50,7 @@ const calculators = defineCollection({
   }),
 });
 
-// Guides Collection (Educational Guides & Mathematical Proofs)
+// Guides Collection (Educational Guides, Deep Dives & Calculations)
 const guides = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/guides' }),
   schema: z.object({
@@ -58,22 +58,34 @@ const guides = defineCollection({
     seoTitle: z.string().optional(),
     h1: z.string().optional(),
     description: z.string(),
+    targetKeyword: z.string().optional(),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     author: z.string().default('Quantitative Editorial Team'),
-    category: z.enum(['math', 'finance', 'health', 'everyday', 'guides']),
+    category: z.enum(['math', 'finance', 'health', 'everyday', 'guides', 'real-estate', 'insurance']),
     tags: z.array(z.string()).default([]),
     lang: z.enum(['en', 'es', 'fr', 'hi']).default('en'),
+    targetCalculator: z
+      .object({
+        name: z.string(),
+        href: z.string(),
+        badge: z.string().optional(),
+        description: z.string().optional(),
+      })
+      .optional(),
     relatedCalculators: z.array(z.string()).default([]),
-    faqs: z.array(z.object({
-      question: z.string(),
-      answer: z.string(),
-    })).optional(),
+    faqs: z
+      .array(
+        z.object({
+          question: z.string(),
+          answer: z.string(),
+        })
+      )
+      .optional(),
   }),
 });
 
 export const collections = {
   calculators,
   guides,
-  blog: guides, // Backward-compatibility alias
 };
