@@ -1,0 +1,134 @@
+---
+// src/components/common/SmartEmailModal.astro
+---
+
+<div
+  id="smart-email-modal"
+  class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-slate-950/70 backdrop-blur-sm transition-opacity duration-300 opacity-0"
+  role="dialog"
+  aria-modal="true"
+>
+  <div class="relative w-full max-w-md rounded-2xl border border-hairline bg-canvas-elevated p-6 sm:p-8 shadow-2xl space-y-5">
+    <!-- Close Button -->
+    <button
+      id="modal-close-btn"
+      class="absolute top-4 right-4 text-mute hover:text-ink min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full transition-colors"
+      aria-label="Close modal"
+    >
+      ✕
+    </button>
+
+    <div class="space-y-2">
+      <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-mono font-semibold bg-emerald-500/10 text-emerald-400">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span>Free Download</span>
+      </span>
+      <h3 class="text-xl font-bold text-ink tracking-tight">Save Your Amortization & Tax Schedule</h3>
+      <p class="text-xs text-mute leading-relaxed">
+        Get our comprehensive <strong>2026 Wealth & Loan Amortization Master Spreadsheet</strong> (Excel/Google Sheets) with auto-calculating prepayment schedules.
+      </p>
+    </div>
+
+    <form id="email-capture-form" class="space-y-3">
+      <div>
+        <label for="subscriber-email" class="sr-only">Email Address</label>
+        <input
+          type="email"
+          id="subscriber-email"
+          required
+          placeholder="Enter your best email..."
+          class="w-full min-h-[44px] px-3.5 py-2 text-sm rounded-lg border border-hairline bg-canvas text-ink placeholder:text-mute focus:outline-none focus:ring-2 focus:ring-link font-sans"
+        />
+      </div>
+
+      <button
+        type="submit"
+        id="modal-submit-btn"
+        class="w-full min-h-[44px] px-4 py-2.5 rounded-lg bg-link hover:opacity-90 text-white font-medium text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+      >
+        <span>Send Me the Free Spreadsheet</span>
+      </button>
+
+      <p class="text-[11px] text-mute text-center">
+        100% Free • No Spam • Unsubscribe anytime with 1-click.
+      </p>
+    </form>
+
+    <div id="modal-success-msg" class="hidden text-center py-4 space-y-2">
+      <div class="text-emerald-400 text-2xl font-bold">✓ Sent!</div>
+      <p class="text-xs text-mute">Check your inbox for your download link.</p>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (() => {
+    const modal = document.getElementById('smart-email-modal');
+    const closeBtn = document.getElementById('modal-close-btn');
+    const form = document.getElementById('email-capture-form');
+    const successMsg = document.getElementById('modal-success-msg');
+
+    if (!modal) return;
+
+    // Frequency & Usage Tracker
+    const isDismissed = localStorage.getItem('fac_modal_dismissed');
+    if (isDismissed) return;
+
+    let calcCount = parseInt(localStorage.getItem('fac_calc_count') || '0', 10);
+
+    window.facIncrementUsage = function() {
+      calcCount++;
+      localStorage.setItem('fac_calc_count', calcCount.toString());
+
+      if (calcCount >= 2 && modal && !sessionStorage.getItem('fac_modal_shown')) {
+        setTimeout(() => {
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+          setTimeout(() => modal.classList.add('opacity-100'), 20);
+          sessionStorage.setItem('fac_modal_shown', 'true');
+        }, 800);
+      }
+    };
+
+    function hideModal() {
+      modal.classList.remove('opacity-100');
+      setTimeout(() => {
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+      }, 300);
+      localStorage.setItem('fac_modal_dismissed', 'true');
+    }
+
+    closeBtn?.addEventListener('click', hideModal);
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const emailInput = document.getElementById('subscriber-email');
+      const email = emailInput ? emailInput.value : '';
+      
+      // Trigger instant direct download of the spreadsheet
+      try {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = '/sheets/amortization-2026.csv';
+        downloadLink.download = '2026-loan-amortization-schedule.csv';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        downloadLink.remove();
+      } catch (_) {}
+
+      try {
+        await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+      } catch (_) {}
+
+      form.classList.add('hidden');
+      if (successMsg) successMsg.classList.remove('hidden');
+      setTimeout(hideModal, 2500);
+    });
+  })();
+</script>

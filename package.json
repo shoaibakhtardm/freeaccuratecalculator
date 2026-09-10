@@ -13,7 +13,8 @@
     "check": "astro check",
     "deploy": "astro build && node scripts/sync-sitemap.mjs && wrangler deploy",
     "test": "node --experimental-strip-types --test tests/formula-correctness.test.mjs tests/currency-system.test.mjs tests/tax-engine.test.mjs tests/compound-interest.test.mjs tests/double-verification.test.mjs tests/country-architecture.test.mjs tests/mobile-responsiveness.test.mjs tests/sitemap.test.mjs tests/seo-schema.test.mjs",
-    "test:vitest": "vitest run"
+    "test:vitest": "vitest run",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.3.0",

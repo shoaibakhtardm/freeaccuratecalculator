@@ -1,0 +1,169 @@
+---
+// src/pages/finance/salary/[slug].astro
+import CalculatorLayout from '../../../layouts/CalculatorLayout.astro';
+import ResultDisplay from '../../../components/calculator/ResultDisplay.astro';
+import FormulaSection from '../../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../../components/calculator/WorkedExample.astro';
+import { SALARY_CLUSTERS, type SalaryClusterPage } from '../../../data/programmatic/salaryTakeHomeClusters';
+
+export async function getStaticPaths() {
+  return SALARY_CLUSTERS.map((page) => ({
+    params: { slug: page.slug },
+    props: { page },
+  }));
+}
+
+interface Props {
+  page: SalaryClusterPage;
+}
+
+const { page } = Astro.props;
+
+// Exact mathematical tax & deduction computation
+const isAnnual = page.payFrequency === 'annual';
+const grossAnnual = isAnnual ? page.grossIncome : page.grossIncome * 12;
+const grossMonthly = isAnnual ? Math.round(page.grossIncome / 12) : page.grossIncome;
+
+const taxAnnual = Math.round(grossAnnual * (page.estimatedTaxRate / 100));
+const deductionsAnnual = Math.round(grossAnnual * (page.mandatoryDeductionRate / 100));
+const netAnnual = grossAnnual - taxAnnual - deductionsAnnual;
+const netMonthly = Math.round(netAnnual / 12);
+const netBiWeekly = Math.round(netAnnual / 26);
+
+const sym = page.currencySymbol;
+
+const formulaVariables = [
+  { symbol: 'Gross', meaning: `Gross Base Income (${sym}${grossMonthly.toLocaleString()}/mo | ${sym}${grossAnnual.toLocaleString()}/yr)` },
+  { symbol: 'Tax', meaning: `Income Tax Liability (${page.estimatedTaxRate}% effective rate ≈ ${sym}${taxAnnual.toLocaleString()}/yr)` },
+  { symbol: 'Deductions', meaning: `Mandatory Social Security, EPF, or National Insurance (${page.mandatoryDeductionRate}% ≈ ${sym}${deductionsAnnual.toLocaleString()}/yr)` },
+  { symbol: 'Net Take-Home', meaning: `Disposable In-Hand Earnings (${sym}${netMonthly.toLocaleString()}/mo)` },
+];
+
+const workedSteps = [
+  {
+    number: 1,
+    title: 'Establish Gross Annual & Monthly Base',
+    description: `Gross income evaluated at ${sym}${page.grossIncome.toLocaleString()} (${page.payFrequency}), standardizing to ${sym}${grossAnnual.toLocaleString()} annually.`,
+    mathExpression: `Gross Annual = ${sym}${grossAnnual.toLocaleString()}`,
+  },
+  {
+    number: 2,
+    title: 'Compute Statutory Income Tax',
+    description: `Applying statutory income tax brackets for ${page.country} yields an effective tax rate of ${page.estimatedTaxRate}%.`,
+    mathExpression: `Tax Liability = ${sym}${grossAnnual.toLocaleString()} × ${page.estimatedTaxRate}% = ${sym}${taxAnnual.toLocaleString()}/year`,
+  },
+  {
+    number: 3,
+    title: 'Deduct Mandatory Social Security & Retirement',
+    description: `Statutory contributions (${page.mandatoryDeductionRate}%) for EPF / FICA / National Insurance.`,
+    mathExpression: `Statutory Deductions = ${sym}${grossAnnual.toLocaleString()} × ${page.mandatoryDeductionRate}% = ${sym}${deductionsAnnual.toLocaleString()}/year`,
+  },
+  {
+    number: 4,
+    title: 'Calculate Final Liquid Take-Home Pay',
+    description: `Subtracting total statutory tax and pension deductions from gross salary yields actual disposable in-hand earnings.`,
+    mathExpression: `Net Monthly = (${sym}${grossAnnual.toLocaleString()} - ${sym}${taxAnnual.toLocaleString()} - ${sym}${deductionsAnnual.toLocaleString()}) ÷ 12 = ${sym}${netMonthly.toLocaleString()}`,
+  },
+];
+---
+
+<CalculatorLayout
+  title={page.title}
+  metaDescription={page.metaDescription}
+  h1={page.h1}
+  subtitle={`Comprehensive salary take-home calculation for ${sym}${page.grossIncome.toLocaleString()} (${page.country}) under current 2025–2026 fiscal tax provisions.`}
+  category={{ label: 'Finance', href: '/finance/' }}
+  calculatorName={page.h1}
+  faqs={page.faqs}
+>
+  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+    <!-- Highlight Callout -->
+    <div class="rounded-[8px] border border-link/20 bg-link/5 p-3.5 sm:p-4 text-xs space-y-1">
+      <div class="font-semibold text-link flex items-center gap-2">
+        <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Fiscal Jurisdiction: {page.country} ({page.regionCode}) • Assessment Year 2025–2026</span>
+      </div>
+      <p class="text-body leading-relaxed">
+        On a gross base of <strong>{sym}{page.grossIncome.toLocaleString()} {page.payFrequency}</strong>, your estimated liquid take-home pay is <strong>{sym}{netMonthly.toLocaleString()} per month</strong> ({sym}{netAnnual.toLocaleString()} annually) after <strong>{sym}{Math.round(taxAnnual / 12).toLocaleString()}</strong> in income taxes and <strong>{sym}{Math.round(deductionsAnnual / 12).toLocaleString()}</strong> in mandatory pension/social levies.
+      </p>
+    </div>
+
+    <!-- Primary Results Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <ResultDisplay
+        id="salary-net-monthly"
+        label="Net Monthly In-Hand"
+        prefix={`${sym} `}
+        initialValue={netMonthly}
+        decimals={0}
+        secondary="Take-Home Pay / Month"
+        accent="cyan"
+      />
+      <ResultDisplay
+        id="salary-net-biweekly"
+        label="Net Bi-Weekly Paycheck"
+        prefix={`${sym} `}
+        initialValue={netBiWeekly}
+        decimals={0}
+        secondary="26 Paychecks / Year"
+        accent="link"
+      />
+      <ResultDisplay
+        id="salary-net-annual"
+        label="Net Annual In-Hand"
+        prefix={`${sym} `}
+        initialValue={netAnnual}
+        decimals={0}
+        secondary={`${((netAnnual / grossAnnual) * 100).toFixed(1)}% Take-Home Ratio`}
+        accent="violet"
+      />
+    </div>
+
+    <!-- Detailed Deductions Snapshot -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-[8px] border border-hairline bg-canvas text-xs">
+      <div>
+        <span class="block text-mute font-mono">Gross Monthly</span>
+        <span class="text-sm font-semibold text-ink font-mono">{sym}{grossMonthly.toLocaleString()}</span>
+      </div>
+      <div>
+        <span class="block text-mute font-mono">Tax / Month</span>
+        <span class="text-sm font-semibold text-amber-500 font-mono">-{sym}{Math.round(taxAnnual / 12).toLocaleString()}</span>
+      </div>
+      <div>
+        <span class="block text-mute font-mono">PF / FICA / NI</span>
+        <span class="text-sm font-semibold text-amber-500 font-mono">-{sym}{Math.round(deductionsAnnual / 12).toLocaleString()}</span>
+      </div>
+      <div>
+        <span class="block text-mute font-mono">Effective Deductions</span>
+        <span class="text-sm font-semibold text-ink font-mono">{(page.estimatedTaxRate + page.mandatoryDeductionRate).toFixed(1)}%</span>
+      </div>
+    </div>
+
+    <!-- Interactive Upgrades CTA -->
+    <div class="rounded-[8px] border border-hairline bg-canvas p-4 text-center space-y-2">
+      <p class="text-xs text-mute font-mono">Need exact multi-slab tax customization, HRA exemptions, or customized standard deductions?</p>
+      <a
+        href="/finance/income-tax-calculator/"
+        class="inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-[6px] bg-ink text-canvas text-xs font-semibold hover:opacity-90 transition-opacity"
+      >
+        Open Multi-Country Income Tax Calculator →
+      </a>
+    </div>
+  </div>
+
+  <WorkedExample
+    title={`Worked Paycheck Calculation for ${sym}${page.grossIncome.toLocaleString()} (${page.country})`}
+    scenario={`An employee earning ${sym}${page.grossIncome.toLocaleString()} ${page.payFrequency} under the statutory tax laws of ${page.country}.`}
+    steps={workedSteps}
+    conclusion={`After deducting ${page.estimatedTaxRate}% income tax and ${page.mandatoryDeductionRate}% mandatory statutory contributions, net liquid earnings total ${sym}${netMonthly.toLocaleString()} per month.`}
+  />
+
+  <FormulaSection
+    title="Net Take-Home Calculation Formula"
+    expression="Net\ Pay = Gross\ Base - (Income\ Tax + Statutory\ Deductions)"
+    explanation="Net disposable pay represents gross salary minus progressive income tax liability and mandatory social contributions (such as EPF in India, FICA in the US, or Class 1 National Insurance in the UK)."
+    variables={formulaVariables}
+  />
+</CalculatorLayout>

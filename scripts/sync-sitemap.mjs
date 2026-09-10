@@ -71,6 +71,7 @@ if (rawXmlContent) {
   // Extract individual <url>...</url> blocks
   const urlBlockRegex = /<url>([\s\S]*?)<\/url>/g;
   const filteredBlocks = [];
+  const addedRoutes = new Set();
   let purgedLegacyCount = 0;
   let missingRoutePurged = 0;
 
@@ -97,8 +98,7 @@ if (rawXmlContent) {
       pathname.includes('/api/') ||
       pathname.includes('/admin/') ||
       pathname.includes('/draft/') ||
-      pathname.includes('/404') ||
-      pathname.includes('/500')
+      /\/(404|500)(\/|$)/.test(pathname)
     ) {
       continue;
     }
@@ -117,6 +117,44 @@ if (rawXmlContent) {
       .join('\n');
 
     filteredBlocks.push(`  <url>\n${cleanedBlock}\n  </url>`);
+    addedRoutes.add(pathname);
+  }
+
+  // Ensure 100% of valid HTML routes on disk are included in sitemap.xml
+  for (const route of validHtmlRoutes) {
+    if (addedRoutes.has(route)) continue;
+    if (
+      route.includes('/dev-preview') ||
+      route.includes('/api/') ||
+      route.includes('/admin/') ||
+      route.includes('/draft/') ||
+      /\/(404|500)(\/|$)/.test(route)
+    ) {
+      continue;
+    }
+
+    const loc = `https://freeaccuratecalculator.com${route}`;
+    const now = new Date().toISOString();
+    let priority = '0.7';
+    let changefreq = 'weekly';
+    if (route === '/') {
+      priority = '1.0';
+      changefreq = 'daily';
+    } else if (route.includes('-calculator') || route.includes('/sip/')) {
+      priority = '0.7';
+      changefreq = 'weekly';
+    } else {
+      priority = '0.5';
+      changefreq = 'monthly';
+    }
+
+    filteredBlocks.push(`  <url>
+    <loc>${loc}</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>${changefreq}</changefreq>
+    <priority>${priority}</priority>
+  </url>`);
+    addedRoutes.add(route);
   }
 
   // Build clean, single sitemap.xml with xml namespaces

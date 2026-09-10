@@ -32,10 +32,17 @@ const accentClasses = {
   cyan: 'text-cyan',
   violet: 'text-violet',
 }[accent];
+
+const borderAccentClasses = {
+  ink: 'border-hairline bg-canvas-elevated',
+  link: 'border-link/30 bg-gradient-to-br from-link/5 to-canvas-elevated',
+  cyan: 'border-cyan/40 bg-gradient-to-br from-cyan/10 via-canvas-elevated to-canvas-elevated shadow-cyan-glow',
+  violet: 'border-violet/30 bg-gradient-to-br from-violet/5 to-canvas-elevated',
+}[accent];
 ---
 
 <div
-  class={`fac-result-card relative overflow-hidden rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-6 shadow-whisper transition-all ${className}`}
+  class={`fac-result-card relative overflow-hidden rounded-[12px] border ${borderAccentClasses} p-4 sm:p-6 shadow-whisper transition-all ${className}`}
   data-result-card={id}
   aria-live="polite"
   aria-atomic="true"

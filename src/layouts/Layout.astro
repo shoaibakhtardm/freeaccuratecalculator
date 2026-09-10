@@ -13,6 +13,8 @@ import CountrySelector from '../components/CountrySelector.astro';
 import { EXCHANGE_RATE_SNAPSHOT } from '../data/exchangeRates';
 import { getLocaleDirection, ALL_SUPPORTED_LOCALES } from '../i18n/config';
 import { LOCALES, DEFAULT_LOCALE } from '../i18n/localeConfig';
+import { getAlternateHreflangLinks } from '../i18n/slugs';
+import { languages, type SupportedLanguage } from '../i18n/ui';
 import type { SupportedLocale } from '../types/i18n';
 
 interface Props {
@@ -52,29 +54,12 @@ const finalCanonical = canonicalUrl.includes('localhost')
   : canonicalUrl;
 
 const currentLocale = (locale || lang || Astro.currentLocale || DEFAULT_LOCALE) as SupportedLocale;
-const localeConfig = LOCALES[currentLocale] || LOCALES[DEFAULT_LOCALE];
-const currentDir = localeConfig.dir || getLocaleDirection(currentLocale);
+const currentDir = languages[currentLocale as SupportedLanguage]?.dir || 'ltr';
 const siteName = 'Free Accurate Calculator';
 const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 
-// Compute technical SEO hreflangs
-const cleanPath = pathname.replace(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)(\/|$)/i, '/');
-const normalizedPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
-
-const hreflangLinks = [
-  { lang: 'en', href: `${siteOrigin}${normalizedPath}` },
-  { lang: 'fr', href: `${siteOrigin}/fr${normalizedPath === '/' ? '/' : normalizedPath}` },
-  { lang: 'de', href: `${siteOrigin}/de${normalizedPath === '/' ? '/' : normalizedPath}` },
-  { lang: 'es', href: `${siteOrigin}/es${normalizedPath === '/' ? '/' : normalizedPath}` },
-  { lang: 'ar', href: `${siteOrigin}/ar${normalizedPath === '/' ? '/' : normalizedPath}` },
-  { lang: 'nl', href: `${siteOrigin}/nl${normalizedPath === '/' ? '/' : normalizedPath}` },
-  { lang: 'pt', href: `${siteOrigin}/pt${normalizedPath === '/' ? '/' : normalizedPath}` },
-  { lang: 'it', href: `${siteOrigin}/it${normalizedPath === '/' ? '/' : normalizedPath}` },
-  { lang: 'ru', href: `${siteOrigin}/ru${normalizedPath === '/' ? '/' : normalizedPath}` },
-  { lang: 'ja', href: `${siteOrigin}/ja${normalizedPath === '/' ? '/' : normalizedPath}` },
-  { lang: 'zh', href: `${siteOrigin}/zh${normalizedPath === '/' ? '/' : normalizedPath}` },
-  { lang: 'x-default', href: `${siteOrigin}${normalizedPath}` },
-];
+// Compute technical SEO hreflangs (guaranteed 200 OK targets, zero 404 hreflangs, includes hi & x-default)
+const hreflangLinks = getAlternateHreflangLinks(pathname, siteOrigin);
 
 const ogLocaleMap: Record<string, string> = {
   en: 'en_US',
@@ -93,7 +78,7 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
 ---
 
 <!doctype html>
-<html lang={currentLocale} dir={currentDir} class="scroll-smooth">
+<html lang={Astro.currentLocale || currentLocale} dir={languages[(Astro.currentLocale || currentLocale) as SupportedLanguage]?.dir || currentDir || 'ltr'} class="scroll-smooth">
   <head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FHX771KJTN"></script>
@@ -104,8 +89,21 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
 
       gtag('config', 'G-FHX771KJTN');
 
-      // Global calculator analytics tracking helper
+      // Early embed mode detection to prevent CLS
+      try {
+        if (window.location.search.includes('embed=true') || window.self !== window.top) {
+          document.documentElement.classList.add('fac-embed-view');
+        }
+      } catch (_) {}
+
+      // Global calculator analytics tracking & retention hook
       window.facTrackCalc = function(calculatorName, details) {
+        try {
+          if (typeof window.facIncrementUsage === 'function') {
+            window.facIncrementUsage();
+          }
+        } catch (_) {}
+
         if (typeof window.gtag === 'function') {
           window.gtag('event', 'calculator_used', {
             calculator_name: calculatorName,
@@ -142,6 +140,60 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
       .calculator-container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
       .result-display { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); }
       .dark .result-display { background: linear-gradient(135deg, #141414 0%, #1e293b 100%); }
+
+      /* Clean Embed Mode for Iframe Widgets */
+      html.fac-embed-view header,
+      html.fac-embed-view footer,
+      html.fac-embed-view #header-nav,
+      html.fac-embed-view aside,
+      html.fac-embed-view #smart-email-modal,
+      html.fac-embed-view #country-modal,
+      html.fac-embed-view .breadcrumbs-container {
+        display: none !important;
+      }
+      html.fac-embed-view body {
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      html.fac-embed-view main {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+        max-width: 100% !important;
+      }
+      html.fac-embed-view .lg\:col-span-8 {
+        grid-column: span 12 / span 12 !important;
+        width: 100% !important;
+      }
+      html.fac-embed-view .fac-embed-watermark {
+        display: block !important;
+      }
+
+      /* Native High-Fidelity PDF & Print Export */
+      @media print {
+        header, footer, aside, nav, #smart-email-modal, #country-modal, .fac-copy-result-btn, .ad-slot-container, .breadcrumbs-container {
+          display: none !important;
+        }
+        body {
+          background: white !important;
+          color: black !important;
+        }
+        main {
+          max-width: 100% !important;
+          padding: 0 !important;
+        }
+        .lg\:col-span-8 {
+          grid-column: span 12 / span 12 !important;
+          width: 100% !important;
+        }
+        table {
+          page-break-inside: auto;
+        }
+        tr {
+          page-break-inside: avoid;
+          page-break-after: auto;
+        }
+      }
     </style>
 
     <!-- SEO Meta Tags -->
@@ -149,6 +201,7 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={finalCanonical} />
     <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Free Accurate Calculator RSS Feed" href="/rss.xml" />
     {noindex ? (
       <meta name="robots" content="noindex, nofollow" />
     ) : (
@@ -349,17 +402,25 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
               if (sel.value !== target) sel.value = target;
             });
 
-            // Navigate to the equivalent localized page cleanly, preserving query params
+            // Safe navigation: check if current page is homepage or has alternate link
             const currentPath = window.location.pathname;
-            const cleanPath = currentPath.replace(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi)(\/|$)/i, '/') || '/';
-            let targetPath = '';
-            if (target === 'en') {
-              targetPath = cleanPath;
-            } else {
-              targetPath = `/${target}${cleanPath === '/' ? '/' : cleanPath}`;
+            const isHome = currentPath === '/' || /^\/(?:en|fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)\/?$/.test(currentPath);
+
+            if (isHome) {
+              const targetPath = target === 'en' ? '/' : `/${target}/`;
+              window.location.href = targetPath + window.location.search;
+              return;
             }
-            if (!targetPath.endsWith('/') && !targetPath.includes('.')) targetPath += '/';
-            window.location.href = targetPath + window.location.search;
+
+            // Check if this page has an explicit hreflang alternate URL for the selected language
+            const alternateTag = document.querySelector(`link[rel="alternate"][hreflang="${target}"]`);
+            if (alternateTag && alternateTag.href) {
+              window.location.href = alternateTag.href + window.location.search;
+              return;
+            }
+
+            // For pages without a translated variant, update locale preference safely without 404ing
+            window.location.reload();
           };
         } catch (_) {}
       })();

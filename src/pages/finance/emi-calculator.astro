@@ -371,10 +371,37 @@ const relatedCalculators = [
             <span id="schedule-counter-badge" class="text-[11px] font-mono text-mute">20 Years Total</span>
           </div>
 
-          <div class="overflow-x-auto max-w-full">
-            <p class="sm:hidden text-[11px] text-mute mb-2 flex items-center gap-1 font-mono">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <p class="sm:hidden text-[11px] text-mute flex items-center gap-1 font-mono">
               <span>⇄ Swipe schedule horizontally</span>
             </p>
+            <div class="flex items-center gap-2 ml-auto">
+              <button
+                type="button"
+                id="print-amort-btn"
+                class="inline-flex items-center gap-1.5 min-h-[36px] px-3 py-1.5 rounded-[6px] border border-hairline bg-canvas hover:bg-hairline-soft text-ink text-xs font-semibold transition-colors cursor-pointer"
+                title="Print or Save Schedule as PDF"
+              >
+                <svg class="h-3.5 w-3.5 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                </svg>
+                <span>Print / PDF</span>
+              </button>
+              <a
+                href="/sheets/amortization-2026.csv"
+                download="amortization-schedule-2026.csv"
+                class="inline-flex items-center gap-1.5 min-h-[36px] px-3 py-1.5 rounded-[6px] border border-hairline bg-canvas hover:bg-hairline-soft text-ink text-xs font-semibold transition-colors cursor-pointer"
+                title="Download CSV Spreadsheet"
+              >
+                <svg class="h-3.5 w-3.5 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                <span>CSV Export</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto max-w-full">
             <table class="w-full min-w-[480px] text-left text-xs font-mono">
               <thead>
                 <tr class="border-b border-hairline text-mute">
@@ -1006,6 +1033,11 @@ const relatedCalculators = [
       }
       calculate();
     };
+
+    // Print / PDF Export listener
+    document.getElementById('print-amort-btn')?.addEventListener('click', () => {
+      window.print();
+    });
 
     // Initial calculation with currency UI sync
     updateCurrencyUI();

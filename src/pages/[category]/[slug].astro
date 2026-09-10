@@ -16,7 +16,7 @@ import type { CalculatorEntity } from '../../types/calculator';
 
 export async function getStaticPaths() {
   const programmaticList = getAllCalculators();
-  const dedicatedPages = new Set(['income-tax-calculator', 'sip-calculator', 'age-calculator']);
+  const dedicatedPages = new Set(['income-tax-calculator', 'sip-calculator', 'age-calculator', 'ai-token-cost-calculator']);
 
   // Map programmatic calculators
   const routes = programmaticList

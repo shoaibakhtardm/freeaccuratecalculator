@@ -27,9 +27,7 @@ export default defineConfig({
       filter: (page) =>
         !page.includes('/dev-preview') &&
         !page.includes('/api/') &&
-        !page.includes('/admin/') &&
-        !page.includes('/draft/') &&
-        !page.includes('/404') &&
+        !/\/(404|500)(\/|$)/.test(page) &&
         !page.endsWith('/sitemap.xml'),
       serialize(item) {
         const url = new URL(item.url);

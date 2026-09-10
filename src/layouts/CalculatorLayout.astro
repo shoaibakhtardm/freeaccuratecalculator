@@ -5,6 +5,8 @@ import Breadcrumbs from '../components/common/Breadcrumbs.astro';
 import AdSlot from '../components/common/AdSlot.astro';
 import ShareButton from '../components/calculator/ShareButton.astro';
 import EmbedButton from '../components/calculator/EmbedButton.astro';
+import ShareResult from '../components/calculator/ShareResult.astro';
+import SmartEmailModal from '../components/common/SmartEmailModal.astro';
 import { generateFAQPageSchema } from '../utils/seoSchema';
 
 interface RelatedCalc {
@@ -134,11 +136,19 @@ const combinedSchemas = [softwareAppSchema, ...extraSchemas];
         <!-- The Calculator UI Slot -->
         <slot />
 
+        <!-- Calculator Result Sharing Component -->
+        <ShareResult calculatorTitle={calculatorName} />
+
         <!-- Native in-content ad slot between calculator and educational content -->
         <AdSlot slotType="in-content" slotId="CALC-INCONTENT-01" />
 
         <!-- Educational Sections Slot (Formula, Worked Example, FAQ) -->
         <slot name="content" />
+
+        <!-- Embed Mode Attribution Watermark (Visible only when in fac-embed-view) -->
+        <div class="hidden fac-embed-watermark text-center text-xs text-mute py-3 border-t border-hairline font-mono">
+          ⚡ Interactive tool provided by <a href={canonicalUrl} target="_blank" rel="noopener" class="text-link font-semibold hover:underline">Free Accurate Calculator</a> • 100% Free &amp; Private
+        </div>
       </div>
 
       <!-- Sidebar Column (4 cols) -->
@@ -186,4 +196,7 @@ const combinedSchemas = [softwareAppSchema, ...extraSchemas];
       </aside>
     </div>
   </div>
+
+  <!-- Smart Email Capture Modal (Triggers non-intrusively after 2 calculations) -->
+  <SmartEmailModal />
 </Layout>

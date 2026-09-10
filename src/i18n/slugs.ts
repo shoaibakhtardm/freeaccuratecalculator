@@ -2,90 +2,48 @@
 import type { SupportedLocale } from './config';
 import { ALL_SUPPORTED_LOCALES, DEFAULT_LOCALE } from './config';
 
-export interface LocalizedSlugMapping {
-  canonicalPath: string; // e.g., '/health/bmi-calculator/'
-  category: string;
-  slugs: Record<SupportedLocale, string>;
+export interface LocalizedRouteConfig {
+  canonicalPath: string; // e.g., '/math/percentage-calculator/'
+  locales: Partial<Record<SupportedLocale, string>>; // locale -> path relative to siteOrigin
 }
 
 /**
- * Universal Matrix of Localized Calculator Slugs across all 11 global languages.
- * Enables true native in-market URL optimization for Google SERP international targeting.
+ * Universal Matrix of Verified Localized Routes.
+ * Guarantees that alternate hreflang tags ONLY point to 200 OK routes that actually exist in the build,
+ * preventing Google Search Console 404 hreflang errors and crawl budget waste.
  */
-export const LOCALIZED_SLUGS: Record<string, LocalizedSlugMapping> = {
-  'bmi-calculator': {
-    canonicalPath: '/health/bmi-calculator/',
-    category: 'health',
-    slugs: {
-      en: 'bmi-calculator',
-      fr: 'calculateur-imc',
-      de: 'bmi-rechner',
-      es: 'calculadora-imc',
-      ar: 'hasibat-kutlat-al-jism',
-      nl: 'bmi-calculator',
-      pt: 'calculadora-de-imc',
-      it: 'calcolatore-bmi',
-      ru: 'kalkulyator-imt',
-      ja: 'bmi-keisanki',
-      hi: 'bmi-calculator',
-      zh: 'bmi-calculator',
-    },
-  },
+export const VERIFIED_LOCALIZED_ROUTES: Record<string, LocalizedRouteConfig> = {
   'percentage-calculator': {
     canonicalPath: '/math/percentage-calculator/',
-    category: 'math',
-    slugs: {
-      en: 'percentage-calculator',
-      fr: 'calculateur-de-pourcentage',
-      de: 'prozentrechner',
-      es: 'calculadora-de-porcentaje',
-      ar: 'hasibat-al-nisba-al-maawiyya',
-      nl: 'percentage-calculator',
-      pt: 'calculadora-de-porcentagem',
-      it: 'calcolatore-percentuale',
-      ru: 'kalkulyator-protsentov',
-      ja: 'paasento-keisanki',
-      hi: 'percentage-calculator',
-      zh: 'percentage-calculator',
+    locales: {
+      en: '/math/percentage-calculator/',
+      es: '/es/math/percentage-calculator/',
+      fr: '/fr/math/percentage-calculator/',
+      hi: '/hi/math/percentage-calculator/',
     },
   },
   'emi-calculator': {
     canonicalPath: '/finance/emi-calculator/',
-    category: 'finance',
-    slugs: {
-      en: 'emi-calculator',
-      fr: 'calculateur-mensualite-pret',
-      de: 'kreditrechner-tilgungsplan',
-      es: 'calculadora-cuota-prestamo',
-      ar: 'hasibat-al-qist-al-shahri',
-      nl: 'lening-aflossing-calculator',
-      pt: 'calculadora-prestacao-financiamento',
-      it: 'calcolo-rata-finanziamento',
-      ru: 'kreditnyj-kalkulyator-annuitet',
-      ja: 'roan-hensai-keisanki',
-      hi: 'emi-calculator',
-      zh: 'emi-calculator',
+    locales: {
+      en: '/finance/emi-calculator/',
+      hi: '/hi/finance/emi-calculator/',
     },
   },
-  'compound-interest-calculator': {
-    canonicalPath: '/finance/compound-interest-calculator/',
-    category: 'finance',
-    slugs: {
-      en: 'compound-interest-calculator',
-      fr: 'calculateur-interets-composes',
-      de: 'zinseszinsrechner',
-      es: 'calculadora-interes-compuesto',
-      ar: 'hasibat-al-fawaid-al-murakkaba',
-      nl: 'samengestelde-interest-calculator',
-      pt: 'calculadora-juros-compostos',
-      it: 'calcolo-interesse-composto',
-      ru: 'kalkulyator-slozhnyh-protsentov',
-      ja: 'fukuri-keisanki',
-      hi: 'compound-interest-calculator',
-      zh: 'compound-interest-calculator',
+  'guides': {
+    canonicalPath: '/guides/',
+    locales: {
+      en: '/guides/',
+      es: '/es/guides/',
+      fr: '/fr/guides/',
+      hi: '/hi/guides/',
     },
   },
 };
+
+/**
+ * Backward compatibility alias for legacy mappings
+ */
+export const LOCALIZED_SLUGS = VERIFIED_LOCALIZED_ROUTES;
 
 /**
  * Resolves the full international alternate URLs for a given canonical route or slug.
@@ -93,62 +51,58 @@ export const LOCALIZED_SLUGS: Record<string, LocalizedSlugMapping> = {
 export function getAlternateHreflangLinks(
   currentPath: string,
   siteOrigin: string = 'https://freeaccuratecalculator.com'
-): Array<{ lang: string; url: string }> {
-  // 1. Clean path to find matching calculator key
-  const normalizedPath = currentPath.replace(/^\/(?:en|fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)\//, '/');
-  const slugMatch = normalizedPath.match(/\/([^/]+)\/?$/);
-  const currentSlug = slugMatch ? slugMatch[1] : '';
+): Array<{ lang: string; href: string }> {
+  // 1. Normalize path
+  const trimmed = currentPath.split('?')[0].split('#')[0];
+  const withLeading = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+  const normalized = withLeading.endsWith('/') ? withLeading : `${withLeading}/`;
 
-  // Check if we have an explicit localized slug mapping
-  let mapping: LocalizedSlugMapping | undefined;
-  for (const key of Object.keys(LOCALIZED_SLUGS)) {
-    if (key === currentSlug || LOCALIZED_SLUGS[key].canonicalPath.includes(`/${currentSlug}/`)) {
-      mapping = LOCALIZED_SLUGS[key];
-      break;
+  // 2. Check if this is the homepage (root or any language root)
+  const isHomepage =
+    normalized === '/' ||
+    /^\/(?:en|fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)\/$/.test(normalized);
+
+  if (isHomepage) {
+    const links = ALL_SUPPORTED_LOCALES.map((locale) => ({
+      lang: locale,
+      href: locale === DEFAULT_LOCALE ? `${siteOrigin}/` : `${siteOrigin}/${locale}/`,
+    }));
+    links.push({
+      lang: 'x-default',
+      href: `${siteOrigin}/`,
+    });
+    return links;
+  }
+
+  // 3. Strip locale prefix to identify base canonical path
+  const strippedPath = normalized.replace(
+    /^\/(?:en|fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)\//,
+    '/'
+  );
+
+  // 4. Check for verified multi-language routes
+  for (const [key, config] of Object.entries(VERIFIED_LOCALIZED_ROUTES)) {
+    if (strippedPath === config.canonicalPath || strippedPath.includes(`/${key}/`)) {
+      const links: Array<{ lang: string; href: string }> = [];
+      for (const [locale, routePath] of Object.entries(config.locales)) {
+        links.push({
+          lang: locale,
+          href: `${siteOrigin}${routePath}`,
+        });
+      }
+      links.push({
+        lang: 'x-default',
+        href: `${siteOrigin}${config.canonicalPath}`,
+      });
+      return links;
     }
   }
 
-  const links: Array<{ lang: string; url: string }> = [];
-
-  if (mapping) {
-    // Generate localized URL for each of the 11 supported locales
-    for (const locale of ALL_SUPPORTED_LOCALES) {
-      const localizedSlug = mapping.slugs[locale] || mapping.slugs[DEFAULT_LOCALE];
-      const category = mapping.category;
-      const pathSuffix = locale === DEFAULT_LOCALE
-        ? `/${category}/${localizedSlug}/`
-        : `/${locale}/${category}/${localizedSlug}/`;
-      
-      links.push({
-        lang: locale,
-        url: `${siteOrigin}${pathSuffix}`,
-      });
-    }
-
-    // Add x-default pointing to the default English canonical URL
-    links.push({
-      lang: 'x-default',
-      url: `${siteOrigin}${mapping.canonicalPath}`,
-    });
-  } else {
-    // Universal path-mirrored fallback for standard hubs and pages
-    for (const locale of ALL_SUPPORTED_LOCALES) {
-      const clean = normalizedPath.startsWith('/') ? normalizedPath : `/${normalizedPath}`;
-      const localizedUrl = locale === DEFAULT_LOCALE
-        ? `${siteOrigin}${clean.endsWith('/') ? clean : `${clean}/`}`
-        : `${siteOrigin}/${locale}${clean.endsWith('/') ? clean : `${clean}/`}`;
-
-      links.push({
-        lang: locale,
-        url: localizedUrl.replace(/([^:]\/)\/+/g, '$1'),
-      });
-    }
-
-    links.push({
-      lang: 'x-default',
-      url: `${siteOrigin}${normalizedPath.endsWith('/') ? normalizedPath : `${normalizedPath}/`}`,
-    });
-  }
-
-  return links;
+  // 5. Default / English-only page: emit canonical English and x-default only.
+  // This guarantees 0 ghost 404 hreflangs for the 280+ English calculators.
+  const canonicalUrl = `${siteOrigin}${strippedPath}`;
+  return [
+    { lang: 'en', href: canonicalUrl },
+    { lang: 'x-default', href: canonicalUrl },
+  ];
 }

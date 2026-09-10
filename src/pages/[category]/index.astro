@@ -15,8 +15,10 @@ import { CATEGORY_PAGE_CONFIGS } from '../../data/categoryConfig';
 const allSearchableToolsJson = JSON.stringify(SEARCHABLE_CALCULATORS);
 
 export async function getStaticPaths() {
+  // Exclude categories that have dedicated static directories with index.astro
+  const dedicatedCategoryDirs = new Set<CategoryId>(['finance', 'everyday', 'insurance']);
   const categoryKeys = (Object.keys(CATEGORY_METADATA) as CategoryId[]).filter(
-    (catId) => catId !== 'finance' && catId !== 'everyday' && catId !== 'insurance'
+    (catId) => !dedicatedCategoryDirs.has(catId)
   );
   return categoryKeys.map((catId) => ({
     params: { category: catId },

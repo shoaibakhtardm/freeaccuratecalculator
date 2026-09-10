@@ -1,0 +1,43 @@
+name: 📢 Automated Calculator Release Announcer
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'src/pages/**'
+      - 'src/data/calculator-seo.json'
+      - 'src/content/guides/**'
+
+jobs:
+  broadcast-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Extract Added Calculator Routes
+        id: parse
+        run: |
+          NEW_ROUTES=$(git diff --name-only --diff-filter=A HEAD~1 HEAD | grep '^src/pages/' | grep -v 'index.astro' || true)
+          echo "routes<<EOF" >> $GITHUB_OUTPUT
+          echo "$NEW_ROUTES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Dispatch to Free Discord Channel / Webhook
+        if: steps.parse.outputs.routes != ''
+        run: |
+          if [ -n "${{ secrets.DISCORD_ANNOUNCE_WEBHOOK }}" ]; then
+            PAYLOAD=$(cat <<EOF
+            {
+              "embeds": [{
+                "title": "🚀 New High-Accuracy Calculator Deployed",
+                "description": "The following routes have been generated and submitted to IndexNow:\n\`\`\`${{ steps.parse.outputs.routes }}\`\`\`",
+                "color": 3447003
+              }]
+            }
+          EOF
+            )
+            curl -H "Content-Type: application/json" -X POST -d "$PAYLOAD" ${{ secrets.DISCORD_ANNOUNCE_WEBHOOK }}
+          fi
