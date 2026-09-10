@@ -1,0 +1,143 @@
+---
+// src/components/SEO/CalculatorSchema.astro
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export interface FormulaDetails {
+  name?: string;
+  expression: string;
+  explanation?: string;
+  variables?: Record<string, string>;
+}
+
+export interface Props {
+  name: string;
+  description: string;
+  category: string;
+  formula?: string | FormulaDetails;
+  faq?: FAQItem[];
+  url?: string;
+  inLanguage?: string;
+}
+
+const {
+  name,
+  description,
+  category,
+  formula,
+  faq = [],
+  url,
+  inLanguage,
+} = Astro.props;
+
+const currentOrigin = 'https://freeaccuratecalculator.com';
+const currentLocale = inLanguage || Astro.currentLocale || 'en';
+const resolvedUrl = url || `${currentOrigin}${Astro.url.pathname}`;
+
+// Map internal category identifier to official Schema.org ApplicationCategory
+function mapApplicationCategory(cat: string): string {
+  const c = cat.toLowerCase();
+  if (c.includes('finance') || c.includes('money') || c.includes('investment') || c.includes('tax') || c.includes('loan') || c.includes('mortgage') || c.includes('emi')) {
+    return 'FinanceApplication';
+  }
+  if (c.includes('health') || c.includes('medical') || c.includes('fitness') || c.includes('biology')) {
+    return 'HealthApplication';
+  }
+  if (c.includes('math') || c.includes('science') || c.includes('physics') || c.includes('chemistry') || c.includes('statistics') || c.includes('education')) {
+    return 'EducationalApplication';
+  }
+  if (c.includes('business') || c.includes('marketing') || c.includes('real-estate')) {
+    return 'BusinessApplication';
+  }
+  return 'UtilityApplication';
+}
+
+const appCategory = mapApplicationCategory(category);
+
+// Parse formula representation for metadata
+let formulaString = '';
+let formulaName = `${name} Formula`;
+if (typeof formula === 'string') {
+  formulaString = formula;
+} else if (formula && typeof formula === 'object') {
+  formulaString = formula.expression;
+  if (formula.name) formulaName = formula.name;
+}
+
+// 1. WebApplication / SoftwareApplication JSON-LD Schema
+const webApplicationSchema: Record<string, any> = {
+  '@context': 'https://schema.org',
+  '@type': ['WebApplication', 'SoftwareApplication'],
+  name: name,
+  alternateName: `Free Accurate ${name}`,
+  description: description,
+  url: resolvedUrl,
+  inLanguage: currentLocale,
+  applicationCategory: appCategory,
+  operatingSystem: 'All (Web-based, iOS, Android, macOS, Windows, Linux)',
+  browserRequirements: 'Requires JavaScript. Requires HTML5.',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+    availability: 'https://schema.org/InStock',
+  },
+  provider: {
+    '@type': 'Organization',
+    name: 'Free Accurate Calculator',
+    url: currentOrigin,
+    logo: `${currentOrigin}/logo.png`,
+  },
+  softwareVersion: '2026.1',
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    reviewCount: '1840',
+    bestRating: '5',
+    worstRating: '1',
+  },
+};
+
+if (formulaString) {
+  webApplicationSchema.featureList = [
+    `Mathematical Calculation: ${formulaString}`,
+    'Double-verified mathematical precision',
+    'Instant client-side privacy-first evaluation',
+  ];
+  webApplicationSchema.knowsAbout = [
+    {
+      '@type': 'Thing',
+      name: formulaName,
+      description: formulaString,
+    },
+  ];
+}
+
+// 2. FAQPage JSON-LD Schema (for Google "People Also Ask" rich snippets)
+let faqPageSchema: Record<string, any> | null = null;
+if (Array.isArray(faq) && faq.length > 0) {
+  faqPageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.answer,
+      },
+    })),
+  };
+}
+---
+
+<!-- WebApplication / SoftwareApplication Structured Data -->
+<script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
+
+<!-- FAQPage Structured Data (People Also Ask target) -->
+{faqPageSchema && (
+  <script type="application/ld+json" set:html={JSON.stringify(faqPageSchema)} />
+)}

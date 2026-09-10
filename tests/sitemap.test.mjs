@@ -35,6 +35,14 @@ test('Single Sitemap.xml integrity and discovery audit', async (t) => {
     // Multilingual alternate links
     assert.match(content, /xhtml:link[^>]+hreflang="es"/);
     assert.match(content, /xhtml:link[^>]+hreflang="fr"/);
+    assert.match(content, /xhtml:link[^>]+hreflang="de"/);
+    assert.match(content, /xhtml:link[^>]+hreflang="ar"/);
+    assert.match(content, /xhtml:link[^>]+hreflang="nl"/);
+    assert.match(content, /xhtml:link[^>]+hreflang="pt"/);
+    assert.match(content, /xhtml:link[^>]+hreflang="it"/);
+    assert.match(content, /xhtml:link[^>]+hreflang="ru"/);
+    assert.match(content, /xhtml:link[^>]+hreflang="ja"/);
+    assert.match(content, /xhtml:link[^>]+hreflang="zh"/);
     assert.match(content, /xhtml:link[^>]+hreflang="hi"/);
 
     // Dev preview and API excluded
@@ -91,8 +99,9 @@ test('Single Sitemap.xml integrity and discovery audit', async (t) => {
     const sitemapUrls = new Set([...sitemapContent.matchAll(/<loc>https:\/\/freeaccuratecalculator\.com([^<]*)<\/loc>/g)].map((m) => m[1] || '/'));
 
     const excluded = ['/dev-preview/'];
-    const missing = htmlRoutes.filter((r) => !sitemapUrls.has(r) && !excluded.includes(r));
+    const validRoutes = htmlRoutes.filter((r) => !excluded.includes(r));
+    const missing = validRoutes.filter((r) => !sitemapUrls.has(r));
     assert.equal(missing.length, 0, `Pages missing from sitemap.xml: ${missing.join(', ')}`);
-    assert.equal(sitemapUrls.size, 274, 'Expected 274 total URLs in sitemap.xml');
+    assert.equal(sitemapUrls.size, validRoutes.length, `Expected ${validRoutes.length} total URLs in sitemap.xml`);
   });
 });

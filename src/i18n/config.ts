@@ -27,6 +27,8 @@ export const LOCALE_CONFIGS: Record<SupportedLocale, LocaleConfig> = {
   it: { code: 'it', name: 'Italiano', englishName: 'Italian', flag: '🇮🇹', dir: 'ltr', dateFormat: 'it-IT', numberFormat: 'it-IT', currency: 'EUR' },
   ru: { code: 'ru', name: 'Русский', englishName: 'Russian', flag: '🇷🇺', dir: 'ltr', dateFormat: 'ru-RU', numberFormat: 'ru-RU', currency: 'RUB' },
   ja: { code: 'ja', name: '日本語', englishName: 'Japanese', flag: '🇯🇵', dir: 'ltr', dateFormat: 'ja-JP', numberFormat: 'ja-JP', currency: 'JPY' },
+  hi: { code: 'hi', name: 'हिन्दी', englishName: 'Hindi', flag: '🇮🇳', dir: 'ltr', dateFormat: 'en-IN', numberFormat: 'en-IN', currency: 'INR' },
+  zh: { code: 'zh', name: '中文', englishName: 'Chinese', flag: '🇨🇳', dir: 'ltr', dateFormat: 'zh-CN', numberFormat: 'zh-CN', currency: 'CNY' },
 };
 
 export const LOCALES: Record<string, LocaleDefinition> = {
@@ -152,6 +154,18 @@ export const LOCALES: Record<string, LocaleDefinition> = {
     numberLocale: 'en-IN',
     dateFormat: 'DD/MM/YYYY',
   },
+  zh: {
+    code: 'zh',
+    name: 'Chinese',
+    nativeName: '中文',
+    flag: '🇨🇳',
+    dir: 'ltr',
+    short: 'ZH',
+    defaultCurrency: 'CNY',
+    numberLocale: 'zh-CN',
+    dateFormat: 'YYYY/MM/DD',
+    isCJK: true,
+  },
 } as const;
 
 export type SupportedLocale = keyof typeof LOCALES;
@@ -182,6 +196,7 @@ export const ALL_SUPPORTED_LOCALES: SupportedLocale[] = [
   'ru',
   'ja',
   'hi',
+  'zh',
 ];
 
 export function isValidLocale(code: string): code is SupportedLocale {
@@ -245,4 +260,8 @@ export const BROWSER_LOCALE_MAP: Record<string, SupportedLocale> = {
   'ja-jp': 'ja',
   hi: 'hi',
   'hi-in': 'hi',
+  zh: 'zh',
+  'zh-cn': 'zh',
+  'zh-tw': 'zh',
+  'zh-hk': 'zh',
 };

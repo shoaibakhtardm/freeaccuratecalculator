@@ -12,6 +12,7 @@ export const LOCALES: Record<SupportedLocale, LocaleConfig> = {
   ru: { code: 'ru', name: 'Русский', englishName: 'Russian', flag: '🇷🇺', dir: 'ltr', dateFormat: 'ru-RU', numberFormat: 'ru-RU', currency: 'RUB' },
   ja: { code: 'ja', name: '日本語', englishName: 'Japanese', flag: '🇯🇵', dir: 'ltr', dateFormat: 'ja-JP', numberFormat: 'ja-JP', currency: 'JPY' },
   zh: { code: 'zh', name: '中文', englishName: 'Chinese', flag: '🇨🇳', dir: 'ltr', dateFormat: 'zh-CN', numberFormat: 'zh-CN', currency: 'CNY' },
+  hi: { code: 'hi', name: 'हिन्दी', englishName: 'Hindi', flag: '🇮🇳', dir: 'ltr', dateFormat: 'en-IN', numberFormat: 'en-IN', currency: 'INR' },
 };
 
 export const SUPPORTED_LOCALES = Object.keys(LOCALES) as SupportedLocale[];

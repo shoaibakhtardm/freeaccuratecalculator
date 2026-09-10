@@ -1,0 +1,129 @@
+---
+// src/components/calculator/EmbedButton.astro
+interface Props {
+  className?: string;
+}
+
+const { className = '' } = Astro.props;
+---
+
+<button
+  id="fac-embed-btn"
+  type="button"
+  aria-label="Embed this calculator on your website"
+  class={`inline-flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[38px] rounded-[6px] border border-hairline bg-canvas-elevated px-3 py-2 sm:py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft transition-colors cursor-pointer shadow-whisper ${className}`}
+  title="Get embed code for your blog or website"
+>
+  <svg class="h-3.5 w-3.5 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+  </svg>
+  <span>Embed</span>
+</button>
+
+<!-- Embed Code Modal Dialog -->
+<dialog
+  id="fac-embed-modal"
+  class="rounded-[12px] border border-hairline bg-canvas-elevated p-6 max-w-lg w-[90vw] text-ink shadow-2xl backdrop:bg-black/60 backdrop:backdrop-blur-sm m-auto"
+>
+  <div class="space-y-4">
+    <div class="flex items-center justify-between pb-2 border-b border-hairline">
+      <div class="flex items-center gap-2">
+        <span class="rounded bg-cyan/10 p-1.5 text-cyan">
+          <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+          </svg>
+        </span>
+        <h3 class="text-sm font-semibold">Embed This Calculator</h3>
+      </div>
+      <button
+        id="fac-embed-close-btn"
+        type="button"
+        aria-label="Close embed modal"
+        class="text-mute hover:text-ink text-sm p-1 rounded transition-colors"
+      >
+        ✕
+      </button>
+    </div>
+
+    <p class="text-xs text-mute">
+      Add this fast, zero-tracking calculator to your website or blog. Free to use with attribution:
+    </p>
+
+    <div class="relative">
+      <textarea
+        id="fac-embed-code"
+        readonly
+        rows="4"
+        class="w-full rounded-[6px] border border-hairline bg-canvas-subtle p-2.5 font-mono text-[11px] text-mute focus:outline-none select-all"
+      ></textarea>
+    </div>
+
+    <div class="flex items-center justify-between gap-3 pt-2">
+      <span id="fac-embed-feedback" class="text-xs text-cyan font-medium hidden">Code copied to clipboard!</span>
+      <div class="flex items-center gap-2 ml-auto">
+        <button
+          id="fac-embed-copy-btn"
+          type="button"
+          class="inline-flex items-center justify-center min-h-[38px] rounded-[6px] bg-cyan px-4 py-1.5 text-xs font-semibold text-white hover:bg-cyan-hover transition-colors shadow-whisper cursor-pointer"
+        >
+          Copy Embed Code
+        </button>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script is:inline>
+  (function () {
+    const btn = document.getElementById('fac-embed-btn');
+    const modal = document.getElementById('fac-embed-modal');
+    const closeBtn = document.getElementById('fac-embed-close-btn');
+    const copyBtn = document.getElementById('fac-embed-copy-btn');
+    const codeArea = document.getElementById('fac-embed-code');
+    const feedback = document.getElementById('fac-embed-feedback');
+
+    if (!btn || !modal) return;
+
+    function generateEmbedCode() {
+      const pageUrl = window.location.href.split('?')[0];
+      const pageTitle = document.title.split('—')[0].trim() || 'Free Calculator';
+      return `<iframe src="${pageUrl}" width="100%" height="650" style="border:1px solid #e2e8f0; border-radius:12px; max-width:700px; display:block; margin:auto;" title="${pageTitle}"></iframe><p style="font-size:11px; text-align:center; color:#64748b; margin-top:8px;">Provided by <a href="https://freeaccuratecalculator.com/" target="_blank" rel="noopener" style="color:#0284c7; text-decoration:underline;">Free Accurate Calculator</a></p>`;
+    }
+
+    btn.addEventListener('click', () => {
+      if (codeArea) {
+        codeArea.value = generateEmbedCode();
+      }
+      modal.showModal();
+    });
+
+    closeBtn?.addEventListener('click', () => modal.close());
+
+    modal.addEventListener('click', (e) => {
+      const rect = modal.getBoundingClientRect();
+      const isInDialog = (
+        rect.top <= e.clientY &&
+        e.clientY <= rect.top + rect.height &&
+        rect.left <= e.clientX &&
+        e.clientX <= rect.left + rect.width
+      );
+      if (!isInDialog) modal.close();
+    });
+
+    copyBtn?.addEventListener('click', async () => {
+      if (!codeArea) return;
+      try {
+        await navigator.clipboard.writeText(codeArea.value);
+        if (feedback) {
+          feedback.classList.remove('hidden');
+          setTimeout(() => feedback.classList.add('hidden'), 2500);
+        }
+        if (typeof window.facShowToast === 'function') {
+          window.facShowToast('Embed code copied to clipboard!', 'success');
+        }
+      } catch (_) {
+        codeArea.select();
+      }
+    });
+  })();
+</script>

@@ -1,6 +1,6 @@
 // src/types/i18n.ts
 
-export type SupportedLocale = 'en' | 'fr' | 'de' | 'es' | 'ar' | 'nl' | 'pt' | 'it' | 'ru' | 'ja' | 'zh';
+export type SupportedLocale = 'en' | 'fr' | 'de' | 'es' | 'ar' | 'nl' | 'pt' | 'it' | 'ru' | 'ja' | 'zh' | 'hi';
 
 export interface LocaleConfig {
   code: SupportedLocale;

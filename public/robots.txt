@@ -3,5 +3,5 @@ Allow: /
 Disallow: /dev-preview/
 Disallow: /api/
 
-Sitemap: https://freeaccuratecalculator.com/sitemap-index.xml
 Sitemap: https://freeaccuratecalculator.com/sitemap.xml
+

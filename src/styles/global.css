@@ -3,9 +3,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Cairo', 'Inter', 'Hiragino Sans', 'Meiryo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'Geist Mono', 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-outfit: 'Outfit', -apple-system, sans-serif;
+  --font-outfit: 'Outfit', 'Cairo', -apple-system, sans-serif;
 
   --color-ink: var(--color-ink);
   --color-body: var(--color-body);
@@ -252,3 +252,48 @@ body {
 .font-outfit {
   font-family: var(--font-outfit), 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
+
+/* ==========================================================================
+   RTL (Right-to-Left) & Arabic Typography Support
+   ========================================================================== */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+  unicode-bidi: embed;
+}
+
+[dir="rtl"] input,
+[dir="rtl"] textarea,
+[dir="rtl"] select {
+  text-align: right;
+}
+
+[dir="rtl"] input[type="number"],
+[dir="rtl"] input[type="tel"] {
+  direction: ltr;
+  text-align: right;
+}
+
+/* Mirrored icons in RTL */
+[dir="rtl"] .fac-chevron,
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
+}
+
+[dir="rtl"] .fac-lang-dropdown {
+  left: 0;
+  right: auto;
+  transform-origin: top left;
+}
+
+/* Arabic typography enhancements */
+:lang(ar) {
+  font-family: 'Cairo', 'Amiri', 'Plus Jakarta Sans', Tahoma, sans-serif;
+  line-height: 1.6;
+}
+
+/* Japanese typography enhancements */
+:lang(ja) {
+  font-family: 'Hiragino Sans', 'Meiryo', 'Yu Gothic', 'Plus Jakarta Sans', sans-serif;
+  letter-spacing: 0.02em;
+}

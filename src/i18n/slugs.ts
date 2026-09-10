@@ -28,6 +28,7 @@ export const LOCALIZED_SLUGS: Record<string, LocalizedSlugMapping> = {
       ru: 'kalkulyator-imt',
       ja: 'bmi-keisanki',
       hi: 'bmi-calculator',
+      zh: 'bmi-calculator',
     },
   },
   'percentage-calculator': {
@@ -45,6 +46,7 @@ export const LOCALIZED_SLUGS: Record<string, LocalizedSlugMapping> = {
       ru: 'kalkulyator-protsentov',
       ja: 'paasento-keisanki',
       hi: 'percentage-calculator',
+      zh: 'percentage-calculator',
     },
   },
   'emi-calculator': {
@@ -62,6 +64,7 @@ export const LOCALIZED_SLUGS: Record<string, LocalizedSlugMapping> = {
       ru: 'kreditnyj-kalkulyator-annuitet',
       ja: 'roan-hensai-keisanki',
       hi: 'emi-calculator',
+      zh: 'emi-calculator',
     },
   },
   'compound-interest-calculator': {
@@ -79,6 +82,7 @@ export const LOCALIZED_SLUGS: Record<string, LocalizedSlugMapping> = {
       ru: 'kalkulyator-slozhnyh-protsentov',
       ja: 'fukuri-keisanki',
       hi: 'compound-interest-calculator',
+      zh: 'compound-interest-calculator',
     },
   },
 };
@@ -91,7 +95,7 @@ export function getAlternateHreflangLinks(
   siteOrigin: string = 'https://freeaccuratecalculator.com'
 ): Array<{ lang: string; url: string }> {
   // 1. Clean path to find matching calculator key
-  const normalizedPath = currentPath.replace(/^\/(?:en|fr|de|es|ar|nl|pt|it|ru|ja|hi)\//, '/');
+  const normalizedPath = currentPath.replace(/^\/(?:en|fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)\//, '/');
   const slugMatch = normalizedPath.match(/\/([^/]+)\/?$/);
   const currentSlug = slugMatch ? slugMatch[1] : '';
 

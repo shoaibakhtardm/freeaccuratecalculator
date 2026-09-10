@@ -4,6 +4,7 @@ import Layout from './Layout.astro';
 import Breadcrumbs from '../components/common/Breadcrumbs.astro';
 import AdSlot from '../components/common/AdSlot.astro';
 import ShareButton from '../components/calculator/ShareButton.astro';
+import EmbedButton from '../components/calculator/EmbedButton.astro';
 import { generateFAQPageSchema } from '../utils/seoSchema';
 
 interface RelatedCalc {
@@ -121,6 +122,7 @@ const combinedSchemas = [softwareAppSchema, ...extraSchemas];
       </div>
 
       <div class="flex items-center gap-2 shrink-0">
+        <EmbedButton />
         <ShareButton />
       </div>
     </div>

@@ -33,6 +33,7 @@ export interface Props {
 }
 
 const { type, data } = Astro.props;
+const currentLocale = (data.inLanguage || Astro.currentLocale || 'en').toLowerCase();
 
 const BASE_URL = 'https://freeaccuratecalculator.com';
 
@@ -76,6 +77,7 @@ if (type === 'calculator') {
     name: data.title || data.name || 'Free Accurate Calculator',
     description: data.metaDescription || data.description || 'Fast, reliable, and free calculation tool.',
     url: calcUrl,
+    inLanguage: currentLocale,
     applicationCategory: getApplicationCategory(data.category),
     operatingSystem: 'All',
     browserRequirements: 'Requires JavaScript. Requires HTML5.',
@@ -99,6 +101,7 @@ if (type === 'calculator') {
     '@type': 'Article',
     headline: data.title || data.name || '',
     description: data.metaDescription || data.description || '',
+    inLanguage: currentLocale,
     image: data.featuredImage || data.image || `${BASE_URL}/og-image.png`,
     mainEntityOfPage: {
       '@type': 'WebPage',

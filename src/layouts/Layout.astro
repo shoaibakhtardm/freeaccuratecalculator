@@ -103,6 +103,17 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
       gtag('js', new Date());
 
       gtag('config', 'G-6V96N6HKEM');
+
+      // Global calculator analytics tracking helper
+      window.facTrackCalc = function(calculatorName, details) {
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'calculator_used', {
+            calculator_name: calculatorName,
+            currency: window.facCurrentCurrency || 'USD',
+            ...details,
+          });
+        }
+      };
     </script>
 
     <meta charset="UTF-8" />

@@ -211,7 +211,7 @@ const combinedJsonLd = [webAppSchema, faqSchema];
                     <select
                       id={inp.id}
                       name={inp.id}
-                      class="dynamic-input w-full min-h-[44px] rounded-lg border border-hairline bg-canvas px-3 py-2 text-sm font-mono text-ink focus:border-link focus:ring-1 focus:ring-link focus:outline-none"
+                      class="dynamic-input w-full min-h-[44px] rounded-lg border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink focus:border-link focus:ring-1 focus:ring-link focus:outline-none"
                     >
                       {inp.options?.map((opt) => (
                         <option value={opt.value} selected={opt.value === inp.defaultValue}>
@@ -229,7 +229,7 @@ const combinedJsonLd = [webAppSchema, faqSchema];
                         min={inp.min}
                         max={inp.max}
                         value={inp.defaultValue}
-                        class="dynamic-input w-full min-h-[44px] rounded-lg border border-hairline bg-canvas px-3 py-2 text-sm font-mono text-ink placeholder-faint focus:border-link focus:ring-1 focus:ring-link focus:outline-none pr-10"
+                        class="dynamic-input w-full min-h-[44px] rounded-lg border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink placeholder-faint focus:border-link focus:ring-1 focus:ring-link focus:outline-none pr-10"
                       />
                       {inp.unit && (
                         <span class="absolute right-3 top-3 text-xs font-mono text-mute select-none pointer-events-none">

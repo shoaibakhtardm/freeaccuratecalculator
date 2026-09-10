@@ -1,8 +1,14 @@
 # Redirects for legacy and renamed calculator URLs
-/calculator/percentage-calculator  /math/percentage-calculator  301
-/calculator/emi-calculator         /finance/emi-calculator       301
-/calculator/bmi-calculator         /health/bmi-calculator        301
-/terms                             /terms-of-use                 301
-/privacy                           /privacy-policy               301
-/blog                             /guides                       301
-/blog/*                           /guides/:splat                301
+/calculators/bmi-calculator         /health/bmi-calculator        301
+/calculators/emi-calculator         /finance/emi-calculator       301
+/calculators/percentage-calculator  /math/percentage-calculator  301
+/calculators                        /                             301
+/calculators/*                      /:splat                       301
+/calculator/percentage-calculator   /math/percentage-calculator   301
+/calculator/emi-calculator          /finance/emi-calculator        301
+/calculator/bmi-calculator          /health/bmi-calculator         301
+/calculator/*                       /:splat                       301
+/terms                              /terms-of-use                  301
+/privacy                            /privacy-policy                301
+/blog                               /guides                        301
+/blog/*                             /guides/:splat                 301

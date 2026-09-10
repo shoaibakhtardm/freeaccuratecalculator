@@ -64,7 +64,7 @@ const guides = defineCollection({
     author: z.string().default('Quantitative Editorial Team'),
     category: z.enum(['math', 'finance', 'health', 'everyday', 'guides', 'real-estate', 'insurance']),
     tags: z.array(z.string()).default([]),
-    lang: z.enum(['en', 'es', 'fr', 'hi']).default('en'),
+    lang: z.enum(['en', 'es', 'fr', 'de', 'ar', 'nl', 'pt', 'it', 'ru', 'ja', 'hi', 'zh']).default('en'),
     targetCalculator: z
       .object({
         name: z.string(),

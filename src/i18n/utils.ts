@@ -21,6 +21,7 @@ import { it } from './locales/it.ts';
 import { ru } from './locales/ru.ts';
 import { ja } from './locales/ja.ts';
 import { hi } from './locales/hi.ts';
+import { zh } from './locales/zh.ts';
 
 export const DICTIONARIES: Record<SupportedLocale, TranslationDictionary> = {
   en,
@@ -34,6 +35,7 @@ export const DICTIONARIES: Record<SupportedLocale, TranslationDictionary> = {
   ru,
   ja,
   hi,
+  zh,
 };
 
 /**
