@@ -1,0 +1,49 @@
+/* src/styles/rtl.css - SaaS-grade RTL Bidirectional Layout Engine */
+
+[dir="rtl"] {
+  text-align: right;
+  direction: rtl;
+}
+
+[dir="rtl"] body {
+  font-family: 'Noto Sans Arabic', 'Segoe UI', Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Logical mirroring for icons and chevrons */
+[dir="rtl"] .rtl-flip,
+[dir="rtl"] .arrow-icon,
+[dir="rtl"] .breadcrumb-separator svg {
+  transform: scaleX(-1);
+}
+
+/* Keep numbers, mathematical equations, and inputs formatted correctly */
+[dir="rtl"] input[type="number"],
+[dir="rtl"] input[type="text"].calc-numeric,
+[dir="rtl"] .calc-math-expression,
+[dir="rtl"] .font-mono {
+  direction: ltr;
+  text-align: left;
+  unicode-bidi: plaintext;
+}
+
+[dir="rtl"] input[type="number"].text-right {
+  text-align: left;
+}
+
+/* Positioning adjustments for modals and dropdowns */
+[dir="rtl"] .fac-lang-dropdown {
+  right: auto;
+  left: 0;
+  transform-origin: top left;
+}
+
+/* Tooltips, badges, and notification adjustments */
+[dir="rtl"] .stat-card-badge {
+  left: 0.75rem;
+  right: auto;
+}
+
+/* Spacing and flex order in RTL */
+[dir="rtl"] .rtl-space-x-reverse > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-x-reverse: 1;
+}

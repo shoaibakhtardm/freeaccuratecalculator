@@ -1,0 +1,231 @@
+---
+// src/components/LanguageCountryModal.astro
+import { ALL_SUPPORTED_LOCALES, LOCALES, type SupportedLocale } from '../i18n/config';
+
+export interface Props {
+  id?: string;
+}
+
+const { id = 'fac-language-modal' } = Astro.props;
+const currentLocale = (Astro.currentLocale || 'en').toLowerCase();
+const localeList = ALL_SUPPORTED_LOCALES.map((code) => LOCALES[code]);
+---
+
+<div
+  id={id}
+  class="fixed inset-0 z-[9999] flex items-center justify-center p-3 sm:p-4 bg-slate-950/60 backdrop-blur-md transition-all duration-200 opacity-0 pointer-events-none invisible"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="fac-modal-title"
+>
+  <div
+    class="fac-modal-panel w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl shadow-slate-900/40 transform scale-95 transition-all duration-200 flex flex-col max-h-[90vh] overflow-hidden"
+  >
+    <!-- Modal Header -->
+    <div class="px-5 py-4 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+        </span>
+        <div>
+          <h2 id="fac-modal-title" class="text-base font-bold text-slate-900 dark:text-white">
+            Select Language & Region
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Choose your preferred display language and regional formatting
+          </p>
+        </div>
+      </div>
+      <button
+        type="button"
+        class="fac-modal-close p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+        aria-label="Close modal"
+      >
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Search Input -->
+    <div class="p-4 border-b border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-900/50">
+      <div class="relative">
+        <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </span>
+        <input
+          type="text"
+          class="fac-lang-search w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700/80 rounded-xl placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+          placeholder="Filter by language name or country..."
+          autocomplete="off"
+        />
+      </div>
+    </div>
+
+    <!-- Language Grid -->
+    <div class="fac-lang-list p-3 overflow-y-auto max-h-[60vh] space-y-1.5 focus:outline-none">
+      {localeList.map((loc) => {
+        const isCurrent = loc.code === currentLocale;
+        return (
+          <button
+            type="button"
+            data-code={loc.code}
+            data-search={`${loc.name} ${loc.nativeName} ${loc.short} ${loc.code}`.toLowerCase()}
+            class={`fac-lang-item group flex items-center justify-between w-full p-2.5 rounded-xl border text-left transition-all duration-150 cursor-pointer ${
+              isCurrent
+                ? 'bg-indigo-50/80 dark:bg-indigo-950/40 border-indigo-200 dark:border-indigo-800/80 text-indigo-900 dark:text-indigo-200 shadow-xs'
+                : 'bg-white dark:bg-slate-900/60 border-transparent hover:border-slate-200 dark:hover:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/60 text-slate-800 dark:text-slate-200'
+            }`}
+          >
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="text-2xl leading-none select-none shrink-0" aria-hidden="true">
+                {loc.flag}
+              </span>
+              <div class="truncate">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-semibold text-slate-900 dark:text-white">
+                    {loc.nativeName}
+                  </span>
+                  {loc.dir === 'rtl' && (
+                    <span class="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.2 bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 rounded">
+                      RTL
+                    </span>
+                  )}
+                </div>
+                <div class="text-xs text-slate-500 dark:text-slate-400">
+                  {loc.name}
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <span class="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 uppercase">
+                {loc.short}
+              </span>
+              {isCurrent && (
+                <span class="text-indigo-600 dark:text-indigo-400 shrink-0" aria-label="Selected">
+                  <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </span>
+              )}
+            </div>
+          </button>
+        );
+      })}
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-5 py-3 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-900/70 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+      <span>10 Global Languages + RTL Supported</span>
+      <button
+        type="button"
+        class="fac-modal-close font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+      >
+        Dismiss
+      </button>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    const modal = document.getElementById('fac-language-modal');
+    if (!modal) return;
+
+    const panel = modal.querySelector('.fac-modal-panel');
+    const closeBtns = modal.querySelectorAll('.fac-modal-close');
+    const searchInput = modal.querySelector('.fac-lang-search');
+    const langItems = modal.querySelectorAll('.fac-lang-item');
+
+    function openModal() {
+      modal.classList.remove('opacity-0', 'pointer-events-none', 'invisible');
+      modal.classList.add('opacity-100', 'pointer-events-auto', 'visible');
+      if (panel) {
+        panel.classList.remove('scale-95');
+        panel.classList.add('scale-100');
+      }
+      if (searchInput) {
+        searchInput.value = '';
+        filterItems('');
+        setTimeout(() => searchInput.focus(), 50);
+      }
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('opacity-100', 'pointer-events-auto', 'visible');
+      modal.classList.add('opacity-0', 'pointer-events-none', 'invisible');
+      if (panel) {
+        panel.classList.remove('scale-100');
+        panel.classList.add('scale-95');
+      }
+      document.body.style.overflow = '';
+    }
+
+    function filterItems(query) {
+      const q = (query || '').toLowerCase().trim();
+      langItems.forEach((item) => {
+        const searchData = item.getAttribute('data-search') || '';
+        if (!q || searchData.includes(q)) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        filterItems(e.target.value);
+      });
+    }
+
+    closeBtns.forEach((btn) => btn.addEventListener('click', closeModal));
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('invisible')) {
+        closeModal();
+      }
+    });
+
+    // Expose open helper globally
+    window.facOpenLanguageModal = openModal;
+
+    // Attach selection handlers
+    langItems.forEach((item) => {
+      item.addEventListener('click', () => {
+        const code = item.getAttribute('data-code');
+        if (!code) return;
+        closeModal();
+
+        try {
+          localStorage.setItem('fac_locale', code);
+          localStorage.setItem('preferred_locale', code);
+        } catch (_) {}
+
+        if (typeof window.facSetActiveLanguage === 'function') {
+          window.facSetActiveLanguage(code);
+        } else {
+          // Navigation fallback
+          const path = window.location.pathname;
+          const clean = path.replace(/^\/([a-z]{2})(\/|$)/i, '/') || '/';
+          let target = code === 'en' ? clean : `/${code}${clean === '/' ? '/' : clean}`;
+          if (!target.endsWith('/') && !target.includes('.')) target += '/';
+          window.location.href = target + window.location.search;
+        }
+      });
+    });
+  })();
+</script>

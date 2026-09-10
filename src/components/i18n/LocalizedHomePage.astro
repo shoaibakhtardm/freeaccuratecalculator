@@ -1,0 +1,102 @@
+---
+// src/components/i18n/LocalizedHomePage.astro
+import Layout from '../../layouts/Layout.astro';
+import type { SupportedLocale } from '../../types/i18n.ts';
+import { LOCALE_CONFIGS } from '../../i18n/config.ts';
+import { translate } from '../../i18n/engine.ts';
+
+interface Props {
+  locale: SupportedLocale;
+}
+
+const { locale } = Astro.props;
+const config = LOCALE_CONFIGS[locale] || LOCALE_CONFIGS.en;
+
+const title = translate(locale, 'seo.homeTitle');
+const description = translate(locale, 'seo.homeDescription');
+
+const bmiTitle = translate(locale, 'calc.bmi.title');
+const bmiDesc = translate(locale, 'calc.bmi.description');
+const emiTitle = translate(locale, 'calc.emi.title');
+const emiDesc = translate(locale, 'calc.emi.description');
+const sipTitle = translate(locale, 'calc.sip.title');
+const sipDesc = translate(locale, 'calc.sip.description');
+
+const featuredCalculators = [
+  {
+    name: emiTitle,
+    desc: emiDesc,
+    href: '/finance/emi-calculator/',
+    badge: translate(locale, 'nav.finance'),
+    categoryColor: 'from-blue-500/20 to-indigo-500/20 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800',
+    icon: '💰',
+  },
+  {
+    name: bmiTitle,
+    desc: bmiDesc,
+    href: '/health/bmi-calculator/',
+    badge: translate(locale, 'nav.health'),
+    categoryColor: 'from-emerald-500/20 to-teal-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800',
+    icon: '⚖️',
+  },
+  {
+    name: sipTitle,
+    desc: sipDesc,
+    href: '/finance/sip-calculator/',
+    badge: translate(locale, 'nav.finance'),
+    categoryColor: 'from-purple-500/20 to-pink-500/20 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800',
+    icon: '📈',
+  },
+];
+---
+
+<Layout title={title} description={description} lang={locale}>
+  <!-- Hero Section -->
+  <section class="py-12 md:py-16 text-center space-y-6 max-w-4xl mx-auto px-4">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-900 bg-indigo-50/60 dark:bg-indigo-950/40 text-xs font-semibold text-indigo-700 dark:text-indigo-300 shadow-xs">
+      <span class="text-sm">{config.flag}</span>
+      <span>{config.name} ({config.englishName})</span>
+    </div>
+
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+      {title}
+    </h1>
+
+    <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+      {description}
+    </p>
+  </section>
+
+  <!-- Featured Tools Grid -->
+  <section class="max-w-6xl mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {featuredCalculators.map((calc) => (
+        <a
+          href={calc.href}
+          class="group block p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-xs hover:shadow-xl hover:border-indigo-500/40 dark:hover:border-indigo-500/40 transition-all duration-300"
+        >
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-3xl p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 group-hover:scale-110 transition-transform">
+              {calc.icon}
+            </span>
+            <span class={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${calc.categoryColor}`}>
+              {calc.badge}
+            </span>
+          </div>
+
+          <h2 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors mb-2">
+            {calc.name}
+          </h2>
+
+          <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 mb-4 leading-relaxed">
+            {calc.desc}
+          </p>
+
+          <span class="inline-flex items-center text-xs font-semibold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">
+            {translate(locale, 'ui.calculate')} →
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+</Layout>

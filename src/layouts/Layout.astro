@@ -1,20 +1,30 @@
 ---
 import '../styles/critical.css';
 import '../styles/global.css';
+import '../styles/rtl.css';
 import Header from '../components/common/Header.astro';
 import Footer from '../components/common/Footer.astro';
 import ConsentBanner from '../components/common/ConsentBanner.astro';
 import Toast from '../components/common/Toast.astro';
+import LanguageCountryModal from '../components/LanguageCountryModal.astro';
+import LocaleDetectionToast from '../components/common/LocaleDetectionToast.astro';
+import LocalizedCalculatorBridge from '../components/calculator/LocalizedCalculatorBridge.astro';
+import CountrySelector from '../components/CountrySelector.astro';
 import { EXCHANGE_RATE_SNAPSHOT } from '../data/exchangeRates';
+import { getLocaleDirection, ALL_SUPPORTED_LOCALES } from '../i18n/config';
+import { LOCALES, DEFAULT_LOCALE } from '../i18n/localeConfig';
+import type { SupportedLocale } from '../types/i18n';
 
 interface Props {
   title: string;
-  description: string;
+  description?: string;
+  metaDescription?: string;
   canonicalUrl?: string;
   image?: string;
   jsonLd?: Record<string, any> | Array<Record<string, any>>;
   noindex?: boolean;
   lang?: string;
+  locale?: SupportedLocale;
 }
 
 const siteOrigin = 'https://freeaccuratecalculator.com';
@@ -24,13 +34,16 @@ const normalizedPathname = pathname.endsWith('/') ? pathname : `${pathname}/`;
 const {
   title,
   description,
+  metaDescription,
   canonicalUrl = `${siteOrigin}${normalizedPathname}`,
   image = `${siteOrigin}/og-image.svg`,
   jsonLd,
   noindex = false,
   lang,
+  locale,
 } = Astro.props;
 
+const pageDescription = metaDescription || description || 'Free, accurate online calculators for finance, health, math, and everyday calculations.';
 const socialImage = image.startsWith('http') ? image : `${siteOrigin}${image.startsWith('/') ? image : `/${image}`}`;
 
 // Ensure any passed-in canonicalUrl using localhost is normalized to production siteOrigin
@@ -38,43 +51,49 @@ const finalCanonical = canonicalUrl.includes('localhost')
   ? `${siteOrigin}${normalizedPathname}`
   : canonicalUrl;
 
-const currentLocale = lang || Astro.currentLocale || 'en';
+const currentLocale = (locale || lang || Astro.currentLocale || DEFAULT_LOCALE) as SupportedLocale;
+const localeConfig = LOCALES[currentLocale] || LOCALES[DEFAULT_LOCALE];
+const currentDir = localeConfig.dir || getLocaleDirection(currentLocale);
 const siteName = 'Free Accurate Calculator';
 const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 
 // Compute technical SEO hreflangs
-const cleanPath = pathname.replace(/^\/(es|fr|hi)(\/|$)/, '/');
+const cleanPath = pathname.replace(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)(\/|$)/i, '/');
 const normalizedPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
 
-// Set of verified multi-locale routes
-const multilangRoutes = new Set([
-  '/',
-  '/guides/',
-  '/guides/how-compound-interest-works/',
-  '/guides/how-to-calculate-percentages-accurately/',
-  '/math/percentage-calculator/',
-  '/finance/emi-calculator/',
-  '/health/bmi-calculator/',
-]);
+const hreflangLinks = [
+  { lang: 'en', href: `${siteOrigin}${normalizedPath}` },
+  { lang: 'fr', href: `${siteOrigin}/fr${normalizedPath === '/' ? '/' : normalizedPath}` },
+  { lang: 'de', href: `${siteOrigin}/de${normalizedPath === '/' ? '/' : normalizedPath}` },
+  { lang: 'es', href: `${siteOrigin}/es${normalizedPath === '/' ? '/' : normalizedPath}` },
+  { lang: 'ar', href: `${siteOrigin}/ar${normalizedPath === '/' ? '/' : normalizedPath}` },
+  { lang: 'nl', href: `${siteOrigin}/nl${normalizedPath === '/' ? '/' : normalizedPath}` },
+  { lang: 'pt', href: `${siteOrigin}/pt${normalizedPath === '/' ? '/' : normalizedPath}` },
+  { lang: 'it', href: `${siteOrigin}/it${normalizedPath === '/' ? '/' : normalizedPath}` },
+  { lang: 'ru', href: `${siteOrigin}/ru${normalizedPath === '/' ? '/' : normalizedPath}` },
+  { lang: 'ja', href: `${siteOrigin}/ja${normalizedPath === '/' ? '/' : normalizedPath}` },
+  { lang: 'zh', href: `${siteOrigin}/zh${normalizedPath === '/' ? '/' : normalizedPath}` },
+  { lang: 'x-default', href: `${siteOrigin}${normalizedPath}` },
+];
 
-const isMultilangPage = multilangRoutes.has(normalizedPath);
-
-const hreflangLinks = isMultilangPage
-  ? [
-      { lang: 'en', href: `${siteOrigin}${normalizedPath}` },
-      { lang: 'es', href: `${siteOrigin}/es${normalizedPath === '/' ? '/' : normalizedPath}` },
-      { lang: 'fr', href: `${siteOrigin}/fr${normalizedPath === '/' ? '/' : normalizedPath}` },
-      { lang: 'hi', href: `${siteOrigin}/hi${normalizedPath === '/' ? '/' : normalizedPath}` },
-      { lang: 'x-default', href: `${siteOrigin}${normalizedPath}` },
-    ]
-  : [
-      { lang: currentLocale, href: finalCanonical },
-      { lang: 'x-default', href: `${siteOrigin}${normalizedPath}` },
-    ];
+const ogLocaleMap: Record<string, string> = {
+  en: 'en_US',
+  fr: 'fr_FR',
+  de: 'de_DE',
+  es: 'es_ES',
+  ar: 'ar_SA',
+  nl: 'nl_NL',
+  pt: 'pt_PT',
+  it: 'it_IT',
+  ru: 'ru_RU',
+  ja: 'ja_JP',
+  hi: 'hi_IN',
+};
+const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
 ---
 
 <!doctype html>
-<html lang={currentLocale} class="scroll-smooth">
+<html lang={currentLocale} dir={currentDir} class="scroll-smooth">
   <head>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-6V96N6HKEM"></script>
@@ -100,15 +119,15 @@ const hreflangLinks = isMultilangPage
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'" />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'" />
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
     </noscript>
 
     <!-- Inline Critical Above-The-Fold CSS (0ms FCP, 0.00 CLS) -->
     <style is:inline>
-      body { margin: 0; font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      body { margin: 0; font-family: 'Plus Jakarta Sans', 'Cairo', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
       .calculator-container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
       .result-display { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); }
       .dark .result-display { background: linear-gradient(135deg, #141414 0%, #1e293b 100%); }
@@ -116,7 +135,7 @@ const hreflangLinks = isMultilangPage
 
     <!-- SEO Meta Tags -->
     <title>{fullTitle}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={pageDescription} />
     <link rel="canonical" href={finalCanonical} />
     <link rel="sitemap" href="/sitemap.xml" />
     {noindex ? (
@@ -130,12 +149,22 @@ const hreflangLinks = isMultilangPage
       <link rel="alternate" hreflang={alternate.lang} href={alternate.href} />
     ))}
 
+    <script is:inline>
+      const currentLocale = document.documentElement.lang || 'en';
+      import(`/src/i18n/locales/${currentLocale}.json`).then((translations) => {
+        window.__translations = {
+          [currentLocale]: translations.default || translations
+        };
+      }).catch(() => {});
+    </script>
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={finalCanonical} />
     <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={pageDescription} />
     <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content={ogLocale} />
     <meta property="og:image" content={socialImage} />
     <meta property="og:image:alt" content={fullTitle} />
     <meta property="og:image:width" content="1200" />
@@ -287,7 +316,7 @@ const hreflangLinks = isMultilangPage
 
           // Native Locale Management (Independent from Currency)
           let savedLocale = (localStorage.getItem('fac_locale') || '').toLowerCase();
-          const pathMatch = window.location.pathname.match(/^\/(es|fr|hi)(\/|$)/i);
+          const pathMatch = window.location.pathname.match(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi)(\/|$)/i);
           if (pathMatch) {
             savedLocale = pathMatch[1].toLowerCase();
             localStorage.setItem('fac_locale', savedLocale);
@@ -311,14 +340,14 @@ const hreflangLinks = isMultilangPage
 
             // Navigate to the equivalent localized page cleanly, preserving query params
             const currentPath = window.location.pathname;
-            const cleanPath = currentPath.replace(/^\/(es|fr|hi)(\/|$)/i, '/') || '/';
+            const cleanPath = currentPath.replace(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi)(\/|$)/i, '/') || '/';
             let targetPath = '';
             if (target === 'en') {
               targetPath = cleanPath;
             } else {
               targetPath = `/${target}${cleanPath === '/' ? '/' : cleanPath}`;
             }
-            if (!targetPath.endsWith('/')) targetPath += '/';
+            if (!targetPath.endsWith('/') && !targetPath.includes('.')) targetPath += '/';
             window.location.href = targetPath + window.location.search;
           };
         } catch (_) {}
@@ -337,7 +366,7 @@ const hreflangLinks = isMultilangPage
     )}
   </head>
 
-  <body class="min-h-screen bg-canvas text-ink antialiased selection:bg-link-soft selection:text-link-deep dark:selection:bg-link-deep dark:selection:text-link-soft flex flex-col transition-colors duration-200">
+  <body class={`min-h-screen bg-canvas text-ink antialiased selection:bg-link-soft selection:text-link-deep dark:selection:bg-link-deep dark:selection:text-link-soft flex flex-col transition-colors duration-200 ${currentDir === 'rtl' ? 'rtl-layout' : ''}`}>
     <Header />
 
     <main class="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 pb-2 md:pt-10 md:pb-4">
@@ -347,6 +376,9 @@ const hreflangLinks = isMultilangPage
     <Footer />
     <ConsentBanner />
     <Toast />
+    <LanguageCountryModal />
+    <LocaleDetectionToast />
+    <LocalizedCalculatorBridge locale={currentLocale as any} />
 
     <!-- Service Worker Registration for Instant PWA & Offline Access -->
     <script is:inline>

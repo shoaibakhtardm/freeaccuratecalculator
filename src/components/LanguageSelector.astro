@@ -1,5 +1,7 @@
 ---
 // src/components/LanguageSelector.astro
+import { ALL_SUPPORTED_LOCALES, LOCALES, type SupportedLocale } from '../i18n/config';
+
 export interface Props {
   className?: string;
   selectId?: string;
@@ -10,14 +12,15 @@ const { className = '', selectId = 'language-select' } = Astro.props;
 // Current locale resolution
 const currentLocale = (Astro.currentLocale || 'en').toLowerCase();
 
-// Language options with flag emoji, native labels, and uppercase codes
-const languages = [
-  { code: 'en', flag: '🇺🇸', name: 'English', short: 'EN' },
-  { code: 'hi', flag: '🇮🇳', name: 'हिन्दी', short: 'HI' },
-  { code: 'es', flag: '🇪🇸', name: 'Español', short: 'ES' },
-  { code: 'fr', flag: '🇫🇷', name: 'Français', short: 'FR' },
-  { code: 'de', flag: '🇩🇪', name: 'Deutsch', short: 'DE' },
-];
+// Core languages formatted for the dropdown
+const languages = ALL_SUPPORTED_LOCALES.map((code) => ({
+  code,
+  flag: LOCALES[code].flag,
+  name: LOCALES[code].nativeName,
+  englishName: LOCALES[code].name,
+  short: LOCALES[code].short,
+  dir: LOCALES[code].dir,
+}));
 
 const activeLang = languages.find((l) => l.code === currentLocale) || languages[0];
 ---
@@ -46,7 +49,7 @@ const activeLang = languages.find((l) => l.code === currentLocale) || languages[
         {activeLang.flag}
       </span>
 
-      <!-- Active Language: Always Full Name (e.g., English, हिन्दी, etc.) -->
+      <!-- Active Language: Full Name -->
       <span class="fac-active-name font-semibold text-xs text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
         {activeLang.name}
       </span>
@@ -70,12 +73,13 @@ const activeLang = languages.find((l) => l.code === currentLocale) || languages[
 
   <!-- Animated Dropdown Menu Panel -->
   <div
-    class="fac-lang-dropdown absolute right-0 top-full mt-2 w-56 rounded-2xl border border-gray-200/90 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-xl shadow-gray-900/10 dark:shadow-black/50 p-1.5 z-50 transition-all duration-200 ease-out origin-top-right transform opacity-0 scale-95 -translate-y-1 pointer-events-none invisible"
+    class="fac-lang-dropdown absolute right-0 top-full mt-2 w-64 max-h-[80vh] overflow-y-auto rounded-2xl border border-gray-200/90 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-xl shadow-gray-900/10 dark:shadow-black/50 p-1.5 z-50 transition-all duration-200 ease-out origin-top-right transform opacity-0 scale-95 -translate-y-1 pointer-events-none invisible"
     role="listbox"
     aria-label="Languages"
   >
-    <div class="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 border-b border-gray-100 dark:border-gray-800/80 mb-1">
-      Select Language
+    <div class="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-gray-400 dark:text-gray-500 border-b border-gray-100 dark:border-gray-800/80 mb-1 flex items-center justify-between">
+      <span>Select Language</span>
+      <span>10 Global + RTL</span>
     </div>
 
     {languages.map((lang) => {
@@ -86,22 +90,41 @@ const activeLang = languages.find((l) => l.code === currentLocale) || languages[
           data-code={lang.code}
           role="option"
           aria-selected={isCurrent ? 'true' : 'false'}
-          class={`fac-lang-opt flex items-center justify-between w-full px-2.5 py-2 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer ${
+          class={`fac-lang-opt flex items-center justify-between w-full px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all duration-150 cursor-pointer ${
             isCurrent
-              ? 'bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 font-bold'
-              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800/80 hover:text-blue-600 dark:hover:text-blue-400'
+              ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 font-bold'
+              : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800/80 hover:text-indigo-600 dark:hover:text-indigo-400'
           }`}
         >
-          <span class="flex items-center gap-2">
-            <span class="text-sm select-none">{lang.flag}</span>
-            <span>{lang.name}</span>
+          <span class="flex items-center gap-2 truncate">
+            <span class="text-sm select-none shrink-0">{lang.flag}</span>
+            <span class="truncate">{lang.name}</span>
+            {lang.dir === 'rtl' && (
+              <span class="text-[9px] font-bold uppercase px-1 py-0.2 bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 rounded shrink-0">
+                RTL
+              </span>
+            )}
           </span>
-          <span class="font-mono text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+          <span class="font-mono text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 shrink-0 ml-1">
             {lang.short}
           </span>
         </button>
       );
     })}
+
+    <!-- All Languages & Regions Modal Trigger -->
+    <div class="pt-1 mt-1 border-t border-gray-100 dark:border-gray-800/80">
+      <button
+        type="button"
+        class="fac-open-all-modal flex items-center justify-center gap-1.5 w-full py-2 px-2.5 rounded-xl text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition-colors cursor-pointer"
+      >
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <span>Search All Languages & Regions...</span>
+      </button>
+    </div>
   </div>
 
   <!-- Hidden native select for automated test compatibility -->
@@ -122,7 +145,7 @@ const activeLang = languages.find((l) => l.code === currentLocale) || languages[
     // Detect currently active locale
     function getActiveLocale() {
       const path = window.location.pathname.toLowerCase();
-      const match = path.match(/^\/(es|fr|de|hi)(\/|$)/);
+      const match = path.match(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi)(\/|$)/);
       if (match) return match[1];
       return localStorage.getItem('fac_locale') || 'en';
     }
@@ -130,10 +153,16 @@ const activeLang = languages.find((l) => l.code === currentLocale) || languages[
     const currentActive = getActiveLocale();
     const langMeta = {
       en: { flag: '🇺🇸', name: 'English' },
-      hi: { flag: '🇮🇳', name: 'हिन्दी' },
-      es: { flag: '🇪🇸', name: 'Español' },
       fr: { flag: '🇫🇷', name: 'Français' },
       de: { flag: '🇩🇪', name: 'Deutsch' },
+      es: { flag: '🇪🇸', name: 'Español' },
+      ar: { flag: '🇸🇦', name: 'العربية' },
+      nl: { flag: '🇳🇱', name: 'Nederlands' },
+      pt: { flag: '🇵🇹', name: 'Português' },
+      it: { flag: '🇮🇹', name: 'Italiano' },
+      ru: { flag: '🇷🇺', name: 'Русский' },
+      ja: { flag: '🇯🇵', name: '日本語' },
+      hi: { flag: '🇮🇳', name: 'हिन्दी' },
     };
 
     wrappers.forEach((wrapper) => {
@@ -142,15 +171,14 @@ const activeLang = languages.find((l) => l.code === currentLocale) || languages[
       const chevron = wrapper.querySelector('.fac-chevron');
       const activeFlagSpan = wrapper.querySelector('.fac-active-flag');
       const activeNameSpan = wrapper.querySelector('.fac-active-name');
-      const activeShortSpan = wrapper.querySelector('.fac-active-short');
       const hiddenSelect = wrapper.querySelector('.fac-language-select');
       const options = wrapper.querySelectorAll('.fac-lang-opt');
+      const openModalBtn = wrapper.querySelector('.fac-open-all-modal');
 
       // Sync active language flag & name in button
       if (langMeta[currentActive]) {
         if (activeFlagSpan) activeFlagSpan.textContent = langMeta[currentActive].flag;
         if (activeNameSpan) activeNameSpan.textContent = langMeta[currentActive].name;
-        if (activeShortSpan) activeShortSpan.textContent = langMeta[currentActive].short;
       }
       if (hiddenSelect) {
         hiddenSelect.value = currentActive;
@@ -192,6 +220,16 @@ const activeLang = languages.find((l) => l.code === currentLocale) || languages[
 
       btn.addEventListener('click', toggleDropdown);
 
+      if (openModalBtn) {
+        openModalBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          closeDropdown();
+          if (typeof window.facOpenLanguageModal === 'function') {
+            window.facOpenLanguageModal();
+          }
+        });
+      }
+
       // Handle language option selection
       options.forEach((opt) => {
         opt.addEventListener('click', (e) => {
@@ -205,21 +243,25 @@ const activeLang = languages.find((l) => l.code === currentLocale) || languages[
             hiddenSelect.value = targetLang;
           }
 
-          localStorage.setItem('fac_locale', targetLang);
+          try {
+            localStorage.setItem('fac_locale', targetLang);
+            localStorage.setItem('preferred_locale', targetLang);
+          } catch (_) {}
+
           if (typeof window.facSetActiveLanguage === 'function') {
             window.facSetActiveLanguage(targetLang);
-          }
-
-          const currentPath = window.location.pathname;
-          const cleanPath = currentPath.replace(/^\/(es|fr|de|hi)(\/|$)/i, '/') || '/';
-          let targetPath = '';
-          if (targetLang === 'en') {
-            targetPath = cleanPath;
           } else {
-            targetPath = `/${targetLang}${cleanPath === '/' ? '/' : cleanPath}`;
+            const currentPath = window.location.pathname;
+            const cleanPath = currentPath.replace(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi)(\/|$)/i, '/') || '/';
+            let targetPath = '';
+            if (targetLang === 'en') {
+              targetPath = cleanPath;
+            } else {
+              targetPath = `/${targetLang}${cleanPath === '/' ? '/' : cleanPath}`;
+            }
+            if (!targetPath.endsWith('/') && !targetPath.includes('.')) targetPath += '/';
+            window.location.href = targetPath + window.location.search;
           }
-          if (!targetPath.endsWith('/')) targetPath += '/';
-          window.location.href = targetPath + window.location.search;
         });
       });
     });
