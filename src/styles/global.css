@@ -291,4 +291,94 @@ body {
 :lang(ja) {
   font-family: 'Hiragino Sans', 'Meiryo', 'Yu Gothic', 'Plus Jakarta Sans', sans-serif;
   letter-spacing: 0.02em;
+}
+
+/* ==========================================================================
+   Universal 360° Revolving Neon Orbit Corner Beam & Typewriter Engine
+   ========================================================================== */
+.fac-neon-orbit-wrapper {
+  position: absolute;
+  inset: -2px;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fac-neon-orbit-beam {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 320%;
+  height: 320%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  will-change: transform;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    transparent 0deg,
+    transparent 260deg,
+    rgba(0, 243, 255, 0.2) 290deg,
+    #00f3ff 330deg,
+    #0070ff 348deg,
+    #00f3ff 360deg
+  );
+  animation: facSpinNeonCorners 4.5s linear infinite;
+  filter: drop-shadow(0 0 10px #00f3ff) drop-shadow(0 0 22px rgba(0, 243, 255, 0.85));
+}
+
+@keyframes facSpinNeonCorners {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+.fac-search-wrapper:hover .fac-neon-orbit-beam {
+  animation-duration: 3.2s;
+  filter: drop-shadow(0 0 14px #00f3ff) drop-shadow(0 0 30px rgba(0, 243, 255, 0.95));
+}
+
+.fac-search-wrapper:focus-within .fac-neon-orbit-beam {
+  animation-duration: 2.8s;
+  filter: drop-shadow(0 0 18px #00f3ff) drop-shadow(0 0 35px #00f3ff);
+}
+
+.fac-search-wrapper:focus-within {
+  box-shadow: 
+    0 0 0 1px rgba(56, 189, 248, 0.25),
+    0 8px 24px -4px rgba(56, 189, 248, 0.12),
+    0 2px 6px -1px rgba(0, 0, 0, 0.04);
+}
+
+.fac-typewriter-container {
+  mask-image: linear-gradient(90deg, transparent 0%, #000 2%, #000 98%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 2%, #000 98%, transparent 100%);
+}
+
+.fac-typewriter-text {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.5;
+}
+
+.fac-typewriter-cursor {
+  animation: facCursorBlink 0.95s ease-in-out infinite;
+  box-shadow: 0 0 6px rgba(0, 243, 255, 0.6);
+}
+
+@keyframes facCursorBlink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fac-neon-orbit-beam,
+  .fac-typewriter-cursor {
+    animation: none !important;
+    opacity: 0.9 !important;
+  }
 }

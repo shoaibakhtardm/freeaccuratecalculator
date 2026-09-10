@@ -11,7 +11,7 @@ interface Props {
 
 const {
   id = 'autocomplete-search',
-  placeholder = "Search calculators (e.g., 'sip', 'mortgage', 'emi', 'tax', 'age')...",
+  placeholder = "Search 📈 SIP Calculator...",
   categoryFilter,
   className = '',
 } = Astro.props;
@@ -24,32 +24,48 @@ const searchDataJson = JSON.stringify(SEARCHABLE_CALCULATORS);
   data-filter={categoryFilter || ''}
   data-search-id={id}
 >
-  <div class="relative flex items-center group">
-    <!-- Ambient Royal Focus Glow -->
+  <div class="fac-search-wrapper relative flex items-center group rounded-2xl sm:rounded-full transition-shadow duration-300">
+    <!-- Authentic Corner-Revolving Neon Border Beam ("corner pe ghumna") -->
+    <div class="fac-neon-orbit-wrapper absolute -inset-[2px] rounded-2xl sm:rounded-full overflow-hidden pointer-events-none" aria-hidden="true">
+      <div class="fac-neon-orbit-beam"></div>
+    </div>
+
+    <!-- Base Structural Border Track -->
     <div
-      class="absolute -inset-1 rounded-2xl sm:rounded-full bg-gradient-to-r from-blue-600/25 via-indigo-600/25 to-purple-600/25 opacity-0 group-focus-within:opacity-100 blur-md transition-all duration-300 pointer-events-none"
+      class="fac-search-track absolute inset-0 rounded-2xl sm:rounded-full border border-slate-200/90 dark:border-slate-800/90 bg-white/95 dark:bg-slate-900/95 pointer-events-none transition-colors duration-300 group-hover:border-slate-300 dark:group-hover:border-slate-700 z-10"
       aria-hidden="true"
     ></div>
 
-    <!-- Search Glass Icon -->
+    <!-- Search Glass Icon (Clean, modern slate/indigo) -->
     <svg
-      class="absolute left-4 h-4.5 w-4.5 text-slate-400 dark:text-slate-500 group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 transition-colors pointer-events-none z-10"
+      class="absolute left-4 sm:left-4.5 h-4.5 w-4.5 sm:h-5 sm:w-5 text-slate-400 dark:text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300 group-focus-within:text-blue-600 dark:group-focus-within:text-sky-400 transition-colors duration-200 pointer-events-none z-30"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
-      stroke-width="2.2"
+      stroke-width="2"
     >
       <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
     </svg>
 
-    <!-- Search Input -->
+    <!-- Beautifully Optimized Typewriter Suggestion Overlay -->
+    <div
+      class="fac-typewriter-container absolute left-11 sm:left-12 right-24 pointer-events-none overflow-hidden flex items-center h-full z-20 select-none transition-opacity duration-200"
+      aria-hidden="true"
+    >
+      <div class="flex items-center whitespace-nowrap overflow-hidden">
+        <span class="fac-typewriter-text font-semibold text-slate-700 dark:text-slate-200 text-xs sm:text-sm md:text-base tracking-tight sm:tracking-normal"></span>
+        <span class="fac-typewriter-cursor inline-block w-[2px] h-3.5 sm:h-4.5 bg-cyan-500 dark:bg-cyan-400 ml-0.5 rounded-full"></span>
+      </div>
+    </div>
+
+    <!-- Search Input (Bold & High-Contrast) -->
     <input
       id={id}
       type="search"
       autocomplete="off"
       spellcheck="false"
-      placeholder={placeholder}
-      class="fac-search-input relative z-10 w-full rounded-2xl sm:rounded-full border border-slate-200/90 dark:border-slate-800/90 bg-white/95 dark:bg-slate-900/95 py-3 sm:py-3.5 pl-11 pr-24 text-xs sm:text-sm md:text-base text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-indigo-400/10 transition-all backdrop-blur-xl"
+      placeholder=""
+      class="fac-search-input relative z-20 w-full rounded-2xl sm:rounded-full bg-transparent py-3 sm:py-3.5 pl-11 sm:pl-12 pr-24 text-xs sm:text-sm md:text-base font-bold text-slate-900 dark:text-white placeholder:font-medium placeholder-slate-400 dark:placeholder-slate-400 shadow-sm outline-none border-none ring-0 transition-all tracking-tight sm:tracking-normal"
       aria-label="Search all calculators"
       aria-autocomplete="list"
       aria-controls={`${id}-dropdown`}
@@ -60,14 +76,15 @@ const searchDataJson = JSON.stringify(SEARCHABLE_CALCULATORS);
     <div class="absolute right-3.5 top-1/2 -translate-y-1/2 z-20 flex items-center gap-1.5">
       <button
         type="button"
-        class="fac-clear-btn hidden p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+        class="fac-clear-btn hidden p-1.5 rounded-full text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 hover:bg-cyan-500/10 dark:hover:bg-cyan-500/20 transition-all cursor-pointer focus:outline-none"
         aria-label="Clear search"
+        title="Clear search"
       >
-        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
       </button>
-      <kbd class="hidden sm:inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-2xs pointer-events-none">
+      <kbd class="fac-kbd-shortcut hidden sm:inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-md shadow-2xs pointer-events-none transition-opacity">
         Ctrl K
       </kbd>
     </div>
@@ -130,6 +147,7 @@ const searchDataJson = JSON.stringify(SEARCHABLE_CALCULATORS);
       const resultsCount = container.querySelector('.fac-results-count');
       const noResults = container.querySelector('.fac-no-results');
       const clearBtn = container.querySelector('.fac-clear-btn');
+      const kbdShortcut = container.querySelector('.fac-kbd-shortcut');
       const dataEl = container.querySelector('.fac-search-data');
       const categoryScope = (container.dataset.filter || '').toLowerCase();
 
@@ -196,10 +214,12 @@ const searchDataJson = JSON.stringify(SEARCHABLE_CALCULATORS);
         if (!q) {
           closePanel();
           if (clearBtn) clearBtn.classList.add('hidden');
+          if (kbdShortcut) kbdShortcut.classList.remove('hidden');
           return;
         }
 
         if (clearBtn) clearBtn.classList.remove('hidden');
+        if (kbdShortcut) kbdShortcut.classList.add('hidden');
 
         // Score & rank matches
         const scored = [];
@@ -343,8 +363,128 @@ const searchDataJson = JSON.stringify(SEARCHABLE_CALCULATORS);
           input.focus();
           closePanel();
           clearBtn.classList.add('hidden');
+          if (kbdShortcut) kbdShortcut.classList.remove('hidden');
         });
       }
+
+      // Masterpiece Typewriter Animation Engine (Always Random & Natural Cadence)
+      const DIVERSE_PROMPTS = [
+        'Search 📈 SIP Calculator...',
+        'Search 🎂 Age Calculator...',
+        'Search 🏦 EMI Calculator...',
+        'Search 🩺 BMI Calculator...',
+        'Search 🏠 Mortgage Calculator...',
+        'Search 📑 Income Tax Calculator...',
+        'Search 🍎 Calorie & TDEE...',
+        'Search 📐 Percentage Calculator...',
+        'Search 🔬 Scientific Calculator...',
+        'Search 🚗 Auto Loan Calculator...',
+        'Search 💰 Lumpsum Calculator...',
+        'Search ⏱️ Time Calculator...',
+        'Search 📊 Compound Interest...',
+        'Search 🏢 Rental Yield...',
+        'Search 🔄 Unit Converter...',
+        'Search 🛡️ Term Life Insurance...',
+        'Search ⚖️ Child Support...',
+        'Search 💼 Break-Even Analysis...',
+        'Search 🎓 GPA Calculator...',
+        'Search 📅 Date Difference...',
+        'Search 🪙 PPF & EPF...',
+        'Search 🚀 Step-Up SIP...',
+        'Search 🏗️ Square Footage...',
+        'Search 🍕 Recipe Scaler...',
+        'Search 🏃 Heart Rate Zone...',
+        'Search 🌍 Carbon Footprint...',
+        'Search 🧪 Dilution & pH...',
+        'Search 🤖 AI Token Cost...'
+      ];
+
+      // Always pick a random calculator to start with!
+      let promptIndex = Math.floor(Math.random() * DIVERSE_PROMPTS.length);
+      let charIndex = 0;
+      let isDeleting = false;
+      let typewriterTimer = null;
+
+      const typeContainer = container.querySelector('.fac-typewriter-container');
+      const typeText = container.querySelector('.fac-typewriter-text');
+
+      function getNextRandomIndex(prev) {
+        let next = prev;
+        while (next === prev) {
+          next = Math.floor(Math.random() * DIVERSE_PROMPTS.length);
+        }
+        return next;
+      }
+
+      function stepTypewriter() {
+        if (document.activeElement === input || (input.value && input.value.trim().length > 0)) {
+          if (typeContainer) typeContainer.classList.add('opacity-0');
+          return;
+        }
+
+        if (typeContainer) typeContainer.classList.remove('opacity-0');
+
+        const phrase = DIVERSE_PROMPTS[promptIndex];
+        const chars = Array.from(phrase);
+
+        let delay = 60;
+
+        if (isDeleting) {
+          charIndex--;
+          delay = 24; // Fast, satisfying backspace
+        } else {
+          charIndex++;
+          // Slight realistic human typing cadence variation
+          delay = charIndex % 3 === 0 ? 80 : 55;
+        }
+
+        if (typeText) {
+          typeText.textContent = chars.slice(0, charIndex).join('');
+        }
+
+        if (!isDeleting && charIndex === chars.length) {
+          // Pause when completely typed so user can easily read
+          delay = 2100;
+          isDeleting = true;
+        } else if (isDeleting && charIndex === 0) {
+          // Finished deleting, pick NEXT completely random calculator!
+          isDeleting = false;
+          promptIndex = getNextRandomIndex(promptIndex);
+          delay = 280;
+        }
+
+        typewriterTimer = setTimeout(stepTypewriter, delay);
+      }
+
+      // Start typewriter immediately
+      typewriterTimer = setTimeout(stepTypewriter, 300);
+
+      input.addEventListener('focus', () => {
+        if (typewriterTimer) clearTimeout(typewriterTimer);
+        if (typeContainer) typeContainer.classList.add('opacity-0');
+        if (!input.value.trim()) {
+          input.placeholder = 'Search any calculator (e.g. sip, emi, age)...';
+        }
+      });
+
+      input.addEventListener('blur', () => {
+        if (!input.value.trim()) {
+          input.placeholder = '';
+          if (typeContainer) typeContainer.classList.remove('opacity-0');
+          charIndex = 0;
+          isDeleting = false;
+          if (typewriterTimer) clearTimeout(typewriterTimer);
+          typewriterTimer = setTimeout(stepTypewriter, 200);
+        }
+      });
+
+      input.addEventListener('input', () => {
+        if (input.value.trim().length > 0) {
+          if (typeContainer) typeContainer.classList.add('opacity-0');
+        } else if (document.activeElement !== input) {
+          if (typeContainer) typeContainer.classList.remove('opacity-0');
+        }
+      });
 
       // Close on outside click
       document.addEventListener('click', (e) => {
@@ -367,3 +507,141 @@ const searchDataJson = JSON.stringify(SEARCHABLE_CALCULATORS);
     document.querySelectorAll('.fac-autocomplete-container').forEach(initAutocomplete);
   })();
 </script>
+
+<style>
+  /* Remove duplicate browser native search cancel/clear button */
+  .fac-search-input::-webkit-search-cancel-button,
+  .fac-search-input::-webkit-search-decoration,
+  .fac-search-input::-webkit-search-results-button,
+  .fac-search-input::-webkit-search-results-decoration {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    display: none !important;
+  }
+
+  .fac-search-input::-ms-clear,
+  .fac-search-input::-ms-reveal {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  /* Bold Typography for Dynamic Typewriter & User Input */
+  .fac-search-input {
+    font-weight: 600 !important;
+  }
+  .fac-search-input::placeholder {
+    font-weight: 500 !important;
+    opacity: 0.92;
+  }
+
+  /* ==========================================================================
+     UI/UX Elite Standard: Overhead Neon Light + Left-to-Right Hairline Beam
+     - Overhead Neon Runner: Glides left-to-right across the top layout
+     - Hairline Beam: 1.25px delicate stream travelling Left to Right in slow-mo
+     - Top Crown Accent: Refined luminous neon reflection on the card roof
+     ========================================================================== */
+
+  /* ==========================================================================
+     UI/UX Elite Standard: 360° Neon Corner Orbit + Continuous Left-to-Right Text
+     ========================================================================== */
+
+  .fac-search-wrapper {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  /* ==========================================================================
+     Neon Color Revolving Round and Round the Corners ("corner pe ghumna")
+     ========================================================================== */
+  .fac-neon-orbit-wrapper {
+    position: absolute;
+    inset: -2.5px;
+    border-radius: inherit;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .fac-neon-orbit-beam {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 320%;
+    height: 320%;
+    transform: translate(-50%, -50%) rotate(0deg);
+    will-change: transform;
+    background: conic-gradient(
+      from 0deg at 50% 50%,
+      transparent 0deg,
+      transparent 260deg,
+      rgba(0, 243, 255, 0.2) 290deg,
+      #00f3ff 330deg,
+      #0070ff 348deg,
+      #00f3ff 360deg
+    );
+    animation: facSpinNeonCorners 4.5s linear infinite;
+    filter: drop-shadow(0 0 10px #00f3ff) drop-shadow(0 0 22px rgba(0, 243, 255, 0.85));
+  }
+
+  @keyframes facSpinNeonCorners {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+
+  .fac-search-wrapper:hover .fac-neon-orbit-beam {
+    animation-duration: 3.2s;
+    filter: drop-shadow(0 0 14px #00f3ff) drop-shadow(0 0 30px rgba(0, 243, 255, 0.95));
+  }
+
+  .fac-search-wrapper:focus-within .fac-neon-orbit-beam {
+    animation-duration: 2.8s;
+    filter: drop-shadow(0 0 18px #00f3ff) drop-shadow(0 0 35px #00f3ff);
+  }
+
+  .fac-search-wrapper:focus-within {
+    box-shadow: 
+      0 0 0 1px rgba(56, 189, 248, 0.25),
+      0 8px 24px -4px rgba(56, 189, 248, 0.12),
+      0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  }
+
+  /* ==========================================================================
+     Masterpiece Typewriter Suggestion Typography & Cursor
+     ========================================================================== */
+  .fac-typewriter-container {
+    mask-image: linear-gradient(90deg, transparent 0%, #000 2%, #000 98%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 2%, #000 98%, transparent 100%);
+  }
+
+  .fac-typewriter-text {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.5;
+  }
+
+  .fac-typewriter-cursor {
+    animation: facCursorBlink 0.95s ease-in-out infinite;
+    box-shadow: 0 0 6px rgba(0, 243, 255, 0.6);
+  }
+
+  @keyframes facCursorBlink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fac-neon-orbit-beam,
+    .fac-typewriter-cursor {
+      animation: none !important;
+      opacity: 0.9 !important;
+    }
+  }
+</style>

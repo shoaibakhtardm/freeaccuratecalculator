@@ -464,5 +464,127 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
         });
       }
     </script>
+    <!-- Universal 360° Search Bar Typewriter Engine (All Pages & Directories) -->
+    <script is:inline>
+      (function () {
+        const UNIVERSAL_PROMPTS = [
+          "Search 📈 SIP Calculator...",
+          "Search 🏠 Mortgage Calculator...",
+          "Search 🏦 EMI Calculator...",
+          "Search 🎂 Age Calculator...",
+          "Search 📑 Income Tax Calculator...",
+          "Search 🩺 BMI Calculator...",
+          "Search 📐 Percentage Calculator...",
+          "Search ⏳ Compound Interest...",
+          "Search 🍎 Calorie & TDEE...",
+          "Search 🚗 Auto Loan Calculator...",
+          "Search ⏱️ Time Calculator...",
+          "Search 📊 Amortization...",
+          "Search 🎓 GPA Calculator...",
+          "Search ⚖️ Body Fat %...",
+          "Search 🔄 Unit Converter...",
+          "Search 🛡️ Term Life Insurance...",
+          "Search 🚀 Step-Up SIP...",
+          "Search 💰 Lumpsum Calculator...",
+          "Search 🏢 Rental Yield...",
+          "Search 💼 Break-Even...",
+          "Search 🎯 Profit Margin...",
+          "Search 🔬 Scientific Calc...",
+          "Search 📅 Date Difference...",
+          "Search ⚖️ Child Support...",
+          "Search 🏗️ Square Footage...",
+          "Search 🏷️ Sales Tax Calculator...",
+          "Search ⚡ Speed & Pace Calc...",
+          "Search 💡 ROI & Return Calc..."
+        ];
+
+        function initSearchTypewriter(wrapper) {
+          if (wrapper.closest('.fac-autocomplete-container') || wrapper.__facTypewriterInit) return;
+          wrapper.__facTypewriterInit = true;
+
+          const textEl = wrapper.querySelector('.fac-typewriter-text');
+          const inputEl = wrapper.querySelector('input');
+          const container = wrapper.querySelector('.fac-typewriter-container');
+          if (!textEl || !inputEl) return;
+
+          function getRandomIndex(excludeIdx) {
+            let next;
+            do {
+              next = Math.floor(Math.random() * UNIVERSAL_PROMPTS.length);
+            } while (next === excludeIdx && UNIVERSAL_PROMPTS.length > 1);
+            return next;
+          }
+
+          let promptIndex = getRandomIndex(-1);
+          let charIndex = 0;
+          let isDeleting = false;
+          let typewriterTimer = null;
+
+          function stepTypewriter() {
+            if (document.activeElement === inputEl || inputEl.value.trim().length > 0) {
+              return;
+            }
+
+            const currentPrompt = UNIVERSAL_PROMPTS[promptIndex];
+
+            if (!isDeleting) {
+              charIndex++;
+              textEl.textContent = currentPrompt.substring(0, charIndex);
+            } else {
+              charIndex--;
+              textEl.textContent = currentPrompt.substring(0, charIndex);
+            }
+
+            let delay = isDeleting ? 24 : Math.floor(55 + Math.random() * 25);
+
+            if (!isDeleting && charIndex === currentPrompt.length) {
+              delay = 2100;
+              isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+              isDeleting = false;
+              promptIndex = getRandomIndex(promptIndex);
+              delay = 280;
+            }
+
+            typewriterTimer = setTimeout(stepTypewriter, delay);
+          }
+
+          typewriterTimer = setTimeout(stepTypewriter, 300);
+
+          inputEl.addEventListener('focus', function () {
+            if (typewriterTimer) clearTimeout(typewriterTimer);
+            if (container) container.classList.add('opacity-0');
+          });
+
+          inputEl.addEventListener('blur', function () {
+            if (!inputEl.value.trim()) {
+              if (container) container.classList.remove('opacity-0');
+              charIndex = 0;
+              isDeleting = false;
+              if (typewriterTimer) clearTimeout(typewriterTimer);
+              typewriterTimer = setTimeout(stepTypewriter, 200);
+            }
+          });
+
+          inputEl.addEventListener('input', function () {
+            if (inputEl.value.trim().length > 0) {
+              if (container) container.classList.add('opacity-0');
+            } else if (document.activeElement !== inputEl) {
+              if (container) container.classList.remove('opacity-0');
+            }
+          });
+        }
+
+        function initAllTypewriters() {
+          document.querySelectorAll('.fac-search-wrapper').forEach(initSearchTypewriter);
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initAllTypewriters);
+        } else {
+          initAllTypewriters();
+        }
+      })();
+    </script>
   </body>
 </html>

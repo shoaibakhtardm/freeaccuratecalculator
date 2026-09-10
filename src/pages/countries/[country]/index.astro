@@ -72,15 +72,38 @@ const schema = {
 
         <!-- Search in Country -->
         <div class="pt-2 max-w-md">
-          <div class="relative flex items-center">
-            <svg class="absolute left-3.5 h-4 w-4 text-mute pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          <div class="fac-search-wrapper relative flex items-center group rounded-full transition-shadow duration-300">
+            <!-- Authentic Corner-Revolving Neon Border Beam -->
+            <div class="fac-neon-orbit-wrapper rounded-full pointer-events-none" aria-hidden="true">
+              <div class="fac-neon-orbit-beam"></div>
+            </div>
+
+            <!-- Base Structural Border Track -->
+            <div
+              class="fac-search-track absolute inset-0 rounded-full border border-slate-200/90 dark:border-slate-800/90 bg-white/95 dark:bg-slate-900/95 pointer-events-none transition-colors duration-300 group-hover:border-slate-300 dark:group-hover:border-slate-700 z-10"
+              aria-hidden="true"
+            ></div>
+
+            <svg class="absolute left-3.5 sm:left-4 h-4.5 w-4.5 text-slate-400 dark:text-slate-400 pointer-events-none group-focus-within:text-blue-600 dark:group-focus-within:text-sky-400 transition-colors z-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
+
+            <!-- Beautifully Optimized Typewriter Suggestion Overlay -->
+            <div
+              class="fac-typewriter-container absolute left-10 sm:left-11 right-6 pointer-events-none overflow-hidden flex items-center h-full z-20 select-none transition-opacity duration-200"
+              aria-hidden="true"
+            >
+              <div class="flex items-center whitespace-nowrap overflow-hidden">
+                <span class="fac-typewriter-text font-semibold text-slate-700 dark:text-slate-200 text-xs sm:text-sm tracking-tight sm:tracking-normal"></span>
+                <span class="fac-typewriter-cursor inline-block w-[2px] h-3.5 sm:h-4 bg-cyan-500 dark:bg-cyan-400 ml-0.5 rounded-full"></span>
+              </div>
+            </div>
+
             <input
               id="calc-search"
               type="search"
-              placeholder={`Search ${country.name} tools (e.g. tax, mortgage, loan)...`}
-              class="w-full min-h-[44px] rounded-[100px] border border-hairline bg-canvas py-2.5 pl-10 pr-4 text-base sm:text-sm text-ink placeholder-faint shadow-whisper focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-all"
+              placeholder=""
+              class="fac-search-input relative z-20 w-full min-h-[44px] rounded-full bg-transparent py-2.5 pl-10 sm:pl-11 pr-4 text-xs sm:text-sm font-bold text-slate-900 dark:text-white placeholder:font-medium placeholder-slate-400 dark:placeholder-slate-400 shadow-2xs outline-none border-none ring-0 transition-all tracking-tight sm:tracking-normal"
             />
           </div>
         </div>
