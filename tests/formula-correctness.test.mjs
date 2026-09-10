@@ -179,3 +179,34 @@ test('Calculator Master Registry Completeness', async (t) => {
     });
   }
 });
+
+import { preciseAdd, preciseSubtract, preciseMultiply, preciseDivide, roundToPrecision } from '../src/utils/math.ts';
+
+test('Precise Decimal Math Utility — Eliminating Floating-Point Drift', async (t) => {
+  await t.test('preciseAdd: 0.1 + 0.2 equals exactly 0.3', () => {
+    assert.equal(preciseAdd(0.1, 0.2), 0.3);
+    assert.equal(preciseAdd(0.1, 0.2, 1), 0.3);
+    assert.equal(preciseAdd(10.555, 4.444, 2), 15.0);
+  });
+
+  await t.test('preciseSubtract: 0.3 - 0.1 equals exactly 0.2', () => {
+    assert.equal(preciseSubtract(0.3, 0.1), 0.2);
+    assert.equal(preciseSubtract(1.0, 0.9), 0.1);
+  });
+
+  await t.test('preciseMultiply: 0.1 * 0.2 equals exactly 0.02', () => {
+    assert.equal(preciseMultiply(0.1, 0.2), 0.02);
+    assert.equal(preciseMultiply(35.5, 1.25, 2), 44.38);
+  });
+
+  await t.test('preciseDivide: safely divides and handles division by zero', () => {
+    assert.equal(preciseDivide(10, 3, 2), 3.33);
+    assert.equal(preciseDivide(10, 0), 0);
+  });
+
+  await t.test('roundToPrecision: rounds numbers with EPSILON protection', () => {
+    assert.equal(roundToPrecision(1.005, 2), 1.01);
+    assert.equal(roundToPrecision(35.494, 2), 35.49);
+  });
+});
+
