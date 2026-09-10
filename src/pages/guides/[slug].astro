@@ -416,10 +416,10 @@ const schemas = faqSchema ? [articleSchema, faqSchema] : [articleSchema];
 
             <div class="mt-5 pt-4 border-t border-hairline">
               <a
-                href="/finance/"
-                class="block text-center text-xs font-medium text-link hover:underline"
+                href={`/${post.data.category}/`}
+                class="block text-center text-xs font-medium text-link hover:underline capitalize"
               >
-                Browse All Finance Tools →
+                Browse All {post.data.category.replace('-', ' ')} Tools →
               </a>
             </div>
           </div>

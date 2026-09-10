@@ -27,6 +27,7 @@ interface Props {
   noindex?: boolean;
   lang?: string;
   locale?: SupportedLocale;
+  bingVerification?: string;
 }
 
 const siteOrigin = 'https://freeaccuratecalculator.com';
@@ -43,7 +44,10 @@ const {
   noindex = false,
   lang,
   locale,
+  bingVerification,
 } = Astro.props;
+
+const bingVerificationCode = bingVerification || (import.meta.env.PUBLIC_BING_SITE_VERIFICATION as string | undefined);
 
 const pageDescription = metaDescription || description || 'Free, accurate online calculators for finance, health, math, and everyday calculations.';
 const socialImage = image.startsWith('http') ? image : `${siteOrigin}${image.startsWith('/') ? image : `/${image}`}`;
@@ -57,6 +61,51 @@ const currentLocale = (locale || lang || Astro.currentLocale || DEFAULT_LOCALE) 
 const currentDir = languages[currentLocale as SupportedLanguage]?.dir || 'ltr';
 const siteName = 'Free Accurate Calculator';
 const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
+
+// Base Schema.org entities for Bing Copilot entity grounding
+const baseSchemas: Array<Record<string, any>> = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${siteOrigin}/#organization`,
+    name: siteName,
+    url: `${siteOrigin}/`,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${siteOrigin}/favicon.svg`,
+      width: 512,
+      height: 512,
+    },
+    description: 'Free, accurate, and privacy-focused online calculators for finance, health, math, and everyday decisions.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${siteOrigin}/#website`,
+    name: siteName,
+    url: `${siteOrigin}/`,
+    publisher: {
+      '@id': `${siteOrigin}/#organization`,
+    },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${siteOrigin}/?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+    inLanguage: currentLocale,
+  },
+];
+
+const customSchemas = jsonLd
+  ? Array.isArray(jsonLd)
+    ? jsonLd
+    : [jsonLd]
+  : [];
+
+const renderedSchemas = [...baseSchemas, ...customSchemas];
 
 // Compute technical SEO hreflangs (guaranteed 200 OK targets, zero 404 hreflangs, includes hi & x-default)
 const hreflangLinks = getAlternateHreflangLinks(pathname, siteOrigin);
@@ -81,13 +130,13 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
 <html lang={Astro.currentLocale || currentLocale} dir={languages[(Astro.currentLocale || currentLocale) as SupportedLanguage]?.dir || currentDir || 'ltr'} class="scroll-smooth">
   <head>
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FHX771KJTN"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N96Q2B7GJ7"></script>
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'G-FHX771KJTN');
+      gtag('config', 'G-N96Q2B7GJ7');
 
       // Early embed mode detection to prevent CLS
       try {
@@ -203,9 +252,18 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
     <link rel="sitemap" href="/sitemap.xml" />
     <link rel="alternate" type="application/rss+xml" title="Free Accurate Calculator RSS Feed" href="/rss.xml" />
     {noindex ? (
-      <meta name="robots" content="noindex, nofollow" />
+      <>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta name="bingbot" content="noindex, nofollow" />
+      </>
     ) : (
-      <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+      <>
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+        <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+      </>
+    )}
+    {bingVerificationCode && (
+      <meta name="msvalidate.01" content={bingVerificationCode} />
     )}
 
     <!-- Multilingual Hreflang SEO -->
@@ -426,19 +484,15 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
       })();
     </script>
 
-    <!-- Schema.org Structured Data -->
-    {jsonLd && (
-      Array.isArray(jsonLd) ? (
-        jsonLd.map((schema) => (
-          <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-        ))
-      ) : (
-        <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-      )
-    )}
+    <!-- Schema.org Structured Data for Bing Grounding & SEO -->
+    {renderedSchemas.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
   </head>
 
   <body class={`min-h-screen bg-canvas text-ink antialiased selection:bg-link-soft selection:text-link-deep dark:selection:bg-link-deep dark:selection:text-link-soft flex flex-col transition-colors duration-200 ${currentDir === 'rtl' ? 'rtl-layout' : ''}`}>
+
+
     <Header />
 
     <main class="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 pb-2 md:pt-10 md:pb-4">

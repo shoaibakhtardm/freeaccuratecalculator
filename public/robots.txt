@@ -1,7 +1,23 @@
+User-agent: Bingbot
+Allow: /
+Disallow: /dev-preview/
+Disallow: /api/
+
+User-agent: msnbot
+Allow: /
+Disallow: /dev-preview/
+Disallow: /api/
+
+User-agent: BingPreview
+Allow: /
+Disallow: /dev-preview/
+Disallow: /api/
+
 User-agent: *
 Allow: /
 Disallow: /dev-preview/
 Disallow: /api/
 
 Sitemap: https://freeaccuratecalculator.com/sitemap.xml
+
 

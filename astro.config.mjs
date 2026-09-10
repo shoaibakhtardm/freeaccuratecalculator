@@ -27,6 +27,10 @@ export default defineConfig({
       filter: (page) =>
         !page.includes('/dev-preview') &&
         !page.includes('/api/') &&
+        !page.includes('/blog/') &&
+        !page.endsWith('/blog') &&
+        !page.includes('/calculators/') &&
+        !page.includes('/calculator/') &&
         !/\/(404|500)(\/|$)/.test(page) &&
         !page.endsWith('/sitemap.xml'),
       serialize(item) {

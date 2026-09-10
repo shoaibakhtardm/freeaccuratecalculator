@@ -86,8 +86,15 @@ if (rawXmlContent) {
     const parsedUrl = new URL(fullUrl);
     const pathname = parsedUrl.pathname;
 
-    // Filter out legacy /calculators/ and /calculator/ routes to eliminate 404s
-    if (pathname.includes('/calculators/') || pathname.includes('/calculator/')) {
+    // Filter out legacy /calculators/, /calculator/, /blog/, and redirected routes to eliminate crawl waste
+    if (
+      pathname.includes('/calculators/') ||
+      pathname.includes('/calculator/') ||
+      pathname.startsWith('/blog/') ||
+      pathname === '/blog' ||
+      pathname === '/terms' ||
+      pathname === '/privacy'
+    ) {
       purgedLegacyCount++;
       continue;
     }
@@ -109,8 +116,16 @@ if (rawXmlContent) {
       continue;
     }
 
-    // Reconstruct cleaned and formatted <url> block
-    const cleanedBlock = blockContent
+    // Reconstruct cleaned and formatted <url> block with fresh lastmod timestamp
+    const nowIso = new Date().toISOString();
+    let updatedBlock = blockContent;
+    if (updatedBlock.includes('<lastmod>')) {
+      updatedBlock = updatedBlock.replace(/<lastmod>[^<]+<\/lastmod>/g, `<lastmod>${nowIso}</lastmod>`);
+    } else {
+      updatedBlock = `<lastmod>${nowIso}</lastmod>` + updatedBlock;
+    }
+
+    const cleanedBlock = updatedBlock
       .trim()
       .split('\n')
       .map((line) => '    ' + line.trim())
@@ -128,6 +143,8 @@ if (rawXmlContent) {
       route.includes('/api/') ||
       route.includes('/admin/') ||
       route.includes('/draft/') ||
+      route.startsWith('/blog/') ||
+      route === '/blog' ||
       /\/(404|500)(\/|$)/.test(route)
     ) {
       continue;
