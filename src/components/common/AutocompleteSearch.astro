@@ -1,0 +1,369 @@
+---
+// src/components/common/AutocompleteSearch.astro
+import { SEARCHABLE_CALCULATORS } from '../../data/searchDatabase';
+
+interface Props {
+  id?: string;
+  placeholder?: string;
+  categoryFilter?: string;
+  className?: string;
+}
+
+const {
+  id = 'autocomplete-search',
+  placeholder = "Search calculators (e.g., 'sip', 'mortgage', 'emi', 'tax', 'age')...",
+  categoryFilter,
+  className = '',
+} = Astro.props;
+
+const searchDataJson = JSON.stringify(SEARCHABLE_CALCULATORS);
+---
+
+<div
+  class={`fac-autocomplete-container relative max-w-xl mx-auto w-full ${className}`}
+  data-filter={categoryFilter || ''}
+  data-search-id={id}
+>
+  <div class="relative flex items-center group">
+    <!-- Ambient Royal Focus Glow -->
+    <div
+      class="absolute -inset-1 rounded-2xl sm:rounded-full bg-gradient-to-r from-blue-600/25 via-indigo-600/25 to-purple-600/25 opacity-0 group-focus-within:opacity-100 blur-md transition-all duration-300 pointer-events-none"
+      aria-hidden="true"
+    ></div>
+
+    <!-- Search Glass Icon -->
+    <svg
+      class="absolute left-4 h-4.5 w-4.5 text-slate-400 dark:text-slate-500 group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 transition-colors pointer-events-none z-10"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      stroke-width="2.2"
+    >
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+    </svg>
+
+    <!-- Search Input -->
+    <input
+      id={id}
+      type="search"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder={placeholder}
+      class="fac-search-input relative z-10 w-full rounded-2xl sm:rounded-full border border-slate-200/90 dark:border-slate-800/90 bg-white/95 dark:bg-slate-900/95 py-3 sm:py-3.5 pl-11 pr-24 text-xs sm:text-sm md:text-base text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-indigo-400/10 transition-all backdrop-blur-xl"
+      aria-label="Search all calculators"
+      aria-autocomplete="list"
+      aria-controls={`${id}-dropdown`}
+      aria-expanded="false"
+    />
+
+    <!-- Shortcut Chip (Desktop) & Clear Button -->
+    <div class="absolute right-3.5 top-1/2 -translate-y-1/2 z-20 flex items-center gap-1.5">
+      <button
+        type="button"
+        class="fac-clear-btn hidden p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+        aria-label="Clear search"
+      >
+        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      <kbd class="hidden sm:inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-2xs pointer-events-none">
+        Ctrl K
+      </kbd>
+    </div>
+  </div>
+
+  <!-- FLOATING SUGGESTIONS POPUP PANEL -->
+  <div
+    id={`${id}-dropdown`}
+    class="fac-suggestions-panel absolute left-0 right-0 top-full mt-2.5 z-50 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl shadow-2xl shadow-slate-900/15 dark:shadow-black/50 overflow-hidden text-left transition-all duration-200 origin-top opacity-0 scale-95 pointer-events-none invisible"
+    role="listbox"
+  >
+    <!-- Dynamic Results Header -->
+    <div class="fac-results-header px-4 py-2.5 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+      <span class="fac-results-count">Suggested Calculators</span>
+      <span class="text-[10px] lowercase font-normal hidden sm:inline">press enter ↵ to open</span>
+    </div>
+
+    <!-- Scrollable Results Container -->
+    <div class="fac-results-list max-h-[300px] sm:max-h-[360px] overflow-y-auto p-1.5 space-y-1">
+      <!-- Injected dynamically by client JS -->
+    </div>
+
+    <!-- Empty State -->
+    <div class="fac-no-results hidden p-6 text-center space-y-1.5">
+      <div class="text-2xl">🔍</div>
+      <p class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200">
+        No calculators found
+      </p>
+      <p class="text-[11px] text-slate-400 dark:text-slate-500">
+        Try searching for "sip", "emi", "tax", "percentage", or "mortgage"
+      </p>
+    </div>
+
+    <!-- Footer Quick Help -->
+    <div class="px-4 py-2 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/50 flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500">
+      <span class="flex items-center gap-1">
+        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Verified Calculator Links
+      </span>
+      <div class="flex items-center gap-2">
+        <span class="hidden sm:inline"><kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800">↑</kbd> <kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800">↓</kbd> navigate</span>
+        <span><kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800">esc</kbd> close</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inlined JSON Data Store -->
+  <script type="application/json" class="fac-search-data" set:html={searchDataJson}></script>
+</div>
+
+<!-- Autocomplete Client-side Engine -->
+<script is:inline>
+  (function () {
+    function initAutocomplete(container) {
+      if (!container || container.dataset.initialized === 'true') return;
+      container.dataset.initialized = 'true';
+
+      const input = container.querySelector('.fac-search-input');
+      const panel = container.querySelector('.fac-suggestions-panel');
+      const resultsList = container.querySelector('.fac-results-list');
+      const resultsCount = container.querySelector('.fac-results-count');
+      const noResults = container.querySelector('.fac-no-results');
+      const clearBtn = container.querySelector('.fac-clear-btn');
+      const dataEl = container.querySelector('.fac-search-data');
+      const categoryScope = (container.dataset.filter || '').toLowerCase();
+
+      if (!input || !panel || !resultsList || !dataEl) return;
+
+      let dataset = [];
+      try {
+        dataset = JSON.parse(dataEl.textContent || '[]');
+      } catch (_) {
+        dataset = [];
+      }
+
+      let activeIndex = -1;
+      let currentMatches = [];
+
+      function escapeHtml(str) {
+        return (str || '').replace(/[&<>"']/g, (m) => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+        }[m]));
+      }
+
+      function highlightMatch(text, query) {
+        if (!query) return escapeHtml(text);
+        const idx = text.toLowerCase().indexOf(query.toLowerCase());
+        if (idx === -1) return escapeHtml(text);
+        const before = escapeHtml(text.slice(0, idx));
+        const matched = escapeHtml(text.slice(idx, idx + query.length));
+        const after = escapeHtml(text.slice(idx + query.length));
+        return `${before}<span class="font-black text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/80 rounded px-0.5">${matched}</span>${after}`;
+      }
+
+      function openPanel() {
+        panel.classList.remove('opacity-0', 'scale-95', 'pointer-events-none', 'invisible');
+        panel.classList.add('opacity-100', 'scale-100', 'pointer-events-auto', 'visible');
+        input.setAttribute('aria-expanded', 'true');
+      }
+
+      function closePanel() {
+        panel.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto', 'visible');
+        panel.classList.add('opacity-0', 'scale-95', 'pointer-events-none', 'invisible');
+        input.setAttribute('aria-expanded', 'false');
+        activeIndex = -1;
+      }
+
+      function updateActiveItem() {
+        const items = resultsList.querySelectorAll('.fac-suggestion-link');
+        items.forEach((item, idx) => {
+          if (idx === activeIndex) {
+            item.classList.add('bg-indigo-50', 'dark:bg-indigo-950/70', 'ring-1', 'ring-indigo-500/30');
+            item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          } else {
+            item.classList.remove('bg-indigo-50', 'dark:bg-indigo-950/70', 'ring-1', 'ring-indigo-500/30');
+          }
+        });
+      }
+
+      function renderSuggestions(query) {
+        const q = (query || '').toLowerCase().trim();
+
+        if (!q) {
+          closePanel();
+          if (clearBtn) clearBtn.classList.add('hidden');
+          return;
+        }
+
+        if (clearBtn) clearBtn.classList.remove('hidden');
+
+        // Score & rank matches
+        const scored = [];
+        for (const item of dataset) {
+          const nameLower = item.name.toLowerCase();
+          const catLower = (item.categoryName || item.category).toLowerCase();
+          const keywords = item.keywords || [];
+
+          let score = 0;
+
+          if (nameLower === q) {
+            score += 100;
+          } else if (nameLower.startsWith(q)) {
+            score += 80;
+          } else if (nameLower.includes(` ${q}`)) {
+            score += 60;
+          } else if (nameLower.includes(q)) {
+            score += 40;
+          } else if (keywords.some((k) => k.toLowerCase().includes(q))) {
+            score += 35;
+          } else if (catLower.includes(q)) {
+            score += 20;
+          }
+
+          // Apply category bonus ONLY if the tool actually matched the query
+          if (score > 0) {
+            if (categoryScope && item.category.toLowerCase() === categoryScope) {
+              score += 15;
+            }
+            scored.push({ item, score });
+          }
+        }
+
+        scored.sort((a, b) => b.score - a.score);
+        currentMatches = scored.slice(0, 8).map((s) => s.item);
+        activeIndex = -1;
+
+        if (currentMatches.length === 0) {
+          resultsList.innerHTML = '';
+          if (resultsCount) resultsCount.textContent = 'No suggestions';
+          if (noResults) noResults.classList.remove('hidden');
+          openPanel();
+          return;
+        }
+
+        if (noResults) noResults.classList.add('hidden');
+        if (resultsCount) {
+          resultsCount.textContent = 'Suggested Calculators';
+        }
+
+        // Render HTML for suggestions
+        let html = '';
+        currentMatches.forEach((calc, idx) => {
+          const highlightedName = highlightMatch(calc.name, q);
+          html += `
+            <a
+              href="${escapeHtml(calc.href)}"
+              class="fac-suggestion-link group flex items-center justify-between w-full p-2.5 sm:p-3 rounded-xl hover:bg-indigo-50/80 dark:hover:bg-indigo-950/50 border border-transparent hover:border-indigo-500/20 transition-all text-left cursor-pointer"
+              data-index="${idx}"
+              role="option"
+              title="Open ${escapeHtml(calc.name)}"
+            >
+              <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <span class="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-sm shadow-2xs group-hover:scale-110 transition-transform">
+                  ${calc.icon || '🧮'}
+                </span>
+                <div class="min-w-0">
+                  <div class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
+                    ${highlightedName}
+                  </div>
+                  <div class="text-[10px] sm:text-[11px] text-slate-400 dark:text-slate-500 font-medium">
+                    ${escapeHtml(calc.categoryName || calc.category)}
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-1 shrink-0 ml-2">
+                <span class="hidden sm:inline-flex text-[10.5px] font-semibold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-0.5 transition-transform">
+                  Open →
+                </span>
+                <svg class="h-3.5 w-3.5 text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 sm:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </a>
+          `;
+        });
+
+        resultsList.innerHTML = html;
+        openPanel();
+      }
+
+      // Input event
+      input.addEventListener('input', (e) => {
+        renderSuggestions(e.target.value);
+      });
+
+      // Focus event (show recent or query matches)
+      input.addEventListener('focus', () => {
+        if (input.value.trim()) {
+          renderSuggestions(input.value);
+        }
+      });
+
+      // Keyboard navigation
+      input.addEventListener('keydown', (e) => {
+        if (!panel.classList.contains('visible')) return;
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (currentMatches.length > 0) {
+            activeIndex = (activeIndex + 1) % currentMatches.length;
+            updateActiveItem();
+          }
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (currentMatches.length > 0) {
+            activeIndex = activeIndex <= 0 ? currentMatches.length - 1 : activeIndex - 1;
+            updateActiveItem();
+          }
+        } else if (e.key === 'Enter') {
+          if (currentMatches.length > 0) {
+            e.preventDefault();
+            const targetIdx = activeIndex >= 0 ? activeIndex : 0;
+            const target = currentMatches[targetIdx];
+            if (target && target.href) {
+              window.location.href = target.href;
+            }
+          }
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          closePanel();
+        }
+      });
+
+      // Clear button
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          input.value = '';
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.focus();
+          closePanel();
+          clearBtn.classList.add('hidden');
+        });
+      }
+
+      // Close on outside click
+      document.addEventListener('click', (e) => {
+        if (!container.contains(e.target)) {
+          closePanel();
+        }
+      });
+
+      // Global shortcut Ctrl+K / Cmd+K
+      document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+          e.preventDefault();
+          input.focus();
+          input.select();
+        }
+      });
+    }
+
+    // Initialize all autocomplete containers on page
+    document.querySelectorAll('.fac-autocomplete-container').forEach(initAutocomplete);
+  })();
+</script>

@@ -58,7 +58,7 @@ export const enDict: TranslationDictionary = {
   'footer.terms': 'Terms of Service',
   'footer.disclaimer': 'Calculations are for educational and informational purposes only.',
   'footer.copyright': '© Free Accurate Calculator. All rights reserved.',
-  'seo.homeTitle': 'Free Accurate Calculator — 100+ Free Online Financial & Health Tools',
+  'seo.homeTitle': 'Free Accurate Calculator — Free Online Financial & Health Tools',
   'seo.homeDescription': 'Fast, precise, zero-cost calculators for finance, health, science, and everyday math. Instant results with formulas and guides.',
 };
 
@@ -302,7 +302,7 @@ export const arDict: TranslationDictionary = {
   'footer.terms': 'شروط الخدمة',
   'footer.disclaimer': 'جميع الحسابات مقدمة للأغراض التعليمية والإرشادية فقط.',
   'footer.copyright': '© حاسبة دقيقة مجانية. جميع الحقوق محفوظة.',
-  'seo.homeTitle': 'حاسبة دقيقة مجانية — أكثر من 100 أداة مالية وصحية وحسابية',
+  'seo.homeTitle': 'حاسبة دقيقة مجانية — أدوات مالية وصحية وحسابية دقيقة',
   'seo.homeDescription': 'أدوات حسابية مجانية ودقيقة وسريعة لحساب القروض، مؤشر كتلة الجسم، الفائدة المركبة والمزيد.',
 };
 
@@ -668,7 +668,7 @@ export const hiDict: TranslationDictionary = {
   'footer.terms': 'उपयोग की शर्तें',
   'footer.disclaimer': 'गणनाएं केवल शैक्षणिक और सूचनात्मक उद्देश्यों के लिए हैं।',
   'footer.copyright': '© Free Accurate Calculator. सर्वाधिकार सुरक्षित।',
-  'seo.homeTitle': 'मुफ्त एवं सटीक ऑनलाइन कैलकुलेटर — 100+ वित्तीय, स्वास्थ्य व गणितीय टूल्स',
+  'seo.homeTitle': 'मुफ्त एवं सटीक ऑनलाइन कैलकुलेटर — वित्तीय, स्वास्थ्य व गणितीय टूल्स',
   'seo.homeDescription': 'ऋण ईएमआई, बीएमआई, एसआईपी व प्रतिशत गणना के लिए तेज, सटीक व 100% मुफ्त ऑनलाइन कैलकुलेटर।',
 };
 
@@ -729,7 +729,7 @@ export const zhDict: TranslationDictionary = {
   'footer.terms': '服务条款',
   'footer.disclaimer': '计算结果仅供教育与参考使用，不构成专业财务或医疗建议。',
   'footer.copyright': '© Free Accurate Calculator. 保留所有权利。',
-  'seo.homeTitle': '免费高精度计算器 — 100+ 在线专业金融、健康与数学计算工具',
+  'seo.homeTitle': '免费高精度计算器 — 在线专业金融、健康与数学计算工具',
   'seo.homeDescription': '提供极速、精准的房贷还款、体脂BMI、复利投资与百分比在线计算器，完全免费。',
 };
 

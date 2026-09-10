@@ -39,7 +39,7 @@ export const hi: TranslationDictionary = {
     disclaimer:
       'Free Accurate Calculator द्वारा प्रदान की गई सभी गणनाएं केवल शैक्षणिक, सूचनात्मक और सामान्य योजना उद्देश्यों के लिए हैं। ये किसी औपचारिक वित्तीय, कर, कानूनी या चिकित्सीय सलाह का गठन नहीं करती हैं।',
     allRightsReserved: 'सर्वाधिकार सुरक्षित।',
-    searchPlaceholder: '100+ कैलकुलेटर में खोजें (उदा. लोन, बीएमआई, प्रतिशत)...',
+    searchPlaceholder: 'कैलकुलेटर में खोजें (उदा. लोन, बीएमआई, प्रतिशत)...',
     close: 'बंद करें',
     switchNow: 'अभी बदलें',
     keepLanguage: 'अंग्रेजी में रखें',
@@ -91,7 +91,7 @@ export const hi: TranslationDictionary = {
     },
   },
   seo: {
-    siteTitle: 'Free Accurate Calculator - 100+ मुफ्त एवं सटीक ऑनलाइन कैलकुलेटर',
+    siteTitle: 'Free Accurate Calculator - मुफ्त एवं सटीक ऑनलाइन कैलकुलेटर',
     siteDescription: 'वित्त, स्वास्थ्य, गणित और दैनिक जीवन के लिए तीव्र, सटीक और निःशुल्क ऑनलाइन कैलकुलेटर।',
     ogTitleSuffix: 'Free Accurate Calculator',
   },

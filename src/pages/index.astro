@@ -1,6 +1,7 @@
 ---
 // src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
+import AutocompleteSearch from '../components/common/AutocompleteSearch.astro';
 
 // 20 categories arranged 3-by-3 ("tin tin karke")
 const CATEGORY_ITEMS = [
@@ -22,7 +23,7 @@ const CATEGORY_ITEMS = [
   { id: 'food', name: 'Food', icon: '🍎' },
   { id: 'sports', name: 'Sports', icon: '⚽' },
   { id: 'ecology', name: 'Ecology', icon: '🌱' },
-  { id: 'everyday', name: 'Everyday life', icon: '☀️' },
+  { id: 'everyday', name: 'Everyday', icon: '☀️' },
   { id: 'converter', name: 'Converter', icon: '🔄' },
 ] as const;
 
@@ -40,26 +41,26 @@ const PROFESSION_ITEMS = [
 ] as const;
 
 const TOP_20_COUNTRIES = [
-  { name: 'United States', flag: '🇺🇸', href: '/countries/united-states/' },
-  { name: 'United Kingdom', flag: '🇬🇧', href: '/countries/united-kingdom/' },
-  { name: 'Canada', flag: '🇨🇦', href: '/countries/canada/' },
-  { name: 'Australia', flag: '🇦🇺', href: '/countries/australia/' },
-  { name: 'Germany', flag: '🇩🇪', href: '/countries/germany/' },
-  { name: 'Switzerland', flag: '🇨🇭', href: '/countries/switzerland/' },
-  { name: 'Norway', flag: '🇳🇴', href: '/countries/norway/' },
-  { name: 'Netherlands', flag: '🇳🇱', href: '/countries/netherlands/' },
-  { name: 'Sweden', flag: '🇸🇪', href: '/countries/sweden/' },
-  { name: 'France', flag: '🇫🇷', href: '/countries/france/' },
-  { name: 'Ireland', flag: '🇮🇪', href: '/countries/ireland/' },
-  { name: 'Singapore', flag: '🇸🇬', href: '/countries/singapore/' },
-  { name: 'New Zealand', flag: '🇳🇿', href: '/countries/new-zealand/' },
-  { name: 'Denmark', flag: '🇩🇰', href: '/countries/denmark/' },
-  { name: 'Japan', flag: '🇯🇵', href: '/countries/japan/' },
-  { name: 'United Arab Emirates', flag: '🇦🇪', href: '/countries/united-arab-emirates/' },
-  { name: 'Austria', flag: '🇦🇹', href: '/countries/austria/' },
-  { name: 'Belgium', flag: '🇧🇪', href: '/countries/belgium/' },
-  { name: 'Italy', flag: '🇮🇹', href: '/countries/italy/' },
-  { name: 'Spain', flag: '🇪🇸', href: '/countries/spain/' },
+  { name: 'United States', flag: '🇺🇸', emoji: '🗽', href: '/countries/united-states/' },
+  { name: 'United Kingdom', flag: '🇬🇧', emoji: '💂', href: '/countries/united-kingdom/' },
+  { name: 'Canada', flag: '🇨🇦', emoji: '🍁', href: '/countries/canada/' },
+  { name: 'Australia', flag: '🇦🇺', emoji: '🦘', href: '/countries/australia/' },
+  { name: 'Germany', flag: '🇩🇪', emoji: '🏰', href: '/countries/germany/' },
+  { name: 'Switzerland', flag: '🇨🇭', emoji: '🏔️', href: '/countries/switzerland/' },
+  { name: 'Norway', flag: '🇳🇴', emoji: '❄️', href: '/countries/norway/' },
+  { name: 'Netherlands', flag: '🇳🇱', emoji: '🌷', href: '/countries/netherlands/' },
+  { name: 'Sweden', flag: '🇸🇪', emoji: '👑', href: '/countries/sweden/' },
+  { name: 'France', flag: '🇫🇷', emoji: '🗼', href: '/countries/france/' },
+  { name: 'Ireland', flag: '🇮🇪', emoji: '☘️', href: '/countries/ireland/' },
+  { name: 'Singapore', flag: '🇸🇬', emoji: '🦁', href: '/countries/singapore/' },
+  { name: 'New Zealand', flag: '🇳🇿', emoji: '🥝', href: '/countries/new-zealand/' },
+  { name: 'Denmark', flag: '🇩🇰', emoji: '🚲', href: '/countries/denmark/' },
+  { name: 'Japan', flag: '🇯🇵', emoji: '🗻', href: '/countries/japan/' },
+  { name: 'United Arab Emirates', flag: '🇦🇪', emoji: '🕌', href: '/countries/united-arab-emirates/' },
+  { name: 'Austria', flag: '🇦🇹', emoji: '🎻', href: '/countries/austria/' },
+  { name: 'Belgium', flag: '🇧🇪', emoji: '🍫', href: '/countries/belgium/' },
+  { name: 'Italy', flag: '🇮🇹', emoji: '🏛️', href: '/countries/italy/' },
+  { name: 'Spain', flag: '🇪🇸', emoji: '💃', href: '/countries/spain/' },
 ] as const;
 
 const websiteSchema = {
@@ -88,231 +89,36 @@ const organizationSchema = {
   description: 'Fast, mathematically verified online calculators for finance, health, math, and everyday utility.',
 };
 
-const featuredSections = [
-  {
-    title: 'FINANCE',
-    links: [
-      { label: 'Mortgage Calculator', href: '/finance/mortgage-calculator/' },
-      { label: 'Compound Interest', href: '/finance/compound-interest-calculator/' },
-      { label: 'EMI Calculator', href: '/finance/emi-calculator/' },
-      { label: 'Loan Amortization', href: '/finance/amortization-calculator/' },
-      { label: 'All Finance Tools →', href: '/finance/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'INSURANCE',
-    links: [
-      { label: 'Term Life Insurance', href: '/insurance/term-life-insurance-calculator/' },
-      { label: 'Health Insurance Premium', href: '/insurance/health-insurance-calculator/' },
-      { label: 'Auto Insurance Estimator', href: '/insurance/auto-insurance-calculator/' },
-      { label: 'Annuity Payout Calculator', href: '/insurance/annuity-payout-calculator/' },
-      { label: 'All Insurance Tools →', href: '/insurance/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'LEGAL',
-    links: [
-      { label: 'Child Support Calculator', href: '/legal/child-support-calculator/' },
-      { label: 'Alimony Estimator', href: '/legal/alimony-calculator/' },
-      { label: 'Settlement Value Estimator', href: '/legal/settlement-value-calculator/' },
-      { label: 'Legal Fee Calculator', href: '/legal/legal-fee-calculator/' },
-      { label: 'All Legal Tools →', href: '/legal/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'BUSINESS',
-    links: [
-      { label: 'Profit Margin Calculator', href: '/finance/profit-margin-calculator/' },
-      { label: 'Break-Even Analysis', href: '/business/break-even-calculator/' },
-      { label: 'ROI Calculator', href: '/business/roi-calculator/' },
-      { label: 'Business Valuation Tool', href: '/business/business-valuation-calculator/' },
-      { label: 'All Business Tools →', href: '/business/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'CONSTRUCTION',
-    links: [
-      { label: 'Concrete Calculator', href: '/everyday/concrete-calculator/' },
-      { label: 'Square Footage Calculator', href: '/construction/square-footage-calculator/' },
-      { label: 'Paint Coverage Estimator', href: '/construction/paint-calculator/' },
-      { label: 'Brick & Mortar Calculator', href: '/construction/brick-calculator/' },
-      { label: 'All Construction Tools →', href: '/construction/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'REAL ESTATE',
-    links: [
-      { label: 'Mortgage Calculator', href: '/finance/mortgage-calculator/' },
-      { label: 'Rental Yield Calculator', href: '/real-estate/rental-yield-calculator/' },
-      { label: 'Property Tax Estimator', href: '/real-estate/property-tax-calculator/' },
-      { label: 'Cap Rate Calculator', href: '/real-estate/cap-rate-calculator/' },
-      { label: 'All Real Estate Tools →', href: '/real-estate/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'TECHNOLOGY',
-    links: [
-      { label: 'Subnet Calculator', href: '/everyday/subnet-calculator/' },
-      { label: 'Password Generator', href: '/everyday/password-generator/' },
-      { label: 'Bandwidth Calculator', href: '/technology/bandwidth-calculator/' },
-      { label: 'Data Transfer Time', href: '/technology/data-transfer-calculator/' },
-      { label: 'All Technology Tools →', href: '/technology/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'HEALTH',
-    links: [
-      { label: 'Calorie & TDEE', href: '/health/calorie-calculator/' },
-      { label: 'BMI Calculator', href: '/health/bmi-calculator/' },
-      { label: 'Body Fat %', href: '/health/body-fat-calculator/' },
-      { label: 'BMR Calculator', href: '/health/bmr-calculator/' },
-      { label: 'All Health Tools →', href: '/health/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'STATISTICS',
-    links: [
-      { label: 'Standard Deviation', href: '/math/standard-deviation-calculator/' },
-      { label: 'Sample Size Calculator', href: '/statistics/sample-size-calculator/' },
-      { label: 'Probability Calculator', href: '/statistics/probability-calculator/' },
-      { label: 'Confidence Interval', href: '/statistics/confidence-interval-calculator/' },
-      { label: 'All Statistics Tools →', href: '/statistics/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'MARKETING',
-    links: [
-      { label: 'Conversion Rate Calculator', href: '/marketing/conversion-rate-calculator/' },
-      { label: 'Customer Acquisition Cost', href: '/marketing/cac-calculator/' },
-      { label: 'ROAS Calculator', href: '/marketing/roas-calculator/' },
-      { label: 'Email ROI Calculator', href: '/marketing/email-roi-calculator/' },
-      { label: 'All Marketing Tools →', href: '/marketing/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'MATH',
-    links: [
-      { label: 'Percentage Calculator', href: '/math/percentage-calculator/' },
-      { label: 'Scientific Calculator', href: '/math/scientific-calculator/' },
-      { label: 'Fraction Calculator', href: '/math/fraction-calculator/' },
-      { label: 'Triangle Calculator', href: '/math/triangle-calculator/' },
-      { label: 'All Math Tools →', href: '/math/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'AUTOMOTIVE',
-    links: [
-      { label: 'Auto Loan Calculator', href: '/finance/auto-loan-calculator/' },
-      { label: 'Fuel Cost Calculator', href: '/automotive/fuel-cost-calculator/' },
-      { label: 'Gas Mileage (MPG)', href: '/automotive/mpg-calculator/' },
-      { label: 'Car Depreciation Tool', href: '/automotive/car-depreciation-calculator/' },
-      { label: 'All Automotive Tools →', href: '/automotive/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'BIOLOGY',
-    links: [
-      { label: 'Punnett Square Calculator', href: '/biology/punnett-square-calculator/' },
-      { label: 'Hardy-Weinberg Estimator', href: '/biology/hardy-weinberg-calculator/' },
-      { label: 'Bacterial Growth Calculator', href: '/biology/bacterial-growth-calculator/' },
-      { label: 'DNA / RNA Molecular Weight', href: '/biology/molecular-weight-calculator/' },
-      { label: 'All Biology Tools →', href: '/biology/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'CHEMISTRY',
-    links: [
-      { label: 'Molar Mass Calculator', href: '/chemistry/molar-mass-calculator/' },
-      { label: 'Solution Dilution (C1V1)', href: '/chemistry/solution-dilution-calculator/' },
-      { label: 'pH & pOH Calculator', href: '/chemistry/ph-calculator/' },
-      { label: 'Stoichiometry Calculator', href: '/chemistry/stoichiometry-calculator/' },
-      { label: 'All Chemistry Tools →', href: '/chemistry/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'PHYSICS',
-    links: [
-      { label: 'Velocity & Acceleration', href: '/physics/velocity-acceleration-calculator/' },
-      { label: 'Kinetic Energy Calculator', href: '/physics/kinetic-energy-calculator/' },
-      { label: 'Ohm\'s Law Calculator', href: '/physics/ohms-law-calculator/' },
-      { label: 'Projectile Motion Tool', href: '/physics/projectile-motion-calculator/' },
-      { label: 'All Physics Tools →', href: '/physics/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'FOOD',
-    links: [
-      { label: 'Recipe Scaler & Converter', href: '/food/recipe-scaler-calculator/' },
-      { label: 'Macronutrient Ratio Tool', href: '/food/macronutrient-calculator/' },
-      { label: 'Baker\'s Percentage Tool', href: '/food/bakers-percentage-calculator/' },
-      { label: 'Calorie per Serving Tool', href: '/food/calorie-per-serving-calculator/' },
-      { label: 'All Food Tools →', href: '/food/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'SPORTS',
-    links: [
-      { label: 'Running Pace Calculator', href: '/health/pace-calculator/' },
-      { label: 'Target Heart Rate Zone', href: '/sports/heart-rate-zone-calculator/' },
-      { label: 'One-Rep Max (1RM) Tool', href: '/sports/one-rep-max-calculator/' },
-      { label: 'Golf Handicap Estimator', href: '/sports/golf-handicap-calculator/' },
-      { label: 'All Sports Tools →', href: '/sports/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'ECOLOGY',
-    links: [
-      { label: 'Carbon Footprint Calculator', href: '/ecology/carbon-footprint-calculator/' },
-      { label: 'Solar Panel Energy Tool', href: '/ecology/solar-energy-calculator/' },
-      { label: 'Water Conservation Tool', href: '/ecology/water-conservation-calculator/' },
-      { label: 'Composting C:N Ratio Tool', href: '/ecology/compost-ratio-calculator/' },
-      { label: 'All Ecology Tools →', href: '/ecology/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'EVERYDAY LIFE',
-    links: [
-      { label: 'Age Calculator', href: '/everyday/age-calculator/' },
-      { label: 'Date Calculator', href: '/everyday/date-calculator/' },
-      { label: 'Time Calculator', href: '/everyday/time-calculator/' },
-      { label: 'GPA Calculator', href: '/everyday/gpa-calculator/' },
-      { label: 'All Everyday Tools →', href: '/everyday/', isHighlight: true },
-    ],
-  },
-  {
-    title: 'CONVERTER',
-    links: [
-      { label: 'Universal Conversion Tool', href: '/everyday/conversion-calculator/' },
-      { label: 'Length & Distance Converter', href: '/converter/length-converter/' },
-      { label: 'Weight & Mass Converter', href: '/converter/weight-converter/' },
-      { label: 'Temperature Converter', href: '/converter/temperature-converter/' },
-      { label: 'All Converter Tools →', href: '/converter/', isHighlight: true },
-    ],
-  },
-];
+const POPULAR_CALCULATORS = [
+  { name: 'EMI Calculator', icon: '🏦', href: '/finance/emi-calculator/' },
+  { name: 'Mortgage Calculator', icon: '🏠', href: '/finance/mortgage-calculator/' },
+  { name: 'SIP Calculator', icon: '📈', href: '/finance/sip-calculator/' },
+  { name: 'Age Calculator', icon: '🎂', href: '/everyday/age-calculator/' },
+  { name: 'Percentage Calculator', icon: '📐', href: '/math/percentage-calculator/' },
+  { name: 'BMI Calculator', icon: '🩺', href: '/health/bmi-calculator/' },
+  { name: 'Compound Interest', icon: '⏳', href: '/finance/compound-interest-calculator/' },
+  { name: 'Income Tax', icon: '📑', href: '/finance/income-tax-calculator/' },
+  { name: 'Calorie & TDEE', icon: '🍎', href: '/health/calorie-calculator/' },
+  { name: 'Scientific Calc', icon: '🔬', href: '/math/scientific-calculator/' },
+  { name: 'Auto Loan', icon: '🚗', href: '/finance/auto-loan-calculator/' },
+  { name: 'Date Calculator', icon: '📅', href: '/everyday/date-calculator/' },
+  { name: 'GPA Calculator', icon: '🎓', href: '/everyday/gpa-calculator/' },
+  { name: 'Body Fat %', icon: '⚖️', href: '/health/body-fat-calculator/' },
+  { name: 'Step-Up SIP', icon: '🚀', href: '/finance/step-up-sip-calculator/' },
+  { name: 'Lumpsum', icon: '💰', href: '/finance/lumpsum-calculator/' },
+  { name: 'Time Calculator', icon: '⏱️', href: '/everyday/time-calculator/' },
+  { name: 'Amortization', icon: '📊', href: '/finance/amortization-calculator/' },
+  { name: 'Length Converter', icon: '📏', href: '/converter/length-converter/' },
+  { name: 'Unit Converter', icon: '🔄', href: '/everyday/conversion-calculator/' },
+  { name: 'Simple Interest', icon: '⏱️', href: '/finance/simple-interest-calculator/' },
+  { name: 'Term Life', icon: '🛡️', href: '/insurance/term-life-insurance-calculator/' },
+  { name: 'Rental Yield', icon: '🏢', href: '/real-estate/rental-yield-calculator/' },
+  { name: 'Profit Margin', icon: '🎯', href: '/finance/profit-margin-calculator/' },
+  { name: 'Child Support', icon: '⚖️', href: '/legal/child-support-calculator/' },
+  { name: 'Break-Even', icon: '💼', href: '/business/break-even-calculator/' },
+  { name: 'Square Footage', icon: '🏗️', href: '/construction/square-footage-calculator/' },
+] as const;
 
-const SECTION_META: Record<string, { name: string; icon: string }> = {
-  'FINANCE': { name: 'Finance', icon: '💰' },
-  'INSURANCE': { name: 'Insurance', icon: '🛡️' },
-  'LEGAL': { name: 'Legal', icon: '⚖️' },
-  'BUSINESS': { name: 'Business', icon: '💼' },
-  'CONSTRUCTION': { name: 'Construction', icon: '🏗️' },
-  'REAL ESTATE': { name: 'Real Estate', icon: '🏢' },
-  'TECHNOLOGY': { name: 'Technology', icon: '💻' },
-  'HEALTH': { name: 'Health', icon: '🩺' },
-  'STATISTICS': { name: 'Statistics', icon: '📊' },
-  'MARKETING': { name: 'Marketing', icon: '📈' },
-  'MATH': { name: 'Math', icon: '📐' },
-  'AUTOMOTIVE': { name: 'Automotive', icon: '🚗' },
-  'BIOLOGY': { name: 'Biology', icon: '🧬' },
-  'CHEMISTRY': { name: 'Chemistry', icon: '⚗️' },
-  'PHYSICS': { name: 'Physics', icon: '⚛️' },
-  'FOOD': { name: 'Food', icon: '🍳' },
-  'SPORTS': { name: 'Sports', icon: '🏃' },
-  'ECOLOGY': { name: 'Ecology', icon: '🌿' },
-  'EVERYDAY LIFE': { name: 'Everyday', icon: '⏱️' },
-  'CONVERTER': { name: 'Converters', icon: '🔄' },
-};
 ---
 
 <Layout
@@ -328,7 +134,7 @@ const SECTION_META: Record<string, { name: string; icon: string }> = {
       aria-hidden="true"
     ></div>
 
-    <div class="relative z-10 mx-auto max-w-3xl space-y-5 sm:space-y-6">
+    <div class="relative z-10 mx-auto max-w-2xl sm:max-w-3xl lg:max-w-4xl space-y-5 sm:space-y-6">
       <!-- 1. The Startup Pill Badge -->
       <div class="inline-flex items-center gap-2 rounded-full border border-indigo-500/20 dark:border-indigo-400/30 bg-gradient-to-r from-blue-500/8 via-indigo-500/8 to-purple-500/8 dark:from-blue-500/15 dark:via-indigo-500/15 dark:to-purple-500/15 px-3.5 py-1.5 shadow-2xs backdrop-blur-md transition-all hover:border-indigo-500/40 select-none">
         <span class="relative flex h-2 w-2">
@@ -354,78 +160,40 @@ const SECTION_META: Record<string, { name: string; icon: string }> = {
         High-precision mathematical calculators with zero clutter, verified formulas, and instant edge calculation. Engineered for global finance, health, and science.
       </p>
 
-      <!-- 4. Spotlight Search Bar (Raycast / Linear Command-Bar Style) -->
-      <div class="pt-2 max-w-xl mx-auto">
-        <div class="relative flex items-center group">
-          <!-- Ambient Focus Glow Ring -->
-          <div
-            class="absolute -inset-1 rounded-2xl sm:rounded-full bg-gradient-to-r from-blue-600/25 via-indigo-600/25 to-purple-600/25 opacity-0 group-focus-within:opacity-100 blur-md transition-all duration-300 pointer-events-none"
-            aria-hidden="true"
-          ></div>
-
-          <!-- Glass Search Icon -->
-          <svg
-            class="absolute left-4 h-4.5 w-4.5 text-slate-400 dark:text-slate-500 group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 transition-colors pointer-events-none z-10"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2.2"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-
-          <!-- Input Field -->
-          <input
-            id="search-input"
-            type="search"
-            placeholder="Search calculators (e.g., 'sip', 'mortgage', 'emi', 'tax')..."
-            class="relative z-0 w-full rounded-2xl sm:rounded-full border border-slate-200/90 dark:border-slate-800/90 bg-white/95 dark:bg-slate-900/95 py-3.5 sm:py-4 pl-11 pr-20 sm:pr-24 text-sm sm:text-base text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-indigo-400/10 transition-all backdrop-blur-xl"
-            aria-label="Search all calculators"
-          />
-
-          <!-- Shortcut Chip (Desktop) -->
-          <div class="absolute right-3.5 top-1/2 -translate-y-1/2 z-10 flex items-center gap-1 pointer-events-none">
-            <kbd class="hidden sm:inline-flex items-center px-2 py-0.5 text-[10.5px] font-mono font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-md shadow-2xs">
-              Ctrl K
-            </kbd>
-          </div>
-        </div>
+      <!-- 4. Interactive Live Spotlight Search Bar with Instant Suggestions -->
+      <div class="pt-2 max-w-2xl mx-auto">
+        <AutocompleteSearch
+          id="search-input"
+          placeholder="Search calculators (e.g., 'sip', 'mortgage', 'emi', 'tax', 'age')..."
+        />
       </div>
 
-      <!-- 2-by-2 Category Navigation Grid (10 Lines Total) -->
+      <!-- 3-by-3 Category Navigation Grid ("tin tin karke" - UI/UX Designer Scaled Edition) -->
       <nav
         aria-label="Calculator Categories"
-        class="mt-6 w-full max-w-xl sm:max-w-2xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 p-3.5 sm:p-5.5 shadow-sm dark:shadow-xl backdrop-blur-xl box-border text-left"
+        class="mt-8 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-3 sm:p-5 md:p-6 shadow-sm dark:shadow-xl backdrop-blur-xl box-border text-center"
       >
-        <div class="flex items-center justify-center border-b border-slate-200/80 dark:border-slate-800/80 pb-3 mb-3.5 text-center">
+        <div class="flex items-center justify-center border-b border-slate-200/80 dark:border-slate-800/80 pb-3 sm:pb-3.5 mb-3.5 sm:mb-4 px-1 text-center">
           <h2 class="font-outfit text-xs sm:text-sm font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white flex items-center justify-center gap-2">
             <span class="text-base sm:text-lg">📁</span>
             <span>Categories</span>
           </h2>
         </div>
 
-        <!-- 20 Categories in 2-Column Grid Layout (10 Lines) -->
-        <div class="grid grid-cols-2 gap-2 sm:gap-2.5">
+        <!-- 20 Categories in 3-Column Grid Layout (Top Emoji, Bottom Single-Line Text) -->
+        <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
           {CATEGORY_ITEMS.map((cat) => (
             <a
               href={`/${cat.id}/`}
               data-category={cat.id}
               title={`Explore ${cat.name} Calculators`}
-              class="category-filter-btn group relative flex items-center justify-between w-full min-w-0 min-h-[44px] rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/80 dark:bg-slate-950/60 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/40 dark:hover:border-indigo-400/40 px-2.5 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 active:scale-[0.98]"
+              class="category-filter-btn group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[68px] sm:min-h-[78px] md:min-h-[86px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/50 dark:hover:border-indigo-400/50 p-2 sm:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 active:scale-[0.97]"
             >
-              <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
-                <span class="flex h-6 w-6 sm:h-7 sm:w-7 shrink-0 items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-xs sm:text-sm shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/40 transition-transform">
-                  {cat.icon}
-                </span>
-                <span class="text-left font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
-                  {cat.name}
-                </span>
-              </div>
-              <span class="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 group-hover:bg-indigo-500 transition-colors"></span>
-                <svg class="h-3 w-3 text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-hover:translate-x-0.5 transition-all hidden sm:inline" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-                </svg>
+              <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-base sm:text-lg md:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 transition-transform mb-1 sm:mb-1.5">
+                {cat.icon}
+              </span>
+              <span class="w-full text-center font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-[11px] sm:text-xs md:text-sm leading-tight whitespace-nowrap overflow-hidden">
+                {cat.name}
               </span>
             </a>
           ))}
@@ -434,125 +202,93 @@ const SECTION_META: Record<string, { name: string; icon: string }> = {
     </div>
   </section>
 
-  <!-- Featured Calculator Directory: 2 Categories Per Line (10 Lines Total) - Clean & Centered -->
-  <section class="my-10 rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 p-4 sm:p-7 md:p-9 shadow-sm dark:shadow-xl backdrop-blur-xl">
-    <!-- Relevant Directory Header: Centered -->
-    <div class="flex items-center justify-center border-b border-slate-200/80 dark:border-slate-800/80 pb-3.5 mb-6 sm:mb-8 text-center">
+  <!-- Popular Calculators Section (Top Emoji, Bottom Single-Line Text) -->
+  <section
+    aria-label="Popular Calculators"
+    class="my-10 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-3 sm:p-5 md:p-6 shadow-sm dark:shadow-xl backdrop-blur-xl box-border text-center"
+  >
+    <div class="flex items-center justify-center border-b border-slate-200/80 dark:border-slate-800/80 pb-3 sm:pb-3.5 mb-3.5 sm:mb-4 px-1 text-center">
       <h2 class="font-outfit text-xs sm:text-sm font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white flex items-center justify-center gap-2">
         <span class="text-base sm:text-lg">⚡</span>
         <span>Popular Calculators</span>
       </h2>
     </div>
 
-    <!-- Ek line me 2 categories (10 lines total) -->
-    <div class="grid grid-cols-2 gap-x-3 sm:gap-x-6 md:gap-x-8 gap-y-8 sm:gap-y-12">
-      {featuredSections.map((sec) => {
-        const meta = SECTION_META[sec.title] || { name: sec.title, icon: '🧮' };
-        return (
-          <div class="flex flex-col">
-            <h3 class="text-center font-outfit text-xs sm:text-sm font-black tracking-wider text-slate-900 dark:text-white mb-3 sm:mb-3.5 flex items-center justify-center gap-1.5 uppercase">
-              <span class="text-sm sm:text-base">{meta.icon}</span>
-              <span>{meta.name}</span>
-            </h3>
-            <div class="flex flex-col gap-2">
-              {sec.links.map((link) => (
-                <a
-                  href={link.href}
-                  class={`group relative flex items-center justify-center min-h-[44px] rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/80 dark:bg-slate-950/60 text-slate-800 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/40 dark:hover:border-indigo-400/40 px-3 sm:px-4 py-2 sm:py-2.5 text-[11px] sm:text-xs md:text-sm font-medium cursor-pointer transition-all shadow-2xs hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 active:scale-[0.98] ${
-                    link.isHighlight
-                      ? 'font-semibold text-indigo-600 dark:text-indigo-400 border-indigo-500/30 hover:border-indigo-500 bg-indigo-50/50 dark:bg-indigo-950/30'
-                      : ''
-                  }`}
-                >
-                  <span class="text-center font-medium leading-snug break-words px-2">
-                    {link.label}
-                  </span>
-                  <span
-                    class={`absolute right-2.5 sm:right-3.5 w-1.5 h-1.5 rounded-full shrink-0 transition-colors ${
-                      link.isHighlight ? 'bg-indigo-500' : 'bg-slate-200 dark:bg-slate-700 group-hover:bg-indigo-500'
-                    }`}
-                  ></span>
-                </a>
-              ))}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  </section>
-
-  <!-- Profession Calculator Section (Exact Same Structure Layout as Categories) -->
-  <section
-    aria-label="Profession Calculators"
-    class="my-10 w-full max-w-xl sm:max-w-2xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 p-3.5 sm:p-5.5 shadow-sm dark:shadow-xl backdrop-blur-xl box-border text-left"
-  >
-    <div class="flex items-center justify-center border-b border-slate-200/80 dark:border-slate-800/80 pb-3 mb-3.5 text-center">
-      <h2 class="font-outfit text-xs sm:text-sm font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white flex items-center justify-center gap-2">
-        <span class="text-base sm:text-lg">🎯</span>
-        <span>Professions</span>
-      </h2>
-    </div>
-
-    <!-- 10 Professions in 2-Column Grid Layout (5 Lines) -->
-    <div class="grid grid-cols-2 gap-2 sm:gap-2.5">
-      {PROFESSION_ITEMS.map((item) => (
+    <!-- 27 Popular Calculators in 3-Column Grid Layout (Top Emoji, Bottom Single-Line Text) -->
+    <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
+      {POPULAR_CALCULATORS.map((item) => (
         <a
           href={item.href}
-          title={`Explore ${item.name} Calculator`}
-          class="group relative flex items-center justify-between w-full min-w-0 min-h-[44px] rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/80 dark:bg-slate-950/60 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/40 dark:hover:border-indigo-400/40 px-2.5 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 active:scale-[0.98]"
+          title={`Explore ${item.name}`}
+          class="group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[68px] sm:min-h-[78px] md:min-h-[86px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/50 dark:hover:border-indigo-400/50 p-2 sm:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 active:scale-[0.97]"
         >
-          <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
-            <span class="flex h-6 w-6 sm:h-7 sm:w-7 shrink-0 items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-xs sm:text-sm shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/40 transition-transform">
-              {item.icon}
-            </span>
-            <span class="text-left font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
-              {item.name}
-            </span>
-          </div>
-          <span class="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 group-hover:bg-indigo-500 transition-colors"></span>
-            <svg class="h-3 w-3 text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 group-hover:translate-x-0.5 transition-all hidden sm:inline" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-            </svg>
+          <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-base sm:text-lg md:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 transition-transform mb-1 sm:mb-1.5">
+            {item.icon}
+          </span>
+          <span class="w-full text-center font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-[10.5px] sm:text-xs md:text-sm leading-tight whitespace-nowrap overflow-hidden">
+            {item.name}
           </span>
         </a>
       ))}
     </div>
   </section>
 
-  <!-- Country-Wise Calculators Section (Top 20 High CPM Countries - Exact Same Structure Layout) -->
+  <!-- Profession Calculator Section (Top Emoji, Bottom Single-Line Text) -->
+  <section
+    aria-label="Profession Calculators"
+    class="my-10 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-3 sm:p-5 md:p-6 shadow-sm dark:shadow-xl backdrop-blur-xl box-border text-center"
+  >
+    <div class="flex items-center justify-center border-b border-slate-200/80 dark:border-slate-800/80 pb-3 sm:pb-3.5 mb-3.5 sm:mb-4 px-1 text-center">
+      <h2 class="font-outfit text-xs sm:text-sm font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white flex items-center justify-center gap-2">
+        <span class="text-base sm:text-lg">🎯</span>
+        <span>Professions</span>
+      </h2>
+    </div>
+
+    <!-- 10 Professions in 3-Column Grid Layout (Top Emoji, Bottom Single-Line Text) -->
+    <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
+      {PROFESSION_ITEMS.map((item) => (
+        <a
+          href={item.href}
+          title={`Explore ${item.name} Calculator`}
+          class="group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[68px] sm:min-h-[78px] md:min-h-[86px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/50 dark:hover:border-indigo-400/50 p-2 sm:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 active:scale-[0.97]"
+        >
+          <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-base sm:text-lg md:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 transition-transform mb-1 sm:mb-1.5">
+            {item.icon}
+          </span>
+          <span class="w-full text-center font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-[10.5px] sm:text-xs md:text-sm leading-tight whitespace-nowrap overflow-hidden">
+            {item.name}
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Country-Wise Calculators Section (Top Flag, Bottom Single-Line Text) -->
   <section
     aria-label="Country-Wise Calculators"
-    class="my-10 w-full max-w-xl sm:max-w-2xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 p-3.5 sm:p-5.5 shadow-sm dark:shadow-xl backdrop-blur-xl box-border text-left"
+    class="my-10 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-3 sm:p-5 md:p-6 shadow-sm dark:shadow-xl backdrop-blur-xl box-border text-center"
   >
-    <div class="flex items-center justify-center border-b border-slate-200/80 dark:border-slate-800/80 pb-3 mb-3.5 text-center">
+    <div class="flex items-center justify-center border-b border-slate-200/80 dark:border-slate-800/80 pb-3 sm:pb-3.5 mb-3.5 sm:mb-4 px-1 text-center">
       <h2 class="font-outfit text-xs sm:text-sm font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white flex items-center justify-center gap-2">
         <span class="text-base sm:text-lg">🌍</span>
         <span>Countries</span>
       </h2>
     </div>
 
-    <!-- 20 High CPM Countries in 2-Column Grid Layout (10 Lines) -->
-    <div class="grid grid-cols-2 gap-2 sm:gap-2.5">
+    <!-- 20 High CPM Countries in 3-Column Grid Layout (Top Emoji, Bottom Clean Text) -->
+    <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
       {TOP_20_COUNTRIES.map((item) => (
         <a
           href={item.href}
           title={`Explore ${item.name} Calculators`}
-          class="group relative flex items-center justify-between w-full min-w-0 min-h-[44px] rounded-xl border border-hairline bg-canvas hover:bg-canvas-elevated hover:border-mute px-2.5 sm:px-3.5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium cursor-pointer transition-all duration-150 shadow-whisper hover:shadow-card hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-link active:scale-[0.98]"
+          class="group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[72px] sm:min-h-[80px] md:min-h-[88px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/50 dark:hover:border-indigo-400/50 p-2 sm:p-2.5 md:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 active:scale-[0.97]"
         >
-          <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
-            <span class="flex h-6 w-6 sm:h-7 sm:w-7 shrink-0 items-center justify-center rounded-lg bg-canvas-elevated border border-hairline text-xs sm:text-sm shadow-xs group-hover:scale-110 group-hover:bg-hairline-soft transition-transform">
-              {item.flag}
-            </span>
-            <span class="text-left font-medium text-ink group-hover:text-link transition-colors truncate">
-              {item.name}
-            </span>
-          </div>
-          <span class="flex items-center gap-1 sm:gap-1.5 shrink-0 ml-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-hairline group-hover:bg-link transition-colors"></span>
-            <svg class="h-3 w-3 text-mute/50 group-hover:text-link group-hover:translate-x-0.5 transition-all hidden sm:inline" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
-            </svg>
+          <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-base sm:text-lg md:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 transition-transform mb-1 sm:mb-1.5">
+            {item.emoji}
+          </span>
+          <span class="w-full text-center font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-[10px] sm:text-xs md:text-sm leading-[1.15] break-words line-clamp-2 px-0.5">
+            {item.name}
           </span>
         </a>
       ))}
@@ -595,7 +331,7 @@ const SECTION_META: Record<string, { name: string; icon: string }> = {
             Zero Cold Start
           </h3>
           <p class="text-[11px] sm:text-xs text-body leading-relaxed">
-            Static HTML prerendered across Cloudflare's 300+ global edge locations for instant calculation load.
+            Static HTML prerendered across Cloudflare's global edge network for instant calculation load.
           </p>
         </div>
 
@@ -658,7 +394,6 @@ const SECTION_META: Record<string, { name: string; icon: string }> = {
 
 <script is:inline>
   (function () {
-    const searchInput = document.getElementById('search-input');
     const filterButtons = document.querySelectorAll('.category-filter-btn');
 
     filterButtons.forEach((btn) => {
@@ -669,26 +404,5 @@ const SECTION_META: Record<string, { name: string; icon: string }> = {
         }
       });
     });
-
-    if (searchInput) {
-      // Enter key to search
-      searchInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          const query = encodeURIComponent(searchInput.value.trim());
-          if (query) {
-            window.location.href = `/finance/?q=${query}`;
-          }
-        }
-      });
-
-      // Global Ctrl+K / Cmd+K to jump to search input
-      document.addEventListener('keydown', (e) => {
-        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
-          e.preventDefault();
-          searchInput.focus();
-          searchInput.select();
-        }
-      });
-    }
   })();
 </script>

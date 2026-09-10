@@ -1,0 +1,725 @@
+---
+// src/pages/everyday/index.astro
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
+import { SEARCHABLE_CALCULATORS } from '../../data/searchDatabase';
+
+const allSearchableToolsJson = JSON.stringify(SEARCHABLE_CALCULATORS);
+
+// 10 Strictly Pure Everyday Calculators arranged in clean 3-by-3 structure
+const EVERYDAY_CALCULATORS = [
+  // Sub-niche 1: Time & Chronometrics
+  {
+    id: 'age-calculator',
+    name: 'Age Calculator',
+    shortName: 'Age',
+    icon: '🎂',
+    href: '/everyday/age-calculator/',
+    badge: 'Exact Chrono',
+    description: 'Calculate your exact age in years, months, weeks, days, hours, and minutes.',
+    subGroup: 'Time & Chrono',
+  },
+  {
+    id: 'date-calculator',
+    name: 'Date Calculator',
+    shortName: 'Date Interval',
+    icon: '📅',
+    href: '/everyday/date-calculator/',
+    badge: 'Days & Weeks',
+    description: 'Calculate days between dates, working days, and calendar intervals.',
+    subGroup: 'Time & Chrono',
+  },
+  {
+    id: 'time-calculator',
+    name: 'Time Calculator',
+    shortName: 'Time Math',
+    icon: '⏱️',
+    href: '/everyday/time-calculator/',
+    badge: 'Hours & Mins',
+    description: 'Add and subtract time intervals, hours, minutes, and military time.',
+    subGroup: 'Time & Chrono',
+  },
+
+  // Sub-niche 2: Work & Productivity
+  {
+    id: 'hours-calculator',
+    name: 'Work Hours Calculator',
+    shortName: 'Work Hours',
+    icon: '⏰',
+    href: '/everyday/hours-calculator/',
+    badge: 'Timesheet & Pay',
+    description: 'Daily and weekly work timesheet, lunch break deductions, and gross earnings.',
+    subGroup: 'Work & Productivity',
+  },
+
+  // Sub-niche 3: Academic & Grades
+  {
+    id: 'gpa-calculator',
+    name: 'GPA Calculator',
+    shortName: 'GPA Scale',
+    icon: '🎓',
+    href: '/everyday/gpa-calculator/',
+    badge: '4.0 Scale',
+    description: 'Calculate high school or college GPA on weighted and unweighted 4.0 scales.',
+    subGroup: 'Academic & Grades',
+  },
+  {
+    id: 'grade-calculator',
+    name: 'Grade Calculator',
+    shortName: 'Course Grade',
+    icon: '📝',
+    href: '/everyday/grade-calculator/',
+    badge: 'Final Goal',
+    description: 'Calculate overall semester course grade from weighted assignments and required final score.',
+    subGroup: 'Academic & Grades',
+  },
+
+  // Sub-niche 4: Home & Construction Utility
+  {
+    id: 'concrete-calculator',
+    name: 'Concrete Calculator',
+    shortName: 'Concrete Vol',
+    icon: '🏗️',
+    href: '/everyday/concrete-calculator/',
+    badge: 'Yards & Bags',
+    description: 'Calculate concrete volume in cubic yards, cubic meters, and pre-mixed bags.',
+    subGroup: 'Home & Yard',
+  },
+
+  // Sub-niche 5: Digital, Privacy & Security
+  {
+    id: 'subnet-calculator',
+    name: 'Subnet Calculator',
+    shortName: 'IPv4 Subnet',
+    icon: '🌐',
+    href: '/everyday/subnet-calculator/',
+    badge: 'IPv4 CIDR',
+    description: 'Calculate IPv4 subnet masks, network addresses, CIDR notation, and usable hosts.',
+    subGroup: 'Digital & Tech',
+  },
+  {
+    id: 'password-generator',
+    name: 'Password Generator',
+    shortName: 'Password Gen',
+    icon: '🔐',
+    href: '/everyday/password-generator/',
+    badge: 'High-Entropy',
+    description: 'Cryptographically secure random passwords generated locally in browser.',
+    subGroup: 'Digital & Tech',
+  },
+
+  // Sub-niche 6: Measurements & Conversions
+  {
+    id: 'conversion-calculator',
+    name: 'Unit Conversion Calculator',
+    shortName: 'Unit Converter',
+    icon: '🔄',
+    href: '/everyday/conversion-calculator/',
+    badge: 'Metric/Imperial',
+    description: 'Convert between metric and imperial units across length, weight, volume, and temperature.',
+    subGroup: 'Measurement',
+  },
+] as const;
+
+const hubSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Everyday Calculators — Free Accurate Calculator',
+  url: 'https://freeaccuratecalculator.com/everyday/',
+  description: 'Verified everyday life calculators for age, date intervals, timesheet hours, GPA grades, concrete, IP subnets, and secure passwords.',
+  hasPart: EVERYDAY_CALCULATORS.map((c) => ({
+    '@type': 'WebApplication',
+    name: c.name,
+    url: `https://freeaccuratecalculator.com${c.href}`,
+    applicationCategory: 'UtilityApplication',
+    operatingSystem: 'All',
+  })),
+};
+
+const breadcrumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Everyday', href: '/everyday/' },
+];
+---
+
+<Layout
+  title="Everyday Calculators — Verified Daily Life & Utility Tools"
+  description="High-precision everyday life calculators: Age, Date Difference, Timesheet Hours, GPA, Grade Target, Concrete Volume, IPv4 Subnet, and Passwords. 100% free and private."
+  jsonLd={[hubSchema]}
+>
+  <div class="space-y-6 sm:space-y-8">
+    <Breadcrumbs items={breadcrumbs} />
+
+    <!-- [HERO SECTION]: Silicon Valley Precision Layout -->
+    <section class="relative overflow-hidden rounded-3xl sm:rounded-[36px] border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-950/70 px-4 py-10 sm:py-14 text-center hero-mesh-gradient shadow-xs sm:shadow-lg backdrop-blur-xl">
+      <!-- Ambient Studio Glow -->
+      <div
+        class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 sm:w-[540px] h-44 sm:h-64 bg-gradient-to-b from-amber-500/20 via-orange-500/10 to-transparent blur-3xl pointer-events-none"
+        aria-hidden="true"
+      ></div>
+
+      <div class="relative z-10 mx-auto max-w-3xl space-y-4 sm:space-y-6">
+        <!-- 1. The Startup Pill Badge -->
+        <div class="inline-flex items-center gap-2 rounded-full border border-amber-500/20 dark:border-amber-400/30 bg-gradient-to-r from-amber-500/8 via-orange-500/8 to-yellow-500/8 dark:from-amber-500/15 dark:via-orange-500/15 dark:to-yellow-500/15 px-3.5 py-1.5 shadow-2xs backdrop-blur-md select-none">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+          </span>
+          <span class="font-outfit text-[11px] sm:text-xs font-bold tracking-wider uppercase text-slate-700 dark:text-slate-200">
+            Verified Everyday Tools
+          </span>
+          <span class="text-amber-500 dark:text-amber-400 text-xs font-bold ml-0.5">✦</span>
+        </div>
+
+        <!-- 2. The Main H1 Headline -->
+        <h1 class="display-hero font-outfit text-3xl sm:text-5xl lg:text-[56px] xl:text-[60px] font-black tracking-[-0.035em] text-slate-900 dark:text-white leading-[1.12] sm:leading-[1.08] text-balance">
+          Everyday Calculators. <br class="hidden sm:inline" />
+          <span class="bg-gradient-to-r from-amber-600 via-orange-600 via-pink-600 to-purple-600 dark:from-amber-400 dark:via-orange-300 dark:to-pink-300 bg-clip-text text-transparent">
+            Fast, Accurate & Private.
+          </span>
+        </h1>
+
+        <!-- 3. Subtitle Paragraph -->
+        <p class="font-sans text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal text-balance px-2">
+          Pure everyday life calculators arranged in a 3-by-3 structure. Each tool runs 100% client-side with zero latency and complete privacy.
+        </p>
+
+
+      </div>
+    </section>
+
+    <!-- [3-BY-3 EVERYDAY DIRECTORY]: Strictly 3 Columns on Mobile & Desktop (3 per row) -->
+    <section class="space-y-4 sm:space-y-5">
+      <!-- Section Header without numbers & Back Link -->
+      <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">☀️</span>
+          <h2 class="font-outfit text-sm sm:text-base md:text-lg font-black uppercase tracking-[0.15em] text-slate-900 dark:text-white">
+            Everyday Directory All Tools
+          </h2>
+        </div>
+        <a
+          href="/"
+          class="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+        >
+          <span>← All Categories</span>
+        </a>
+      </div>
+
+      <!-- In-Directory Instant Search Bar: Search & Open Any Tool Directly Across The Platform -->
+      <div class="relative w-full max-w-xl mx-auto">
+        <div class="relative flex items-center group">
+          <span class="absolute left-3.5 text-slate-400 dark:text-slate-500 pointer-events-none group-focus-within:text-amber-600 dark:group-focus-within:text-amber-400 transition-colors">
+            <svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </span>
+          <input
+            id="directory-filter-input"
+            type="search"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Search any calculator here (e.g., 'emi', 'sip', 'age', 'tax', 'gpa')..."
+            class="w-full rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-white/95 dark:bg-slate-900/95 py-2.5 sm:py-3 pl-10 pr-24 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 shadow-2xs focus:border-amber-500 dark:focus:border-amber-400 focus:outline-none focus:ring-4 focus:ring-amber-500/10 dark:focus:ring-amber-400/10 transition-all backdrop-blur-xl"
+            aria-label="Search all calculators"
+          />
+          <div class="absolute right-2.5 flex items-center gap-1.5">
+            <button
+              type="button"
+              id="directory-filter-clear"
+              class="hidden p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              aria-label="Clear search"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <span id="directory-match-counter" class="text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200/60 dark:border-amber-900/60">
+              All Tools
+            </span>
+          </div>
+        </div>
+
+        <!-- Floating Live Suggestions Dropdown for Any Tool Across Entire Website -->
+        <div
+          id="directory-filter-dropdown"
+          class="absolute left-0 right-0 top-full mt-2 z-50 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl shadow-2xl shadow-slate-900/15 dark:shadow-black/50 overflow-hidden text-left transition-all duration-200 origin-top opacity-0 scale-95 pointer-events-none invisible"
+          role="listbox"
+        >
+          <div class="px-3.5 py-2 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+            <span id="directory-dropdown-title">Suggested Calculators</span>
+            <span class="text-[10px] lowercase font-normal hidden sm:inline">press enter ↵ to open</span>
+          </div>
+          <div id="directory-dropdown-list" class="max-h-[280px] overflow-y-auto p-1.5 space-y-1"></div>
+        </div>
+      </div>
+
+      <!-- THE 3-BY-3 GRID: 3 Columns on Mobile, Tablet & Desktop (Exact 3-by-3 Rhythm) -->
+      <div
+        id="everyday-grid"
+        class="grid grid-cols-3 gap-2 sm:gap-3.5 md:gap-4.5"
+      >
+        {EVERYDAY_CALCULATORS.map((calc) => (
+          <a
+            href={calc.href}
+            title={`Calculate with ${calc.name}`}
+            class="everyday-card group relative flex flex-col items-center justify-between text-center min-w-0 min-h-[110px] sm:min-h-[140px] md:min-h-[155px] rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-amber-500/50 hover:shadow-md p-2.5 sm:p-4 md:p-5 transition-all duration-200 shadow-2xs active:scale-[0.98] cursor-pointer"
+            data-name={calc.name.toLowerCase()}
+            data-desc={calc.description.toLowerCase()}
+          >
+            <!-- Top Icon Emblem -->
+            <div class="flex h-8 w-8 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-base sm:text-xl shadow-2xs group-hover:scale-110 group-hover:border-amber-400/40 transition-transform">
+              {calc.icon}
+            </div>
+
+            <!-- Title: Optimized for 3-Column Width on all devices -->
+            <div class="my-1.5 w-full min-w-0 px-0.5">
+              <h3 class="font-outfit text-[11.5px] sm:text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors truncate">
+                <span class="inline sm:hidden">{calc.shortName}</span>
+                <span class="hidden sm:inline">{calc.name}</span>
+              </h3>
+            </div>
+
+            <!-- Bottom Badge & Action -->
+            <div class="flex items-center justify-center w-full">
+              <span class="inline-flex items-center px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] md:text-[11px] font-mono font-semibold rounded-md bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200/60 dark:border-amber-900/60 truncate max-w-full">
+                {calc.badge}
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <!-- Cross-Category Match Results (e.g. When searching 'emi', 'sip', 'tax' inside Everyday) -->
+      <div id="cross-category-container" class="hidden space-y-3 pt-2">
+        <div class="flex items-center justify-between px-1">
+          <h3 class="font-outfit text-xs sm:text-sm font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1.5">
+            <span>✦</span>
+            <span id="cross-category-title">Matching Tools Found In Other Categories</span>
+          </h3>
+          <span class="text-[11px] text-slate-500 dark:text-slate-400 font-mono" id="cross-category-badge"></span>
+        </div>
+        <div id="cross-category-grid" class="grid grid-cols-3 gap-2 sm:gap-3.5 md:gap-4.5">
+          <!-- Dynamically populated 3*3 cards for tools found across categories -->
+        </div>
+      </div>
+
+      <!-- No Results Container when absolutely nothing matches across whole site -->
+      <div id="no-search-results" class="hidden py-10 text-center space-y-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50">
+        <span class="text-3xl">🔍</span>
+        <h3 class="text-sm font-bold text-slate-900 dark:text-white">No calculators found</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+          Try searching for another keyword like "age", "sip", "emi", "tax", or "date".
+        </p>
+        <div>
+          <button
+            type="button"
+            id="reset-directory-search-btn"
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-amber-600 text-white hover:bg-amber-700 transition-colors cursor-pointer"
+          >
+            <span>Show All Tools</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Educational & Architectural Value Section -->
+    <section class="rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 p-6 sm:p-9 space-y-6 shadow-sm dark:shadow-xl backdrop-blur-xl">
+      <div class="flex items-center gap-3 border-b border-slate-200/80 dark:border-slate-800/80 pb-4">
+        <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 text-lg font-bold">
+          ℹ️
+        </span>
+        <div>
+          <h3 class="font-outfit text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+            Why Use Free Accurate Everyday Calculators?
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            Engineered for daily productivity, academic calculations, home improvement, and digital utility.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm">
+        <div class="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/70 dark:border-slate-800/70 space-y-1.5">
+          <h4 class="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+            <span>⏱️</span>
+            <span>Chronological & Calendar Precision</span>
+          </h4>
+          <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-[12.5px]">
+            Tested against leap years, differing month lengths, and exact sexagesimal time additions to eliminate rounding drifts.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/70 dark:border-slate-800/70 space-y-1.5">
+          <h4 class="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+            <span>🛡️</span>
+            <span>100% Client-Side Privacy</span>
+          </h4>
+          <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-[12.5px]">
+            Your dates of birth, working hours, grades, and cryptographic passwords are computed in local browser memory and never sent over the network.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/70 dark:border-slate-800/70 space-y-1.5">
+          <h4 class="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+            <span>⚡</span>
+            <span>Zero Cold Start Performance</span>
+          </h4>
+          <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-[12.5px]">
+            Prerendered static architecture served across 300+ edge locations worldwide for sub-100ms global responsiveness.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-white/80 dark:bg-slate-900/80 border border-slate-200/70 dark:border-slate-800/70 space-y-1.5">
+          <h4 class="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+            <span>📐</span>
+            <span>Standards Compliant</span>
+          </h4>
+          <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-[12.5px]">
+            From standard credit-weighted 4.0 GPA algorithms to RFC IPv4 CIDR allocation rules and NIST unit conversions.
+          </p>
+        </div>
+      </div>
+
+      <!-- FAQ Accordion Container -->
+      <div class="pt-4 border-t border-slate-200/80 dark:border-slate-800/80 space-y-3">
+        <h4 class="font-outfit text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white">
+          Frequently Asked Questions
+        </h4>
+
+        <div class="space-y-2 text-xs sm:text-sm">
+          <details class="group rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/60 p-3.5 transition-all open:bg-white dark:open:bg-slate-900">
+            <summary class="font-semibold text-slate-800 dark:text-slate-200 cursor-pointer list-none flex items-center justify-between">
+              <span>Does the Age Calculator account for February 29 leap years?</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <p class="mt-2 text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+              Yes. The algorithm evaluates calendar leap years and exact month lengths, returning your chronological age down to precise days, hours, and seconds.
+            </p>
+          </details>
+
+          <details class="group rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/60 p-3.5 transition-all open:bg-white dark:open:bg-slate-900">
+            <summary class="font-semibold text-slate-800 dark:text-slate-200 cursor-pointer list-none flex items-center justify-between">
+              <span>Are generated passwords saved or tracked anywhere?</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <p class="mt-2 text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+              Never. Passwords are generated using the browser's cryptographic Web Crypto API. They remain strictly in ephemeral memory and are never transmitted to our servers.
+            </p>
+          </details>
+
+          <details class="group rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/60 p-3.5 transition-all open:bg-white dark:open:bg-slate-900">
+            <summary class="font-semibold text-slate-800 dark:text-slate-200 cursor-pointer list-none flex items-center justify-between">
+              <span>Can I use the Work Hours Calculator for payroll timesheets?</span>
+              <span class="text-slate-400 group-open:rotate-180 transition-transform">▼</span>
+            </summary>
+            <p class="mt-2 text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+              Yes. It calculates net payable decimal hours by subtracting unpaid lunch breaks from shift hours, and applies your hourly pay rate for instant gross pay estimation.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<!-- Embedded Database of All Calculators for Instant Cross-Directory Search -->
+<script type="application/json" id="everyday-all-tools-json" set:html={allSearchableToolsJson}></script>
+
+<!-- Client-side Interactive Universal Search & Quick-Launch Engine -->
+<script is:inline>
+  (function () {
+    const heroSearchInput = document.getElementById('everyday-search');
+    const dirSearchInput = document.getElementById('directory-filter-input');
+    const dirClearBtn = document.getElementById('directory-filter-clear');
+    const dirCounter = document.getElementById('directory-match-counter');
+    const dirDropdown = document.getElementById('directory-filter-dropdown');
+    const dirDropdownList = document.getElementById('directory-dropdown-list');
+    const dirDropdownTitle = document.getElementById('directory-dropdown-title');
+    const resetBtn = document.getElementById('reset-directory-search-btn');
+    const cards = document.querySelectorAll('.everyday-card');
+    const crossContainer = document.getElementById('cross-category-container');
+    const crossGrid = document.getElementById('cross-category-grid');
+    const crossBadge = document.getElementById('cross-category-badge');
+    const noResults = document.getElementById('no-search-results');
+    const allToolsEl = document.getElementById('everyday-all-tools-json');
+
+    let allTools = [];
+    try {
+      allTools = JSON.parse(allToolsEl?.textContent || '[]');
+    } catch (_) {
+      allTools = [];
+    }
+
+    let activeDropdownIndex = -1;
+    let currentDropdownMatches = [];
+    let firstMatchHref = null;
+
+    function escapeHtml(str) {
+      return (str || '').replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      }[m]));
+    }
+
+    function openDropdown() {
+      if (!dirDropdown) return;
+      dirDropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none', 'invisible');
+      dirDropdown.classList.add('opacity-100', 'scale-100', 'pointer-events-auto', 'visible');
+    }
+
+    function closeDropdown() {
+      if (!dirDropdown) return;
+      dirDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto', 'visible');
+      dirDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none', 'invisible');
+      activeDropdownIndex = -1;
+    }
+
+    function updateActiveDropdownItem() {
+      if (!dirDropdownList) return;
+      const items = dirDropdownList.querySelectorAll('.fac-dir-suggestion');
+      items.forEach((item, idx) => {
+        if (idx === activeDropdownIndex) {
+          item.classList.add('bg-amber-50', 'dark:bg-amber-950/70', 'ring-1', 'ring-amber-500/30');
+          item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        } else {
+          item.classList.remove('bg-amber-50', 'dark:bg-amber-950/70', 'ring-1', 'ring-amber-500/30');
+        }
+      });
+    }
+
+    function filterTools(query, sourceInput) {
+      const q = (query || '').toLowerCase().trim();
+      let everydayVisibleCount = 0;
+      firstMatchHref = null;
+
+      // 1. Filter local 10 everyday cards
+      cards.forEach((card) => {
+        const name = card.dataset.name || '';
+        const desc = card.dataset.desc || '';
+        const match = !q || name.includes(q) || desc.includes(q);
+        card.style.display = match ? 'flex' : 'none';
+        if (match) {
+          everydayVisibleCount++;
+          if (!firstMatchHref) {
+            firstMatchHref = card.getAttribute('href');
+          }
+        }
+      });
+
+      if (!q) {
+        closeDropdown();
+        if (crossContainer) crossContainer.classList.add('hidden');
+        if (noResults) noResults.style.display = 'none';
+        if (dirClearBtn) dirClearBtn.classList.add('hidden');
+        if (dirCounter) {
+          dirCounter.textContent = 'All Tools';
+          dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 border border-amber-200/60 dark:border-amber-900/60';
+        }
+        return;
+      }
+
+      if (dirClearBtn) dirClearBtn.classList.remove('hidden');
+
+      // 2. Score & Rank across ALL calculators globally
+      const matchedAll = [];
+      for (const item of allTools) {
+        const nameLower = item.name.toLowerCase();
+        const catLower = (item.categoryName || item.category || '').toLowerCase();
+        const keywords = (item.keywords || []).map((k) => k.toLowerCase());
+
+        let score = 0;
+        if (nameLower === q) score += 100;
+        else if (nameLower.startsWith(q)) score += 80;
+        else if (nameLower.includes(` ${q}`)) score += 60;
+        else if (nameLower.includes(q)) score += 40;
+        else if (keywords.some((k) => k.includes(q))) score += 35;
+        else if (catLower.includes(q)) score += 20;
+
+        if (score > 0) {
+          if (item.category === 'everyday') score += 10;
+          matchedAll.push({ item, score });
+        }
+      }
+
+      matchedAll.sort((a, b) => b.score - a.score);
+      const topDropdown = matchedAll.slice(0, 8).map((m) => m.item);
+      currentDropdownMatches = topDropdown;
+
+      // Determine default Enter launch target
+      if (!firstMatchHref && topDropdown.length > 0) {
+        firstMatchHref = topDropdown[0].href;
+      }
+
+      // 3. Render Floating Dropdown suggestions
+      if (topDropdown.length > 0 && dirDropdownList) {
+        let listHtml = '';
+        topDropdown.forEach((calc, idx) => {
+          listHtml += `
+            <a
+              href="${escapeHtml(calc.href)}"
+              class="fac-dir-suggestion group flex items-center justify-between w-full p-2.5 sm:p-3 rounded-xl hover:bg-amber-50/80 dark:hover:bg-amber-950/50 border border-transparent hover:border-amber-500/20 transition-all text-left cursor-pointer"
+              data-index="${idx}"
+              role="option"
+              title="Open ${escapeHtml(calc.name)}"
+            >
+              <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <span class="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-sm shadow-2xs group-hover:scale-110 transition-transform">
+                  ${calc.icon || '🧮'}
+                </span>
+                <div class="min-w-0">
+                  <div class="font-outfit text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 truncate">
+                    ${escapeHtml(calc.name)}
+                  </div>
+                  <div class="text-[10px] text-slate-400 dark:text-slate-500 truncate font-mono">
+                    ${escapeHtml(calc.categoryName || calc.category)}
+                  </div>
+                </div>
+              </div>
+              <span class="shrink-0 text-xs font-semibold text-amber-600 dark:text-amber-400 group-hover:translate-x-0.5 transition-transform">
+                Launch →
+              </span>
+            </a>
+          `;
+        });
+        dirDropdownList.innerHTML = listHtml;
+        if (dirDropdownTitle) {
+          dirDropdownTitle.textContent = 'Suggested Tools';
+        }
+        openDropdown();
+      } else {
+        closeDropdown();
+      }
+
+      // 4. Render Cross-Category Cards (e.g. When searching 'emi', 'sip', 'tax' inside everyday)
+      const crossMatches = matchedAll.filter((m) => m.item.category !== 'everyday').slice(0, 6).map((m) => m.item);
+      if (crossMatches.length > 0 && crossContainer && crossGrid) {
+        let gridHtml = '';
+        crossMatches.forEach((calc) => {
+          gridHtml += `
+            <a
+              href="${escapeHtml(calc.href)}"
+              title="Calculate with ${escapeHtml(calc.name)}"
+              class="group relative flex flex-col items-center justify-between text-center min-w-0 min-h-[110px] sm:min-h-[140px] md:min-h-[155px] rounded-2xl border border-amber-300/60 dark:border-amber-700/60 bg-gradient-to-b from-amber-50/50 via-white/80 to-white/90 dark:from-amber-950/30 dark:via-slate-900/80 dark:to-slate-900/90 hover:border-amber-500 hover:shadow-md p-2.5 sm:p-4 md:p-5 transition-all duration-200 shadow-2xs active:scale-[0.98] cursor-pointer"
+            >
+              <div class="flex h-8 w-8 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-amber-50 dark:bg-amber-950/80 border border-amber-200/80 dark:border-amber-800/80 text-base sm:text-xl shadow-2xs group-hover:scale-110 group-hover:border-amber-400 transition-transform">
+                ${calc.icon || '🧮'}
+              </div>
+              <div class="my-1.5 w-full min-w-0 px-0.5">
+                <h4 class="font-outfit text-[11.5px] sm:text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-amber-600 dark:group-hover:text-amber-400 transition-colors truncate">
+                  ${escapeHtml(calc.name)}
+                </h4>
+              </div>
+              <div class="flex items-center justify-center w-full">
+                <span class="inline-flex items-center px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] md:text-[11px] font-mono font-semibold rounded-md bg-amber-100/80 dark:bg-amber-900/60 text-amber-700 dark:text-amber-300 border border-amber-300/60 dark:border-amber-800/60 truncate max-w-full">
+                  ${escapeHtml(calc.categoryName || calc.category)} ↗
+                </span>
+              </div>
+            </a>
+          `;
+        });
+        crossGrid.innerHTML = gridHtml;
+        if (crossBadge) {
+          crossBadge.textContent = 'Tools outside everyday';
+        }
+        crossContainer.classList.remove('hidden');
+      } else if (crossContainer) {
+        crossContainer.classList.add('hidden');
+      }
+
+      // 5. Overall Match Counter & Empty State
+      const totalCount = everydayVisibleCount + crossMatches.length;
+      if (noResults) {
+        noResults.style.display = (totalCount === 0) ? 'block' : 'none';
+      }
+
+      if (dirCounter) {
+        if (totalCount > 0) {
+          dirCounter.textContent = 'Found';
+          dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-900/60';
+        } else {
+          dirCounter.textContent = 'No match';
+          dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200/60 dark:border-rose-900/60';
+        }
+      }
+    }
+
+    function resetSearch() {
+      if (dirSearchInput) dirSearchInput.value = '';
+      if (heroSearchInput) heroSearchInput.value = '';
+      filterTools('', null);
+      if (dirSearchInput) dirSearchInput.focus();
+    }
+
+    // Directory Search Input Listeners
+    if (dirSearchInput) {
+      dirSearchInput.addEventListener('input', (e) => {
+        filterTools(e.target.value, dirSearchInput);
+      });
+
+      dirSearchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (currentDropdownMatches.length > 0) {
+            activeDropdownIndex = (activeDropdownIndex + 1) % currentDropdownMatches.length;
+            updateActiveDropdownItem();
+          }
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (currentDropdownMatches.length > 0) {
+            activeDropdownIndex = (activeDropdownIndex - 1 + currentDropdownMatches.length) % currentDropdownMatches.length;
+            updateActiveDropdownItem();
+          }
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (activeDropdownIndex >= 0 && currentDropdownMatches[activeDropdownIndex]) {
+            window.location.href = currentDropdownMatches[activeDropdownIndex].href;
+          } else if (firstMatchHref) {
+            window.location.href = firstMatchHref;
+          }
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          resetSearch();
+        }
+      });
+
+      dirSearchInput.addEventListener('focus', () => {
+        if (dirSearchInput.value.trim() && currentDropdownMatches.length > 0) {
+          openDropdown();
+        }
+      });
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#directory-filter-dropdown') && e.target !== dirSearchInput) {
+        closeDropdown();
+      }
+    });
+
+    // Clear and Reset Buttons
+    if (dirClearBtn) dirClearBtn.addEventListener('click', resetSearch);
+    if (resetBtn) resetBtn.addEventListener('click', resetSearch);
+
+    // Hero Search Input Listener
+    if (heroSearchInput) {
+      heroSearchInput.addEventListener('input', (e) => {
+        if (dirSearchInput && !dirSearchInput.value) {
+          filterTools(e.target.value, heroSearchInput);
+        }
+      });
+    }
+
+    // URL query check on load
+    const params = new URLSearchParams(window.location.search);
+    const initialQuery = params.get('q');
+    if (initialQuery) {
+      if (dirSearchInput) dirSearchInput.value = initialQuery;
+      if (heroSearchInput) heroSearchInput.value = initialQuery;
+      filterTools(initialQuery, null);
+    }
+  })();
+</script>

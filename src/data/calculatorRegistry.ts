@@ -216,7 +216,7 @@ export const CATEGORY_METADATA: Record<CategoryId, CategoryMeta> = {
   },
   everyday: {
     id: 'everyday',
-    name: 'Everyday Life Calculators',
+    name: 'Everyday Calculators',
     eyebrow: 'Practical Everyday Productivity Tools',
     description: 'Chronological age, timesheets, date intervals, GPA grades, concrete volume, IP subnets, and secure cryptographic tools.',
     icon: 'clock',
@@ -2433,7 +2433,7 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
       },
     ],
     inputs: [
-      { id: 'birth_year', label: 'Birth Year', type: 'number', defaultValue: 2000, step: 1 },
+      { id: 'birth_year', label: 'Birth Year', type: 'number', defaultValue: 2000, min: 1900, max: 2099, step: 1 },
       { id: 'birth_month', label: 'Birth Month (1-12)', type: 'number', defaultValue: 3, min: 1, max: 12, step: 1 },
       { id: 'birth_day', label: 'Birth Day (1-31)', type: 'number', defaultValue: 15, min: 1, max: 31, step: 1 },
     ],

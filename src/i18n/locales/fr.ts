@@ -39,7 +39,7 @@ export const fr: TranslationDictionary = {
     disclaimer:
       'Tous les calculs fournis par Free Accurate Calculator sont destinés à des fins éducatives, informatives et de planification générale. Ils ne constituent pas un avis financier, fiscal, juridique ou médical formel.',
     allRightsReserved: 'Tous droits réservés.',
-    searchPlaceholder: 'Rechercher parmi 100+ outils (ex. prêt, imc, pourcentage)...',
+    searchPlaceholder: 'Rechercher des outils (ex. prêt, imc, pourcentage)...',
     close: 'Fermer',
     switchNow: 'Changer maintenant',
     keepLanguage: 'Rester en anglais',
@@ -91,7 +91,7 @@ export const fr: TranslationDictionary = {
     },
   },
   seo: {
-    siteTitle: 'Free Accurate Calculator - 100+ Outils & Calculateurs Précis en Ligne',
+    siteTitle: 'Free Accurate Calculator - Outils & Calculateurs Précis en Ligne',
     siteDescription: 'Des calculateurs en ligne gratuits, rapides et ultra-précis pour les finances, la santé, les mathématiques et le quotidien.',
     ogTitleSuffix: 'Free Accurate Calculator',
   },

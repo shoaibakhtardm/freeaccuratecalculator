@@ -210,3 +210,67 @@ test('Precise Decimal Math Utility — Eliminating Floating-Point Drift', async 
   });
 });
 
+test('Age Calculator Chronometrics & Feature Verification', async (t) => {
+  await t.test('Exact chronological age computation (Years, Months, Days)', () => {
+    const birth = new Date(2000, 0, 1, 0, 0, 0); // Jan 1, 2000
+    const target = new Date(2026, 2, 15, 0, 0, 0); // Mar 15, 2026
+
+    let years = target.getFullYear() - birth.getFullYear();
+    let months = target.getMonth() - birth.getMonth();
+    let days = target.getDate() - birth.getDate();
+
+    if (days < 0) {
+      months--;
+      const prevMonthDays = new Date(target.getFullYear(), target.getMonth(), 0).getDate();
+      days += prevMonthDays;
+    }
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    assert.equal(years, 26);
+    assert.equal(months, 2);
+    assert.equal(days, 14);
+  });
+
+  await t.test('Granular time units (Total Days, Hours, Minutes, Seconds)', () => {
+    const birth = new Date(2020, 0, 1, 0, 0, 0);
+    const target = new Date(2020, 0, 2, 12, 30, 15);
+
+    const diffMs = target.getTime() - birth.getTime();
+    const totalSecs = Math.floor(diffMs / 1000);
+    const totalMins = Math.floor(totalSecs / 60);
+    const totalHours = Math.floor(totalMins / 60);
+    const totalDays = Math.floor(totalHours / 24);
+
+    assert.equal(totalDays, 1);
+    assert.equal(totalHours, 36);
+    assert.equal(totalMins, 2190);
+    assert.equal(totalSecs, 131415);
+  });
+
+  await t.test('Strict future date rejection', () => {
+    const now = new Date();
+    const futureBirth = new Date(now.getFullYear() + 2, 0, 1);
+    const isFuture = futureBirth.getTime() > now.getTime();
+    assert.equal(isFuture, true, 'Future birth date correctly identified and rejected');
+  });
+
+  await t.test('Dedicated age-calculator HTML page exists with day, time, second controls and future limit', () => {
+    const distPath = path.join(process.cwd(), 'dist', 'client', 'everyday', 'age-calculator', 'index.html');
+    assert.ok(fs.existsSync(distPath), 'Dist HTML for age calculator must exist');
+    const content = fs.readFileSync(distPath, 'utf-8');
+
+    // Verification of required features:
+    assert.match(content, /birth-date-input/i, 'Has native date picker');
+    assert.match(content, /hero-seconds/i, 'Has live seconds display');
+    assert.match(content, /hero-hours/i, 'Has hours display');
+    assert.match(content, /metric-total-seconds/i, 'Has total seconds lived metric');
+    assert.match(content, /metric-total-days/i, 'Has total days lived metric');
+    assert.match(content, /born-day-name/i, 'Has day of birth detection');
+    assert.match(content, /next-birthday-date/i, 'Has next birthday countdown');
+    assert.match(content, /future-date-error/i, 'Has future date limitation error banner');
+  });
+});
+

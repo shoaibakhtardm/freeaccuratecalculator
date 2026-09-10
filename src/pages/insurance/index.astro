@@ -1,0 +1,699 @@
+---
+// src/pages/insurance/index.astro
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
+import { SEARCHABLE_CALCULATORS } from '../../data/searchDatabase';
+
+const allSearchableToolsJson = JSON.stringify(SEARCHABLE_CALCULATORS);
+
+// Exactly 9 Pure Insurance Calculators arranged in strict 3-by-3 structure (3 columns × 3 rows = 9)
+const INSURANCE_CALCULATORS = [
+  // Row 1: Life & Longevity
+  {
+    id: 'term-life-insurance-calculator',
+    name: 'Term Life Insurance',
+    shortName: 'Term Life',
+    icon: '🛡️',
+    href: '/insurance/term-life-insurance-calculator/',
+    badge: 'Death Benefit',
+    description: 'Calculate recommended term life insurance death benefit with DIME formula and debt coverage.',
+    subGroup: 'Life & Longevity',
+  },
+  {
+    id: 'whole-life-insurance-calculator',
+    name: 'Whole Life Insurance',
+    shortName: 'Whole Life',
+    icon: '🏛️',
+    href: '/insurance/whole-life-insurance-calculator/',
+    badge: 'Cash Value',
+    description: 'Project guaranteed cash value growth, permanent death benefit, and policy borrowing power.',
+    subGroup: 'Life & Longevity',
+  },
+  {
+    id: 'annuity-payout-calculator',
+    name: 'Annuity Payout Calculator',
+    shortName: 'Annuity',
+    icon: '📜',
+    href: '/insurance/annuity-payout-calculator/',
+    badge: 'Guaranteed Stream',
+    description: 'Determine guaranteed lifetime monthly income and fixed-period annuity liquidation schedules.',
+    subGroup: 'Life & Longevity',
+  },
+
+  // Row 2: Health & Liability Protection
+  {
+    id: 'health-insurance-calculator',
+    name: 'Health Insurance Calculator',
+    shortName: 'Health Plan',
+    icon: '🩺',
+    href: '/insurance/health-insurance-calculator/',
+    badge: 'Out-of-Pocket',
+    description: 'Compare health plan costs including premiums, deductibles, co-insurance, and OOP maximums.',
+    subGroup: 'Health & Liability',
+  },
+  {
+    id: 'disability-insurance-calculator',
+    name: 'Disability Insurance',
+    shortName: 'Disability Ins',
+    icon: '♿',
+    href: '/insurance/disability-insurance-calculator/',
+    badge: 'Income Shield',
+    description: 'Calculate short-term and long-term disability wage protection and monthly benefit requirements.',
+    subGroup: 'Health & Liability',
+  },
+  {
+    id: 'umbrella-insurance-calculator',
+    name: 'Umbrella Insurance',
+    shortName: 'Umbrella Ins',
+    icon: '☂️',
+    href: '/insurance/umbrella-insurance-calculator/',
+    badge: 'Excess Liability',
+    description: 'Calculate secondary umbrella liability coverage needed above standard home and auto limits.',
+    subGroup: 'Health & Liability',
+  },
+
+  // Row 3: Vehicle & Property Protection
+  {
+    id: 'auto-insurance-calculator',
+    name: 'Auto Insurance Estimator',
+    shortName: 'Auto Ins',
+    icon: '🚗',
+    href: '/insurance/auto-insurance-calculator/',
+    badge: 'Driver Risk',
+    description: 'Estimate motor insurance premiums across liability, collision, comprehensive, and deductibles.',
+    subGroup: 'Property & Vehicle',
+  },
+  {
+    id: 'homeowners-insurance-calculator',
+    name: 'Homeowners Insurance',
+    shortName: 'Homeowners',
+    icon: '🏡',
+    href: '/insurance/homeowners-insurance-calculator/',
+    badge: 'Replacement Cost',
+    description: 'Estimate dwelling replacement values, personal belongings coverage, and annual premiums.',
+    subGroup: 'Property & Vehicle',
+  },
+  {
+    id: 'renters-insurance-calculator',
+    name: 'Renters Insurance',
+    shortName: 'Renters Ins',
+    icon: '🏢',
+    href: '/insurance/renters-insurance-calculator/',
+    badge: 'Personal Property',
+    description: 'Calculate personal property inventory and liability protection costs for apartment renters.',
+    subGroup: 'Property & Vehicle',
+  },
+];
+
+const insuranceHubSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Insurance Calculators — Free Accurate Calculator',
+  description: 'Complete suite of actuarially verified insurance calculators arranged in a 3-by-3 structure: Term Life, Whole Life, Health, Auto, Homeowners, Renters, Disability, Umbrella, and Annuity Payout.',
+  url: 'https://freeaccuratecalculator.com/insurance/',
+};
+---
+
+<Layout
+  title="Insurance Calculators — Fast, Accurate & Free Actuarial Tools"
+  description="Make smart risk decisions with verified insurance calculators: Term Life, Whole Life, Health, Auto, Homeowners, Renters, Disability, Umbrella, and Annuity Payout."
+  jsonLd={insuranceHubSchema}
+>
+  <div class="max-w-7xl mx-auto space-y-8">
+    <!-- Breadcrumbs -->
+    <Breadcrumbs items={[{ label: 'Insurance' }]} />
+
+    <!-- [HERO SECTION]: Royal Presentation -->
+    <section class="relative overflow-hidden rounded-3xl sm:rounded-[36px] border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-950/70 px-4 py-8 sm:py-14 md:py-16 text-center hero-mesh-gradient shadow-xs sm:shadow-lg backdrop-blur-xl">
+      <div
+        class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 sm:w-[580px] h-44 sm:h-72 bg-gradient-to-b from-cyan-500/20 via-blue-500/15 to-transparent blur-3xl pointer-events-none"
+        aria-hidden="true"
+      ></div>
+
+      <div class="relative z-10 mx-auto max-w-3xl space-y-4 sm:space-y-6">
+        <!-- 1. The Startup Pill Badge -->
+        <div class="inline-flex items-center gap-2 rounded-full border border-cyan-500/20 dark:border-cyan-400/30 bg-gradient-to-r from-cyan-500/8 via-blue-500/8 to-indigo-500/8 dark:from-cyan-500/15 dark:via-blue-500/15 dark:to-indigo-500/15 px-3.5 py-1.5 shadow-2xs backdrop-blur-md select-none">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span class="font-outfit text-[11px] sm:text-xs font-bold tracking-wider uppercase text-slate-700 dark:text-slate-200">
+            Verified Insurance Calculators
+          </span>
+          <span class="text-cyan-500 dark:text-cyan-400 text-xs font-bold ml-0.5">✦</span>
+        </div>
+
+        <!-- 2. The Main H1 Headline -->
+        <h1 class="display-hero font-outfit text-3xl sm:text-5xl lg:text-[56px] xl:text-[60px] font-black tracking-[-0.035em] text-slate-900 dark:text-white leading-[1.12] sm:leading-[1.08] text-balance">
+          Insurance Calculators. <br class="hidden sm:inline" />
+          <span class="bg-gradient-to-r from-cyan-600 via-blue-600 via-indigo-600 to-teal-500 dark:from-cyan-400 dark:via-blue-300 dark:to-indigo-300 bg-clip-text text-transparent">
+            Fast, Accurate & Private.
+          </span>
+        </h1>
+
+        <!-- 3. Subtitle Paragraph -->
+        <p class="font-sans text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal text-balance px-2">
+          Pure insurance and actuarial calculators arranged in a 3-by-3 structure. Each tool runs 100% client-side with zero latency and full privacy.
+        </p>
+      </div>
+    </section>
+
+    <!-- [3-BY-3 INSURANCE DIRECTORY]: Strictly 3 Columns on Mobile & Desktop -->
+    <section class="space-y-4 sm:space-y-5">
+      <!-- Section Header without numbers & Back Link -->
+      <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">🛡️</span>
+          <h2 class="font-outfit text-sm sm:text-base md:text-lg font-black uppercase tracking-[0.15em] text-slate-900 dark:text-white">
+            Insurance Directory All Tools
+          </h2>
+        </div>
+        <a
+          href="/"
+          class="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+        >
+          <span>← All Categories</span>
+        </a>
+      </div>
+
+      <!-- In-Directory Instant Search Bar -->
+      <div class="relative w-full max-w-xl mx-auto">
+        <div class="relative flex items-center group">
+          <span class="absolute left-3.5 text-slate-400 dark:text-slate-500 pointer-events-none group-focus-within:text-cyan-600 dark:group-focus-within:text-cyan-400 transition-colors">
+            <svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </span>
+          <input
+            id="directory-filter-input"
+            type="search"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Search any calculator here (e.g., 'term life', 'health', 'auto', 'umbrella')..."
+            class="w-full rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-white/95 dark:bg-slate-900/95 py-2.5 sm:py-3 pl-10 pr-24 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 shadow-2xs focus:border-cyan-500 dark:focus:border-cyan-400 focus:outline-none focus:ring-4 focus:ring-cyan-500/10 dark:focus:ring-cyan-400/10 transition-all backdrop-blur-xl"
+            aria-label="Search all calculators"
+          />
+          <div class="absolute right-2.5 flex items-center gap-1.5">
+            <button
+              type="button"
+              id="directory-filter-clear"
+              class="hidden p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              aria-label="Clear search"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <span id="directory-match-counter" class="text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200/60 dark:border-cyan-900/60">
+              All Tools
+            </span>
+          </div>
+        </div>
+
+        <!-- Floating Live Suggestions Dropdown -->
+        <div
+          id="directory-filter-dropdown"
+          class="absolute left-0 right-0 top-full mt-2 z-50 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl shadow-2xl shadow-slate-900/15 dark:shadow-black/50 overflow-hidden text-left transition-all duration-200 origin-top opacity-0 scale-95 pointer-events-none invisible"
+          role="listbox"
+        >
+          <div class="px-3.5 py-2 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+            <span id="directory-dropdown-title">Suggested Tools</span>
+            <span class="text-[10px] lowercase font-normal hidden sm:inline">press enter ↵ to open</span>
+          </div>
+          <div id="directory-dropdown-list" class="max-h-[280px] overflow-y-auto p-1.5 space-y-1"></div>
+        </div>
+      </div>
+
+      <!-- THE 3-BY-3 GRID: 3 Columns on Mobile, Tablet & Desktop (Exact 3-by-3 Rhythm) -->
+      <div
+        id="insurance-grid"
+        class="grid grid-cols-3 gap-2 sm:gap-3.5 md:gap-4.5"
+      >
+        {INSURANCE_CALCULATORS.map((calc) => (
+          <a
+            href={calc.href}
+            title={`Calculate with ${calc.name}`}
+            class="insurance-card group relative flex flex-col items-center justify-between text-center min-w-0 min-h-[110px] sm:min-h-[140px] md:min-h-[155px] rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-cyan-500/50 hover:shadow-md p-2.5 sm:p-4 md:p-5 transition-all duration-200 shadow-2xs active:scale-[0.98] cursor-pointer"
+            data-name={calc.name.toLowerCase()}
+            data-desc={calc.description.toLowerCase()}
+          >
+            <!-- Top Icon Emblem -->
+            <div class="flex h-8 w-8 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-base sm:text-xl shadow-2xs group-hover:scale-110 group-hover:border-cyan-400/40 transition-transform">
+              {calc.icon}
+            </div>
+
+            <!-- Title: Optimized for 3-Column Width on all devices -->
+            <div class="my-1.5 w-full min-w-0 px-0.5">
+              <h3 class="font-outfit text-[11.5px] sm:text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors truncate">
+                <span class="inline sm:hidden">{calc.shortName}</span>
+                <span class="hidden sm:inline">{calc.name}</span>
+              </h3>
+            </div>
+
+            <!-- Bottom Badge & Action -->
+            <div class="flex items-center justify-center w-full">
+              <span class="inline-flex items-center px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] md:text-[11px] font-mono font-semibold rounded-md bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200/60 dark:border-cyan-900/60 truncate max-w-full">
+                {calc.badge}
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <!-- Cross-Category Match Results -->
+      <div id="cross-category-container" class="hidden space-y-3 pt-2">
+        <div class="flex items-center justify-between px-1">
+          <h3 class="font-outfit text-xs sm:text-sm font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400 flex items-center gap-1.5">
+            <span>✦</span>
+            <span id="cross-category-title">Matching Tools Found In Other Categories</span>
+          </h3>
+          <span class="text-[11px] text-slate-500 dark:text-slate-400 font-mono" id="cross-category-badge"></span>
+        </div>
+        <div id="cross-category-grid" class="grid grid-cols-3 gap-2 sm:gap-3.5 md:gap-4.5">
+          <!-- Dynamically populated 3*3 cards for tools found across categories -->
+        </div>
+      </div>
+
+      <!-- No Results Container -->
+      <div id="no-search-results" class="hidden py-10 text-center space-y-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50">
+        <span class="text-3xl">🔍</span>
+        <h3 class="text-sm font-bold text-slate-900 dark:text-white">No calculators found</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+          Try searching for another keyword like "term life", "auto", "health", "annuity", or "homeowners".
+        </p>
+        <div>
+          <button
+            type="button"
+            id="reset-directory-search-btn"
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-cyan-600 text-white hover:bg-cyan-700 transition-colors cursor-pointer"
+          >
+            <span>Show All Tools</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Educational & Actuarial Value Section -->
+    <section class="rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 p-6 sm:p-9 space-y-6 shadow-sm dark:shadow-xl backdrop-blur-xl">
+      <div class="flex items-center gap-3 border-b border-slate-200/80 dark:border-slate-800/80 pb-4">
+        <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 text-lg font-bold">
+          ℹ️
+        </span>
+        <div>
+          <h3 class="font-outfit text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+            Why Use Free Accurate Insurance Calculators?
+          </h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Engineered for actuarial precision, unbiased policy analysis, and complete user privacy
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div class="space-y-2 p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+          <div class="text-lg">🔒</div>
+          <h4 class="font-outfit text-xs sm:text-sm font-bold text-slate-900 dark:text-white">100% Client-Side Privacy</h4>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Your family income, health status, asset valuations, and policy limits are never transmitted to any external server or lead broker. Everything calculates locally in your browser.
+          </p>
+        </div>
+
+        <div class="space-y-2 p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+          <div class="text-lg">📐</div>
+          <h4 class="font-outfit text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Actuarial Industry Standards</h4>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Based on established underwriting principles like the DIME method (Debt, Income, Mortgage, Education) and standard co-insurance cost curves.
+          </p>
+        </div>
+
+        <div class="space-y-2 p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+          <div class="text-lg">⚖️</div>
+          <h4 class="font-outfit text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Unbiased & Agent-Free</h4>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            No commissioned sales agents, no hidden insurance broker markup, and no pressure. Pure mathematical models designed solely for consumer protection.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Insurance FAQs Accordion Section -->
+    <section class="rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 p-6 sm:p-9 space-y-6 shadow-sm dark:shadow-xl backdrop-blur-xl">
+      <div class="flex items-center gap-3 border-b border-slate-200/80 dark:border-slate-800/80 pb-4">
+        <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 text-lg font-bold">
+          ❓
+        </span>
+        <div>
+          <h3 class="font-outfit text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+            Frequently Asked Questions About Insurance Calculations
+          </h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Clear actuarial answers to help you select appropriate coverage limits
+          </p>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        <details class="group rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-800/40 p-4 transition-all open:bg-white dark:open:bg-slate-850">
+          <summary class="flex cursor-pointer items-center justify-between font-outfit text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 list-none">
+            <span>How much term life insurance coverage do I actually need?</span>
+            <span class="text-xs text-cyan-600 dark:text-cyan-400 transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <p class="mt-3 text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Most financial planners and certified actuaries use the DIME formula: Debt + Income replacement (typically 10 to 12 times annual earnings) + Mortgage balance + Education expenses for children, minus existing liquid assets and investments.
+          </p>
+        </details>
+
+        <details class="group rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-800/40 p-4 transition-all open:bg-white dark:open:bg-slate-850">
+          <summary class="flex cursor-pointer items-center justify-between font-outfit text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 list-none">
+            <span>What is the difference between Term Life and Whole Life insurance?</span>
+            <span class="text-xs text-cyan-600 dark:text-cyan-400 transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <p class="mt-3 text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Term life provides pure death benefit protection for a fixed period (such as 10, 20, or 30 years) at significantly lower premiums. Whole life is permanent insurance that remains active for your entire life and builds tax-deferred cash value over time.
+          </p>
+        </details>
+
+        <details class="group rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-800/40 p-4 transition-all open:bg-white dark:open:bg-slate-850">
+          <summary class="flex cursor-pointer items-center justify-between font-outfit text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 list-none">
+            <span>How do health insurance deductibles and out-of-pocket maximums interact?</span>
+            <span class="text-xs text-cyan-600 dark:text-cyan-400 transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <p class="mt-3 text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            You pay 100% of medical bills until you satisfy your deductible. After that, you pay co-insurance (e.g., 20%) while the insurer pays 80%, until your total spending reaches the annual out-of-pocket maximum, after which the insurer covers 100% of eligible in-network costs.
+          </p>
+        </details>
+
+        <details class="group rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-800/40 p-4 transition-all open:bg-white dark:open:bg-slate-850">
+          <summary class="flex cursor-pointer items-center justify-between font-outfit text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 list-none">
+            <span>Who needs Umbrella Insurance?</span>
+            <span class="text-xs text-cyan-600 dark:text-cyan-400 transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <p class="mt-3 text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Anyone whose net worth, future earnings, or personal assets exceed the liability limits of standard auto or homeowners policies should consider umbrella coverage. It kicks in when underlying bodily injury or property liability limits are exhausted.
+          </p>
+        </details>
+
+        <details class="group rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-800/40 p-4 transition-all open:bg-white dark:open:bg-slate-850">
+          <summary class="flex cursor-pointer items-center justify-between font-outfit text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 list-none">
+            <span>What is the difference between Dwelling Replacement Cost and Market Value?</span>
+            <span class="text-xs text-cyan-600 dark:text-cyan-400 transition-transform group-open:rotate-180">▼</span>
+          </summary>
+          <p class="mt-3 text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Market value includes the price of land and location desirability. Replacement cost is strictly the estimated construction cost of materials and labor needed to rebuild your home from scratch following a total loss.
+          </p>
+        </details>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<!-- Embedded Database of All Calculators for Instant Cross-Directory Search -->
+<script type="application/json" id="insurance-all-tools-json" set:html={allSearchableToolsJson}></script>
+
+<!-- Client-side Interactive Universal Search & Quick-Launch Engine -->
+<script is:inline>
+  (function () {
+    const dirSearchInput = document.getElementById('directory-filter-input');
+    const dirClearBtn = document.getElementById('directory-filter-clear');
+    const dirCounter = document.getElementById('directory-match-counter');
+    const dirDropdown = document.getElementById('directory-filter-dropdown');
+    const dirDropdownList = document.getElementById('directory-dropdown-list');
+    const dirDropdownTitle = document.getElementById('directory-dropdown-title');
+    const resetBtn = document.getElementById('reset-directory-search-btn');
+    const cards = document.querySelectorAll('.insurance-card');
+    const crossContainer = document.getElementById('cross-category-container');
+    const crossGrid = document.getElementById('cross-category-grid');
+    const crossBadge = document.getElementById('cross-category-badge');
+    const noResults = document.getElementById('no-search-results');
+    const allToolsEl = document.getElementById('insurance-all-tools-json');
+
+    let allTools = [];
+    try {
+      allTools = JSON.parse(allToolsEl?.textContent || '[]');
+    } catch (_) {
+      allTools = [];
+    }
+
+    let activeDropdownIndex = -1;
+    let currentDropdownMatches = [];
+    let firstMatchHref = null;
+
+    function escapeHtml(str) {
+      return (str || '').replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      }[m]));
+    }
+
+    function openDropdown() {
+      if (!dirDropdown) return;
+      dirDropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none', 'invisible');
+      dirDropdown.classList.add('opacity-100', 'scale-100', 'pointer-events-auto', 'visible');
+    }
+
+    function closeDropdown() {
+      if (!dirDropdown) return;
+      dirDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto', 'visible');
+      dirDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none', 'invisible');
+      activeDropdownIndex = -1;
+    }
+
+    function updateActiveDropdownItem() {
+      if (!dirDropdownList) return;
+      const items = dirDropdownList.querySelectorAll('.fac-dir-suggestion');
+      items.forEach((item, idx) => {
+        if (idx === activeDropdownIndex) {
+          item.classList.add('bg-cyan-50', 'dark:bg-cyan-950/70', 'ring-1', 'ring-cyan-500/30');
+          item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        } else {
+          item.classList.remove('bg-cyan-50', 'dark:bg-cyan-950/70', 'ring-1', 'ring-cyan-500/30');
+        }
+      });
+    }
+
+    function filterTools(query) {
+      const q = (query || '').toLowerCase().trim();
+      let insuranceVisibleCount = 0;
+      firstMatchHref = null;
+
+      // 1. Filter local 9 insurance cards
+      cards.forEach((card) => {
+        const name = card.dataset.name || '';
+        const desc = card.dataset.desc || '';
+        const match = !q || name.includes(q) || desc.includes(q);
+        card.style.display = match ? 'flex' : 'none';
+        if (match) {
+          insuranceVisibleCount++;
+          if (!firstMatchHref) {
+            firstMatchHref = card.getAttribute('href');
+          }
+        }
+      });
+
+      if (!q) {
+        closeDropdown();
+        if (crossContainer) crossContainer.classList.add('hidden');
+        if (noResults) noResults.style.display = 'none';
+        if (dirClearBtn) dirClearBtn.classList.add('hidden');
+        if (dirCounter) {
+          dirCounter.textContent = 'All Tools';
+          dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200/60 dark:border-cyan-900/60';
+        }
+        return;
+      }
+
+      if (dirClearBtn) dirClearBtn.classList.remove('hidden');
+
+      // 2. Score & Rank across ALL calculators globally
+      const matchedAll = [];
+      for (const item of allTools) {
+        const nameLower = item.name.toLowerCase();
+        const catLower = (item.categoryName || item.category || '').toLowerCase();
+        const keywords = (item.keywords || []).map((k) => k.toLowerCase());
+
+        let score = 0;
+        if (nameLower === q) score += 100;
+        else if (nameLower.startsWith(q)) score += 80;
+        else if (nameLower.includes(` ${q}`)) score += 60;
+        else if (nameLower.includes(q)) score += 40;
+        else if (keywords.some((k) => k.includes(q))) score += 35;
+        else if (catLower.includes(q)) score += 20;
+
+        if (score > 0) {
+          matchedAll.push({ ...item, score });
+        }
+      }
+
+      matchedAll.sort((a, b) => b.score - a.score);
+
+      // 3. Populate Live Suggestion Dropdown
+      currentDropdownMatches = matchedAll.slice(0, 7);
+      if (currentDropdownMatches.length > 0) {
+        if (!firstMatchHref) {
+          firstMatchHref = currentDropdownMatches[0].href;
+        }
+        if (dirDropdownTitle) {
+          dirDropdownTitle.textContent = 'Suggested Tools';
+        }
+        if (dirDropdownList) {
+          dirDropdownList.innerHTML = currentDropdownMatches
+            .map(
+              (item, idx) => `
+              <a
+                href="${escapeHtml(item.href)}"
+                class="fac-dir-suggestion flex items-center justify-between gap-3 px-3 py-2 rounded-xl hover:bg-cyan-50/80 dark:hover:bg-cyan-950/50 border border-transparent hover:border-cyan-200/50 dark:hover:border-cyan-800/50 transition-colors group cursor-pointer"
+                data-index="${idx}"
+              >
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <span class="text-base sm:text-lg shrink-0">${item.icon || '🛡️'}</span>
+                  <div class="min-w-0">
+                    <div class="text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-100 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 truncate">
+                      ${escapeHtml(item.name)}
+                    </div>
+                    <div class="text-[10px] text-slate-400 dark:text-slate-500 truncate">
+                      ${escapeHtml(item.categoryName || item.category || 'Tool')}
+                    </div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <span class="text-[9px] font-mono font-medium px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
+                    Open ↗
+                  </span>
+                </div>
+              </a>
+            `
+            )
+            .join('');
+        }
+        openDropdown();
+      } else {
+        closeDropdown();
+      }
+
+      // 4. Update Directory Counter Pill
+      if (dirCounter) {
+        if (insuranceVisibleCount > 0) {
+          dirCounter.textContent = 'Filtered';
+          dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-900/60';
+        } else if (matchedAll.length > 0) {
+          dirCounter.textContent = 'Global Match';
+          dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200/60 dark:border-cyan-900/60';
+        } else {
+          dirCounter.textContent = '0 Matches';
+          dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200/60 dark:border-rose-900/60';
+        }
+      }
+
+      // 5. Handle Cross-Category Results Grid
+      const nonInsuranceMatches = matchedAll.filter((i) => i.category !== 'insurance');
+      if (insuranceVisibleCount === 0 && nonInsuranceMatches.length > 0) {
+        if (crossContainer) crossContainer.classList.remove('hidden');
+        if (crossBadge) crossBadge.textContent = 'Suggested Tools';
+        if (crossGrid) {
+          crossGrid.innerHTML = nonInsuranceMatches.slice(0, 9).map((calc) => `
+            <a
+              href="${escapeHtml(calc.href)}"
+              title="Calculate with ${escapeHtml(calc.name)}"
+              class="group relative flex flex-col items-center justify-between text-center min-w-0 min-h-[110px] sm:min-h-[140px] md:min-h-[155px] rounded-2xl border border-cyan-200/60 dark:border-cyan-900/40 bg-white/90 dark:bg-slate-900/90 hover:bg-cyan-50/40 dark:hover:bg-cyan-950/30 hover:border-cyan-500/50 hover:shadow-md p-2.5 sm:p-4 md:p-5 transition-all duration-200 shadow-2xs active:scale-[0.98] cursor-pointer"
+            >
+              <div class="flex h-8 w-8 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-base sm:text-xl shadow-2xs group-hover:scale-110 group-hover:border-cyan-400/40 transition-transform">
+                ${calc.icon || '🧮'}
+              </div>
+              <div class="my-1.5 w-full min-w-0 px-0.5">
+                <h3 class="font-outfit text-[11.5px] sm:text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors truncate">
+                  ${escapeHtml(calc.name)}
+                </h3>
+              </div>
+              <div class="flex items-center justify-center w-full">
+                <span class="inline-flex items-center px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] md:text-[11px] font-mono font-semibold rounded-md bg-cyan-50 dark:bg-cyan-950/60 text-cyan-600 dark:text-cyan-400 border border-cyan-200/60 dark:border-cyan-900/60 truncate max-w-full">
+                  ${escapeHtml(calc.categoryName || calc.category || 'Calculator')}
+                </span>
+              </div>
+            </a>
+          `).join('');
+        }
+      } else {
+        if (crossContainer) crossContainer.classList.add('hidden');
+      }
+
+      // 6. No Results State
+      if (insuranceVisibleCount === 0 && matchedAll.length === 0) {
+        if (noResults) noResults.style.display = 'block';
+      } else {
+        if (noResults) noResults.style.display = 'none';
+      }
+    }
+
+    if (dirSearchInput) {
+      dirSearchInput.addEventListener('input', (e) => {
+        filterTools(e.target.value);
+      });
+
+      dirSearchInput.addEventListener('keydown', (e) => {
+        if (!dirDropdown || dirDropdown.classList.contains('invisible')) {
+          if (e.key === 'Enter' && firstMatchHref) {
+            e.preventDefault();
+            window.location.href = firstMatchHref;
+          }
+          return;
+        }
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          activeDropdownIndex = Math.min(activeDropdownIndex + 1, currentDropdownMatches.length - 1);
+          updateActiveDropdownItem();
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          activeDropdownIndex = Math.max(activeDropdownIndex - 1, 0);
+          updateActiveDropdownItem();
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (activeDropdownIndex >= 0 && currentDropdownMatches[activeDropdownIndex]) {
+            window.location.href = currentDropdownMatches[activeDropdownIndex].href;
+          } else if (firstMatchHref) {
+            window.location.href = firstMatchHref;
+          }
+        } else if (e.key === 'Escape') {
+          closeDropdown();
+        }
+      });
+
+      dirSearchInput.addEventListener('focus', () => {
+        if (dirSearchInput.value.trim() && currentDropdownMatches.length > 0) {
+          openDropdown();
+        }
+      });
+    }
+
+    if (dirClearBtn) {
+      dirClearBtn.addEventListener('click', () => {
+        if (dirSearchInput) {
+          dirSearchInput.value = '';
+          dirSearchInput.focus();
+        }
+        filterTools('');
+      });
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (dirSearchInput) dirSearchInput.value = '';
+        filterTools('');
+      });
+    }
+
+    document.addEventListener('click', (e) => {
+      if (
+        dirDropdown &&
+        !dirDropdown.contains(e.target) &&
+        dirSearchInput &&
+        !dirSearchInput.contains(e.target)
+      ) {
+        closeDropdown();
+      }
+    });
+  })();
+</script>

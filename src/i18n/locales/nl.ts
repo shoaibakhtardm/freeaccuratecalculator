@@ -39,7 +39,7 @@ export const nl: TranslationDictionary = {
     disclaimer:
       'Alle berekeningen van Free Accurate Calculator zijn uitsluitend bedoeld voor educatieve, informatieve en algemene planningsdoeleinden. Ze vormen geen formeel financieel, fiscaal, juridisch of medisch advies.',
     allRightsReserved: 'Alle rechten voorbehouden.',
-    searchPlaceholder: 'Doorzoek 100+ rekenmachines (bijv. lening, bmi, percentage)...',
+    searchPlaceholder: 'Doorzoek rekenmachines (bijv. lening, bmi, percentage)...',
     close: 'Sluiten',
     switchNow: 'Nu Wisselen',
     keepLanguage: 'Blijf op Engels',
@@ -91,7 +91,7 @@ export const nl: TranslationDictionary = {
     },
   },
   seo: {
-    siteTitle: 'Free Accurate Calculator - 100+ Gratis Nauwkeurige Online Rekenmachines',
+    siteTitle: 'Free Accurate Calculator - Gratis Nauwkeurige Online Rekenmachines',
     siteDescription: 'Snelle, accurate en gratis online rekenhulpen voor financiën, leningen, gezondheid en wiskunde.',
     ogTitleSuffix: 'Free Accurate Calculator',
   },

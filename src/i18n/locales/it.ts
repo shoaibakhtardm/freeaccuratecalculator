@@ -39,7 +39,7 @@ export const it: TranslationDictionary = {
     disclaimer:
       'Tutti i calcoli forniti da Free Accurate Calculator sono intesi esclusivamente per scopi educativi, informativi e di pianificazione generale. Non costituiscono una consulenza finanziaria, fiscale, legale o medica formale.',
     allRightsReserved: 'Tutti i diritti riservati.',
-    searchPlaceholder: 'Cerca tra oltre 100 calcolatori (es. mutuo, bmi, percentuale)...',
+    searchPlaceholder: 'Cerca calcolatori (es. mutuo, bmi, percentuale)...',
     close: 'Chiudi',
     switchNow: 'Passa Ora',
     keepLanguage: 'Rimani in Inglese',
@@ -91,7 +91,7 @@ export const it: TranslationDictionary = {
     },
   },
   seo: {
-    siteTitle: 'Free Accurate Calculator - Oltre 100 Calcolatori Online Gratuiti e Precisi',
+    siteTitle: 'Free Accurate Calculator - Calcolatori Online Gratuiti e Precisi',
     siteDescription: 'Calcolatori online gratuiti, veloci e precisi per finanza, salute, matematica e calcoli quotidiani.',
     ogTitleSuffix: 'Free Accurate Calculator',
   },

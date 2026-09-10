@@ -1,0 +1,834 @@
+---
+// src/pages/finance/index.astro
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
+import { SEARCHABLE_CALCULATORS } from '../../data/searchDatabase';
+
+const allSearchableToolsJson = JSON.stringify(SEARCHABLE_CALCULATORS);
+
+// 27 Pure Finance Calculators arranged in strict 3-by-3 structure (3 columns × 9 rows = 27)
+const FINANCE_CALCULATORS = [
+  // Row 1: Core Loans
+  {
+    id: 'emi-calculator',
+    name: 'EMI Calculator',
+    shortName: 'EMI',
+    icon: '🏦',
+    href: '/finance/emi-calculator/',
+    badge: 'Country-Aware',
+    description: 'Calculate home, car, and personal loan EMIs with reducing balance interest.',
+    subGroup: 'Loans',
+  },
+  {
+    id: 'mortgage-calculator',
+    name: 'Mortgage Calculator',
+    shortName: 'Mortgage',
+    icon: '🏠',
+    href: '/finance/mortgage-calculator/',
+    badge: 'Amortization',
+    description: 'Monthly mortgage payments, property taxes, and amortization schedules.',
+    subGroup: 'Loans',
+  },
+  {
+    id: 'loan-calculator',
+    name: 'Loan Calculator',
+    shortName: 'Loan',
+    icon: '💳',
+    href: '/finance/loan-calculator/',
+    badge: 'Fixed APR',
+    description: 'Estimate monthly loan payments, total interest, and payoff dates.',
+    subGroup: 'Loans',
+  },
+
+  // Row 2: Specialized Loans
+  {
+    id: 'auto-loan-calculator',
+    name: 'Auto Loan Calculator',
+    shortName: 'Auto Loan',
+    icon: '🚗',
+    href: '/finance/auto-loan-calculator/',
+    badge: 'Vehicle APR',
+    description: 'Car loan payments, trade-in value, sales tax, and dealer financing terms.',
+    subGroup: 'Loans',
+  },
+  {
+    id: 'amortization-calculator',
+    name: 'Loan Amortization',
+    shortName: 'Amortization',
+    icon: '📊',
+    href: '/finance/amortization-calculator/',
+    badge: 'Schedule',
+    description: 'Complete payment-by-payment principal and interest breakdown schedule.',
+    subGroup: 'Loans',
+  },
+  {
+    id: 'payment-calculator',
+    name: 'Payment Calculator',
+    shortName: 'Payment',
+    icon: '💵',
+    href: '/finance/payment-calculator/',
+    badge: 'Budget Fit',
+    description: 'Reverse calculate affordability, loan amounts, and payment terms.',
+    subGroup: 'Loans',
+  },
+
+  // Row 3: SIP & Mutual Funds
+  {
+    id: 'sip-calculator',
+    name: 'SIP Calculator',
+    shortName: 'SIP',
+    icon: '📈',
+    href: '/finance/sip-calculator/',
+    badge: 'Mutual Fund',
+    description: 'Calculate Systematic Investment Plan returns and wealth compounding.',
+    subGroup: 'SIP',
+  },
+  {
+    id: 'step-up-sip-calculator',
+    name: 'Step-Up SIP Calculator',
+    shortName: 'Step-Up SIP',
+    icon: '🚀',
+    href: '/finance/step-up-sip-calculator/',
+    badge: 'Annual Boost',
+    description: 'Factor annual investment percentage increments into future SIP wealth.',
+    subGroup: 'SIP',
+  },
+  {
+    id: 'lumpsum-calculator',
+    name: 'Lumpsum Calculator',
+    shortName: 'Lumpsum',
+    icon: '💰',
+    href: '/finance/lumpsum-calculator/',
+    badge: 'One-Time',
+    description: 'One-time capital investment returns compounded over your horizon.',
+    subGroup: 'SIP',
+  },
+
+  // Row 4: Interest Mathematics
+  {
+    id: 'compound-interest-calculator',
+    name: 'Compound Interest',
+    shortName: 'Compound Int',
+    icon: '⏳',
+    href: '/finance/compound-interest-calculator/',
+    badge: 'Daily to Annual',
+    description: 'Compound interest calculated across daily, monthly, or annual intervals.',
+    subGroup: 'Interest',
+  },
+  {
+    id: 'simple-interest-calculator',
+    name: 'Simple Interest',
+    shortName: 'Simple Int',
+    icon: '⏱️',
+    href: '/finance/simple-interest-calculator/',
+    badge: 'Direct APR',
+    description: 'Straight-line simple interest on principal without compounding.',
+    subGroup: 'Interest',
+  },
+  {
+    id: 'interest-rate-calculator',
+    name: 'Interest Rate Calculator',
+    shortName: 'Interest Rate',
+    icon: '📉',
+    href: '/finance/interest-rate-calculator/',
+    badge: 'Effective APY',
+    description: 'Calculate nominal vs effective annual percentage yields and loan rates.',
+    subGroup: 'Interest',
+  },
+
+  // Row 5: Taxes & Salary
+  {
+    id: 'income-tax-calculator',
+    name: 'Income Tax Calculator',
+    shortName: 'Income Tax',
+    icon: '🧾',
+    href: '/finance/income-tax-calculator/',
+    badge: 'New vs Old 2026',
+    description: 'Calculate income tax liability with progressive slabs and standard deduction.',
+    subGroup: 'Tax',
+  },
+  {
+    id: 'salary-calculator',
+    name: 'Salary Calculator',
+    shortName: 'Salary',
+    icon: '💼',
+    href: '/finance/salary-calculator/',
+    badge: 'Net Take-Home',
+    description: 'Gross to net take-home pay with taxes, deductions, and withholdings.',
+    subGroup: 'Tax',
+  },
+  {
+    id: 'sales-tax-calculator',
+    name: 'Sales Tax Calculator',
+    shortName: 'Sales Tax / GST',
+    icon: '🏷️',
+    href: '/finance/sales-tax-calculator/',
+    badge: 'Forward/Reverse',
+    description: 'Calculate sales tax, VAT, or GST inclusive and exclusive prices.',
+    subGroup: 'Tax',
+  },
+
+  // Row 6: Retirement & Long-Term
+  {
+    id: 'retirement-calculator',
+    name: 'Retirement Calculator',
+    shortName: 'Retirement',
+    icon: '🏖️',
+    href: '/finance/retirement-calculator/',
+    badge: 'Corpus Goal',
+    description: 'Determine retirement savings requirements, inflation, and nest egg.',
+    subGroup: 'Retirement',
+  },
+  {
+    id: '401k-calculator',
+    name: '401(k) Calculator',
+    shortName: '401(k)',
+    icon: '🏛️',
+    href: '/finance/401k-calculator/',
+    badge: 'Employer Match',
+    description: 'Project future 401(k) balance with salary deferrals and employer match.',
+    subGroup: 'Retirement',
+  },
+  {
+    id: 'roth-ira-calculator',
+    name: 'Roth IRA Calculator',
+    shortName: 'Roth IRA',
+    icon: '🌱',
+    href: '/finance/roth-ira-calculator/',
+    badge: 'Tax-Free',
+    description: 'Tax-free retirement growth, annual contributions, and compound returns.',
+    subGroup: 'Retirement',
+  },
+
+  // Row 7: Statutory Funds & Benefits
+  {
+    id: 'ppf-calculator',
+    name: 'PPF Calculator',
+    shortName: 'PPF',
+    icon: '🛡️',
+    href: '/finance/ppf-calculator/',
+    badge: '15-Year Lock',
+    description: 'Public Provident Fund maturity amount, interest, and yearly extension.',
+    subGroup: 'Savings',
+  },
+  {
+    id: 'epf-calculator',
+    name: 'EPF Calculator',
+    shortName: 'EPF',
+    icon: '📑',
+    href: '/finance/epf-calculator/',
+    badge: 'Statutory Rate',
+    description: 'Employee Provident Fund accumulation with employee and employer share.',
+    subGroup: 'Savings',
+  },
+  {
+    id: 'gratuity-calculator',
+    name: 'Gratuity Calculator',
+    shortName: 'Gratuity',
+    icon: '🎖️',
+    href: '/finance/gratuity-calculator/',
+    badge: '15/26 Formula',
+    description: 'Statutory gratuity payout based on years of service and basic salary.',
+    subGroup: 'Savings',
+  },
+
+  // Row 8: Wealth & Withdrawals
+  {
+    id: 'swp-calculator',
+    name: 'SWP Calculator',
+    shortName: 'SWP Cash',
+    icon: '🔄',
+    href: '/finance/swp-calculator/',
+    badge: 'Withdrawal',
+    description: 'Systematic Withdrawal Plan for regular monthly income from mutual funds.',
+    subGroup: 'Wealth',
+  },
+  {
+    id: 'investment-calculator',
+    name: 'Investment Calculator',
+    shortName: 'Investment',
+    icon: '💎',
+    href: '/finance/investment-calculator/',
+    badge: 'Future Capital',
+    description: 'Multi-asset return projections with periodic additional contributions.',
+    subGroup: 'Wealth',
+  },
+  {
+    id: 'inflation-calculator',
+    name: 'Inflation Calculator',
+    shortName: 'Inflation',
+    icon: '🎈',
+    href: '/finance/inflation-calculator/',
+    badge: 'Purchasing Pwr',
+    description: 'Historic and future purchasing power eroded by inflation over time.',
+    subGroup: 'Wealth',
+  },
+
+  // Row 9: Business & General Finance
+  {
+    id: 'profit-margin-calculator',
+    name: 'Profit Margin Calculator',
+    shortName: 'Profit Margin',
+    icon: '🎯',
+    href: '/finance/profit-margin-calculator/',
+    badge: 'Margin/Markup',
+    description: 'Gross margin, net profit margin, and cost markup percentages.',
+    subGroup: 'Business',
+  },
+  {
+    id: 'interest-calculator',
+    name: 'Fixed Interest Calculator',
+    shortName: 'Fixed Interest',
+    icon: '🔢',
+    href: '/finance/interest-calculator/',
+    badge: 'Savings Gain',
+    description: 'General interest earned across fixed deposits and savings accounts.',
+    subGroup: 'Interest',
+  },
+  {
+    id: 'finance-calculator',
+    name: 'Finance Master Calculator',
+    shortName: 'Finance Master',
+    icon: '🧮',
+    href: '/finance/finance-calculator/',
+    badge: 'Multi-Variable',
+    description: 'Comprehensive financial modeling for cash flows, NPV, and debt servicing.',
+    subGroup: 'Business',
+  },
+];
+
+const financeHubSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Finance Calculators — Free Accurate Calculator',
+  description: 'Complete suite of verified financial calculators arranged in a 3-by-3 structure: EMI, Mortgage, SIP, Income Tax, Compound Interest, 401(k), PPF, and Profit Margin.',
+  url: 'https://freeaccuratecalculator.com/finance/',
+};
+---
+
+<Layout
+  title="Finance Calculators — Fast, Accurate & Free Financial Tools"
+  description="Master your money with verified financial calculators: Loan EMI, Mortgage, SIP, Income Tax (Old vs New Regime), Compound Interest, 401(k), and Profit Margin."
+  jsonLd={financeHubSchema}
+>
+  <div class="max-w-7xl mx-auto space-y-8">
+    <!-- Breadcrumbs -->
+    <Breadcrumbs items={[{ label: 'Finance' }]} />
+
+    <!-- [HERO SECTION]: Royal Startup Presentation -->
+    <section class="relative overflow-hidden rounded-3xl sm:rounded-[36px] border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-950/70 px-4 py-8 sm:py-14 md:py-16 text-center hero-mesh-gradient shadow-xs sm:shadow-lg backdrop-blur-xl">
+      <div
+        class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 sm:w-[580px] h-44 sm:h-72 bg-gradient-to-b from-blue-500/20 via-indigo-500/15 to-transparent blur-3xl pointer-events-none"
+        aria-hidden="true"
+      ></div>
+
+      <div class="relative z-10 mx-auto max-w-3xl space-y-4 sm:space-y-6">
+        <!-- 1. The Startup Pill Badge -->
+        <div class="inline-flex items-center gap-2 rounded-full border border-indigo-500/20 dark:border-indigo-400/30 bg-gradient-to-r from-blue-500/8 via-indigo-500/8 to-purple-500/8 dark:from-blue-500/15 dark:via-indigo-500/15 dark:to-purple-500/15 px-3.5 py-1.5 shadow-2xs backdrop-blur-md select-none">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <span class="font-outfit text-[11px] sm:text-xs font-bold tracking-wider uppercase text-slate-700 dark:text-slate-200">
+            Verified Financial Calculators
+          </span>
+          <span class="text-indigo-500 dark:text-indigo-400 text-xs font-bold ml-0.5">✦</span>
+        </div>
+
+        <!-- 2. The Main H1 Headline -->
+        <h1 class="display-hero font-outfit text-3xl sm:text-5xl lg:text-[56px] xl:text-[60px] font-black tracking-[-0.035em] text-slate-900 dark:text-white leading-[1.12] sm:leading-[1.08] text-balance">
+          Finance Calculators. <br class="hidden sm:inline" />
+          <span class="bg-gradient-to-r from-blue-600 via-indigo-600 via-purple-600 to-pink-500 dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent">
+            Fast, Accurate & Private.
+          </span>
+        </h1>
+
+        <!-- 3. Subtitle Paragraph -->
+        <p class="font-sans text-xs sm:text-sm md:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal text-balance px-2">
+          Pure financial calculators arranged in a 3-by-3 structure. Each tool runs 100% client-side with zero latency and full privacy.
+        </p>
+
+
+      </div>
+    </section>
+
+    <!-- [3-BY-3 FINANCE DIRECTORY]: Strictly 3 Columns on Mobile & Desktop (3 per row) -->
+    <section class="space-y-4 sm:space-y-5">
+      <!-- Section Header without numbers & Back Link -->
+      <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">💰</span>
+          <h2 class="font-outfit text-sm sm:text-base md:text-lg font-black uppercase tracking-[0.15em] text-slate-900 dark:text-white">
+            Finance Directory All Tools
+          </h2>
+        </div>
+        <a
+          href="/"
+          class="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline"
+        >
+          <span>← All Categories</span>
+        </a>
+      </div>
+
+      <!-- In-Directory Instant Search Bar: Search & Open Any Tool Directly Across The Platform -->
+      <div class="relative w-full max-w-xl mx-auto">
+        <div class="relative flex items-center group">
+          <span class="absolute left-3.5 text-slate-400 dark:text-slate-500 pointer-events-none group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 transition-colors">
+            <svg class="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </span>
+          <input
+            id="directory-filter-input"
+            type="search"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="Search any calculator here (e.g., 'age', 'sip', 'emi', 'tax', 'bmi')..."
+            class="w-full rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-white/95 dark:bg-slate-900/95 py-2.5 sm:py-3 pl-10 pr-24 text-xs sm:text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 shadow-2xs focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-indigo-400/10 transition-all backdrop-blur-xl"
+            aria-label="Search all calculators"
+          />
+          <div class="absolute right-2.5 flex items-center gap-1.5">
+            <button
+              type="button"
+              id="directory-filter-clear"
+              class="hidden p-1 rounded-full text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              aria-label="Clear search"
+            >
+              <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <span id="directory-match-counter" class="text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-900/60">
+              All Tools
+            </span>
+          </div>
+        </div>
+
+        <!-- Floating Live Suggestions Dropdown for Any Tool Across Entire Website -->
+        <div
+          id="directory-filter-dropdown"
+          class="absolute left-0 right-0 top-full mt-2 z-50 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl shadow-2xl shadow-slate-900/15 dark:shadow-black/50 overflow-hidden text-left transition-all duration-200 origin-top opacity-0 scale-95 pointer-events-none invisible"
+          role="listbox"
+        >
+          <div class="px-3.5 py-2 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+            <span id="directory-dropdown-title">Suggested Calculators</span>
+            <span class="text-[10px] lowercase font-normal hidden sm:inline">press enter ↵ to open</span>
+          </div>
+          <div id="directory-dropdown-list" class="max-h-[280px] overflow-y-auto p-1.5 space-y-1"></div>
+        </div>
+      </div>
+
+      <!-- THE 3-BY-3 GRID: 3 Columns on Mobile, Tablet & Desktop (Exact 3-by-3 Rhythm) -->
+      <div
+        id="finance-grid"
+        class="grid grid-cols-3 gap-2 sm:gap-3.5 md:gap-4.5"
+      >
+        {FINANCE_CALCULATORS.map((calc) => (
+          <a
+            href={calc.href}
+            title={`Calculate with ${calc.name}`}
+            class="finance-card group relative flex flex-col items-center justify-between text-center min-w-0 min-h-[110px] sm:min-h-[140px] md:min-h-[155px] rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/50 hover:shadow-md p-2.5 sm:p-4 md:p-5 transition-all duration-200 shadow-2xs active:scale-[0.98] cursor-pointer"
+            data-name={calc.name.toLowerCase()}
+            data-desc={calc.description.toLowerCase()}
+          >
+            <!-- Top Icon Emblem -->
+            <div class="flex h-8 w-8 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-base sm:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/40 transition-transform">
+              {calc.icon}
+            </div>
+
+            <!-- Title: Optimized for 3-Column Width on all devices -->
+            <div class="my-1.5 w-full min-w-0 px-0.5">
+              <h3 class="font-outfit text-[11.5px] sm:text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
+                <span class="inline sm:hidden">{calc.shortName}</span>
+                <span class="hidden sm:inline">{calc.name}</span>
+              </h3>
+            </div>
+
+            <!-- Bottom Badge & Action -->
+            <div class="flex items-center justify-center w-full">
+              <span class="inline-flex items-center px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] md:text-[11px] font-mono font-semibold rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-900/60 truncate max-w-full">
+                {calc.badge}
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <!-- Cross-Category Match Results (e.g. When searching 'age', 'bmi', 'gpa' inside Finance) -->
+      <div id="cross-category-container" class="hidden space-y-3 pt-2">
+        <div class="flex items-center justify-between px-1">
+          <h3 class="font-outfit text-xs sm:text-sm font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
+            <span>✦</span>
+            <span id="cross-category-title">Matching Tools Found In Other Categories</span>
+          </h3>
+          <span class="text-[11px] text-slate-500 dark:text-slate-400 font-mono" id="cross-category-badge"></span>
+        </div>
+        <div id="cross-category-grid" class="grid grid-cols-3 gap-2 sm:gap-3.5 md:gap-4.5">
+          <!-- Dynamically populated 3*3 cards for tools found across categories -->
+        </div>
+      </div>
+
+      <!-- No Results Container when absolutely nothing matches across whole site -->
+      <div id="no-search-results" class="hidden py-10 text-center space-y-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50">
+        <span class="text-3xl">🔍</span>
+        <h3 class="text-sm font-bold text-slate-900 dark:text-white">No calculators found</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+          Try searching for another keyword like "age", "sip", "emi", "tax", or "mortgage".
+        </p>
+        <div>
+          <button
+            type="button"
+            id="reset-directory-search-btn"
+            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-colors cursor-pointer"
+          >
+            <span>Show All Tools</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Educational & Architectural Value Section -->
+    <section class="rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 p-6 sm:p-9 space-y-6 shadow-sm dark:shadow-xl backdrop-blur-xl">
+      <div class="flex items-center gap-3 border-b border-slate-200/80 dark:border-slate-800/80 pb-4">
+        <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 text-lg font-bold">
+          ℹ️
+        </span>
+        <div>
+          <h3 class="font-outfit text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+            Why Use Free Accurate Financial Calculators?
+          </h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Engineered for computational accuracy, mathematical transparency, and total client privacy
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div class="space-y-2 p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+          <div class="text-lg">🔒</div>
+          <h4 class="font-outfit text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Zero Server Data Storage</h4>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Your financial figures, salary data, loan amounts, and net worth calculations never leave your device. All math executes 100% locally in your browser.
+          </p>
+        </div>
+
+        <div class="space-y-2 p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+          <div class="text-lg">⚡</div>
+          <h4 class="font-outfit text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Real-Time Reactive Math</h4>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Instant updates on every slider adjustment and keystroke. Compare amortization timelines, inflation impacts, and compounding gains with zero page reloads.
+          </p>
+        </div>
+
+        <div class="space-y-2 p-4 rounded-2xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-700/60">
+          <div class="text-lg">🌍</div>
+          <h4 class="font-outfit text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Multi-Currency & Regional Formats</h4>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Seamlessly handles Lakh/Crore systems (INR) as well as Millions/Billions formats with real-time currency conversion across 14+ benchmark currencies.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>
+
+<!-- Embedded Database of All Calculators for Instant Cross-Directory Search -->
+<script type="application/json" id="finance-all-tools-json" set:html={allSearchableToolsJson}></script>
+
+<!-- Client-side Interactive Universal Search & Quick-Launch Engine -->
+<script is:inline>
+  (function () {
+    const heroSearchInput = document.getElementById('finance-search');
+    const dirSearchInput = document.getElementById('directory-filter-input');
+    const dirClearBtn = document.getElementById('directory-filter-clear');
+    const dirCounter = document.getElementById('directory-match-counter');
+    const dirDropdown = document.getElementById('directory-filter-dropdown');
+    const dirDropdownList = document.getElementById('directory-dropdown-list');
+    const dirDropdownTitle = document.getElementById('directory-dropdown-title');
+    const resetBtn = document.getElementById('reset-directory-search-btn');
+    const cards = document.querySelectorAll('.finance-card');
+    const crossContainer = document.getElementById('cross-category-container');
+    const crossGrid = document.getElementById('cross-category-grid');
+    const crossBadge = document.getElementById('cross-category-badge');
+    const noResults = document.getElementById('no-search-results');
+    const allToolsEl = document.getElementById('finance-all-tools-json');
+
+    let allTools = [];
+    try {
+      allTools = JSON.parse(allToolsEl?.textContent || '[]');
+    } catch (_) {
+      allTools = [];
+    }
+
+    let activeDropdownIndex = -1;
+    let currentDropdownMatches = [];
+    let firstMatchHref = null;
+
+    function escapeHtml(str) {
+      return (str || '').replace(/[&<>"']/g, (m) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;',
+      }[m]));
+    }
+
+    function openDropdown() {
+      if (!dirDropdown) return;
+      dirDropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none', 'invisible');
+      dirDropdown.classList.add('opacity-100', 'scale-100', 'pointer-events-auto', 'visible');
+    }
+
+    function closeDropdown() {
+      if (!dirDropdown) return;
+      dirDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto', 'visible');
+      dirDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none', 'invisible');
+      activeDropdownIndex = -1;
+    }
+
+    function updateActiveDropdownItem() {
+      if (!dirDropdownList) return;
+      const items = dirDropdownList.querySelectorAll('.fac-dir-suggestion');
+      items.forEach((item, idx) => {
+        if (idx === activeDropdownIndex) {
+          item.classList.add('bg-indigo-50', 'dark:bg-indigo-950/70', 'ring-1', 'ring-indigo-500/30');
+          item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        } else {
+          item.classList.remove('bg-indigo-50', 'dark:bg-indigo-950/70', 'ring-1', 'ring-indigo-500/30');
+        }
+      });
+    }
+
+    function filterTools(query, sourceInput) {
+      const q = (query || '').toLowerCase().trim();
+      let financeVisibleCount = 0;
+      firstMatchHref = null;
+
+      // 1. Filter local 27 finance cards
+      cards.forEach((card) => {
+        const name = card.dataset.name || '';
+        const desc = card.dataset.desc || '';
+        const match = !q || name.includes(q) || desc.includes(q);
+        card.style.display = match ? 'flex' : 'none';
+        if (match) {
+          financeVisibleCount++;
+          if (!firstMatchHref) {
+            firstMatchHref = card.getAttribute('href');
+          }
+        }
+      });
+
+      if (!q) {
+        closeDropdown();
+        if (crossContainer) crossContainer.classList.add('hidden');
+        if (noResults) noResults.style.display = 'none';
+        if (dirClearBtn) dirClearBtn.classList.add('hidden');
+        if (dirCounter) {
+          dirCounter.textContent = 'All Tools';
+          dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-900/60';
+        }
+        return;
+      }
+
+      if (dirClearBtn) dirClearBtn.classList.remove('hidden');
+
+      // 2. Score & Rank across ALL calculators globally
+      const matchedAll = [];
+      for (const item of allTools) {
+        const nameLower = item.name.toLowerCase();
+        const catLower = (item.categoryName || item.category || '').toLowerCase();
+        const keywords = (item.keywords || []).map((k) => k.toLowerCase());
+
+        let score = 0;
+        if (nameLower === q) score += 100;
+        else if (nameLower.startsWith(q)) score += 80;
+        else if (nameLower.includes(` ${q}`)) score += 60;
+        else if (nameLower.includes(q)) score += 40;
+        else if (keywords.some((k) => k.includes(q))) score += 35;
+        else if (catLower.includes(q)) score += 20;
+
+        if (score > 0) {
+          if (item.category === 'finance') score += 10;
+          matchedAll.push({ item, score });
+        }
+      }
+
+      matchedAll.sort((a, b) => b.score - a.score);
+      const topDropdown = matchedAll.slice(0, 8).map((m) => m.item);
+      currentDropdownMatches = topDropdown;
+
+      // Determine default Enter launch target
+      if (!firstMatchHref && topDropdown.length > 0) {
+        firstMatchHref = topDropdown[0].href;
+      }
+
+      // 3. Render Floating Dropdown suggestions
+      if (topDropdown.length > 0 && dirDropdownList) {
+        let listHtml = '';
+        topDropdown.forEach((calc, idx) => {
+          listHtml += `
+            <a
+              href="${escapeHtml(calc.href)}"
+              class="fac-dir-suggestion group flex items-center justify-between w-full p-2.5 sm:p-3 rounded-xl hover:bg-indigo-50/80 dark:hover:bg-indigo-950/50 border border-transparent hover:border-indigo-500/20 transition-all text-left cursor-pointer"
+              data-index="${idx}"
+              role="option"
+              title="Open ${escapeHtml(calc.name)}"
+            >
+              <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
+                <span class="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-sm shadow-2xs group-hover:scale-110 transition-transform">
+                  ${calc.icon || '🧮'}
+                </span>
+                <div class="min-w-0">
+                  <div class="font-outfit text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 truncate">
+                    ${escapeHtml(calc.name)}
+                  </div>
+                  <div class="text-[10px] text-slate-400 dark:text-slate-500 truncate font-mono">
+                    ${escapeHtml(calc.categoryName || calc.category)}
+                  </div>
+                </div>
+              </div>
+              <span class="shrink-0 text-xs font-semibold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-0.5 transition-transform">
+                Launch →
+              </span>
+            </a>
+          `;
+        });
+        dirDropdownList.innerHTML = listHtml;
+        if (dirDropdownTitle) {
+          dirDropdownTitle.textContent = 'Suggested Tools';
+        }
+        openDropdown();
+      } else {
+        closeDropdown();
+      }
+
+      // 4. Render Cross-Category Cards (e.g. When searching 'age' inside finance)
+      const crossMatches = matchedAll.filter((m) => m.item.category !== 'finance').slice(0, 6).map((m) => m.item);
+      if (crossMatches.length > 0 && crossContainer && crossGrid) {
+        let gridHtml = '';
+        crossMatches.forEach((calc) => {
+          gridHtml += `
+            <a
+              href="${escapeHtml(calc.href)}"
+              title="Calculate with ${escapeHtml(calc.name)}"
+              class="group relative flex flex-col items-center justify-between text-center min-w-0 min-h-[110px] sm:min-h-[140px] md:min-h-[155px] rounded-2xl border border-indigo-300/60 dark:border-indigo-700/60 bg-gradient-to-b from-indigo-50/50 via-white/80 to-white/90 dark:from-indigo-950/30 dark:via-slate-900/80 dark:to-slate-900/90 hover:border-indigo-500 hover:shadow-md p-2.5 sm:p-4 md:p-5 transition-all duration-200 shadow-2xs active:scale-[0.98] cursor-pointer"
+            >
+              <div class="flex h-8 w-8 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200/80 dark:border-indigo-800/80 text-base sm:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400 transition-transform">
+                ${calc.icon || '🧮'}
+              </div>
+              <div class="my-1.5 w-full min-w-0 px-0.5">
+                <h4 class="font-outfit text-[11.5px] sm:text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors truncate">
+                  ${escapeHtml(calc.name)}
+                </h4>
+              </div>
+              <div class="flex items-center justify-center w-full">
+                <span class="inline-flex items-center px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] md:text-[11px] font-mono font-semibold rounded-md bg-indigo-100/80 dark:bg-indigo-900/60 text-indigo-700 dark:text-indigo-300 border border-indigo-300/60 dark:border-indigo-800/60 truncate max-w-full">
+                  ${escapeHtml(calc.categoryName || calc.category)} ↗
+                </span>
+              </div>
+            </a>
+          `;
+        });
+        crossGrid.innerHTML = gridHtml;
+        if (crossBadge) {
+          crossBadge.textContent = 'Tools outside finance';
+        }
+        crossContainer.classList.remove('hidden');
+      } else if (crossContainer) {
+        crossContainer.classList.add('hidden');
+      }
+
+      // 5. Overall Match Counter & Empty State
+      const totalCount = financeVisibleCount + crossMatches.length;
+      if (noResults) {
+        noResults.style.display = (totalCount === 0) ? 'block' : 'none';
+      }
+
+      if (dirCounter) {
+        if (totalCount > 0) {
+          dirCounter.textContent = 'Found';
+          dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-900/60';
+        } else {
+          dirCounter.textContent = 'No match';
+          dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200/60 dark:border-rose-900/60';
+        }
+      }
+    }
+
+    function resetSearch() {
+      if (dirSearchInput) dirSearchInput.value = '';
+      if (heroSearchInput) heroSearchInput.value = '';
+      filterTools('', null);
+      if (dirSearchInput) dirSearchInput.focus();
+    }
+
+    // Directory Search Input Listeners
+    if (dirSearchInput) {
+      dirSearchInput.addEventListener('input', (e) => {
+        filterTools(e.target.value, dirSearchInput);
+      });
+
+      dirSearchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (currentDropdownMatches.length > 0) {
+            activeDropdownIndex = (activeDropdownIndex + 1) % currentDropdownMatches.length;
+            updateActiveDropdownItem();
+          }
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (currentDropdownMatches.length > 0) {
+            activeDropdownIndex = (activeDropdownIndex - 1 + currentDropdownMatches.length) % currentDropdownMatches.length;
+            updateActiveDropdownItem();
+          }
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (activeDropdownIndex >= 0 && currentDropdownMatches[activeDropdownIndex]) {
+            window.location.href = currentDropdownMatches[activeDropdownIndex].href;
+          } else if (firstMatchHref) {
+            window.location.href = firstMatchHref;
+          }
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          resetSearch();
+        }
+      });
+
+      dirSearchInput.addEventListener('focus', () => {
+        if (dirSearchInput.value.trim() && currentDropdownMatches.length > 0) {
+          openDropdown();
+        }
+      });
+    }
+
+    // Close dropdown on outside click
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#directory-filter-dropdown') && e.target !== dirSearchInput) {
+        closeDropdown();
+      }
+    });
+
+    // Clear and Reset Buttons
+    if (dirClearBtn) dirClearBtn.addEventListener('click', resetSearch);
+    if (resetBtn) resetBtn.addEventListener('click', resetSearch);
+
+    // Hero Search Input Listener
+    if (heroSearchInput) {
+      heroSearchInput.addEventListener('input', (e) => {
+        if (dirSearchInput && !dirSearchInput.value) {
+          filterTools(e.target.value, heroSearchInput);
+        }
+      });
+    }
+
+    // URL query check on load
+    const params = new URLSearchParams(window.location.search);
+    const initialQuery = params.get('q');
+    if (initialQuery) {
+      if (dirSearchInput) dirSearchInput.value = initialQuery;
+      if (heroSearchInput) heroSearchInput.value = initialQuery;
+      filterTools(initialQuery, null);
+    }
+  })();
+</script>

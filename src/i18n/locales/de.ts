@@ -39,7 +39,7 @@ export const de: TranslationDictionary = {
     disclaimer:
       'Alle von Free Accurate Calculator bereitgestellten Berechnungen dienen ausschließlich Bildungs-, Informations- und allgemeinen Planungszwecken. Sie stellen keine formelle Finanz-, Steuer-, Rechts- oder medizinische Beratung dar.',
     allRightsReserved: 'Alle Rechte vorbehalten.',
-    searchPlaceholder: '100+ Rechner durchsuchen (z. B. Darlehen, BMI, Prozent)...',
+    searchPlaceholder: 'Rechner durchsuchen (z. B. Darlehen, BMI, Prozent)...',
     close: 'Schließen',
     switchNow: 'Jetzt wechseln',
     keepLanguage: 'Auf Englisch bleiben',
@@ -91,7 +91,7 @@ export const de: TranslationDictionary = {
     },
   },
   seo: {
-    siteTitle: 'Free Accurate Calculator - 100+ Kostenlose Präzisionsrechner Online',
+    siteTitle: 'Free Accurate Calculator - Kostenlose Präzisionsrechner Online',
     siteDescription: 'Schnelle, präzise und kostenlose Online-Rechner für Finanzen, Kredite, Gesundheit, Mathematik und den täglichen Bedarf.',
     ogTitleSuffix: 'Free Accurate Calculator',
   },

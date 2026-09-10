@@ -39,7 +39,7 @@ export const ar: TranslationDictionary = {
     disclaimer:
       'جميع الحسابات المقدمة من Free Accurate Calculator مخصصة للأغراض التعليمية والإعلامية والتخطيط العام فقط. ولا تشكل استشارة مالية أو ضريبية أو قانونية أو طبية رسمية.',
     allRightsReserved: 'جميع الحقوق محفوظة.',
-    searchPlaceholder: 'ابحث في أكثر من 100 حاسبة (مثل القروض، مؤشر كتلة الجسم، النسبة)...',
+    searchPlaceholder: 'ابحث في الحاسبات (مثل القروض، مؤشر كتلة الجسم، النسبة)...',
     close: 'إغلاق',
     switchNow: 'التحويل الآن',
     keepLanguage: 'البقاء بالإنجليزية',
@@ -91,7 +91,7 @@ export const ar: TranslationDictionary = {
     },
   },
   seo: {
-    siteTitle: 'Free Accurate Calculator - أكثر من 100 حاسبة إلكترونية دقيقة ومجانية',
+    siteTitle: 'Free Accurate Calculator - حاسبات إلكترونية دقيقة ومجانية',
     siteDescription: 'حاسبات ذكية ودقيقة ومجانية للمالية، القروض، الصحة، الرياضيات والحياة اليومية.',
     ogTitleSuffix: 'Free Accurate Calculator',
   },

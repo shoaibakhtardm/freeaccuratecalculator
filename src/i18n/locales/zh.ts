@@ -39,7 +39,7 @@ export const zh: TranslationDictionary = {
     disclaimer:
       'Free Accurate Calculator 提供的所有计算结果仅供教育、信息参考和一般规划使用，不构成正式的财务、税务、法律或医疗建议。',
     allRightsReserved: '保留所有权利。',
-    searchPlaceholder: '搜索100+款专业计算器（如：房贷、BMI、百分比）...',
+    searchPlaceholder: '搜索专业计算器（如：房贷、BMI、百分比）...',
     close: '关闭',
     switchNow: '立即切换',
     keepLanguage: '保留英文',
@@ -91,7 +91,7 @@ export const zh: TranslationDictionary = {
     },
   },
   seo: {
-    siteTitle: 'Free Accurate Calculator — 100+款免费高精度专业在线计算器',
+    siteTitle: 'Free Accurate Calculator — 免费高精度专业在线计算器',
     siteDescription: '涵盖金融贷款、健康BMI、数学几何、日常生活等领域的专业精准计算工具，永久免费。',
     ogTitleSuffix: 'Free Accurate Calculator',
   },

@@ -16,7 +16,7 @@ import type { CalculatorEntity } from '../../types/calculator';
 
 export async function getStaticPaths() {
   const programmaticList = getAllCalculators();
-  const dedicatedPages = new Set(['income-tax-calculator', 'sip-calculator']);
+  const dedicatedPages = new Set(['income-tax-calculator', 'sip-calculator', 'age-calculator']);
 
   // Map programmatic calculators
   const routes = programmaticList
@@ -475,6 +475,47 @@ const combinedJsonLd = [webAppSchema, faqSchema];
           const monthly = Math.round((annual / 12) * 100) / 100;
           const weekly = Math.round((annual / 52) * 100) / 100;
           secondary = `Monthly: $${monthly.toLocaleString()} | Weekly: $${weekly.toLocaleString()}`;
+        }
+      } else if (slug === 'age-calculator') {
+        const y = parseInt(raw.birth_year || '2000', 10);
+        const m = parseInt(raw.birth_month || '1', 10) - 1;
+        const d = parseInt(raw.birth_day || '1', 10);
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999);
+        const birth = new Date(y, m, d);
+
+        if (isNaN(y) || isNaN(m) || isNaN(d) || y <= 0 || m < 0 || m > 11 || d < 1 || d > 31) {
+          resValue = 0;
+          formatted = 'Invalid Date';
+          secondary = 'Please enter a valid birth day, month, and year.';
+        } else if (birth > today) {
+          resValue = 0;
+          formatted = '0 Years (Future Date)';
+          secondary = '⚠️ Birth date cannot be in the future. Limit: Today or earlier.';
+        } else {
+          let years = now.getFullYear() - birth.getFullYear();
+          let months = now.getMonth() - birth.getMonth();
+          let days = now.getDate() - birth.getDate();
+
+          if (days < 0) {
+            months--;
+            const prevMonthDays = new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+            days += prevMonthDays;
+          }
+          if (months < 0) {
+            years--;
+            months += 12;
+          }
+
+          const totalMs = Math.max(0, now.getTime() - birth.getTime());
+          const totalDays = Math.floor(totalMs / (1000 * 60 * 60 * 24));
+          const totalHours = Math.floor(totalMs / (1000 * 60 * 60));
+          const totalMinutes = Math.floor(totalMs / (1000 * 60));
+          const totalSeconds = Math.floor(totalMs / 1000);
+
+          resValue = years;
+          formatted = `${years} Years, ${months} Months, ${days} Days`;
+          secondary = `Lived: ${totalDays.toLocaleString()} Days | ${totalHours.toLocaleString()} Hours | ${totalMinutes.toLocaleString()} Mins | ${totalSeconds.toLocaleString()} Secs`;
         }
       } else {
         // Fallback for any other calculator

@@ -39,7 +39,7 @@ export const ru: TranslationDictionary = {
     disclaimer:
       'Все расчеты на сайте Free Accurate Calculator предназначены исключительно для образовательных, информационных и ознакомительных целей. Они не являются юридической, налоговой, медицинской или финансовой консультацией.',
     allRightsReserved: 'Все права защищены.',
-    searchPlaceholder: 'Поиск по 100+ калькуляторам (например, кредит, ИМТ, проценты)...',
+    searchPlaceholder: 'Поиск по калькуляторам (например, кредит, ИМТ, проценты)...',
     close: 'Закрыть',
     switchNow: 'Переключить сейчас',
     keepLanguage: 'Остаться на английском',
@@ -91,7 +91,7 @@ export const ru: TranslationDictionary = {
     },
   },
   seo: {
-    siteTitle: 'Free Accurate Calculator - Более 100 точных и бесплатных онлайн калькуляторов',
+    siteTitle: 'Free Accurate Calculator - Точные и бесплатные онлайн калькуляторы',
     siteDescription: 'Быстрые, точные и бесплатные онлайн-калькуляторы для кредитов, здоровья, математики и повседневных задач.',
     ogTitleSuffix: 'Free Accurate Calculator',
   },

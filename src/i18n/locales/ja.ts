@@ -39,7 +39,7 @@ export const ja: TranslationDictionary = {
     disclaimer:
       'Free Accurate Calculator が提供するすべての計算結果は、教育・情報提供および一般的なシミュレーションのみを目的としています。公式な金融、税務、法務、医療アドバイスを構成するものではありません。',
     allRightsReserved: 'All rights reserved.',
-    searchPlaceholder: '100種類以上の計算機を検索（例: ローン、BMI、パーセント）...',
+    searchPlaceholder: '計算機を検索（例: ローン、BMI、パーセント）...',
     close: '閉じる',
     switchNow: '今すぐ切り替える',
     keepLanguage: '英語のままにする',
@@ -91,7 +91,7 @@ export const ja: TranslationDictionary = {
     },
   },
   seo: {
-    siteTitle: 'Free Accurate Calculator - 100種類以上の高精度無料オンライン計算機',
+    siteTitle: 'Free Accurate Calculator - 高精度無料オンライン計算機',
     siteDescription: '金融、住宅ローン、健康管理、数学、日々の生活に役立つ高精度な無料オンライン計算ツールを提供。',
     ogTitleSuffix: 'Free Accurate Calculator',
   },

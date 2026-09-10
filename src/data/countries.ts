@@ -670,7 +670,7 @@ export const COUNTRIES: Record<string, CountryConfig> = {
   },
 };
 
-// Supplementary global country index allowing clean scale to 100+ nations
+// Supplementary global country index allowing clean scale to global nations
 const SUPPLEMENTARY_NATIONS: Array<Pick<CountryConfig, 'code' | 'slug' | 'name' | 'flag' | 'currency' | 'currencySymbol' | 'locale' | 'unitSystem'>> = [
   { code: 'AT', slug: 'austria', name: 'Austria', flag: '🇦🇹', currency: 'EUR', currencySymbol: '€', locale: 'de-AT', unitSystem: 'metric' },
   { code: 'BE', slug: 'belgium', name: 'Belgium', flag: '🇧🇪', currency: 'EUR', currencySymbol: '€', locale: 'nl-BE', unitSystem: 'metric' },

@@ -39,7 +39,7 @@ export const en: TranslationDictionary = {
     disclaimer:
       'All calculations provided by Free Accurate Calculator are intended strictly for educational, informational, and general planning purposes. Calculations do not constitute formal financial, tax, legal, or medical advice.',
     allRightsReserved: 'All rights reserved.',
-    searchPlaceholder: 'Search 100+ calculators (e.g. loan, bmi, percentage)...',
+    searchPlaceholder: 'Search calculators (e.g. loan, bmi, percentage)...',
     close: 'Close',
     switchNow: 'Switch Now',
     keepLanguage: 'Stay on English',
@@ -91,7 +91,7 @@ export const en: TranslationDictionary = {
     },
   },
   seo: {
-    siteTitle: 'Free Accurate Calculator - 100+ Free Online Precision Calculators',
+    siteTitle: 'Free Accurate Calculator - Free Online Precision Calculators',
     siteDescription: 'Fast, free, and accurate online calculators for finance, loans, health, mathematics, and everyday precision computations.',
     ogTitleSuffix: 'Free Accurate Calculator',
   },
