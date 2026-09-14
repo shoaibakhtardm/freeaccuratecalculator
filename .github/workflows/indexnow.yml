@@ -1,0 +1,43 @@
+name: 🚀 Instant IndexNow Submission
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Allows manual triggering from GitHub Actions UI
+
+jobs:
+  ping-indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Submit All Live URLs via Batch IndexNow
+        run: node scripts/indexnow.mjs
+        env:
+          INDEXNOW_KEY: "fac948a31e804f90918ef86520b22a07"
+
+      - name: Ping Direct IndexNow API Fallback
+        run: |
+          curl -s -X POST "https://api.indexnow.org/indexnow" \
+          -H "Content-Type: application/json; charset=utf-8" \
+          -d '{
+            "host": "freeaccuratecalculator.com",
+            "key": "fac948a31e804f90918ef86520b22a07",
+            "keyLocation": "https://freeaccuratecalculator.com/fac948a31e804f90918ef86520b22a07.txt",
+            "urlList": [
+              "https://freeaccuratecalculator.com/",
+              "https://freeaccuratecalculator.com/sitemap.xml",
+              "https://freeaccuratecalculator.com/hi/finance/emi-calculator/",
+              "https://freeaccuratecalculator.com/es/math/percentage-calculator/"
+            ]
+          }' || echo "IndexNow fallback curl executed."

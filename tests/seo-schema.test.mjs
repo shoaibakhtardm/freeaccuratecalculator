@@ -23,6 +23,21 @@ test('SEO & Schema Markup — Layout & Meta Tags Verification', () => {
     'Layout must enforce Google Discover/Rich Snippet robots directives'
   );
 
+  // Verify Bingbot and Copilot grounding compliance
+  assert.ok(
+    layoutContent.includes('name="bingbot"'),
+    'Layout must include explicit bingbot meta directive for Bing and Copilot'
+  );
+  assert.ok(
+    !layoutContent.includes('noarchive') && !layoutContent.includes('nocache'),
+    'Layout must not emit noarchive or nocache directives which restrict Copilot answer depth'
+  );
+
+  // Verify baseline Schema.org entity grounding (Organization & WebSite)
+  assert.ok(layoutContent.includes("'@type': 'Organization'"), 'Layout must include Organization entity schema');
+  assert.ok(layoutContent.includes("'@type': 'WebSite'"), 'Layout must include WebSite entity schema');
+  assert.ok(layoutContent.includes("'@type': 'SearchAction'"), 'Layout must include SearchAction for sitelinks searchbox');
+
   // Verify canonical and hreflang
   assert.ok(layoutContent.includes('rel="canonical"'), 'Layout must declare canonical tag');
   assert.ok(layoutContent.includes('rel="alternate" hreflang='), 'Layout must declare alternate hreflang links');

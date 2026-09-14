@@ -1,0 +1,950 @@
+---
+// src/pages/everyday/age-calculator.astro
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import FormulaSection from '../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../components/calculator/WorkedExample.astro';
+import FAQSection from '../../components/calculator/FAQSection.astro';
+import SocialProof from '../../components/SocialProof.astro';
+
+const faqs = [
+  {
+    question: 'How does the Age Calculator compute exact chronological age?',
+    answer:
+      'The calculator subtracts your exact birth date and optional birth time from the current moment or a target date. It factors in variable month day counts (28, 29, 30, or 31 days) and leap years to provide a 100% mathematically accurate breakdown of years, months, days, hours, minutes, and live ticking seconds.',
+  },
+  {
+    question: 'Why does the calculator limit future birth dates?',
+    answer:
+      'Chronological age measures elapsed time since birth. A birth date set in the future represents a mathematical impossibility for lived age, so the calculator enforces strict client-side validation preventing future date selection.',
+  },
+  {
+    question: 'How does the live seconds feature work?',
+    answer:
+      'Our live calculation engine runs a high-precision 1-second interval loop in your browser. As each second elapses, your total seconds lived, hours, and next birthday countdown update instantaneously in real time without refreshing the page.',
+  },
+  {
+    question: 'How is the next birthday countdown calculated?',
+    answer:
+      'The engine determines whether your birthday has already passed in the current calendar year. If it has, it targets your birthday in the subsequent year; otherwise, it targets the upcoming date in this year, calculating exact months, days, hours, minutes, and seconds remaining.',
+  },
+  {
+    question: 'Is my birth date and personal data private?',
+    answer:
+      'Yes, 100% private. All calculations are executed locally in your browser using client-side JavaScript. No dates, times, or personal data are ever uploaded, tracked, or stored on our servers.',
+  },
+];
+
+const relatedCalculators = [
+  { title: 'Date Calculator', href: '/everyday/date-calculator/' },
+  { title: 'Time Calculator', href: '/everyday/time-calculator/' },
+  { title: 'Hours Calculator', href: '/everyday/hours-calculator/' },
+  { title: 'Percentage Calculator', href: '/math/percentage-calculator/', badge: 'Math' },
+];
+
+const workedExampleSteps = [
+  {
+    number: 1,
+    title: 'Calculate Complete Calendar Years',
+    description: 'Subtract the birth year from the current year, adjusting backward by 1 year if the birthday has not yet occurred in the current year.',
+    mathExpression: 'Years = 2026 - 2000 = 26 full years',
+  },
+  {
+    number: 2,
+    title: 'Calculate Remaining Calendar Months and Days',
+    description: 'Count full calendar months passed since the last monthly anniversary, accounting for variable days (28-31) in preceding months.',
+    mathExpression: 'Months = 5, Days = 26',
+  },
+  {
+    number: 3,
+    title: 'Compute Granular Units (Days, Hours, Minutes, Seconds)',
+    description: 'Convert total elapsed milliseconds into days, hours, minutes, and ticking seconds using exact time delta.',
+    mathExpression: 'Total Seconds = Total Milliseconds ÷ 1,000',
+  },
+];
+
+const now = new Date();
+const todayDateString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+const currentYear = now.getFullYear();
+---
+
+<CalculatorLayout
+  title="Age Calculator — Exact Chronological Age in Days, Hours & Live Seconds"
+  metaDescription="Calculate your exact chronological age in years, months, days, hours, minutes, and live ticking seconds. Includes future date limits, next birthday countdown, and birth day of week."
+  h1="Age Calculator"
+  subtitle="Calculate your exact age down to years, months, days, hours, minutes, and live ticking seconds with strict future date validation."
+  category={{ label: 'Everyday Tools', href: '/everyday/' }}
+  calculatorName="Age Calculator"
+  relatedCalculators={relatedCalculators}
+  faqs={faqs}
+>
+  <!-- Real-time Social Proof Widget -->
+  <SocialProof calculatorName="Age Calculator" />
+
+  <!-- Calculator Main Box -->
+  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+    <!-- Top Controls: Mode & Live Toggle -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="mono-eyebrow text-mute">Input Mode:</span>
+        <div class="inline-flex rounded-[6px] border border-hairline bg-canvas p-0.5" role="tablist">
+          <button
+            id="tab-datepicker-btn"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            class="rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors"
+          >
+            📅 Calendar Picker
+          </button>
+          <button
+            id="tab-dropdown-btn"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            class="rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink cursor-pointer hover:bg-hairline-soft transition-colors"
+          >
+            🔢 Day / Month / Year
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Ticker Switcher -->
+      <div class="flex items-center gap-2">
+        <span class="mono-eyebrow text-mute">Live Ticker:</span>
+        <button
+          id="toggle-ticker-btn"
+          type="button"
+          aria-pressed="true"
+          class="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-canvas px-3 py-1.5 min-h-[44px] sm:min-h-[30px] text-xs font-mono font-medium text-ink hover:border-link transition-colors cursor-pointer"
+        >
+          <span id="ticker-status-dot" class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+          <span id="ticker-status-text">Live (Ticking)</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Error Banner (Hidden by default, shown for future dates) -->
+    <div
+      id="future-date-error"
+      role="alert"
+      class="hidden rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-xs sm:text-sm font-mono text-red-600 dark:text-red-400 space-y-1"
+    >
+      <div class="flex items-center gap-2 font-bold">
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+        <span>Future Date Limit Exceeded</span>
+      </div>
+      <p>Birth date cannot be in the future. Please select today's date or any date in the past.</p>
+    </div>
+
+    <!-- Form Inputs Area -->
+    <div class="space-y-5">
+      <!-- 1. Date of Birth Section -->
+      <div id="mode-datepicker" class="space-y-2">
+        <label for="birth-date-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+          Date of Birth <span class="text-red-500">*</span>
+        </label>
+        <div class="relative">
+          <input
+            id="birth-date-input"
+            type="date"
+            value="2000-01-01"
+            max={todayDateString}
+            class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3.5 py-2.5 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+        </div>
+        <p class="text-[11px] text-mute font-mono">Select your exact birth date. Future dates are strictly restricted.</p>
+      </div>
+
+      <!-- Alternative Dropdown Input Mode -->
+      <div id="mode-dropdown" class="hidden space-y-2">
+        <span class="block text-xs font-semibold text-ink uppercase font-mono">
+          Date of Birth (Day / Month / Year) <span class="text-red-500">*</span>
+        </span>
+        <div class="grid grid-cols-3 gap-3">
+          <div>
+            <label for="birth-day-select" class="sr-only">Birth Day</label>
+            <select
+              id="birth-day-select"
+              class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+            >
+              {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
+                <option value={d} selected={d === 1}>{d}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label for="birth-month-select" class="sr-only">Birth Month</label>
+            <select
+              id="birth-month-select"
+              class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+            >
+              {[
+                { val: 1, name: 'Jan (01)' },
+                { val: 2, name: 'Feb (02)' },
+                { val: 3, name: 'Mar (03)' },
+                { val: 4, name: 'Apr (04)' },
+                { val: 5, name: 'May (05)' },
+                { val: 6, name: 'Jun (06)' },
+                { val: 7, name: 'Jul (07)' },
+                { val: 8, name: 'Aug (08)' },
+                { val: 9, name: 'Sep (09)' },
+                { val: 10, name: 'Oct (10)' },
+                { val: 11, name: 'Nov (11)' },
+                { val: 12, name: 'Dec (12)' },
+              ].map((m) => (
+                <option value={m.val} selected={m.val === 1}>{m.name}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label for="birth-year-input" class="sr-only">Birth Year</label>
+            <input
+              id="birth-year-input"
+              type="number"
+              min="1900"
+              max={currentYear}
+              value="2000"
+              placeholder="Year (e.g. 2000)"
+              class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Optional Time of Birth Expansion -->
+      <div class="rounded-xl border border-hairline bg-canvas/60 p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-medium text-ink">⏰ Exact Birth Time</span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono bg-link/10 text-link">For live second accuracy</span>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="enable-time-toggle" type="checkbox" class="sr-only peer" />
+            <div class="w-9 h-5 bg-hairline peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-link"></div>
+          </label>
+        </div>
+
+        <div id="birth-time-container" class="hidden grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-hairline">
+          <div>
+            <label for="birth-time-input" class="block text-[11px] font-semibold text-mute uppercase font-mono mb-1">
+              Time of Birth (HH:MM)
+            </label>
+            <input
+              id="birth-time-input"
+              type="time"
+              value="12:00"
+              class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none"
+            />
+          </div>
+          <div class="flex items-center text-xs text-mute leading-relaxed pt-2 sm:pt-4">
+            <span>Enabling time allows real-time calculation down to the exact second you were born.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Age as of Date (Optional Comparison) -->
+      <div class="space-y-1.5">
+        <div class="flex items-center justify-between">
+          <label for="target-date-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+            Calculate Age As Of (Target Date)
+          </label>
+          <button
+            id="reset-target-today-btn"
+            type="button"
+            class="text-[11px] font-mono text-link hover:underline cursor-pointer"
+          >
+            Reset to Now
+          </button>
+        </div>
+        <input
+          id="target-date-input"
+          type="date"
+          value={todayDateString}
+          class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3.5 py-2.5 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+        />
+        <p class="text-[11px] text-mute font-mono">Defaults to today for live chronological tracking. Change to calculate your age on any specific date.</p>
+      </div>
+    </div>
+
+    <!-- Live Primary Result Card (Hero) -->
+    <div
+      id="age-hero-card"
+      aria-live="polite"
+      class="rounded-2xl border border-link/30 bg-gradient-to-br from-link/5 via-canvas to-link/10 p-6 sm:p-8 relative overflow-hidden transition-all shadow-whisper space-y-5"
+    >
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-hairline pb-3">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-link animate-ping"></span>
+          <span class="mono-eyebrow text-xs uppercase tracking-wider text-link font-bold">Exact Chronological Age</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <button
+            id="copy-age-btn"
+            type="button"
+            class="inline-flex items-center gap-1 text-xs font-mono text-link hover:underline cursor-pointer px-2 py-1 rounded border border-hairline bg-canvas"
+            title="Copy age summary to clipboard"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <span id="copy-age-text">Copy Result</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Primary Big Counter: Years, Months, Days -->
+      <div class="space-y-2">
+        <div class="text-3xl sm:text-5xl font-extrabold font-mono text-ink tracking-tight flex flex-wrap items-baseline gap-x-3 gap-y-1">
+          <span id="hero-years">0</span> <span class="text-lg sm:text-2xl font-bold text-mute">Years</span>
+          <span id="hero-months">0</span> <span class="text-lg sm:text-2xl font-bold text-mute">Months</span>
+          <span id="hero-days">0</span> <span class="text-lg sm:text-2xl font-bold text-mute">Days</span>
+        </div>
+
+        <!-- Secondary Real-time Ticker: Hours, Minutes, Seconds -->
+        <div class="flex items-center gap-2 text-sm sm:text-lg font-mono font-semibold text-link pt-1">
+          <span>⏳</span>
+          <span id="hero-hours">00</span><span>h</span> :
+          <span id="hero-minutes">00</span><span>m</span> :
+          <span id="hero-seconds" class="inline-block min-w-[28px] text-ink font-bold">00</span><span>s</span>
+          <span class="text-xs font-mono text-mute font-normal">(live ticks)</span>
+        </div>
+      </div>
+
+      <!-- Born on Day Banner -->
+      <div class="rounded-xl border border-hairline bg-canvas p-3.5 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+        <div class="flex items-center gap-2">
+          <span class="text-base">🎂</span>
+          <span class="text-mute">You were born on a:</span>
+          <strong id="born-day-name" class="text-ink font-bold text-sm">--</strong>
+        </div>
+        <div class="flex items-center gap-3 text-mute text-[11px]">
+          <span>Zodiac: <strong id="zodiac-sign" class="text-ink">--</strong></span>
+          <span>Chinese Zodiac: <strong id="chinese-zodiac" class="text-ink">--</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Granular Units Breakdown Grid (Day, Time, Second features) -->
+    <div class="space-y-3">
+      <h3 class="text-xs font-semibold text-ink uppercase font-mono tracking-wider">
+        Granular Lifetime Breakdown (Total Elapsed Units)
+      </h3>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <!-- Total Days -->
+        <div class="rounded-xl border border-hairline bg-canvas p-4 text-center space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Total Days Lived</span>
+          <div id="metric-total-days" class="text-xl sm:text-2xl font-extrabold font-mono text-ink tracking-tight">0</div>
+          <span class="text-[10px] font-mono text-mute block">Full 24-hr periods</span>
+        </div>
+
+        <!-- Total Hours -->
+        <div class="rounded-xl border border-hairline bg-canvas p-4 text-center space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Total Hours</span>
+          <div id="metric-total-hours" class="text-xl sm:text-2xl font-extrabold font-mono text-ink tracking-tight">0</div>
+          <span class="text-[10px] font-mono text-mute block">Elapsed hours</span>
+        </div>
+
+        <!-- Total Minutes -->
+        <div class="rounded-xl border border-hairline bg-canvas p-4 text-center space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Total Minutes</span>
+          <div id="metric-total-minutes" class="text-xl sm:text-2xl font-extrabold font-mono text-ink tracking-tight">0</div>
+          <span class="text-[10px] font-mono text-mute block">Minutes lived</span>
+        </div>
+
+        <!-- Total Seconds (Live) -->
+        <div class="rounded-xl border border-link/40 bg-link/5 p-4 text-center space-y-1">
+          <span class="text-[10px] font-mono text-link uppercase tracking-wider font-bold block">Total Seconds (Live)</span>
+          <div id="metric-total-seconds" class="text-xl sm:text-2xl font-extrabold font-mono text-link tracking-tight">0</div>
+          <span class="text-[10px] font-mono text-mute block">Ticking in real-time</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Next Birthday Countdown Card -->
+    <div class="rounded-xl border border-hairline bg-canvas p-5 sm:p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-hairline pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-lg">🎉</span>
+          <h3 class="text-sm font-semibold uppercase font-mono text-ink">Next Birthday Countdown</h3>
+        </div>
+        <span id="next-birthday-date" class="text-xs font-mono text-mute">--</span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center font-mono">
+        <div class="rounded-lg bg-hairline-soft/40 p-3">
+          <div id="nb-months" class="text-2xl font-extrabold text-ink">0</div>
+          <div class="text-[10px] text-mute uppercase">Months</div>
+        </div>
+        <div class="rounded-lg bg-hairline-soft/40 p-3">
+          <div id="nb-days" class="text-2xl font-extrabold text-ink">0</div>
+          <div class="text-[10px] text-mute uppercase">Days</div>
+        </div>
+        <div class="rounded-lg bg-hairline-soft/40 p-3">
+          <div id="nb-hours" class="text-2xl font-extrabold text-ink">0</div>
+          <div class="text-[10px] text-mute uppercase">Hours</div>
+        </div>
+        <div class="rounded-lg bg-hairline-soft/40 p-3">
+          <div id="nb-seconds" class="text-2xl font-extrabold text-link">0</div>
+          <div class="text-[10px] text-mute uppercase">Seconds</div>
+        </div>
+      </div>
+
+      <p id="nb-summary" class="text-xs font-mono text-mute text-center leading-relaxed"></p>
+    </div>
+
+    <!-- Fun Milestones & Physiological Statistics -->
+    <div class="rounded-xl border border-hairline bg-canvas-elevated p-5 space-y-3">
+      <h3 class="text-xs font-semibold text-ink uppercase font-mono tracking-wider">
+        Lifetime Physiological Milestones
+      </h3>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
+        <div class="rounded-lg border border-hairline bg-canvas p-3 space-y-1">
+          <span class="text-mute text-[11px] block">❤️ Estimated Heartbeats</span>
+          <div id="stat-heartbeats" class="text-base font-bold text-ink">--</div>
+          <span class="text-[10px] text-faint">At an avg resting rate of 72 bpm</span>
+        </div>
+        <div class="rounded-lg border border-hairline bg-canvas p-3 space-y-1">
+          <span class="text-mute text-[11px] block">💨 Estimated Breaths</span>
+          <div id="stat-breaths" class="text-base font-bold text-ink">--</div>
+          <span class="text-[10px] text-faint">At an avg of 16 breaths / min</span>
+        </div>
+        <div class="rounded-lg border border-hairline bg-canvas p-3 space-y-1">
+          <span class="text-mute text-[11px] block">🌓 Half-Birthday</span>
+          <div id="stat-half-birthday" class="text-base font-bold text-ink">--</div>
+          <span class="text-[10px] text-faint">Exact 6-month opposite milestone</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Educational Formula & Scientific Methodology -->
+  <FormulaSection
+    formula="Chronological Age = Target Timestamp - Birth Timestamp"
+    explanation="Standard Gregorian calendar age calculation accounts for variable month day counts (28, 29, 30, 31) and leap years (Feb 29). Total days, hours, minutes, and seconds represent absolute elapsed solar time since the moment of birth."
+    variables={[
+      { symbol: 'Target Date', meaning: 'The present moment or historical comparison date' },
+      { symbol: 'Birth Date', meaning: 'The exact date and time when life began' },
+      { symbol: 'Leap Year', meaning: 'Every year divisible by 4, except end-of-century years not divisible by 400' },
+      { symbol: 'Seconds Delta', meaning: 'Total elapsed milliseconds divided by 1,000' },
+    ]}
+  />
+
+  <!-- Worked Example -->
+  <WorkedExample
+    calculatorId="age-calculator"
+    title="Worked Example: Chronological Calculation"
+    scenario="Calculating exact age for an individual born on January 1, 2000 at 12:00 PM as of March 15, 2026."
+    steps={workedExampleSteps}
+    conclusion="As of March 15, 2026, the exact chronological age is 26 Years, 2 Months, and 14 Days, spanning over 9,570 days and 826 million seconds."
+  />
+
+  <!-- FAQ Section with Schema.org Generation -->
+  <FAQSection faqs={faqs} title="Age Calculator Questions & Technical Answers" />
+</CalculatorLayout>
+
+<!-- Client-side High Precision Live Engine -->
+<script is:inline>
+  (function () {
+    // DOM Elements
+    const datePickerInput = document.getElementById('birth-date-input');
+    const birthDaySelect = document.getElementById('birth-day-select');
+    const birthMonthSelect = document.getElementById('birth-month-select');
+    const birthYearInput = document.getElementById('birth-year-input');
+    const enableTimeToggle = document.getElementById('enable-time-toggle');
+    const birthTimeContainer = document.getElementById('birth-time-container');
+    const birthTimeInput = document.getElementById('birth-time-input');
+    const targetDateInput = document.getElementById('target-date-input');
+    const resetTargetTodayBtn = document.getElementById('reset-target-today-btn');
+    const tabDatepickerBtn = document.getElementById('tab-datepicker-btn');
+    const tabDropdownBtn = document.getElementById('tab-dropdown-btn');
+    const modeDatepicker = document.getElementById('mode-datepicker');
+    const modeDropdown = document.getElementById('mode-dropdown');
+    const toggleTickerBtn = document.getElementById('toggle-ticker-btn');
+    const tickerStatusDot = document.getElementById('ticker-status-dot');
+    const tickerStatusText = document.getElementById('ticker-status-text');
+    const futureError = document.getElementById('future-date-error');
+
+    // Display targets
+    const heroYears = document.getElementById('hero-years');
+    const heroMonths = document.getElementById('hero-months');
+    const heroDays = document.getElementById('hero-days');
+    const heroHours = document.getElementById('hero-hours');
+    const heroMinutes = document.getElementById('hero-minutes');
+    const heroSeconds = document.getElementById('hero-seconds');
+    const bornDayName = document.getElementById('born-day-name');
+    const zodiacSign = document.getElementById('zodiac-sign');
+    const chineseZodiac = document.getElementById('chinese-zodiac');
+
+    // Granular metric targets
+    const metricTotalDays = document.getElementById('metric-total-days');
+    const metricTotalHours = document.getElementById('metric-total-hours');
+    const metricTotalMinutes = document.getElementById('metric-total-minutes');
+    const metricTotalSeconds = document.getElementById('metric-total-seconds');
+
+    // Next birthday targets
+    const nextBirthdayDate = document.getElementById('next-birthday-date');
+    const nbMonths = document.getElementById('nb-months');
+    const nbDays = document.getElementById('nb-days');
+    const nbHours = document.getElementById('nb-hours');
+    const nbSeconds = document.getElementById('nb-seconds');
+    const nbSummary = document.getElementById('nb-summary');
+
+    // Stats targets
+    const statHeartbeats = document.getElementById('stat-heartbeats');
+    const statBreaths = document.getElementById('stat-breaths');
+    const statHalfBirthday = document.getElementById('stat-half-birthday');
+
+    // Copy button
+    const copyAgeBtn = document.getElementById('copy-age-btn');
+    const copyAgeText = document.getElementById('copy-age-text');
+
+    let isTickerActive = true;
+    let tickerInterval = null;
+    let isDropdownMode = false;
+
+    // Helper: format YYYY-MM-DD
+    function toDateInputValue(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    // Initialize Max Date Limit to Today (Future Date Restriction)
+    function enforceFutureDateLimits() {
+      const now = new Date();
+      const todayString = toDateInputValue(now);
+
+      if (datePickerInput) {
+        datePickerInput.max = todayString;
+      }
+      if (birthYearInput) {
+        birthYearInput.max = String(now.getFullYear());
+      }
+      if (targetDateInput && !targetDateInput.value) {
+        targetDateInput.value = todayString;
+      }
+    }
+
+    enforceFutureDateLimits();
+
+    // Sync helpers between datepicker and dropdown
+    function syncDatepickerToDropdown() {
+      if (!datePickerInput || !datePickerInput.value) return;
+      const parts = datePickerInput.value.split('-');
+      if (parts.length === 3) {
+        if (birthYearInput) birthYearInput.value = parts[0];
+        if (birthMonthSelect) birthMonthSelect.value = parseInt(parts[1], 10);
+        if (birthDaySelect) birthDaySelect.value = parseInt(parts[2], 10);
+      }
+    }
+
+    function syncDropdownToDatepicker() {
+      if (!birthYearInput || !birthMonthSelect || !birthDaySelect) return;
+      const y = parseInt(birthYearInput.value, 10);
+      const m = parseInt(birthMonthSelect.value, 10);
+      const d = parseInt(birthDaySelect.value, 10);
+      if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+        const mm = String(m).padStart(2, '0');
+        const dd = String(d).padStart(2, '0');
+        if (datePickerInput) {
+          datePickerInput.value = `${y}-${mm}-${dd}`;
+        }
+      }
+    }
+
+    // Get current configured birth Date object
+    function getBirthDate() {
+      let y, m, d;
+      if (isDropdownMode) {
+        y = parseInt(birthYearInput?.value || '2000', 10);
+        m = parseInt(birthMonthSelect?.value || '1', 10) - 1;
+        d = parseInt(birthDaySelect?.value || '1', 10);
+      } else {
+        const val = datePickerInput?.value || '2000-01-01';
+        const parts = val.split('-');
+        y = parseInt(parts[0], 10);
+        m = parseInt(parts[1], 10) - 1;
+        d = parseInt(parts[2], 10);
+      }
+
+      let hour = 0;
+      let minute = 0;
+      if (enableTimeToggle?.checked && birthTimeInput?.value) {
+        const tParts = birthTimeInput.value.split(':');
+        if (tParts.length >= 2) {
+          hour = parseInt(tParts[0], 10) || 0;
+          minute = parseInt(tParts[1], 10) || 0;
+        }
+      }
+
+      return new Date(y, m, d, hour, minute, 0, 0);
+    }
+
+    // Get comparison Target Date
+    function getTargetDate() {
+      const now = new Date();
+      if (!targetDateInput || !targetDateInput.value) {
+        return now;
+      }
+      const todayStr = toDateInputValue(now);
+      if (targetDateInput.value === todayStr) {
+        return now;
+      }
+      const parts = targetDateInput.value.split('-');
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10) - 1;
+      const d = parseInt(parts[2], 10);
+      return new Date(y, m, d, now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
+    }
+
+    // Day of week name
+    const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    // Zodiac signs
+    function getZodiac(month, day) {
+      const dates = [20, 19, 21, 20, 21, 21, 23, 23, 23, 23, 22, 22];
+      const signs = [
+        'Capricorn', 'Aquarius', 'Pisces', 'Aries', 'Taurus', 'Gemini',
+        'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn'
+      ];
+      return day < dates[month - 1] ? signs[month - 1] : signs[month];
+    }
+
+    function getChineseZodiac(year) {
+      const animals = ['Rat', 'Ox', 'Tiger', 'Rabbit', 'Dragon', 'Snake', 'Horse', 'Goat', 'Monkey', 'Rooster', 'Dog', 'Pig'];
+      const baseYear = 1900;
+      const index = (year - baseYear) % 12;
+      return animals[(index + 12) % 12];
+    }
+
+    // Core Chronological Age Algorithm
+    function updateCalculations() {
+      const birth = getBirthDate();
+      const target = getTargetDate();
+
+      // Check future date validity (future date limitation)
+      if (birth.getTime() > target.getTime()) {
+        if (futureError) futureError.classList.remove('hidden');
+        if (datePickerInput) datePickerInput.classList.add('border-red-500');
+        if (birthYearInput) birthYearInput.classList.add('border-red-500');
+
+        // Zero out displays
+        if (heroYears) heroYears.textContent = '0';
+        if (heroMonths) heroMonths.textContent = '0';
+        if (heroDays) heroDays.textContent = '0';
+        if (heroHours) heroHours.textContent = '00';
+        if (heroMinutes) heroMinutes.textContent = '00';
+        if (heroSeconds) heroSeconds.textContent = '00';
+
+        if (metricTotalDays) metricTotalDays.textContent = '0';
+        if (metricTotalHours) metricTotalHours.textContent = '0';
+        if (metricTotalMinutes) metricTotalMinutes.textContent = '0';
+        if (metricTotalSeconds) metricTotalSeconds.textContent = '0';
+
+        if (bornDayName) bornDayName.textContent = 'Future Date Selected';
+        if (zodiacSign) zodiacSign.textContent = '--';
+        if (chineseZodiac) chineseZodiac.textContent = '--';
+        if (nbSummary) nbSummary.textContent = 'Please choose a birth date today or earlier.';
+        return;
+      }
+
+      // Valid date
+      if (futureError) futureError.classList.add('hidden');
+      if (datePickerInput) datePickerInput.classList.remove('border-red-500');
+      if (birthYearInput) birthYearInput.classList.remove('border-red-500');
+
+      // 1. Calendar Years, Months, Days breakdown
+      let years = target.getFullYear() - birth.getFullYear();
+      let months = target.getMonth() - birth.getMonth();
+      let days = target.getDate() - birth.getDate();
+      let hours = target.getHours() - birth.getHours();
+      let minutes = target.getMinutes() - birth.getMinutes();
+      let seconds = target.getSeconds() - birth.getSeconds();
+
+      if (seconds < 0) {
+        minutes--;
+        seconds += 60;
+      }
+      if (minutes < 0) {
+        hours--;
+        minutes += 60;
+      }
+      if (hours < 0) {
+        days--;
+        hours += 24;
+      }
+      if (days < 0) {
+        months--;
+        const prevMonthDays = new Date(target.getFullYear(), target.getMonth(), 0).getDate();
+        days += prevMonthDays;
+      }
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      // Update Hero display
+      if (heroYears) heroYears.textContent = String(Math.max(0, years));
+      if (heroMonths) heroMonths.textContent = String(Math.max(0, months));
+      if (heroDays) heroDays.textContent = String(Math.max(0, days));
+      if (heroHours) heroHours.textContent = String(Math.max(0, hours)).padStart(2, '0');
+      if (heroMinutes) heroMinutes.textContent = String(Math.max(0, minutes)).padStart(2, '0');
+      if (heroSeconds) heroSeconds.textContent = String(Math.max(0, seconds)).padStart(2, '0');
+
+      // 2. Total Elapsed Metrics
+      const totalMs = target.getTime() - birth.getTime();
+      const totalSeconds = Math.floor(totalMs / 1000);
+      const totalMinutes = Math.floor(totalSeconds / 60);
+      const totalHours = Math.floor(totalMinutes / 60);
+      const totalDays = Math.floor(totalHours / 24);
+
+      if (metricTotalDays) metricTotalDays.textContent = totalDays.toLocaleString();
+      if (metricTotalHours) metricTotalHours.textContent = totalHours.toLocaleString();
+      if (metricTotalMinutes) metricTotalMinutes.textContent = totalMinutes.toLocaleString();
+      if (metricTotalSeconds) metricTotalSeconds.textContent = totalSeconds.toLocaleString();
+
+      // 3. Born Day & Zodiac
+      const dayIndex = birth.getDay();
+      if (bornDayName) bornDayName.textContent = DAYS[dayIndex];
+      if (zodiacSign) zodiacSign.textContent = getZodiac(birth.getMonth() + 1, birth.getDate());
+      if (chineseZodiac) chineseZodiac.textContent = getChineseZodiac(birth.getFullYear());
+
+      // 4. Next Birthday Countdown
+      let nextBdayYear = target.getFullYear();
+      let nextBday = new Date(nextBdayYear, birth.getMonth(), birth.getDate(), birth.getHours(), birth.getMinutes(), 0);
+
+      // If next birthday already passed this year, advance to next year
+      if (nextBday.getTime() <= target.getTime()) {
+        nextBdayYear++;
+        nextBday = new Date(nextBdayYear, birth.getMonth(), birth.getDate(), birth.getHours(), birth.getMinutes(), 0);
+      }
+
+      const diffMs = nextBday.getTime() - target.getTime();
+      let nbSecsTotal = Math.floor(diffMs / 1000);
+      const nbDaysCount = Math.floor(nbSecsTotal / (24 * 3600));
+      nbSecsTotal %= (24 * 3600);
+      const nbHoursCount = Math.floor(nbSecsTotal / 3600);
+      nbSecsTotal %= 3600;
+      const nbMinsCount = Math.floor(nbSecsTotal / 60);
+      const nbSecsFinal = nbSecsTotal % 60;
+
+      const nbMonthsEst = Math.floor(nbDaysCount / 30.4375);
+      const nbDaysRem = Math.floor(nbDaysCount % 30.4375);
+
+      if (nextBirthdayDate) {
+        const options = { month: 'short', day: 'numeric', year: 'numeric' };
+        nextBirthdayDate.textContent = `${nextBday.toLocaleDateString('en-US', options)} (${DAYS[nextBday.getDay()]})`;
+      }
+      if (nbMonths) nbMonths.textContent = String(nbMonthsEst);
+      if (nbDays) nbDays.textContent = String(nbDaysRem);
+      if (nbHours) nbHours.textContent = String(nbHoursCount).padStart(2, '0');
+      if (nbSeconds) nbSeconds.textContent = String(nbSecsFinal).padStart(2, '0');
+
+      const turningAge = nextBdayYear - birth.getFullYear();
+      if (nbSummary) {
+        nbSummary.textContent = `You will turn ${turningAge} on ${DAYS[nextBday.getDay()]}, ${nextBday.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}. Exactly ${nbDaysCount.toLocaleString()} days remaining!`;
+      }
+
+      // 5. Physiological Statistics
+      if (statHeartbeats) {
+        const beats = Math.round(totalMinutes * 72);
+        statHeartbeats.textContent = beats.toLocaleString() + ' beats';
+      }
+      if (statBreaths) {
+        const breaths = Math.round(totalMinutes * 16);
+        statBreaths.textContent = breaths.toLocaleString() + ' breaths';
+      }
+      if (statHalfBirthday) {
+        const halfBday = new Date(birth.getFullYear(), birth.getMonth() + 6, birth.getDate());
+        statHalfBirthday.textContent = halfBday.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      }
+
+      // Sync URL parameters
+      syncUrlParams(birth);
+    }
+
+    function syncUrlParams(birth) {
+      try {
+        const params = new URLSearchParams();
+        const y = birth.getFullYear();
+        const m = String(birth.getMonth() + 1).padStart(2, '0');
+        const d = String(birth.getDate()).padStart(2, '0');
+        params.set('dob', `${y}-${m}-${d}`);
+        if (enableTimeToggle?.checked && birthTimeInput?.value) {
+          params.set('time', birthTimeInput.value);
+        }
+        window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+      } catch (_) {}
+    }
+
+    // Start Live Ticker
+    function startTicker() {
+      if (tickerInterval) clearInterval(tickerInterval);
+      tickerInterval = setInterval(updateCalculations, 1000);
+      isTickerActive = true;
+      if (tickerStatusDot) {
+        tickerStatusDot.className = 'w-2 h-2 rounded-full bg-green-500 animate-pulse';
+      }
+      if (tickerStatusText) {
+        tickerStatusText.textContent = 'Live (Ticking)';
+      }
+    }
+
+    function stopTicker() {
+      if (tickerInterval) clearInterval(tickerInterval);
+      tickerInterval = null;
+      isTickerActive = false;
+      if (tickerStatusDot) {
+        tickerStatusDot.className = 'w-2 h-2 rounded-full bg-mute';
+      }
+      if (tickerStatusText) {
+        tickerStatusText.textContent = 'Paused';
+      }
+    }
+
+    // Toggle Ticker Click
+    if (toggleTickerBtn) {
+      toggleTickerBtn.addEventListener('click', () => {
+        if (isTickerActive) {
+          stopTicker();
+        } else {
+          startTicker();
+          updateCalculations();
+        }
+      });
+    }
+
+    // Input Change Listeners
+    if (datePickerInput) {
+      datePickerInput.addEventListener('input', () => {
+        syncDatepickerToDropdown();
+        updateCalculations();
+      });
+      datePickerInput.addEventListener('change', () => {
+        syncDatepickerToDropdown();
+        updateCalculations();
+      });
+    }
+
+    [birthDaySelect, birthMonthSelect, birthYearInput].forEach((el) => {
+      if (el) {
+        el.addEventListener('input', () => {
+          syncDropdownToDatepicker();
+          updateCalculations();
+        });
+        el.addEventListener('change', () => {
+          syncDropdownToDatepicker();
+          updateCalculations();
+        });
+      }
+    });
+
+    if (enableTimeToggle) {
+      enableTimeToggle.addEventListener('change', () => {
+        if (birthTimeContainer) {
+          if (enableTimeToggle.checked) {
+            birthTimeContainer.classList.remove('hidden');
+            birthTimeContainer.classList.add('grid');
+          } else {
+            birthTimeContainer.classList.add('hidden');
+            birthTimeContainer.classList.remove('grid');
+          }
+        }
+        updateCalculations();
+      });
+    }
+
+    if (birthTimeInput) {
+      birthTimeInput.addEventListener('input', updateCalculations);
+    }
+
+    if (targetDateInput) {
+      targetDateInput.addEventListener('input', updateCalculations);
+    }
+
+    if (resetTargetTodayBtn) {
+      resetTargetTodayBtn.addEventListener('click', () => {
+        if (targetDateInput) {
+          targetDateInput.value = toDateInputValue(new Date());
+        }
+        updateCalculations();
+      });
+    }
+
+    // Mode Switcher Tabs
+    if (tabDatepickerBtn && tabDropdownBtn) {
+      tabDatepickerBtn.addEventListener('click', () => {
+        isDropdownMode = false;
+        tabDatepickerBtn.className = 'rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors';
+        tabDropdownBtn.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink cursor-pointer hover:bg-hairline-soft transition-colors';
+        if (modeDatepicker) modeDatepicker.classList.remove('hidden');
+        if (modeDropdown) modeDropdown.classList.add('hidden');
+        syncDropdownToDatepicker();
+        updateCalculations();
+      });
+
+      tabDropdownBtn.addEventListener('click', () => {
+        isDropdownMode = true;
+        tabDropdownBtn.className = 'rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors';
+        tabDatepickerBtn.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink cursor-pointer hover:bg-hairline-soft transition-colors';
+        if (modeDropdown) modeDropdown.classList.remove('hidden');
+        if (modeDatepicker) modeDatepicker.classList.add('hidden');
+        syncDatepickerToDropdown();
+        updateCalculations();
+      });
+    }
+
+    // Copy Result to Clipboard
+    if (copyAgeBtn) {
+      copyAgeBtn.addEventListener('click', () => {
+        const y = heroYears?.textContent || '0';
+        const m = heroMonths?.textContent || '0';
+        const d = heroDays?.textContent || '0';
+        const h = heroHours?.textContent || '00';
+        const min = heroMinutes?.textContent || '00';
+        const s = heroSeconds?.textContent || '00';
+        const daysTotal = metricTotalDays?.textContent || '0';
+        const secsTotal = metricTotalSeconds?.textContent || '0';
+        const bornDay = bornDayName?.textContent || '';
+
+        const summary = `Chronological Age: ${y} Years, ${m} Months, ${d} Days (${h}h:${min}m:${s}s)\nTotal Days: ${daysTotal} Days | Total Seconds: ${secsTotal} Secs\nBorn on a: ${bornDay}\nCalculated with FreeAccurateCalculator.com`;
+
+        navigator.clipboard.writeText(summary).then(() => {
+          if (copyAgeText) {
+            copyAgeText.textContent = 'Copied!';
+            setTimeout(() => {
+              copyAgeText.textContent = 'Copy Result';
+            }, 2000);
+          }
+        });
+      });
+    }
+
+    // Restore URL params on Load
+    function restoreParams() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const dobParam = urlParams.get('dob');
+      const timeParam = urlParams.get('time');
+
+      if (dobParam && /^\d{4}-\d{2}-\d{2}$/.test(dobParam)) {
+        if (datePickerInput) datePickerInput.value = dobParam;
+        syncDatepickerToDropdown();
+      }
+      if (timeParam && enableTimeToggle && birthTimeInput) {
+        enableTimeToggle.checked = true;
+        birthTimeInput.value = timeParam;
+        if (birthTimeContainer) {
+          birthTimeContainer.classList.remove('hidden');
+          birthTimeContainer.classList.add('grid');
+        }
+      }
+    }
+
+    restoreParams();
+    updateCalculations();
+    startTicker();
+  })();
+</script>

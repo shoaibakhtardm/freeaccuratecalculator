@@ -1,0 +1,149 @@
+---
+// src/components/Educational/WorkedExample.astro
+import fs from 'node:fs';
+import path from 'node:path';
+
+export interface WorkedStep {
+  number: number;
+  title: string;
+  description: string;
+  mathExpression?: string;
+}
+
+export interface Props {
+  calculatorId?: string;
+  title?: string;
+  scenario?: string;
+  steps?: WorkedStep[];
+  conclusion?: string;
+  formula?: string;
+}
+
+const {
+  calculatorId,
+  title: userTitle,
+  scenario: userScenario,
+  steps: userSteps,
+  conclusion: userConclusion,
+  formula,
+} = Astro.props;
+
+let resolvedTitle = userTitle || 'Step-by-Step Worked Example';
+let resolvedScenario = userScenario || '';
+let resolvedSteps: WorkedStep[] = userSteps || [];
+let resolvedConclusion = userConclusion || '';
+let resolvedFormula = formula || '';
+
+// If calculatorId is supplied and explicit scenario/steps are omitted, dynamically load from content repository
+if (calculatorId && (!resolvedScenario || resolvedSteps.length === 0)) {
+  try {
+    const jsonPath = path.resolve(process.cwd(), `src/content/calculators/${calculatorId}.json`);
+    if (fs.existsSync(jsonPath)) {
+      const fileData = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+      if (fileData.example) {
+        if (!resolvedScenario && fileData.example.problem) {
+          resolvedScenario = fileData.example.problem;
+        }
+        if (!resolvedConclusion && fileData.example.solution) {
+          resolvedConclusion = fileData.example.solution;
+        }
+        if (resolvedSteps.length === 0 && Array.isArray(fileData.example.steps)) {
+          resolvedSteps = fileData.example.steps.map((rawStep: string, index: number) => {
+            const parts = rawStep.split(':');
+            const stepTitle = parts.length > 1 ? parts[0].trim() : `Step ${index + 1}`;
+            const stepDesc = parts.length > 1 ? parts.slice(1).join(':').trim() : rawStep.trim();
+            const mathMatch = stepDesc.match(/([0-9.,]+(?:\s*[+\-×÷*/=^]\s*[0-9.,()]+)+(?:\s*=\s*[0-9.,]+)?(?:\s*[a-zA-Z%$/₹€£]*)?)/);
+            
+            return {
+              number: index + 1,
+              title: stepTitle,
+              description: stepDesc,
+              mathExpression: mathMatch ? mathMatch[0].trim() : undefined,
+            };
+          });
+        }
+      }
+      if (!resolvedFormula && fileData.formula?.expression) {
+        resolvedFormula = fileData.formula.expression;
+      }
+      if (!userTitle && fileData.shortTitle) {
+        resolvedTitle = `${fileData.shortTitle} — Worked Example & Practical Calculation`;
+      }
+    }
+  } catch {
+    // Graceful fallback to provided props
+  }
+}
+---
+
+<section 
+  class="mt-8 rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-5"
+  aria-labelledby="worked-example-heading"
+  itemscope 
+  itemtype="https://schema.org/HowTo"
+>
+  <div class="flex items-center justify-between gap-3 border-b border-hairline pb-3">
+    <div class="flex items-center gap-2">
+      <span class="inline-block w-2 h-2 rounded-full bg-cyan"></span>
+      <span class="mono-eyebrow text-cyan">Educational Calculation & Verification</span>
+    </div>
+    {resolvedFormula && (
+      <span class="hidden sm:inline-block rounded-[4px] border border-hairline-soft bg-canvas px-2.5 py-1 text-xs font-mono text-mute">
+        Formula: {resolvedFormula}
+      </span>
+    )}
+  </div>
+
+  <h2 id="worked-example-heading" class="heading-md text-ink" itemprop="name">
+    {resolvedTitle}
+  </h2>
+
+  {resolvedScenario && (
+    <div class="rounded-[8px] border border-hairline-soft bg-canvas p-4 text-xs sm:text-sm text-body leading-relaxed">
+      <strong class="font-semibold text-ink">Practical Scenario:</strong> 
+      <span itemprop="description">{resolvedScenario}</span>
+    </div>
+  )}
+
+  <div class="space-y-3 pt-1">
+    {resolvedSteps.map((step) => (
+      <div 
+        class="flex items-start gap-3 rounded-[8px] border border-hairline bg-canvas p-3.5 sm:p-4 hover:border-hairline-strong transition-colors"
+        itemprop="step" 
+        itemscope 
+        itemtype="https://schema.org/HowToStep"
+      >
+        <span 
+          class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-canvas text-xs font-mono font-bold"
+          aria-hidden="true"
+        >
+          {step.number}
+        </span>
+        <div class="space-y-1.5 flex-1">
+          <h3 class="text-xs sm:text-sm font-semibold text-ink" itemprop="name">
+            {step.title}
+          </h3>
+          <p class="text-xs sm:text-sm text-body leading-relaxed" itemprop="text">
+            {step.description}
+          </p>
+          {step.mathExpression && (
+            <div class="mt-2 inline-block rounded-[4px] border border-hairline-soft bg-canvas-elevated px-3 py-1.5 text-xs font-mono font-medium text-link">
+              {step.mathExpression}
+            </div>
+          )}
+        </div>
+      </div>
+    ))}
+  </div>
+
+  {resolvedConclusion && (
+    <div class="rounded-[8px] border border-cyan/30 bg-cyan/5 p-4 text-xs sm:text-sm text-ink font-medium flex items-center gap-2.5">
+      <svg class="w-4 h-4 text-cyan shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <div>
+        <strong class="font-semibold text-cyan">Final Verified Result:</strong> {resolvedConclusion}
+      </div>
+    </div>
+  )}
+</section>

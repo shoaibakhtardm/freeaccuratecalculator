@@ -1,6 +1,7 @@
 ---
 // src/pages/es/index.astro
 import Layout from '../../layouts/Layout.astro';
+import AutocompleteSearch from '../../components/common/AutocompleteSearch.astro';
 
 const categories = [
   {
@@ -106,32 +107,12 @@ const websiteSchema = {
         Precisión matemática verificada con un diseño limpio, sin fórmulas fiscales engañosas y sin retardos. Calculadoras locales y entrega instantánea en el borde.
       </p>
 
-      <!-- 4. Spotlight Search Bar (Raycast / Linear Command-Bar Style) -->
-      <div class="pt-2 max-w-xl mx-auto">
-        <div class="relative flex items-center group">
-          <div
-            class="absolute -inset-1 rounded-2xl sm:rounded-full bg-gradient-to-r from-blue-600/25 via-indigo-600/25 to-purple-600/25 opacity-0 group-focus-within:opacity-100 blur-md transition-all duration-300 pointer-events-none"
-            aria-hidden="true"
-          ></div>
-
-          <svg
-            class="absolute left-4 h-4.5 w-4.5 text-slate-400 dark:text-slate-500 group-focus-within:text-indigo-600 dark:group-focus-within:text-indigo-400 transition-colors pointer-events-none z-10"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2.2"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
-
-          <input
-            id="search-input"
-            type="search"
-            placeholder="Buscar calculadora (ej. 'porcentaje', 'préstamo', 'imc')..."
-            class="relative z-0 w-full rounded-2xl sm:rounded-full border border-slate-200/90 dark:border-slate-800/90 bg-white/95 dark:bg-slate-900/95 py-3.5 sm:py-4 pl-11 pr-4 text-sm sm:text-base text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 shadow-sm focus:border-indigo-500 dark:focus:border-indigo-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 dark:focus:ring-indigo-400/10 transition-all backdrop-blur-xl"
-            aria-label="Buscar calculadoras"
-          />
-        </div>
+      <!-- 4. Interactive Live Spotlight Search Bar with Instant Suggestions -->
+      <div class="pt-2 max-w-2xl mx-auto">
+        <AutocompleteSearch
+          id="search-input"
+          placeholder="Buscar calculadora (ej. 'porcentaje', 'préstamo', 'imc')..."
+        />
       </div>
     </div>
   </section>

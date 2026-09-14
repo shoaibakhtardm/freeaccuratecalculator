@@ -1,9 +1,10 @@
 ---
 // src/pages/health/bmi-calculator.astro
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import CalculatorSchema from '../../components/SEO/CalculatorSchema.astro';
 import ResultDisplay from '../../components/calculator/ResultDisplay.astro';
 import FormulaSection from '../../components/calculator/FormulaSection.astro';
-import WorkedExample from '../../components/calculator/WorkedExample.astro';
+import WorkedExample from '../../components/Educational/WorkedExample.astro';
 import FAQSection from '../../components/calculator/FAQSection.astro';
 import HistoryDrawer from '../../components/calculator/HistoryDrawer.astro';
 
@@ -46,6 +47,18 @@ const relatedCalculators = [
   calculatorName="BMI Calculator"
   relatedCalculators={relatedCalculators}
 >
+  <CalculatorSchema
+    name="BMI Calculator"
+    description="Calculate your exact Body Mass Index (BMI) with instant Metric (kg/cm) and Imperial (lbs/ft-in) switchers, WHO classification gauge, and healthy weight recommendations."
+    category="Health"
+    formula={{
+      name: "Body Mass Index (Quetelet Index)",
+      expression: "BMI = weight (kg) / [height (m)]^2",
+      explanation: "Body Mass Index evaluates body mass relative to height squared according to WHO cutoffs."
+    }}
+    faq={faqs}
+  />
+
   <!-- Calculator Main Box -->
   <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
     <!-- Unit System Tabs -->
@@ -313,7 +326,17 @@ const relatedCalculators = [
       <div class="flex items-center gap-2">
         <span class="mono-eyebrow text-link">Clinical Reference</span>
       </div>
-      <h2 class="heading-md text-ink">World Health Organization (WHO) BMI Cut-Offs</h2>
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <h2 class="heading-md text-ink">World Health Organization (WHO) BMI Cut-Offs</h2>
+        <a
+          href="https://www.who.int/news-room/fact-sheets/detail/obesity-and-overweight"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-xs text-link underline hover:opacity-80 inline-flex items-center gap-1"
+        >
+          WHO Guidelines ↗
+        </a>
+      </div>
 
       <div class="overflow-x-auto max-w-full">
         <table class="w-full min-w-[300px] text-left text-xs sm:text-sm">

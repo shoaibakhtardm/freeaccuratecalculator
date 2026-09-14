@@ -1,20 +1,33 @@
 ---
-// src/layouts/Layout.astro
+import '../styles/critical.css';
 import '../styles/global.css';
+import '../styles/rtl.css';
 import Header from '../components/common/Header.astro';
 import Footer from '../components/common/Footer.astro';
 import ConsentBanner from '../components/common/ConsentBanner.astro';
 import Toast from '../components/common/Toast.astro';
+import LanguageCountryModal from '../components/LanguageCountryModal.astro';
+import LocaleDetectionToast from '../components/common/LocaleDetectionToast.astro';
+import LocalizedCalculatorBridge from '../components/calculator/LocalizedCalculatorBridge.astro';
+import CountrySelector from '../components/CountrySelector.astro';
 import { EXCHANGE_RATE_SNAPSHOT } from '../data/exchangeRates';
+import { getLocaleDirection, ALL_SUPPORTED_LOCALES } from '../i18n/config';
+import { LOCALES, DEFAULT_LOCALE } from '../i18n/localeConfig';
+import { getAlternateHreflangLinks } from '../i18n/slugs';
+import { languages, type SupportedLanguage } from '../i18n/ui';
+import type { SupportedLocale } from '../types/i18n';
 
 interface Props {
   title: string;
-  description: string;
+  description?: string;
+  metaDescription?: string;
   canonicalUrl?: string;
   image?: string;
   jsonLd?: Record<string, any> | Array<Record<string, any>>;
   noindex?: boolean;
   lang?: string;
+  locale?: SupportedLocale;
+  bingVerification?: string;
 }
 
 const siteOrigin = 'https://freeaccuratecalculator.com';
@@ -24,13 +37,19 @@ const normalizedPathname = pathname.endsWith('/') ? pathname : `${pathname}/`;
 const {
   title,
   description,
+  metaDescription,
   canonicalUrl = `${siteOrigin}${normalizedPathname}`,
   image = `${siteOrigin}/og-image.svg`,
   jsonLd,
   noindex = false,
   lang,
+  locale,
+  bingVerification,
 } = Astro.props;
 
+const bingVerificationCode = bingVerification || (import.meta.env.PUBLIC_BING_SITE_VERIFICATION as string | undefined);
+
+const pageDescription = metaDescription || description || 'Free, accurate online calculators for finance, health, math, and everyday calculations.';
 const socialImage = image.startsWith('http') ? image : `${siteOrigin}${image.startsWith('/') ? image : `/${image}`}`;
 
 // Ensure any passed-in canonicalUrl using localhost is normalized to production siteOrigin
@@ -38,68 +57,234 @@ const finalCanonical = canonicalUrl.includes('localhost')
   ? `${siteOrigin}${normalizedPathname}`
   : canonicalUrl;
 
-const currentLocale = lang || Astro.currentLocale || 'en';
+const currentLocale = (locale || lang || Astro.currentLocale || DEFAULT_LOCALE) as SupportedLocale;
+const currentDir = languages[currentLocale as SupportedLanguage]?.dir || 'ltr';
 const siteName = 'Free Accurate Calculator';
 const fullTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
 
-// Compute technical SEO hreflangs
-const cleanPath = pathname.replace(/^\/(es|fr|hi)(\/|$)/, '/');
-const normalizedPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
+// Base Schema.org entities for Bing Copilot entity grounding
+const baseSchemas: Array<Record<string, any>> = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${siteOrigin}/#organization`,
+    name: siteName,
+    url: `${siteOrigin}/`,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${siteOrigin}/favicon.svg`,
+      width: 512,
+      height: 512,
+    },
+    description: 'Free, accurate, and privacy-focused online calculators for finance, health, math, and everyday decisions.',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${siteOrigin}/#website`,
+    name: siteName,
+    url: `${siteOrigin}/`,
+    publisher: {
+      '@id': `${siteOrigin}/#organization`,
+    },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${siteOrigin}/?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+    inLanguage: currentLocale,
+  },
+];
 
-// Set of verified multi-locale routes
-const multilangRoutes = new Set([
-  '/',
-  '/guides/',
-  '/guides/how-compound-interest-works/',
-  '/guides/how-to-calculate-percentages-accurately/',
-  '/math/percentage-calculator/',
-  '/finance/emi-calculator/',
-  '/health/bmi-calculator/',
-]);
+const customSchemas = jsonLd
+  ? Array.isArray(jsonLd)
+    ? jsonLd
+    : [jsonLd]
+  : [];
 
-const isMultilangPage = multilangRoutes.has(normalizedPath);
+const renderedSchemas = [...baseSchemas, ...customSchemas];
 
-const hreflangLinks = isMultilangPage
-  ? [
-      { lang: 'en', href: `${siteOrigin}${normalizedPath}` },
-      { lang: 'es', href: `${siteOrigin}/es${normalizedPath === '/' ? '/' : normalizedPath}` },
-      { lang: 'fr', href: `${siteOrigin}/fr${normalizedPath === '/' ? '/' : normalizedPath}` },
-      { lang: 'hi', href: `${siteOrigin}/hi${normalizedPath === '/' ? '/' : normalizedPath}` },
-      { lang: 'x-default', href: `${siteOrigin}${normalizedPath}` },
-    ]
-  : [
-      { lang: currentLocale, href: finalCanonical },
-      { lang: 'x-default', href: `${siteOrigin}${normalizedPath}` },
-    ];
+// Compute technical SEO hreflangs (guaranteed 200 OK targets, zero 404 hreflangs, includes hi & x-default)
+const hreflangLinks = getAlternateHreflangLinks(pathname, siteOrigin);
+
+const ogLocaleMap: Record<string, string> = {
+  en: 'en_US',
+  fr: 'fr_FR',
+  de: 'de_DE',
+  es: 'es_ES',
+  ar: 'ar_SA',
+  nl: 'nl_NL',
+  pt: 'pt_PT',
+  it: 'it_IT',
+  ru: 'ru_RU',
+  ja: 'ja_JP',
+  hi: 'hi_IN',
+};
+const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
 ---
 
 <!doctype html>
-<html lang={currentLocale} class="scroll-smooth">
+<html lang={Astro.currentLocale || currentLocale} dir={languages[(Astro.currentLocale || currentLocale) as SupportedLanguage]?.dir || currentDir || 'ltr'} class="scroll-smooth">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6V96N6HKEM"></script>
+    <!-- Defer Google Tag Manager until Idle / First Interaction (Zero TBT & LCP impact) -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
       gtag('js', new Date());
+      gtag('config', 'G-N96Q2B7GJ7');
 
-      gtag('config', 'G-6V96N6HKEM');
+      (function() {
+        let loaded = false;
+        function loadGtag() {
+          if (loaded) return;
+          loaded = true;
+          const s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-N96Q2B7GJ7';
+          document.head.appendChild(s);
+        }
+
+        if ('requestIdleCallback' in window) {
+          window.requestIdleCallback(loadGtag, { timeout: 3500 });
+        } else {
+          window.addEventListener('load', () => setTimeout(loadGtag, 2000), { once: true });
+        }
+        ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach((event) => {
+          window.addEventListener(event, loadGtag, { once: true, passive: true });
+        });
+      })();
+
+      // Early embed mode detection to prevent CLS
+      try {
+        if (window.location.search.includes('embed=true') || window.self !== window.top) {
+          document.documentElement.classList.add('fac-embed-view');
+        }
+      } catch (_) {}
+
+      // Global calculator analytics tracking & retention hook
+      window.facTrackCalc = function(calculatorName, details) {
+        try {
+          if (typeof window.facIncrementUsage === 'function') {
+            window.facIncrementUsage();
+          }
+        } catch (_) {}
+
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'calculator_used', {
+            calculator_name: calculatorName,
+            currency: window.facCurrentCurrency || 'USD',
+            ...details,
+          });
+        }
+      };
     </script>
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#0070f3" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Preconnect & DNS-Prefetch to external domains for sub-second DNS resolution -->
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+    </noscript>
+
+    <!-- Inline Critical Above-The-Fold CSS (0ms FCP, 0.00 CLS) -->
+    <style is:inline>
+      body { margin: 0; font-family: 'Plus Jakarta Sans', 'Cairo', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+      .calculator-container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }
+      .result-display { background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); }
+      .dark .result-display { background: linear-gradient(135deg, #141414 0%, #1e293b 100%); }
+
+      /* Clean Embed Mode for Iframe Widgets */
+      html.fac-embed-view header,
+      html.fac-embed-view footer,
+      html.fac-embed-view #header-nav,
+      html.fac-embed-view aside,
+      html.fac-embed-view #smart-email-modal,
+      html.fac-embed-view #country-modal,
+      html.fac-embed-view .breadcrumbs-container {
+        display: none !important;
+      }
+      html.fac-embed-view body {
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      html.fac-embed-view main {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+        max-width: 100% !important;
+      }
+      html.fac-embed-view .lg\:col-span-8 {
+        grid-column: span 12 / span 12 !important;
+        width: 100% !important;
+      }
+      html.fac-embed-view .fac-embed-watermark {
+        display: block !important;
+      }
+
+      /* Native High-Fidelity PDF & Print Export */
+      @media print {
+        header, footer, aside, nav, #smart-email-modal, #country-modal, .fac-copy-result-btn, .ad-slot-container, .breadcrumbs-container {
+          display: none !important;
+        }
+        body {
+          background: white !important;
+          color: black !important;
+        }
+        main {
+          max-width: 100% !important;
+          padding: 0 !important;
+        }
+        .lg\:col-span-8 {
+          grid-column: span 12 / span 12 !important;
+          width: 100% !important;
+        }
+        table {
+          page-break-inside: auto;
+        }
+        tr {
+          page-break-inside: avoid;
+          page-break-after: auto;
+        }
+      }
+    </style>
 
     <!-- SEO Meta Tags -->
     <title>{fullTitle}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={pageDescription} />
     <link rel="canonical" href={finalCanonical} />
     <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Free Accurate Calculator RSS Feed" href="/rss.xml" />
     {noindex ? (
-      <meta name="robots" content="noindex, nofollow" />
+      <>
+        <meta name="robots" content="noindex, nofollow" />
+        <meta name="bingbot" content="noindex, nofollow" />
+      </>
     ) : (
-      <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+      <>
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+        <meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+      </>
+    )}
+    {bingVerificationCode && (
+      <meta name="msvalidate.01" content={bingVerificationCode} />
     )}
 
     <!-- Multilingual Hreflang SEO -->
@@ -107,12 +292,22 @@ const hreflangLinks = isMultilangPage
       <link rel="alternate" hreflang={alternate.lang} href={alternate.href} />
     ))}
 
+    <script is:inline>
+      const currentLocale = document.documentElement.lang || 'en';
+      import(`/src/i18n/locales/${currentLocale}.json`).then((translations) => {
+        window.__translations = {
+          [currentLocale]: translations.default || translations
+        };
+      }).catch(() => {});
+    </script>
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={finalCanonical} />
     <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={pageDescription} />
     <meta property="og:site_name" content={siteName} />
+    <meta property="og:locale" content={ogLocale} />
     <meta property="og:image" content={socialImage} />
     <meta property="og:image:alt" content={fullTitle} />
     <meta property="og:image:width" content="1200" />
@@ -264,7 +459,7 @@ const hreflangLinks = isMultilangPage
 
           // Native Locale Management (Independent from Currency)
           let savedLocale = (localStorage.getItem('fac_locale') || '').toLowerCase();
-          const pathMatch = window.location.pathname.match(/^\/(es|fr|hi)(\/|$)/i);
+          const pathMatch = window.location.pathname.match(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi)(\/|$)/i);
           if (pathMatch) {
             savedLocale = pathMatch[1].toLowerCase();
             localStorage.setItem('fac_locale', savedLocale);
@@ -286,35 +481,39 @@ const hreflangLinks = isMultilangPage
               if (sel.value !== target) sel.value = target;
             });
 
-            // Navigate to the equivalent localized page cleanly, preserving query params
+            // Safe navigation: check if current page is homepage or has alternate link
             const currentPath = window.location.pathname;
-            const cleanPath = currentPath.replace(/^\/(es|fr|hi)(\/|$)/i, '/') || '/';
-            let targetPath = '';
-            if (target === 'en') {
-              targetPath = cleanPath;
-            } else {
-              targetPath = `/${target}${cleanPath === '/' ? '/' : cleanPath}`;
+            const isHome = currentPath === '/' || /^\/(?:en|fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)\/?$/.test(currentPath);
+
+            if (isHome) {
+              const targetPath = target === 'en' ? '/' : `/${target}/`;
+              window.location.href = targetPath + window.location.search;
+              return;
             }
-            if (!targetPath.endsWith('/')) targetPath += '/';
-            window.location.href = targetPath + window.location.search;
+
+            // Check if this page has an explicit hreflang alternate URL for the selected language
+            const alternateTag = document.querySelector(`link[rel="alternate"][hreflang="${target}"]`);
+            if (alternateTag && alternateTag.href) {
+              window.location.href = alternateTag.href + window.location.search;
+              return;
+            }
+
+            // For pages without a translated variant, update locale preference safely without 404ing
+            window.location.reload();
           };
         } catch (_) {}
       })();
     </script>
 
-    <!-- Schema.org Structured Data -->
-    {jsonLd && (
-      Array.isArray(jsonLd) ? (
-        jsonLd.map((schema) => (
-          <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-        ))
-      ) : (
-        <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
-      )
-    )}
+    <!-- Schema.org Structured Data for Bing Grounding & SEO -->
+    {renderedSchemas.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))}
   </head>
 
-  <body class="min-h-screen bg-canvas text-ink antialiased selection:bg-link-soft selection:text-link-deep dark:selection:bg-link-deep dark:selection:text-link-soft flex flex-col transition-colors duration-200">
+  <body class={`min-h-screen bg-canvas text-ink antialiased selection:bg-link-soft selection:text-link-deep dark:selection:bg-link-deep dark:selection:text-link-soft flex flex-col transition-colors duration-200 ${currentDir === 'rtl' ? 'rtl-layout' : ''}`}>
+
+
     <Header />
 
     <main class="flex-1 w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-6 pb-2 md:pt-10 md:pb-4">
@@ -324,5 +523,143 @@ const hreflangLinks = isMultilangPage
     <Footer />
     <ConsentBanner />
     <Toast />
+    <LanguageCountryModal />
+    <LocaleDetectionToast />
+    <LocalizedCalculatorBridge locale={currentLocale as any} />
+
+    <!-- Service Worker Registration for Instant PWA & Offline Access -->
+    <script is:inline>
+      if ('serviceWorker' in navigator && (window.location.protocol === 'https:' || window.location.hostname === 'localhost')) {
+        window.addEventListener('load', function () {
+          navigator.serviceWorker
+            .register('/sw.js')
+            .catch(function (err) {
+              console.debug('[SW] Registration failed:', err);
+            });
+        });
+      }
+    </script>
+    <!-- Universal 360° Search Bar Typewriter Engine (All Pages & Directories) -->
+    <script is:inline>
+      (function () {
+        const UNIVERSAL_PROMPTS = [
+          "Search 📈 SIP Calculator...",
+          "Search 🏠 Mortgage Calculator...",
+          "Search 🏦 EMI Calculator...",
+          "Search 🎂 Age Calculator...",
+          "Search 📑 Income Tax Calculator...",
+          "Search 🩺 BMI Calculator...",
+          "Search 📐 Percentage Calculator...",
+          "Search ⏳ Compound Interest...",
+          "Search 🍎 Calorie & TDEE...",
+          "Search 🚗 Auto Loan Calculator...",
+          "Search ⏱️ Time Calculator...",
+          "Search 📊 Amortization...",
+          "Search 🎓 GPA Calculator...",
+          "Search ⚖️ Body Fat %...",
+          "Search 🔄 Unit Converter...",
+          "Search 🛡️ Term Life Insurance...",
+          "Search 🚀 Step-Up SIP...",
+          "Search 💰 Lumpsum Calculator...",
+          "Search 🏢 Rental Yield...",
+          "Search 💼 Break-Even...",
+          "Search 🎯 Profit Margin...",
+          "Search 🔬 Scientific Calc...",
+          "Search 📅 Date Difference...",
+          "Search ⚖️ Child Support...",
+          "Search 🏗️ Square Footage...",
+          "Search 🏷️ Sales Tax Calculator...",
+          "Search ⚡ Speed & Pace Calc...",
+          "Search 💡 ROI & Return Calc..."
+        ];
+
+        function initSearchTypewriter(wrapper) {
+          if (wrapper.closest('.fac-autocomplete-container') || wrapper.__facTypewriterInit) return;
+          wrapper.__facTypewriterInit = true;
+
+          const textEl = wrapper.querySelector('.fac-typewriter-text');
+          const inputEl = wrapper.querySelector('input');
+          const container = wrapper.querySelector('.fac-typewriter-container');
+          if (!textEl || !inputEl) return;
+
+          function getRandomIndex(excludeIdx) {
+            let next;
+            do {
+              next = Math.floor(Math.random() * UNIVERSAL_PROMPTS.length);
+            } while (next === excludeIdx && UNIVERSAL_PROMPTS.length > 1);
+            return next;
+          }
+
+          let promptIndex = getRandomIndex(-1);
+          let charIndex = 0;
+          let isDeleting = false;
+          let typewriterTimer = null;
+
+          function stepTypewriter() {
+            if (document.activeElement === inputEl || inputEl.value.trim().length > 0) {
+              return;
+            }
+
+            const currentPrompt = UNIVERSAL_PROMPTS[promptIndex];
+
+            if (!isDeleting) {
+              charIndex++;
+              textEl.textContent = currentPrompt.substring(0, charIndex);
+            } else {
+              charIndex--;
+              textEl.textContent = currentPrompt.substring(0, charIndex);
+            }
+
+            let delay = isDeleting ? 24 : Math.floor(55 + Math.random() * 25);
+
+            if (!isDeleting && charIndex === currentPrompt.length) {
+              delay = 2100;
+              isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+              isDeleting = false;
+              promptIndex = getRandomIndex(promptIndex);
+              delay = 280;
+            }
+
+            typewriterTimer = setTimeout(stepTypewriter, delay);
+          }
+
+          typewriterTimer = setTimeout(stepTypewriter, 300);
+
+          inputEl.addEventListener('focus', function () {
+            if (typewriterTimer) clearTimeout(typewriterTimer);
+            if (container) container.classList.add('opacity-0');
+          });
+
+          inputEl.addEventListener('blur', function () {
+            if (!inputEl.value.trim()) {
+              if (container) container.classList.remove('opacity-0');
+              charIndex = 0;
+              isDeleting = false;
+              if (typewriterTimer) clearTimeout(typewriterTimer);
+              typewriterTimer = setTimeout(stepTypewriter, 200);
+            }
+          });
+
+          inputEl.addEventListener('input', function () {
+            if (inputEl.value.trim().length > 0) {
+              if (container) container.classList.add('opacity-0');
+            } else if (document.activeElement !== inputEl) {
+              if (container) container.classList.remove('opacity-0');
+            }
+          });
+        }
+
+        function initAllTypewriters() {
+          document.querySelectorAll('.fac-search-wrapper').forEach(initSearchTypewriter);
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initAllTypewriters);
+        } else {
+          initAllTypewriters();
+        }
+      })();
+    </script>
   </body>
 </html>

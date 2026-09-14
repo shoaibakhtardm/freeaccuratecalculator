@@ -216,7 +216,7 @@ export const CATEGORY_METADATA: Record<CategoryId, CategoryMeta> = {
   },
   everyday: {
     id: 'everyday',
-    name: 'Everyday Life Calculators',
+    name: 'Everyday Calculators',
     eyebrow: 'Practical Everyday Productivity Tools',
     description: 'Chronological age, timesheets, date intervals, GPA grades, concrete volume, IP subnets, and secure cryptographic tools.',
     icon: 'clock',
@@ -1301,8 +1301,8 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
       },
     ],
     inputs: [
-      { id: 'wage', label: 'Wage Amount ($)', type: 'number', defaultValue: 35, step: 1 },
-      { id: 'hours_per_week', label: 'Hours per Week', type: 'number', defaultValue: 40, step: 1 },
+      { id: 'wage', label: 'Wage Amount ($)', type: 'number', defaultValue: 35, min: 0, step: 1 },
+      { id: 'hours_per_week', label: 'Hours per Week', type: 'number', defaultValue: 40, min: 1, max: 168, step: 1 },
       {
         id: 'frequency',
         label: 'Pay Frequency',
@@ -1325,9 +1325,26 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
       prefix: '$',
     },
     computeScript: `
-      const wage = parseFloat(inputs.wage || '0');
+      const rawWage = inputs.wage;
+      const wage = parseFloat(rawWage != null ? String(rawWage) : '0');
       const hrs = parseFloat(inputs.hours_per_week || '40');
       const freq = inputs.frequency || 'hourly';
+
+      if (isNaN(wage) || wage < 0) {
+        return {
+          error: 'Salary cannot be negative. Please enter a valid positive salary amount.',
+          value: 0,
+          secondary: 'Please enter a valid positive salary amount.'
+        };
+      }
+      if (hrs <= 0) {
+        return {
+          error: 'Hours per week must be greater than zero.',
+          value: 0,
+          secondary: 'Invalid hours per week'
+        };
+      }
+
       let annual = 0;
       if (freq === 'hourly') {
         annual = wage * hrs * 52;
@@ -1343,7 +1360,7 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
       const weekly = annual / 52;
       const hourly = hrs > 0 ? annual / (hrs * 52) : 0;
       return {
-        value: annual,
+        value: Math.round((annual + Number.EPSILON) * 100) / 100,
         secondary: 'Monthly: $' + monthly.toFixed(2) + ' | Bi-Weekly: $' + biweekly.toFixed(2) + ' | Hourly: $' + hourly.toFixed(2)
       };
     `,
@@ -2416,7 +2433,7 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
       },
     ],
     inputs: [
-      { id: 'birth_year', label: 'Birth Year', type: 'number', defaultValue: 2000, step: 1 },
+      { id: 'birth_year', label: 'Birth Year', type: 'number', defaultValue: 2000, min: 1900, max: 2099, step: 1 },
       { id: 'birth_month', label: 'Birth Month (1-12)', type: 'number', defaultValue: 3, min: 1, max: 12, step: 1 },
       { id: 'birth_day', label: 'Birth Day (1-31)', type: 'number', defaultValue: 15, min: 1, max: 31, step: 1 },
     ],

@@ -44,6 +44,7 @@ export interface CountryConfig {
   name: string;
   nativeName: string;
   flag: string;
+  flagUrl: string;
   currency: string;
   currencySymbol: string;
   locale: string;
@@ -670,7 +671,7 @@ export const COUNTRIES: Record<string, CountryConfig> = {
   },
 };
 
-// Supplementary global country index allowing clean scale to 100+ nations
+// Supplementary global country index allowing clean scale to global nations
 const SUPPLEMENTARY_NATIONS: Array<Pick<CountryConfig, 'code' | 'slug' | 'name' | 'flag' | 'currency' | 'currencySymbol' | 'locale' | 'unitSystem'>> = [
   { code: 'AT', slug: 'austria', name: 'Austria', flag: '🇦🇹', currency: 'EUR', currencySymbol: '€', locale: 'de-AT', unitSystem: 'metric' },
   { code: 'BE', slug: 'belgium', name: 'Belgium', flag: '🇧🇪', currency: 'EUR', currencySymbol: '€', locale: 'nl-BE', unitSystem: 'metric' },
@@ -710,6 +711,7 @@ for (const n of SUPPLEMENTARY_NATIONS) {
       name: n.name,
       nativeName: n.name,
       flag: n.flag,
+      flagUrl: `/flags/${n.code.toLowerCase()}.svg`,
       currency: n.currency,
       currencySymbol: n.currencySymbol,
       locale: n.locale,
@@ -720,6 +722,29 @@ for (const n of SUPPLEMENTARY_NATIONS) {
       popularCalculators: ['compound-interest-calculator', 'mortgage-calculator', 'loan-calculator', 'percentage-calculator'],
     };
   }
+}
+
+// Ensure every country in COUNTRIES has flagUrl set
+for (const country of Object.values(COUNTRIES)) {
+  if (!country.flagUrl) {
+    country.flagUrl = `/flags/${country.code.toLowerCase()}.svg`;
+  }
+}
+
+export function getCountryFlagUrl(countryOrCode?: CountryConfig | string | null): string {
+  if (!countryOrCode) return '/flags/us.svg';
+  if (typeof countryOrCode === 'object') {
+    return countryOrCode.flagUrl || `/flags/${countryOrCode.code.toLowerCase()}.svg`;
+  }
+  const str = countryOrCode.toLowerCase();
+  if (str.length === 2) {
+    return `/flags/${str}.svg`;
+  }
+  const found = getCountryBySlug(str);
+  if (found) {
+    return found.flagUrl || `/flags/${found.code.toLowerCase()}.svg`;
+  }
+  return `/flags/${str}.svg`;
 }
 
 export const COUNTRY_LIST: CountryConfig[] = Object.values(COUNTRIES).sort((a, b) =>

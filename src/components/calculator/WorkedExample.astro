@@ -1,60 +1,20 @@
 ---
 // src/components/calculator/WorkedExample.astro
-interface Step {
-  number: number;
-  title: string;
-  description: string;
-  mathExpression?: string;
-}
+import EducationalWorkedExample from '../Educational/WorkedExample.astro';
+import type { WorkedStep } from '../Educational/WorkedExample.astro';
 
-interface Props {
+export type Step = WorkedStep;
+
+export interface Props {
+  calculatorId?: string;
   title?: string;
-  scenario: string;
-  steps: Step[];
+  scenario?: string;
+  steps?: WorkedStep[];
   conclusion?: string;
+  formula?: string;
 }
 
-const {
-  title = 'Step-by-Step Worked Example',
-  scenario,
-  steps,
-  conclusion,
-} = Astro.props;
+const props = Astro.props;
 ---
 
-<section class="mt-8 rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-4">
-  <div class="flex items-center gap-2">
-    <span class="mono-eyebrow text-cyan">Practical Demonstration</span>
-  </div>
-
-  <h2 class="heading-md text-ink">{title}</h2>
-
-  <div class="rounded-[8px] border border-hairline-soft bg-canvas p-4 text-xs sm:text-sm text-body leading-relaxed">
-    <strong>Scenario:</strong> {scenario}
-  </div>
-
-  <div class="space-y-3 pt-2">
-    {steps.map((step) => (
-      <div class="flex items-start gap-3 rounded-[8px] border border-hairline bg-canvas p-3.5 sm:p-4">
-        <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-ink text-canvas text-xs font-mono font-bold">
-          {step.number}
-        </span>
-        <div class="space-y-1">
-          <h3 class="text-xs sm:text-sm font-semibold text-ink">{step.title}</h3>
-          <p class="text-xs text-body leading-relaxed">{step.description}</p>
-          {step.mathExpression && (
-            <div class="mt-1.5 rounded-[4px] border border-hairline-soft bg-canvas-elevated px-2.5 py-1 text-xs font-mono font-medium text-link">
-              {step.mathExpression}
-            </div>
-          )}
-        </div>
-      </div>
-    ))}
-  </div>
-
-  {conclusion && (
-    <div class="rounded-[8px] border border-cyan/30 bg-cyan/5 p-4 text-xs sm:text-sm text-ink font-medium">
-      <strong>Result:</strong> {conclusion}
-    </div>
-  )}
-</section>
+<EducationalWorkedExample {...props} />

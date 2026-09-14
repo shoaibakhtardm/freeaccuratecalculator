@@ -7,11 +7,11 @@ import type { CalculatorEntity, CalculatorCatalogItem } from '../types/calculato
  */
 export const ALL_FRONTEND_CALCULATORS: CalculatorCatalogItem[] = [
   // Finance
+  { name: 'SIP & Investment Calculator', slug: 'sip-calculator', category: 'finance', href: '/finance/sip-calculator/' },
+  { name: 'EMI Calculator', slug: 'emi-calculator', category: 'finance', href: '/finance/emi-calculator/' },
   { name: 'Mortgage Calculator', slug: 'mortgage-calculator', category: 'finance', href: '/finance/mortgage-calculator/' },
   { name: 'Compound Interest Calculator', slug: 'compound-interest-calculator', category: 'finance', href: '/finance/compound-interest-calculator/' },
-  { name: 'EMI Calculator', slug: 'emi-calculator', category: 'finance', href: '/finance/emi-calculator/' },
   { name: 'Loan Amortization Calculator', slug: 'amortization-calculator', category: 'finance', href: '/finance/amortization-calculator/' },
-  { name: 'SIP & Investment Calculator', slug: 'sip-calculator', category: 'finance', href: '/finance/sip-calculator/' },
   { name: 'Auto Loan Calculator', slug: 'auto-loan-calculator', category: 'finance', href: '/finance/auto-loan-calculator/' },
   { name: 'Profit Margin Calculator', slug: 'profit-margin-calculator', category: 'finance', href: '/finance/profit-margin-calculator/' },
 
@@ -140,6 +140,7 @@ export const ALL_FRONTEND_CALCULATORS: CalculatorCatalogItem[] = [
   { name: 'Developer Sprint Velocity Calculator', slug: 'developer-sprint-velocity-calculator', category: 'profession', href: '/profession/developer-sprint-velocity-calculator/' },
   { name: 'Teacher Grade Curve Calculator', slug: 'teacher-grade-curve-calculator', category: 'profession', href: '/profession/teacher-grade-curve-calculator/' },
   { name: 'Pilot Fuel Burn Calculator', slug: 'pilot-fuel-burn-calculator', category: 'profession', href: '/profession/pilot-fuel-burn-calculator/' },
+  { name: 'AI Prompt & Token Cost Calculator', slug: 'ai-token-cost-calculator', category: 'technology', href: '/technology/ai-token-cost-calculator/' },
 ];
 
 /**

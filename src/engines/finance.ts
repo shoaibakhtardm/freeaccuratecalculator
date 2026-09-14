@@ -137,6 +137,22 @@ export function calculateEMIWithPrepayment(
       payment = roundToCents(payment + lumpSum);
     }
 
+    // Critical Bug #3: Negative amortization protection (payment must exceed interest)
+    if (monthlyRate > 0 && payment <= interest && balance > 0) {
+      return {
+        regularEMI,
+        totalInterestWithoutPrepayment: roundToCents(totalInterestWithout),
+        totalPaymentWithoutPrepayment: roundToCents(totalPaymentWithout),
+        totalInterestWithPrepayment: totalInterestWithout,
+        totalPaymentWithPrepayment: totalPaymentWithout,
+        interestSaved: 0,
+        originalTenureMonths: originalMonths,
+        newTenureMonths: originalMonths,
+        monthsSaved: 0,
+        finalBalance: balance,
+      };
+    }
+
     let principalPaid = roundToCents(payment - interest);
     if (principalPaid >= balance || (month === originalMonths && extraMonthly === 0 && lumpSum === 0)) {
       principalPaid = balance;
@@ -370,5 +386,92 @@ export function calculateBreakEven(
     breakEvenRevenue: isFinite(breakEvenRevenue) ? breakEvenRevenue : 0,
     contributionMargin,
     contributionMarginRatio: roundToCents(contributionMarginRatio * 100),
+  };
+}
+
+export interface SalaryBreakdownResult {
+  annual: number;
+  monthly: number;
+  biweekly: number;
+  weekly: number;
+  daily: number;
+  hourly: number;
+  error?: string;
+}
+
+/**
+ * Calculates converted salary across multiple frequencies.
+ * Strictly guards against negative salaries and invalid inputs.
+ */
+export function calculateSalary(
+  salary: number,
+  hoursPerWeek: number = 40,
+  frequency: 'hourly' | 'weekly' | 'biweekly' | 'monthly' | 'annual' = 'hourly'
+): SalaryBreakdownResult {
+  if (isNaN(salary) || !isFinite(salary) || typeof salary !== 'number') {
+    return {
+      annual: 0,
+      monthly: 0,
+      biweekly: 0,
+      weekly: 0,
+      daily: 0,
+      hourly: 0,
+      error: 'Please enter a valid positive salary amount.',
+    };
+  }
+
+  // Strict negative salary check
+  if (salary < 0) {
+    return {
+      annual: 0,
+      monthly: 0,
+      biweekly: 0,
+      weekly: 0,
+      daily: 0,
+      hourly: 0,
+      error: 'Salary cannot be negative. Please enter a valid positive salary amount.',
+    };
+  }
+
+  const hrs = Number(hoursPerWeek);
+  if (isNaN(hrs) || !isFinite(hrs) || hrs <= 0 || hrs > 168) {
+    return {
+      annual: 0,
+      monthly: 0,
+      biweekly: 0,
+      weekly: 0,
+      daily: 0,
+      hourly: 0,
+      error: 'Please enter valid weekly working hours (1 to 168).',
+    };
+  }
+
+  let annual = 0;
+  if (frequency === 'hourly') {
+    annual = salary * hrs * 52;
+  } else if (frequency === 'weekly') {
+    annual = salary * 52;
+  } else if (frequency === 'biweekly') {
+    annual = salary * 26;
+  } else if (frequency === 'monthly') {
+    annual = salary * 12;
+  } else {
+    annual = salary;
+  }
+
+  const safeAnnual = roundToCents(annual);
+  const monthly = roundToCents(safeAnnual / 12);
+  const biweekly = roundToCents(safeAnnual / 26);
+  const weekly = roundToCents(safeAnnual / 52);
+  const daily = roundToCents(weekly / 5);
+  const hourly = roundToCents(safeAnnual / (hrs * 52));
+
+  return {
+    annual: safeAnnual,
+    monthly,
+    biweekly,
+    weekly,
+    daily,
+    hourly,
   };
 }

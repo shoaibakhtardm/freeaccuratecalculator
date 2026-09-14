@@ -1,0 +1,59 @@
+/* src/styles/critical.css - Critical Above-The-Fold Styles for 100/100 Core Web Vitals */
+
+:root {
+  --font-fallback: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono-fallback: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Plus Jakarta Sans', 'Inter', var(--font-fallback);
+  background-color: #fafafa;
+  color: #171717;
+}
+
+html.dark body {
+  background-color: #0a0a0a;
+  color: #ededed;
+}
+
+/* Prevent layout shifts on main containers */
+.calculator-container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .calculator-container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Instant result cards placeholder geometry to achieve 0.00 CLS */
+.result-display-skeleton {
+  min-height: 110px;
+  border-radius: 12px;
+  background-color: #ffffff;
+  border: 1px solid #ebebeb;
+}
+
+html.dark .result-display-skeleton {
+  background-color: #141414;
+  border-color: #262626;
+}

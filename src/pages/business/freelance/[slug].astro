@@ -1,0 +1,175 @@
+---
+// src/pages/business/freelance/[slug].astro
+import CalculatorLayout from '../../../layouts/CalculatorLayout.astro';
+import ResultDisplay from '../../../components/calculator/ResultDisplay.astro';
+import FormulaSection from '../../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../../components/calculator/WorkedExample.astro';
+import SEO_DATA from '../../../data/calculator-seo.json';
+
+export async function getStaticPaths() {
+  return SEO_DATA.filter((item) => item.cluster === 'freelance-rate').map((page) => ({
+    params: { slug: page.slug },
+    props: { page },
+  }));
+}
+
+interface Props {
+  page: (typeof SEO_DATA)[0];
+}
+
+const { page } = Astro.props;
+
+// Mathematical Derivation (Zero Floating Point Loss)
+const workingWeeks = 52 - page.vacationWeeks;
+const annualBillableHours = workingWeeks * page.billableHoursPerWeek;
+const targetAnnualNet = page.targetMonthlyNet * 12;
+const annualOverhead = page.overheadMonthly * 12;
+
+// Net to Gross Equation:
+// Gross_Revenue * (1 - Platform_Fee) * (1 - Tax_Rate) - Overhead = Target_Net
+// Gross_Revenue = (Target_Net + Overhead) / [(1 - Platform_Fee) * (1 - Tax_Rate)]
+const netMultiplier = (1 - page.platformFeeRate) * (1 - page.effectiveTaxRate);
+const requiredAnnualGross = Math.round((targetAnnualNet + annualOverhead) / netMultiplier);
+const requiredHourlyRateNum = Math.round((requiredAnnualGross / annualBillableHours) * 100) / 100;
+const dayRateNum = Math.round((requiredHourlyRateNum * (page.billableHoursPerWeek / 5)) * 100) / 100;
+const monthlyGross = Math.round(requiredAnnualGross / 12);
+const platformCutAnnual = Math.round(requiredAnnualGross * page.platformFeeRate);
+const taxesAnnual = Math.round((requiredAnnualGross - platformCutAnnual) * page.effectiveTaxRate);
+
+const sym = page.currency;
+
+const formulaVariables = [
+  { symbol: 'Net_target', meaning: `Target Disposable Income (${sym}${page.targetMonthlyNet.toLocaleString()}/month)` },
+  { symbol: 'Hours_yr', meaning: `Annual Billable Hours (${workingWeeks} weeks × ${page.billableHoursPerWeek} hrs = ${annualBillableHours} hrs)` },
+  { symbol: 'Fee_platform', meaning: `Platform Commission (${(page.platformFeeRate * 100).toFixed(0)}%)` },
+  { symbol: 'Tax', meaning: `Effective Self-Employment & Income Tax (${(page.effectiveTaxRate * 100).toFixed(0)}%)` },
+];
+
+const workedSteps = [
+  {
+    number: 1,
+    title: 'Calculate Annual Billable Capacity',
+    description: `Deduct ${page.vacationWeeks} weeks for vacation/holidays from 52 weeks = ${workingWeeks} active weeks.`,
+    mathExpression: `${workingWeeks} weeks × ${page.billableHoursPerWeek} billable hrs/wk = ${annualBillableHours} billable hours/year`,
+  },
+  {
+    number: 2,
+    title: 'Establish True Annual Cash Requirement',
+    description: `Target net earnings + business operational overhead.`,
+    mathExpression: `(${sym}${page.targetMonthlyNet.toLocaleString()} × 12) + (${sym}${page.overheadMonthly.toLocaleString()} × 12) = ${sym}${(targetAnnualNet + annualOverhead).toLocaleString()}`,
+  },
+  {
+    number: 3,
+    title: 'Account for Platform Commissions & Tax Friction',
+    description: `Gross revenue must cover the ${(page.platformFeeRate * 100)}% platform cut and ${(page.effectiveTaxRate * 100)}% tax liability.`,
+    mathExpression: `Gross Annual = ${sym}${(targetAnnualNet + annualOverhead).toLocaleString()} ÷ [(1 - ${page.platformFeeRate}) × (1 - ${page.effectiveTaxRate})] = ${sym}${requiredAnnualGross.toLocaleString()}`,
+  },
+  {
+    number: 4,
+    title: 'Compute Unit Hourly & Daily Invoicing Rates',
+    description: `Divide gross annual revenue by billable capacity.`,
+    mathExpression: `Hourly Rate = ${sym}${requiredAnnualGross.toLocaleString()} ÷ ${annualBillableHours} hrs = ${sym}${requiredHourlyRateNum.toFixed(2)}/hour`,
+  },
+];
+---
+
+<CalculatorLayout
+  title={page.title}
+  metaDescription={page.metaDescription}
+  h1={page.h1}
+  subtitle={`Accurate pricing model to take home exactly ${sym}${page.targetMonthlyNet.toLocaleString()}/month after platform cuts, business expenses, and taxes.`}
+  category={{ label: 'Business', href: '/business/' }}
+  calculatorName={page.h1}
+  faqs={page.faqs}
+>
+  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+    <!-- Highlight Callout -->
+    <div class="rounded-[8px] border border-link/20 bg-link/5 p-3.5 sm:p-4 text-xs space-y-1">
+      <div class="font-semibold text-link flex items-center gap-2">
+        <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Recommended Quotation Rate: {sym}{requiredHourlyRateNum.toFixed(2)} / hour</span>
+      </div>
+      <p class="text-body leading-relaxed">
+        To net <strong>{sym}{page.targetMonthlyNet.toLocaleString()}/month</strong> with <strong>{page.billableHoursPerWeek} billable hrs/week</strong> and <strong>{page.vacationWeeks} weeks off</strong>, you must invoice at <strong>{sym}{requiredHourlyRateNum.toFixed(2)}/hour</strong> (or <strong>{sym}{dayRateNum.toFixed(2)}/day</strong>).
+      </p>
+    </div>
+
+    <!-- Primary Results Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <ResultDisplay
+        id="rate-hourly"
+        label="Minimum Hourly Rate"
+        prefix={`${sym} `}
+        initialValue={requiredHourlyRateNum}
+        decimals={2}
+        secondary="Quote to Clients"
+        accent="cyan"
+      />
+      <ResultDisplay
+        id="rate-day"
+        label="Equivalent Day Rate"
+        prefix={`${sym} `}
+        initialValue={dayRateNum}
+        decimals={2}
+        secondary={`${(page.billableHoursPerWeek / 5).toFixed(1)} hrs/day`}
+        accent="link"
+      />
+      <ResultDisplay
+        id="rate-gross-monthly"
+        label="Gross Monthly Invoicing"
+        prefix={`${sym} `}
+        initialValue={monthlyGross}
+        decimals={0}
+        secondary="Total Billed"
+        accent="violet"
+      />
+    </div>
+
+    <!-- Deductions Breakdown -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-[8px] border border-hairline bg-canvas text-xs font-mono">
+      <div>
+        <span class="block text-mute">Target Net / Month</span>
+        <span class="text-sm font-semibold text-ink">{sym}{page.targetMonthlyNet.toLocaleString()}</span>
+      </div>
+      <div>
+        <span class="block text-mute">Platform Cut / Year</span>
+        <span class="text-sm font-semibold text-amber-500">-{sym}{platformCutAnnual.toLocaleString()}</span>
+      </div>
+      <div>
+        <span class="block text-mute">Taxes / Year</span>
+        <span class="text-sm font-semibold text-rose-400">-{sym}{taxesAnnual.toLocaleString()}</span>
+      </div>
+      <div>
+        <span class="block text-mute">Billable Hours / Year</span>
+        <span class="text-sm font-semibold text-ink">{annualBillableHours} hrs</span>
+      </div>
+    </div>
+
+    <!-- Cross-Linking CTA -->
+    <div class="rounded-[8px] border border-hairline bg-canvas p-4 text-center space-y-2">
+      <p class="text-xs text-mute font-mono">Need to calculate company dividends, VAT/GST registration, or corporation tax?</p>
+      <a
+        href="/business/break-even-calculator/"
+        class="inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-[6px] bg-ink text-canvas text-xs font-semibold hover:opacity-90 transition-opacity"
+      >
+        Open Full Business & Break-Even Engine →
+      </a>
+    </div>
+  </div>
+
+  <WorkedExample
+    title={`Breakdown: Earning ${sym}${page.targetMonthlyNet.toLocaleString()} Net / Month`}
+    scenario={`A remote freelancer billing ${page.billableHoursPerWeek} hours/week aiming for ${sym}${page.targetMonthlyNet.toLocaleString()} disposable income.`}
+    steps={workedSteps}
+    conclusion={`Invoicing ${sym}${requiredHourlyRateNum.toFixed(2)}/hr produces ${sym}${requiredAnnualGross.toLocaleString()} annually, covering platform fees, taxes, overhead, and delivering exact net pay.`}
+  />
+
+  <FormulaSection
+    title="Freelance Rate Pricing Equation"
+    expression="\text{Hourly Rate} = \frac{(\text{Net Target} \times 12) + \text{Overhead}}{\text{Billable Hours} \times (1 - \text{Platform Fee}) \times (1 - \text{Tax Rate})}"
+    explanation="Gross rate divides total cash needs (net plus operating overhead) by the product of billable capacity and retention percentage."
+    variables={formulaVariables}
+  />
+</CalculatorLayout>

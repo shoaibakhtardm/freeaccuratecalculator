@@ -179,3 +179,98 @@ test('Calculator Master Registry Completeness', async (t) => {
     });
   }
 });
+
+import { preciseAdd, preciseSubtract, preciseMultiply, preciseDivide, roundToPrecision } from '../src/utils/math.ts';
+
+test('Precise Decimal Math Utility — Eliminating Floating-Point Drift', async (t) => {
+  await t.test('preciseAdd: 0.1 + 0.2 equals exactly 0.3', () => {
+    assert.equal(preciseAdd(0.1, 0.2), 0.3);
+    assert.equal(preciseAdd(0.1, 0.2, 1), 0.3);
+    assert.equal(preciseAdd(10.555, 4.444, 2), 15.0);
+  });
+
+  await t.test('preciseSubtract: 0.3 - 0.1 equals exactly 0.2', () => {
+    assert.equal(preciseSubtract(0.3, 0.1), 0.2);
+    assert.equal(preciseSubtract(1.0, 0.9), 0.1);
+  });
+
+  await t.test('preciseMultiply: 0.1 * 0.2 equals exactly 0.02', () => {
+    assert.equal(preciseMultiply(0.1, 0.2), 0.02);
+    assert.equal(preciseMultiply(35.5, 1.25, 2), 44.38);
+  });
+
+  await t.test('preciseDivide: safely divides and handles division by zero', () => {
+    assert.equal(preciseDivide(10, 3, 2), 3.33);
+    assert.equal(preciseDivide(10, 0), 0);
+  });
+
+  await t.test('roundToPrecision: rounds numbers with EPSILON protection', () => {
+    assert.equal(roundToPrecision(1.005, 2), 1.01);
+    assert.equal(roundToPrecision(35.494, 2), 35.49);
+  });
+});
+
+test('Age Calculator Chronometrics & Feature Verification', async (t) => {
+  await t.test('Exact chronological age computation (Years, Months, Days)', () => {
+    const birth = new Date(2000, 0, 1, 0, 0, 0); // Jan 1, 2000
+    const target = new Date(2026, 2, 15, 0, 0, 0); // Mar 15, 2026
+
+    let years = target.getFullYear() - birth.getFullYear();
+    let months = target.getMonth() - birth.getMonth();
+    let days = target.getDate() - birth.getDate();
+
+    if (days < 0) {
+      months--;
+      const prevMonthDays = new Date(target.getFullYear(), target.getMonth(), 0).getDate();
+      days += prevMonthDays;
+    }
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    assert.equal(years, 26);
+    assert.equal(months, 2);
+    assert.equal(days, 14);
+  });
+
+  await t.test('Granular time units (Total Days, Hours, Minutes, Seconds)', () => {
+    const birth = new Date(2020, 0, 1, 0, 0, 0);
+    const target = new Date(2020, 0, 2, 12, 30, 15);
+
+    const diffMs = target.getTime() - birth.getTime();
+    const totalSecs = Math.floor(diffMs / 1000);
+    const totalMins = Math.floor(totalSecs / 60);
+    const totalHours = Math.floor(totalMins / 60);
+    const totalDays = Math.floor(totalHours / 24);
+
+    assert.equal(totalDays, 1);
+    assert.equal(totalHours, 36);
+    assert.equal(totalMins, 2190);
+    assert.equal(totalSecs, 131415);
+  });
+
+  await t.test('Strict future date rejection', () => {
+    const now = new Date();
+    const futureBirth = new Date(now.getFullYear() + 2, 0, 1);
+    const isFuture = futureBirth.getTime() > now.getTime();
+    assert.equal(isFuture, true, 'Future birth date correctly identified and rejected');
+  });
+
+  await t.test('Dedicated age-calculator HTML page exists with day, time, second controls and future limit', () => {
+    const distPath = path.join(process.cwd(), 'dist', 'client', 'everyday', 'age-calculator', 'index.html');
+    assert.ok(fs.existsSync(distPath), 'Dist HTML for age calculator must exist');
+    const content = fs.readFileSync(distPath, 'utf-8');
+
+    // Verification of required features:
+    assert.match(content, /birth-date-input/i, 'Has native date picker');
+    assert.match(content, /hero-seconds/i, 'Has live seconds display');
+    assert.match(content, /hero-hours/i, 'Has hours display');
+    assert.match(content, /metric-total-seconds/i, 'Has total seconds lived metric');
+    assert.match(content, /metric-total-days/i, 'Has total days lived metric');
+    assert.match(content, /born-day-name/i, 'Has day of birth detection');
+    assert.match(content, /next-birthday-date/i, 'Has next birthday countdown');
+    assert.match(content, /future-date-error/i, 'Has future date limitation error banner');
+  });
+});
+

@@ -1,0 +1,475 @@
+---
+// src/pages/technology/ai-token-cost-calculator.astro
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import ResultDisplay from '../../components/calculator/ResultDisplay.astro';
+import FormulaSection from '../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../components/calculator/WorkedExample.astro';
+import FAQSection from '../../components/calculator/FAQSection.astro';
+import SocialProof from '../../components/SocialProof.astro';
+
+const relatedCalculators = [
+  { title: 'Developer Sprint Velocity', href: '/profession/developer-sprint-velocity-calculator/', badge: 'Dev' },
+  { title: 'Engineer Project Cost', href: '/profession/engineer-project-cost-calculator/' },
+  { title: 'Percentage Calculator', href: '/math/percentage-calculator/' },
+  { title: 'Compound Interest', href: '/finance/compound-interest-calculator/' },
+];
+
+const faqs = [
+  {
+    question: 'How do AI LLM API pricing models work?',
+    answer: 'Most Large Language Model (LLM) providers charge per 1 Million tokens (1M tokens). Input (prompt) tokens are generally 3x to 5x cheaper than output (completion) tokens because output tokens require auto-regressive generation step-by-step.',
+  },
+  {
+    question: 'What is prompt caching and how does it reduce API bills?',
+    answer: 'Prompt caching allows providers like Anthropic, OpenAI, and DeepSeek to reuse the Key-Value (KV) cache for repeating system prompts or large context documents. Cached input tokens are typically discounted by 50% to 90% compared to standard input token prices.',
+  },
+  {
+    question: 'How many words or characters is 1 token?',
+    answer: 'As a general rule of thumb for English text: 1 token ≈ 4 characters or 0.75 words. A 1,000-word prompt is approximately 1,333 tokens.',
+  },
+  {
+    question: 'How does DeepSeek-V3 compare to GPT-4o in cost?',
+    answer: 'DeepSeek-V3 is approximately 10x to 18x cheaper than GPT-4o, costing $0.14 per 1M input tokens and $0.28 per 1M output tokens, compared to GPT-4o at $2.50 input and $10.00 output.',
+  },
+];
+
+const formulaVariables = [
+  { symbol: 'Cost_in', meaning: '(Input Tokens ÷ 1,000,000) × Input Price per 1M' },
+  { symbol: 'Cost_cache', meaning: '(Cached Tokens ÷ 1,000,000) × Cached Price per 1M' },
+  { symbol: 'Cost_out', meaning: '(Output Tokens ÷ 1,000,000) × Output Price per 1M' },
+  { symbol: 'Total Cost', meaning: '(Cost_in + Cost_cache + Cost_out) × Number of Requests' },
+];
+
+const workedSteps = [
+  {
+    number: 1,
+    title: 'Calculate Input Prompt Cost',
+    description: 'Convert prompt tokens to millions and multiply by model input pricing rate.',
+    mathExpression: 'Cost_in = (1,500 ÷ 1,000,000) × $2.50 = $0.00375',
+  },
+  {
+    number: 2,
+    title: 'Calculate Completion Output Cost',
+    description: 'Convert completion tokens to millions and multiply by output generation rate.',
+    mathExpression: 'Cost_out = (500 ÷ 1,000,000) × $10.00 = $0.00500',
+  },
+  {
+    number: 3,
+    title: 'Compute Unit Cost per API Call',
+    description: 'Sum input and output costs for a single inference request.',
+    mathExpression: 'Unit Cost = $0.00375 + $0.00500 = $0.00875 per request',
+  },
+  {
+    number: 4,
+    title: 'Scale to Monthly Operational Volume',
+    description: 'Multiply unit cost by monthly call volume (e.g. 5,000 daily requests × 30 days).',
+    mathExpression: 'Monthly Cost = $0.00875 × 150,000 requests = $1,312.50',
+  },
+];
+---
+
+<CalculatorLayout
+  title="AI Prompt & Token Cost Calculator — LLM API Price & Caching Estimator"
+  metaDescription="Calculate LLM API costs for OpenAI GPT-4o, Claude 3.5 Sonnet, DeepSeek-V3, Gemini 1.5, and Llama. Compare prompt tokens, output pricing, and caching savings."
+  h1="AI Prompt & Token Cost Calculator"
+  subtitle="Accurately benchmark and compare API inference costs across OpenAI, Anthropic, DeepSeek, Google Gemini, and Meta Llama models with KV prompt caching."
+  category={{ label: 'Technology', href: '/technology/' }}
+  calculatorName="AI Prompt & Token Cost Calculator"
+  relatedCalculators={relatedCalculators}
+  faqs={faqs}
+>
+  <!-- Transparency Notice Card -->
+  <div class="rounded-[12px] border border-cyan/30 bg-cyan/5 p-4 sm:p-5 text-xs space-y-2">
+    <div class="flex items-center gap-2 font-semibold text-cyan">
+      <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+      </svg>
+      <span class="font-mono uppercase tracking-wider text-[11px]">2025/2026 Verified LLM API Pricing Matrix</span>
+    </div>
+    <p class="text-body leading-relaxed">
+      Rates reflect current official API pricing per 1 Million tokens with prompt caching discounts from OpenAI, Anthropic, DeepSeek, and Google Cloud. All computations execute 100% client-side.
+    </p>
+    <div class="flex flex-wrap items-center gap-4 text-[11px] font-mono text-mute pt-1">
+      <span>Zero Rounding Drift</span>
+      <span>•</span>
+      <span>Prompt Caching Aware</span>
+      <span>•</span>
+      <span>Multi-Model Live Comparison</span>
+    </div>
+  </div>
+
+  <SocialProof calculatorName="AI Prompt & Token Cost Calculator" />
+
+  <!-- Calculator Controls & Interactive Workbench -->
+  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Left Column: Model & Parameters -->
+      <div class="space-y-4">
+        <div>
+          <label for="ai-model" class="block text-xs font-semibold text-ink uppercase tracking-wider mb-1.5">
+            Select LLM Model
+          </label>
+          <select
+            id="ai-model"
+            class="w-full min-h-[44px] px-3 py-2 rounded-[6px] border border-hairline bg-canvas text-ink text-sm font-sans focus:outline-none focus:ring-2 focus:ring-link transition-all"
+          >
+            <option value="gpt-4o" selected>OpenAI GPT-4o ($2.50 / $10.00)</option>
+            <option value="gpt-4o-mini">OpenAI GPT-4o-mini ($0.15 / $0.60)</option>
+            <option value="claude-3-5-sonnet">Claude 3.5 Sonnet ($3.00 / $15.00)</option>
+            <option value="claude-3-5-haiku">Claude 3.5 Haiku ($0.80 / $4.00)</option>
+            <option value="deepseek-v3">DeepSeek-V3 ($0.14 / $0.28)</option>
+            <option value="deepseek-r1">DeepSeek-R1 Reasoning ($0.55 / $2.19)</option>
+            <option value="gemini-1-5-pro">Gemini 1.5 Pro ($1.25 / $5.00)</option>
+            <option value="gemini-1-5-flash">Gemini 1.5 Flash ($0.075 / $0.30)</option>
+            <option value="llama-3-3-70b">Llama 3.3 70B Groq ($0.59 / $0.79)</option>
+            <option value="custom">Custom Pricing Rate...</option>
+          </select>
+        </div>
+
+        <!-- Custom Rate Controls (Hidden by default) -->
+        <div id="custom-rate-box" class="hidden grid grid-cols-2 gap-3 p-3 rounded-[6px] border border-hairline bg-canvas text-xs">
+          <div>
+            <label for="custom-in-price" class="block text-mute font-mono mb-1">Input $/1M Tokens</label>
+            <input
+              type="number"
+              id="custom-in-price"
+              value="2.00"
+              step="0.01"
+              min="0"
+              class="w-full min-h-[44px] px-2.5 py-1.5 rounded-[4px] border border-hairline bg-canvas-elevated text-ink font-mono"
+            />
+          </div>
+          <div>
+            <label for="custom-out-price" class="block text-mute font-mono mb-1">Output $/1M Tokens</label>
+            <input
+              type="number"
+              id="custom-out-price"
+              value="8.00"
+              step="0.01"
+              min="0"
+              class="w-full min-h-[44px] px-2.5 py-1.5 rounded-[4px] border border-hairline bg-canvas-elevated text-ink font-mono"
+            />
+          </div>
+        </div>
+
+        <!-- Token Sliders & Inputs -->
+        <div class="space-y-4 pt-2">
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label for="prompt-tokens" class="text-xs font-medium text-ink">Prompt / Input Tokens</label>
+              <span id="prompt-tokens-val" class="text-xs font-mono font-semibold text-link">1,500</span>
+            </div>
+            <input
+              type="range"
+              id="prompt-tokens-slider"
+              min="10"
+              max="64000"
+              step="50"
+              value="1500"
+              class="w-full h-2 bg-canvas rounded-lg appearance-none cursor-pointer accent-link"
+            />
+            <div class="flex justify-between text-[11px] text-mute font-mono mt-1">
+              <span>Short Prompt (100)</span>
+              <span>Doc / Context (32k)</span>
+              <span>64k</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label for="completion-tokens" class="text-xs font-medium text-ink">Completion / Output Tokens</label>
+              <span id="completion-tokens-val" class="text-xs font-mono font-semibold text-cyan">500</span>
+            </div>
+            <input
+              type="range"
+              id="completion-tokens-slider"
+              min="10"
+              max="8192"
+              step="25"
+              value="500"
+              class="w-full h-2 bg-canvas rounded-lg appearance-none cursor-pointer accent-cyan"
+            />
+            <div class="flex justify-between text-[11px] text-mute font-mono mt-1">
+              <span>Single Sentence (50)</span>
+              <span>Structured JSON (1k)</span>
+              <span>8k Max</span>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label for="daily-requests" class="text-xs font-medium text-ink">Daily Request Volume</label>
+              <span id="daily-requests-val" class="text-xs font-mono font-semibold text-violet">1,000 req/day</span>
+            </div>
+            <input
+              type="range"
+              id="daily-requests-slider"
+              min="10"
+              max="100000"
+              step="100"
+              value="1000"
+              class="w-full h-2 bg-canvas rounded-lg appearance-none cursor-pointer accent-violet"
+            />
+            <div class="flex justify-between text-[11px] text-mute font-mono mt-1">
+              <span>Personal (100)</span>
+              <span>Startup (10k)</span>
+              <span>Production (100k)</span>
+            </div>
+          </div>
+
+          <!-- Prompt Caching Toggle -->
+          <div class="flex items-center justify-between p-3 rounded-[6px] border border-hairline bg-canvas text-xs">
+            <div>
+              <span class="font-semibold text-ink block">Enable KV Prompt Caching</span>
+              <span class="text-mute text-[11px]">Reuses system prompts for discounted rate (50-80% off)</span>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="caching-toggle" class="sr-only peer" />
+              <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-link"></div>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Interactive Text Estimator & Results -->
+      <div class="space-y-4 flex flex-col justify-between">
+        <!-- Quick Text Tokenizer Helper -->
+        <div class="p-3.5 rounded-[8px] border border-hairline bg-canvas space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-semibold text-ink">Paste Prompt to Estimate Tokens</span>
+            <button id="clear-text-btn" class="text-[11px] font-mono text-mute hover:text-ink">Clear</button>
+          </div>
+          <textarea
+            id="prompt-text-input"
+            rows="3"
+            placeholder="Type or paste your prompt text here to calculate tokens directly..."
+            class="w-full p-2 text-xs font-sans rounded-[4px] border border-hairline bg-canvas-elevated text-ink placeholder:text-mute focus:outline-none focus:ring-1 focus:ring-link resize-none"
+          ></textarea>
+          <div class="flex items-center justify-between text-[11px] font-mono text-mute">
+            <span>Chars: <strong id="char-count" class="text-ink">0</strong></span>
+            <span>Words: <strong id="word-count" class="text-ink">0</strong></span>
+            <span>Tokens: <strong id="token-estimate" class="text-link">0</strong></span>
+            <button id="apply-tokens-btn" class="text-xs font-semibold text-link hover:underline">Use as Input Tokens</button>
+          </div>
+        </div>
+
+        <!-- Calculated Cost Displays -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <ResultDisplay
+            id="cost-per-call"
+            label="Cost Per Request"
+            prefix="$"
+            initialValue={0.00875}
+            decimals={5}
+            secondary="Single Inference Call"
+            accent="cyan"
+          />
+          <ResultDisplay
+            id="cost-per-1k"
+            label="Cost Per 1,000 Requests"
+            prefix="$"
+            initialValue={8.75}
+            decimals={2}
+            secondary="1,000 Inferences"
+            accent="link"
+          />
+          <ResultDisplay
+            id="cost-daily"
+            label="Estimated Daily Cost"
+            prefix="$"
+            initialValue={8.75}
+            decimals={2}
+            secondary="Based on Daily Volume"
+            accent="violet"
+          />
+          <ResultDisplay
+            id="cost-monthly"
+            label="Projected Monthly Bill"
+            prefix="$"
+            initialValue={262.5}
+            decimals={2}
+            secondary="30 Days Compounded"
+            accent="amber"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Live Multi-Model Competitive Comparison Table -->
+    <div class="pt-4 border-t border-hairline">
+      <h3 class="text-sm font-semibold text-ink mb-3 flex items-center gap-2">
+        <span>Cross-Model Cost Comparison (For This Exact Workload)</span>
+      </h3>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs font-mono border-collapse">
+          <thead>
+            <tr class="border-b border-hairline text-mute">
+              <th class="py-2.5 px-3">Model</th>
+              <th class="py-2.5 px-3">Input / 1M</th>
+              <th class="py-2.5 px-3">Output / 1M</th>
+              <th class="py-2.5 px-3">Cost / 1k Calls</th>
+              <th class="py-2.5 px-3">Monthly Bill</th>
+            </tr>
+          </thead>
+          <tbody id="comparison-table-body" class="divide-y divide-hairline text-ink">
+            <!-- Populated via script -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <WorkedExample
+    title="Step-by-Step API Inference Math"
+    scenario="Calculating total monthly operational costs for a production microservice processing 1,000 requests per day with 1,500 input tokens and 500 output tokens on GPT-4o."
+    steps={workedSteps}
+    conclusion="Using GPT-4o costs $0.00875 per request, translating to $8.75 daily and $262.50 per month. Switching to DeepSeek-V3 reduces this same workload to only $10.50 per month (a 96% cost reduction)."
+  />
+
+  <FormulaSection
+    title="LLM API Pricing Formula"
+    expression="\text{Total Cost} = \left[ \left(\frac{T_{\text{in}}}{10^6} \times P_{\text{in}}\right) + \left(\frac{T_{\text{out}}}{10^6} \times P_{\text{out}}\right) \right] \times N_{\text{requests}}"
+    explanation="Token charges scale per 1 Million (1,000,000) tokens. Providers sum input prompt token ingestion with output token completion generation."
+    variables={formulaVariables}
+  />
+
+  <FAQSection faqs={faqs} />
+</CalculatorLayout>
+
+<script is:inline>
+  (() => {
+    const MODEL_PRICES = {
+      'gpt-4o': { name: 'GPT-4o', in: 2.50, out: 10.00, cacheIn: 1.25 },
+      'gpt-4o-mini': { name: 'GPT-4o-mini', in: 0.15, out: 0.60, cacheIn: 0.075 },
+      'claude-3-5-sonnet': { name: 'Claude 3.5 Sonnet', in: 3.00, out: 15.00, cacheIn: 0.30 },
+      'claude-3-5-haiku': { name: 'Claude 3.5 Haiku', in: 0.80, out: 4.00, cacheIn: 0.08 },
+      'deepseek-v3': { name: 'DeepSeek-V3', in: 0.14, out: 0.28, cacheIn: 0.014 },
+      'deepseek-r1': { name: 'DeepSeek-R1', in: 0.55, out: 2.19, cacheIn: 0.14 },
+      'gemini-1-5-pro': { name: 'Gemini 1.5 Pro', in: 1.25, out: 5.00, cacheIn: 0.3125 },
+      'gemini-1-5-flash': { name: 'Gemini 1.5 Flash', in: 0.075, out: 0.30, cacheIn: 0.01875 },
+      'llama-3-3-70b': { name: 'Llama 3.3 70B (Groq)', in: 0.59, out: 0.79, cacheIn: 0.59 },
+    };
+
+    const modelSelect = document.getElementById('ai-model');
+    const promptSlider = document.getElementById('prompt-tokens-slider');
+    const promptVal = document.getElementById('prompt-tokens-val');
+    const completionSlider = document.getElementById('completion-tokens-slider');
+    const completionVal = document.getElementById('completion-tokens-val');
+    const dailySlider = document.getElementById('daily-requests-slider');
+    const dailyVal = document.getElementById('daily-requests-val');
+    const cachingToggle = document.getElementById('caching-toggle');
+    const customBox = document.getElementById('custom-rate-box');
+    const customIn = document.getElementById('custom-in-price');
+    const customOut = document.getElementById('custom-out-price');
+
+    // Text Estimator Elements
+    const promptTextArea = document.getElementById('prompt-text-input');
+    const charCount = document.getElementById('char-count');
+    const wordCount = document.getElementById('word-count');
+    const tokenEstimate = document.getElementById('token-estimate');
+    const clearTextBtn = document.getElementById('clear-text-btn');
+    const applyTokensBtn = document.getElementById('apply-tokens-btn');
+
+    const tableBody = document.getElementById('comparison-table-body');
+
+    function calculate() {
+      const selectedKey = modelSelect.value;
+      const isCustom = selectedKey === 'custom';
+      customBox.classList.toggle('hidden', !isCustom);
+
+      let inPrice = isCustom ? parseFloat(customIn.value) || 0 : MODEL_PRICES[selectedKey].in;
+      let outPrice = isCustom ? parseFloat(customOut.value) || 0 : MODEL_PRICES[selectedKey].out;
+      const isCaching = cachingToggle.checked;
+
+      if (isCaching && !isCustom && MODEL_PRICES[selectedKey].cacheIn) {
+        inPrice = MODEL_PRICES[selectedKey].cacheIn;
+      }
+
+      const promptTokens = parseInt(promptSlider.value, 10);
+      const completionTokens = parseInt(completionSlider.value, 10);
+      const dailyRequests = parseInt(dailySlider.value, 10);
+
+      promptVal.textContent = promptTokens.toLocaleString();
+      completionVal.textContent = completionTokens.toLocaleString();
+      dailyVal.textContent = dailyRequests.toLocaleString() + ' req/day';
+
+      const costPerRequest = (promptTokens / 1000000) * inPrice + (completionTokens / 1000000) * outPrice;
+      const costPer1k = costPerRequest * 1000;
+      const costDaily = costPerRequest * dailyRequests;
+      const costMonthly = costDaily * 30;
+
+      // Update Displays
+      const perCallEl = document.querySelector('#cost-per-call [data-result-value]');
+      if (perCallEl) perCallEl.textContent = '$' + costPerRequest.toFixed(5);
+
+      const per1kEl = document.querySelector('#cost-per-1k [data-result-value]');
+      if (per1kEl) per1kEl.textContent = '$' + costPer1k.toFixed(2);
+
+      const dailyEl = document.querySelector('#cost-daily [data-result-value]');
+      if (dailyEl) dailyEl.textContent = '$' + costDaily.toFixed(2);
+
+      const monthlyEl = document.querySelector('#cost-monthly [data-result-value]');
+      if (monthlyEl) monthlyEl.textContent = '$' + costMonthly.toFixed(2);
+
+      // Render Multi-Model Table
+      if (tableBody) {
+        let rows = '';
+        for (const [key, m] of Object.entries(MODEL_PRICES)) {
+          const isSelected = key === selectedKey;
+          const effIn = isCaching && m.cacheIn ? m.cacheIn : m.in;
+          const mUnit = (promptTokens / 1000000) * effIn + (completionTokens / 1000000) * m.out;
+          const m1k = mUnit * 1000;
+          const mMonth = mUnit * dailyRequests * 30;
+
+          rows += `
+            <tr class="${isSelected ? 'bg-link/10 font-bold text-link' : 'hover:bg-canvas/50'}">
+              <td class="py-2 px-3">${m.name} ${isSelected ? '★' : ''}</td>
+              <td class="py-2 px-3">$${effIn.toFixed(2)}</td>
+              <td class="py-2 px-3">$${m.out.toFixed(2)}</td>
+              <td class="py-2 px-3">$${m1k.toFixed(2)}</td>
+              <td class="py-2 px-3">$${mMonth.toFixed(2)}</td>
+            </tr>
+          `;
+        }
+        tableBody.innerHTML = rows;
+      }
+    }
+
+    // Text token estimator
+    function updateTextTokens() {
+      const text = promptTextArea.value || '';
+      const chars = text.length;
+      const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+      const tokens = Math.ceil(chars / 4);
+
+      charCount.textContent = chars.toLocaleString();
+      wordCount.textContent = words.toLocaleString();
+      tokenEstimate.textContent = tokens.toLocaleString();
+    }
+
+    promptTextArea?.addEventListener('input', updateTextTokens);
+    clearTextBtn?.addEventListener('click', () => {
+      promptTextArea.value = '';
+      updateTextTokens();
+    });
+
+    applyTokensBtn?.addEventListener('click', () => {
+      const est = parseInt(tokenEstimate.textContent.replace(/,/g, ''), 10) || 0;
+      if (est > 0) {
+        promptSlider.value = Math.min(64000, Math.max(10, est));
+        calculate();
+      }
+    });
+
+    modelSelect?.addEventListener('change', calculate);
+    promptSlider?.addEventListener('input', calculate);
+    completionSlider?.addEventListener('input', calculate);
+    dailySlider?.addEventListener('input', calculate);
+    cachingToggle?.addEventListener('change', calculate);
+    customIn?.addEventListener('input', calculate);
+    customOut?.addEventListener('input', calculate);
+
+    // Initial run
+    calculate();
+  })();
+</script>

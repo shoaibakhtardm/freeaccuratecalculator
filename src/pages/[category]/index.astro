@@ -2,16 +2,24 @@
 // src/pages/[category]/index.astro
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
-import AdSlot from '../../components/common/AdSlot.astro';
 import {
   CALCULATORS,
   CATEGORY_METADATA,
   type CategoryId,
   type CategoryMeta,
 } from '../../data/calculatorRegistry';
+import { ALL_FRONTEND_CALCULATORS } from '../../data/calculators';
+import { SEARCHABLE_CALCULATORS } from '../../data/searchDatabase';
+import { CATEGORY_PAGE_CONFIGS } from '../../data/categoryConfig';
+
+const allSearchableToolsJson = JSON.stringify(SEARCHABLE_CALCULATORS);
 
 export async function getStaticPaths() {
-  const categoryKeys = Object.keys(CATEGORY_METADATA) as CategoryId[];
+  // Exclude categories that have dedicated static directories with index.astro
+  const dedicatedCategoryDirs = new Set<CategoryId>(['finance', 'everyday', 'insurance']);
+  const categoryKeys = (Object.keys(CATEGORY_METADATA) as CategoryId[]).filter(
+    (catId) => !dedicatedCategoryDirs.has(catId)
+  );
   return categoryKeys.map((catId) => ({
     params: { category: catId },
     props: {
@@ -27,182 +35,159 @@ interface Props {
 }
 
 const { categoryKey, meta } = Astro.props;
+const catConfig = CATEGORY_PAGE_CONFIGS[categoryKey];
 
-// Additional dedicated calculators per category that have custom standalone pages
-const EXTRA_DEDICATED_CALCS: Record<string, any[]> = {
-  finance: [
-    {
-      id: 'emi-calculator',
-      category: 'finance',
-      name: 'EMI Calculator',
-      description: 'Equated Monthly Installment with reducing balance interest, Lakh/Crore support & amortization schedule.',
-      badge: 'Country-Aware',
-      badgeColor: 'text-cyan border-cyan/30 bg-cyan/10',
-    },
-  ],
-  health: [
-    {
-      id: 'bmi-calculator',
-      category: 'health',
-      name: 'BMI Calculator',
-      description: 'Body Mass Index with instant Metric (kg/cm) & Imperial (lbs/ft-in) switch and WHO classification.',
-      badge: 'Unit-Aware',
-      badgeColor: 'text-violet border-violet/30 bg-violet/10',
-    },
-  ],
-  math: [
-    {
-      id: 'percentage-calculator',
-      category: 'math',
-      name: 'Percentage Calculator',
-      description: 'Calculate percentages, increases, decreases, differences, fractions to percentage, and reverse percentage.',
-      badge: 'Step-by-Step',
-      badgeColor: 'text-link border-link/30 bg-link/10',
-    },
-  ],
-};
+const cleanCatName = meta.name.replace(/\s+Calculators$/i, '');
+const fullCatTitle = `${cleanCatName} Calculators`;
+const categoryIcon = catConfig?.icon || '🧮';
 
+const catalogCalcs = ALL_FRONTEND_CALCULATORS.filter((c) => c.category === categoryKey);
 const categoryCalcs = CALCULATORS.filter((c) => c.category === categoryKey);
-const dedicated = EXTRA_DEDICATED_CALCS[categoryKey] || [];
 
-// Combine and deduplicate by id
-const seenIds = new Set<string>();
-const allCalcs: any[] = [];
+// Combine and deduplicate calculators for this category
+const seenSlugs = new Set<string>();
+const allCalcs: Array<{
+  id: string;
+  name: string;
+  shortName: string;
+  href: string;
+  description: string;
+  category: string;
+  badge: string;
+  icon: string;
+  subNiche?: string;
+}> = [];
 
-[...categoryCalcs, ...dedicated].forEach((c) => {
-  if (!seenIds.has(c.id)) {
-    seenIds.add(c.id);
-    allCalcs.push(c);
+// Helper to find override from config
+function getOverride(id: string) {
+  return catConfig?.tools.find((t) => t.id === id);
+}
+
+// 1. Process catalogCalcs
+catalogCalcs.forEach((c) => {
+  if (!seenSlugs.has(c.slug)) {
+    seenSlugs.add(c.slug);
+    const ov = getOverride(c.slug);
+    allCalcs.push({
+      id: c.slug,
+      name: ov?.name || c.name,
+      shortName: ov?.shortName || c.name.replace(/\s+Calculator$/i, '').trim(),
+      href: c.href || `/${c.category}/${c.slug}/`,
+      description: ov?.description || (c as any).description || '',
+      category: c.category,
+      badge: ov?.badge || (c as any).badge || 'Verified',
+      icon: ov?.icon || (c as any).icon || categoryIcon,
+      subNiche: ov?.subNiche,
+    });
   }
 });
 
-allCalcs.sort((a, b) => a.name.localeCompare(b.name));
+// 2. Process categoryCalcs
+categoryCalcs.forEach((c) => {
+  if (!seenSlugs.has(c.id)) {
+    seenSlugs.add(c.id);
+    const ov = getOverride(c.id);
+    allCalcs.push({
+      id: c.id,
+      name: ov?.name || c.name,
+      shortName: ov?.shortName || c.name.replace(/\s+Calculator$/i, '').trim(),
+      href: `/${c.category}/${c.id}/`,
+      description: ov?.description || c.description || '',
+      category: c.category,
+      badge: ov?.badge || c.badge || 'Verified',
+      icon: ov?.icon || categoryIcon,
+      subNiche: ov?.subNiche,
+    });
+  }
+});
+
+// Fallback education cards if category not in config
+const defaultEducationCards = [
+  {
+    icon: '🔒',
+    title: '100% Client-Side Privacy',
+    desc: 'All computations execute directly in your web browser. No data, inputs, or calculations are ever uploaded to any server.',
+  },
+  {
+    icon: '⚡',
+    title: 'Real-Time Edge Calculation',
+    desc: 'Instant updates on every slider adjustment and keystroke with sub-millisecond calculation speeds.',
+  },
+  {
+    icon: '📐',
+    title: 'Verified Mathematical Precision',
+    desc: 'Strict floating-point accuracy tested against reference mathematical, physical, and scientific models.',
+  },
+];
+
+// Fallback FAQs if category not in config
+const defaultFaqs = [
+  {
+    question: `How accurate are the ${cleanCatName} calculators?`,
+    answer: `All calculations are strictly verified against standard academic, scientific, and statutory formulas to eliminate floating-point drift and ensure precision.`,
+  },
+  {
+    question: `Is my personal data saved when using these tools?`,
+    answer: `Never. Our calculators run 100% locally in your browser memory. We do not require accounts, and no data is ever transmitted to or stored on external servers.`,
+  },
+  {
+    question: `Can I use these calculators on mobile devices?`,
+    answer: `Yes. Every calculator is designed with responsive touch-friendly controls (44px min touch targets) and optimized layouts for phones, tablets, and desktops.`,
+  },
+  {
+    question: `Are these ${cleanCatName.toLowerCase()} tools free to use?`,
+    answer: `Yes. All tools on Free Accurate Calculator are completely free with zero subscription fees, paywalls, or hidden usage limits.`,
+  },
+  {
+    question: `Can I export or share my calculation results?`,
+    answer: `Yes. Each calculator includes one-click clipboard copying and clean formatting so you can easily paste your results into spreadsheets, reports, or emails.`,
+  },
+];
+
+const educationCards = catConfig?.educationCards || defaultEducationCards;
+const faqs = catConfig?.faqs || defaultFaqs;
 
 const categorySchema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
-  name: meta.name,
+  name: fullCatTitle,
   description: meta.description,
   url: `https://freeaccuratecalculator.com/${categoryKey}/`,
 };
+
+import DirectoryPageView from '../../components/directory/DirectoryPageView.astro';
+
+const pillBadgeText = catConfig?.pillBadge || `Verified ${cleanCatName} Calculators`;
+const headlineHighlight = catConfig?.headlineHighlight || 'Fast, Accurate & Private.';
+const subheadlineText = catConfig?.subheadline || `Pure ${cleanCatName.toLowerCase()} calculators arranged in a 3-by-3 structure. Each tool runs 100% client-side with zero latency and full privacy.`;
+const glowGradient = catConfig?.gradient.glow || 'from-indigo-500/20 via-blue-500/10 to-transparent';
+const headlineGradient = catConfig?.gradient.light || 'from-blue-600 via-indigo-600 to-purple-600';
+const headlineGradientDark = catConfig?.gradient.dark || 'dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300';
 ---
 
-<Layout
-  title={`${meta.name} — Free, Accurate & Instant Precision Calculations`}
+<DirectoryPageView
+  title={`${fullCatTitle} — Fast, Accurate & Free Online Tools`}
   description={meta.description}
   jsonLd={categorySchema}
->
-  <div class="max-w-7xl mx-auto space-y-8">
-    <!-- Breadcrumbs -->
-    <Breadcrumbs items={[{ label: meta.name }]} />
+  breadcrumbs={[{ label: cleanCatName }]}
+  pillBadgeText={pillBadgeText}
+  headline={`${cleanCatName} Calculators.`}
+  headlineHighlight={headlineHighlight}
+  subheadlineText={subheadlineText}
+  directoryTitle={`${cleanCatName} Directory All Tools`}
+  directoryIcon={categoryIcon}
+  backLink={{ label: '← All Categories', href: '/' }}
+  searchPlaceholder={`Search ${cleanCatName} calculators...`}
+  tools={allCalcs}
+  allSearchableToolsJson={allSearchableToolsJson}
+  educationHeading={catConfig?.educationHeading || `Why Use Free Accurate ${cleanCatName} Calculators?`}
+  educationSubheading={catConfig?.educationSubheading || `Engineered for computational accuracy, verified formulas, and total client privacy`}
+  educationCards={educationCards}
+  faqsHeading={catConfig?.faqsHeading || `Frequently Asked Questions About ${cleanCatName} Calculations`}
+  faqsSubheading={catConfig?.faqsSubheading || `Clear mathematical and domain answers to help you calculate accurately`}
+  faqs={faqs}
+  glowGradient={glowGradient}
+  headlineGradient={headlineGradient}
+  headlineGradientDark={headlineGradientDark}
+/>
 
-    <!-- Category Header Hero -->
-    <section class="relative overflow-hidden rounded-[16px] border border-hairline bg-canvas-elevated/70 px-4 py-8 sm:p-12 hero-mesh-gradient shadow-whisper">
-      <div class="max-w-3xl space-y-4">
-        <div class="inline-flex items-center gap-2 rounded-full border border-hairline bg-canvas/80 px-3 py-1 text-xs text-body shadow-whisper">
-          <span class="flex h-2 w-2 rounded-full bg-cyan animate-pulse"></span>
-          <span class="font-mono text-[11px] font-medium tracking-wide uppercase">
-            {allCalcs.length} Verified {meta.name}
-          </span>
-        </div>
-
-        <!-- Exact Headline Requested by User -->
-        <h1 class="display-hero text-ink">{meta.name}</h1>
-        <p class="text-base text-body leading-relaxed">{meta.description}</p>
-
-        <!-- Category Instant Filter Search -->
-        <div class="pt-2 max-w-lg">
-          <div class="relative flex items-center">
-            <svg class="absolute left-3.5 h-4 w-4 text-mute pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            <input
-              id="category-search"
-              type="search"
-              placeholder={`Filter ${meta.name.toLowerCase()}...`}
-              class="w-full min-h-[44px] rounded-[100px] border border-hairline bg-canvas py-2.5 pl-10 pr-4 text-base sm:text-sm text-ink placeholder-faint shadow-whisper focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-all"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Top Reserved Ad Slot -->
-    <AdSlot slotId={`category-${categoryKey}-top`} format="horizontal" />
-
-    <!-- Calculator Cards Grid -->
-    <div id="calculator-grid" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {allCalcs.map((calc) => (
-        <a
-          href={`/${calc.category}/${calc.id}/`}
-          class="calc-card group relative flex flex-col justify-between rounded-[12px] border border-hairline bg-canvas-elevated p-5 shadow-whisper transition-all duration-200 hover:-translate-y-0.5 hover:border-hairline-focus hover:shadow-card"
-          data-name={calc.name.toLowerCase()}
-          data-desc={(calc.description || '').toLowerCase()}
-        >
-          <div class="space-y-2.5">
-            <div class="flex items-center justify-between">
-              <span class={`rounded-full border px-2 py-0.5 text-[10px] font-mono font-medium ${calc.badgeColor || 'text-cyan border-cyan/30 bg-cyan/10'}`}>
-                {calc.badge || 'Verified'}
-              </span>
-              <span class="text-[11px] font-mono text-mute">Instant Client-Side</span>
-            </div>
-            <h2 class="text-base font-semibold text-ink group-hover:text-link transition-colors">
-              {calc.name}
-            </h2>
-            <p class="text-xs leading-relaxed text-body line-clamp-2">
-              {calc.description}
-            </p>
-          </div>
-          <div class="mt-4 flex items-center text-xs font-medium text-link">
-            <span>Calculate now</span>
-            <svg class="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-            </svg>
-          </div>
-        </a>
-      ))}
-    </div>
-
-    <!-- Bottom Reserved Ad Slot for Category Hub -->
-    <AdSlot slotId={`category-${categoryKey}-bottom`} format="horizontal" className="my-6" />
-
-    <!-- Educational Footer Overview -->
-    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper">
-      <h3 class="heading-md text-ink">Understanding {meta.name}</h3>
-      <p class="text-xs sm:text-sm text-body leading-relaxed">
-        {meta.description} All algorithms execute strictly client-side using IEEE 754 floating-point precision, ensuring zero latency, maximum computational accuracy, and 100% data privacy without transmitting inputs across external servers.
-      </p>
-    </section>
-  </div>
-</Layout>
-
-<script is:inline>
-  (function () {
-    const searchInput = document.getElementById('category-search');
-    const cards = document.querySelectorAll('.calc-card');
-
-    function filterCards(q) {
-      cards.forEach((card) => {
-        const name = card.dataset.name || '';
-        const desc = card.dataset.desc || '';
-        const matches = !q || name.includes(q) || desc.includes(q);
-        card.style.display = matches ? 'flex' : 'none';
-      });
-    }
-
-    if (searchInput) {
-      // Check query param from URL (e.g. ?q=search)
-      const params = new URLSearchParams(window.location.search);
-      const initialQuery = params.get('q');
-      if (initialQuery) {
-        searchInput.value = initialQuery;
-        filterCards(initialQuery.toLowerCase().trim());
-      }
-
-      searchInput.addEventListener('input', (e) => {
-        const q = e.target.value.toLowerCase().trim();
-        filterCards(q);
-      });
-    }
-  })();
-</script>

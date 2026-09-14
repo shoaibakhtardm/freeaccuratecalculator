@@ -1,0 +1,141 @@
+---
+// src/pages/finance/sip/[slug].astro
+import CalculatorLayout from '../../../layouts/CalculatorLayout.astro';
+import ResultDisplay from '../../../components/calculator/ResultDisplay.astro';
+import FormulaSection from '../../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../../components/calculator/WorkedExample.astro';
+import { SIP_PROGRAMMATIC_DATA, type SipClusterPage } from '../../../data/programmatic/sipClusters';
+
+export async function getStaticPaths() {
+  return SIP_PROGRAMMATIC_DATA.map((page) => ({
+    params: { slug: page.slug },
+    props: { page },
+  }));
+}
+
+interface Props {
+  page: SipClusterPage;
+}
+
+const { page } = Astro.props;
+
+// Precision mathematical calculations
+const P = page.monthlyDeposit;
+const n = page.years * 12;
+const r = page.expectedReturnRate / 100;
+const i = r / 12;
+
+// Annuity Due standard (beginning of month deposits)
+const totalInvested = P * n;
+const maturityCorpus = Math.round(P * (((Math.pow(1 + i, n) - 1) / i) * (1 + i)));
+const wealthGain = maturityCorpus - totalInvested;
+
+const formulaVariables = [
+  { symbol: 'P', meaning: `Monthly Deposit (₹${P.toLocaleString('en-IN')})` },
+  { symbol: 'n', meaning: `Number of Monthly Installments (${n} months)` },
+  { symbol: 'i', meaning: `Monthly Interest Rate (${(i * 100).toFixed(3)}%)` },
+  { symbol: 'FV', meaning: `Expected Maturity Corpus (₹${maturityCorpus.toLocaleString('en-IN')})` },
+];
+
+const workedSteps = [
+  {
+    number: 1,
+    title: 'Calculate Monthly Compounding Rate',
+    description: `Divide annual return (${page.expectedReturnRate}%) by 12 months.`,
+    mathExpression: `i = ${page.expectedReturnRate}% ÷ 12 = ${(i * 100).toFixed(4)}% = ${i.toFixed(6)}`,
+  },
+  {
+    number: 2,
+    title: 'Determine Total Installments & Invested Principal',
+    description: `Multiply monthly deposit ₹${P.toLocaleString('en-IN')} by ${page.years} years (${n} months).`,
+    mathExpression: `Total Invested = ₹${P.toLocaleString('en-IN')} × ${n} = ₹${totalInvested.toLocaleString('en-IN')}`,
+  },
+  {
+    number: 3,
+    title: 'Apply Annuity Due Compounding Equation',
+    description: `Compound every installment through the future value annuity formula.`,
+    mathExpression: `FV = ₹${P.toLocaleString('en-IN')} × [((1 + ${i.toFixed(4)})^${n} - 1) ÷ ${i.toFixed(4)}] × (1 + ${i.toFixed(4)}) = ₹${maturityCorpus.toLocaleString('en-IN')}`,
+  },
+];
+---
+
+<CalculatorLayout
+  title={page.title}
+  metaDescription={page.metaDescription}
+  h1={page.h1}
+  subtitle={`Comprehensive wealth projection for ₹${P.toLocaleString('en-IN')} monthly mutual fund contributions over a continuous ${page.years}-year compounding horizon.`}
+  category={{ label: 'Finance', href: '/finance/' }}
+  calculatorName={`SIP ${page.h1}`}
+  faqs={page.faqs}
+>
+  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+    <!-- Highlight Callout -->
+    <div class="rounded-[8px] border border-link/20 bg-link/5 p-3.5 sm:p-4 text-xs space-y-1">
+      <div class="font-semibold text-link flex items-center gap-2">
+        <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+        </svg>
+        <span>Compounding Summary (India / AMFI Benchmark Standard)</span>
+      </div>
+      <p class="text-body leading-relaxed">
+        Investing <strong>₹{P.toLocaleString('en-IN')}</strong> per month for <strong>{page.years} years</strong> ({n} installments) at an expected <strong>{page.expectedReturnRate}% CAGR</strong> accumulates an estimated corpus of <strong>₹{maturityCorpus.toLocaleString('en-IN')}</strong>, generating <strong>₹{wealthGain.toLocaleString('en-IN')}</strong> in pure compounding returns.
+      </p>
+    </div>
+
+    <!-- Primary Results Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <ResultDisplay
+        id="cluster-corpus"
+        label="Expected Maturity Corpus"
+        prefix="₹ "
+        initialValue={maturityCorpus}
+        decimals={0}
+        secondary={`${page.years} Years @ ${page.expectedReturnRate}% CAGR`}
+        accent="cyan"
+      />
+      <ResultDisplay
+        id="cluster-invested"
+        label="Total Capital Invested"
+        prefix="₹ "
+        initialValue={totalInvested}
+        decimals={0}
+        secondary={`${n} Monthly Installments`}
+        accent="link"
+      />
+      <ResultDisplay
+        id="cluster-gain"
+        label="Estimated Wealth Gain"
+        prefix="₹ "
+        initialValue={wealthGain}
+        decimals={0}
+        secondary="Pure Compounding Growth"
+        accent="violet"
+      />
+    </div>
+
+    <!-- Interactive Upgrades CTA -->
+    <div class="rounded-[8px] border border-hairline bg-canvas p-4 text-center space-y-2">
+      <p class="text-xs text-mute font-mono">Want to simulate custom inflation rates, annual step-up increases, or compare with lump sum?</p>
+      <a
+        href="/finance/sip-calculator/"
+        class="inline-flex items-center justify-center min-h-[44px] px-5 py-2.5 rounded-[6px] bg-ink text-canvas text-xs font-semibold hover:opacity-90 transition-opacity"
+      >
+        Open Full Interactive SIP Engine with Table →
+      </a>
+    </div>
+  </div>
+
+  <WorkedExample
+    title={`Worked Example: ₹${P.toLocaleString('en-IN')} Monthly SIP for ${page.years} Years`}
+    scenario={`An investor deposits ₹${P.toLocaleString('en-IN')} on the 1st of each month for ${page.years} continuous years into a diversified equity fund averaging ${page.expectedReturnRate}% annual return.`}
+    steps={workedSteps}
+    conclusion={`Total accumulated maturity corpus reaches ₹${maturityCorpus.toLocaleString('en-IN')} against ₹${totalInvested.toLocaleString('en-IN')} invested principal, yielding +${((wealthGain / totalInvested) * 100).toFixed(1)}% in net gains.`}
+  />
+
+  <FormulaSection
+    title="Exact Mathematical Derivation"
+    expression="FV = P × [((1 + i)ⁿ - 1) ÷ i] × (1 + i)"
+    explanation={`Calculations follow the Annuity Due formulation standard in Indian mutual funds, where contributions deposited on the 1st of each month immediately compound over the full month's timeline.`}
+    variables={formulaVariables}
+  />
+</CalculatorLayout>

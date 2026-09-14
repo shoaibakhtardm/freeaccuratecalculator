@@ -9,6 +9,10 @@ author: "Quantitative Editorial Team"
 category: "finance"
 tags: ["compound-interest", "financial-mathematics", "annuity", "investing", "apr-vs-apy"]
 lang: "en"
+targetCalculator:
+  name: "Compound Interest Calculator"
+  href: "/finance/compound-interest-calculator/"
+  description: "Simulate compounding growth with custom compounding frequencies, regular monthly additions, and inflation adjustments."
 relatedCalculators: ["compound-interest-calculator", "simple-interest-calculator", "investment-calculator", "inflation-calculator"]
 faqs:
   - question: "How often is compound interest calculated on standard savings accounts?"

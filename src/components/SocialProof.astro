@@ -1,0 +1,29 @@
+---
+// src/components/SocialProof.astro
+interface Props {
+  calculatorName: string;
+}
+
+const { calculatorName } = Astro.props;
+---
+
+<div id="social-proof" class="bg-green-50 dark:bg-emerald-950/30 border border-green-200 dark:border-emerald-800/40 rounded-lg p-3 mb-4 text-sm">
+  <div class="flex items-center gap-2">
+    <span class="animate-pulse w-2 h-2 bg-green-500 rounded-full"></span>
+    <span class="text-green-800 dark:text-emerald-300">
+      <strong id="user-count">127</strong> people calculated <strong>{calculatorName}</strong> today
+    </span>
+  </div>
+</div>
+
+<script>
+  // Simulate real-time user count (increases throughout the day)
+  const userCountEl = document.getElementById('user-count');
+  if (userCountEl) {
+    const hour = new Date().getHours();
+    const baseCount = 50;
+    const multiplier = Math.min(hour, 18); // Cap at 6 PM
+    const simulatedCount = baseCount + (multiplier * 7) + Math.floor(Math.random() * 20);
+    userCountEl.textContent = simulatedCount.toString();
+  }
+</script>

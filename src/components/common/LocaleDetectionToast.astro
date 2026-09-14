@@ -1,0 +1,158 @@
+---
+// src/components/common/LocaleDetectionToast.astro
+---
+
+<div
+  id="fac-locale-toast"
+  class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-50 bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl shadow-slate-900/20 backdrop-blur-xl p-4 transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none invisible"
+  role="alert"
+  aria-live="polite"
+>
+  <div class="flex items-start gap-3">
+    <!-- Globe Icon -->
+    <div class="p-2 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="2" y1="12" x2="22" y2="12"></line>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+      </svg>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 min-w-0">
+      <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+        Language Detected
+      </h3>
+      <p id="fac-toast-text" class="text-sm font-medium text-slate-800 dark:text-slate-200 mt-0.5">
+        We detected your preferred language is <strong id="fac-toast-lang-name" class="text-indigo-600 dark:text-indigo-400"></strong>. Would you like to switch?
+      </p>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-2 mt-3">
+        <button
+          type="button"
+          id="fac-toast-switch-btn"
+          class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs hover:shadow-md transition-all cursor-pointer"
+        >
+          Switch Now
+        </button>
+        <button
+          type="button"
+          id="fac-toast-dismiss-btn"
+          class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium transition-colors cursor-pointer"
+        >
+          Stay on English
+        </button>
+      </div>
+    </div>
+
+    <!-- Close Button -->
+    <button
+      type="button"
+      id="fac-toast-close-x"
+      class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 -mr-1 -mt-1 rounded-lg transition-colors"
+      aria-label="Dismiss language suggestion"
+    >
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    // Avoid running on crawlers and search engine bots
+    const botPattern = /bot|googlebot|crawler|spider|robot|crawling|bingbot|yandex|baidu/i;
+    if (botPattern.test(navigator.userAgent)) return;
+
+    const toast = document.getElementById('fac-locale-toast');
+    if (!toast) return;
+
+    // Only suggest if visitor is currently on English path
+    const path = window.location.pathname;
+    const isEnglishPath = !/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi)(\/|$)/i.test(path);
+    if (!isEnglishPath) return;
+
+    // Check if preference has already been set or dismissed
+    try {
+      const stored = localStorage.getItem('fac_locale') || localStorage.getItem('preferred_locale');
+      if (stored) return;
+    } catch (_) {
+      return;
+    }
+
+    const browserLocaleMap = {
+      fr: { code: 'fr', name: 'Français', flag: '🇫🇷' },
+      de: { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
+      es: { code: 'es', name: 'Español', flag: '🇪🇸' },
+      ar: { code: 'ar', name: 'العربية', flag: '🇸🇦' },
+      nl: { code: 'nl', name: 'Nederlands', flag: '🇳🇱' },
+      pt: { code: 'pt', name: 'Português', flag: '🇵🇹' },
+      it: { code: 'it', name: 'Italiano', flag: '🇮🇹' },
+      ru: { code: 'ru', name: 'Русский', flag: '🇷🇺' },
+      ja: { code: 'ja', name: '日本語', flag: '🇯🇵' },
+    };
+
+    let detected = null;
+    const languages = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+
+    for (const l of languages) {
+      const tag = (l || '').toLowerCase().trim();
+      const primary = tag.split('-')[0];
+      if (browserLocaleMap[primary]) {
+        detected = browserLocaleMap[primary];
+        break;
+      }
+    }
+
+    if (!detected) return;
+
+    const langNameEl = document.getElementById('fac-toast-lang-name');
+    const switchBtn = document.getElementById('fac-toast-switch-btn');
+    const dismissBtn = document.getElementById('fac-toast-dismiss-btn');
+    const closeX = document.getElementById('fac-toast-close-x');
+
+    if (langNameEl) langNameEl.textContent = `${detected.flag} ${detected.name}`;
+
+    // Show toast with gentle delay for smooth user experience
+    setTimeout(() => {
+      toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none', 'invisible');
+      toast.classList.add('translate-y-0', 'opacity-100', 'pointer-events-auto', 'visible');
+    }, 1200);
+
+    function hideToast() {
+      toast.classList.remove('translate-y-0', 'opacity-100', 'pointer-events-auto', 'visible');
+      toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none', 'invisible');
+    }
+
+    if (switchBtn) {
+      switchBtn.addEventListener('click', () => {
+        try {
+          localStorage.setItem('fac_locale', detected.code);
+          localStorage.setItem('preferred_locale', detected.code);
+        } catch (_) {}
+        hideToast();
+        if (typeof window.facSetActiveLanguage === 'function') {
+          window.facSetActiveLanguage(detected.code);
+        } else {
+          const clean = path.replace(/^\/([a-z]{2})(\/|$)/i, '/') || '/';
+          let target = `/${detected.code}${clean === '/' ? '/' : clean}`;
+          if (!target.endsWith('/') && !target.includes('.')) target += '/';
+          window.location.href = target + window.location.search;
+        }
+      });
+    }
+
+    function stayOnEnglish() {
+      try {
+        localStorage.setItem('fac_locale', 'en');
+        localStorage.setItem('preferred_locale', 'en');
+      } catch (_) {}
+      hideToast();
+    }
+
+    if (dismissBtn) dismissBtn.addEventListener('click', stayOnEnglish);
+    if (closeX) closeX.addEventListener('click', stayOnEnglish);
+  })();
+</script>

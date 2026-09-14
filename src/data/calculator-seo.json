@@ -1,0 +1,114 @@
+[
+  {
+    "slug": "upwork-freelancer-hourly-rate-to-make-5000-a-month",
+    "cluster": "freelance-rate",
+    "targetMonthlyNet": 5000,
+    "billableHoursPerWeek": 25,
+    "vacationWeeks": 4,
+    "platformFeeRate": 0.10,
+    "effectiveTaxRate": 0.25,
+    "overheadMonthly": 200,
+    "currency": "$",
+    "title": "Upwork Hourly Rate Calculator: How Much to Charge to Net $5,000/Month",
+    "metaDescription": "Calculate the exact Upwork hourly rate needed to take home $5,000 net monthly after Upwork's 10% cut, self-employment taxes, and software expenses.",
+    "h1": "How Much to Charge on Upwork to Net $5,000/Month",
+    "faqs": [
+      {
+        "question": "What hourly rate should I charge on Upwork to take home $5,000/month?",
+        "answer": "Working 25 billable hours/week with 4 weeks off per year, you need to quote $68.42/hour on Upwork. This accounts for Upwork's 10% platform fee, 25% self-employment & income tax, and $200/month in basic business overhead."
+      },
+      {
+        "question": "Does Upwork charge a 10% fee on all earnings?",
+        "answer": "Yes. Upwork charges a flat 10% freelancer service fee on all contracts regardless of total billing with a client."
+      }
+    ]
+  },
+  {
+    "slug": "freelance-hourly-rate-to-make-100k-a-year",
+    "cluster": "freelance-rate",
+    "targetMonthlyNet": 8333,
+    "billableHoursPerWeek": 30,
+    "vacationWeeks": 4,
+    "platformFeeRate": 0.00,
+    "effectiveTaxRate": 0.28,
+    "overheadMonthly": 400,
+    "currency": "$",
+    "title": "Freelance Hourly Rate to Make $100k a Year (Net Take-Home Pay)",
+    "metaDescription": "Want to earn $100,000 net as a freelancer? Calculate your exact minimum hourly billing rate accounting for unbilled hours, self-employment taxes, and health insurance.",
+    "h1": "Freelance Rate Needed to Net $100k Annually",
+    "faqs": [
+      {
+        "question": "What hourly rate equals $100k net salary for a freelancer?",
+        "answer": "To take home $100,000 clean after taxes (28%) and $4,800 annual overhead, billing 30 hours per week across 48 weeks requires a minimum rate of $100.28/hour."
+      },
+      {
+        "question": "Why can't I just divide $100,000 by 2,080 hours ($48/hr)?",
+        "answer": "Dividing by 2,080 assumes 40 billable hours every week without unpaid admin, marketing, sick days, self-employment tax (15.3%), or private health insurance."
+      }
+    ]
+  },
+  {
+    "slug": "fiverr-freelance-gig-pricing-for-3000-monthly-take-home",
+    "cluster": "freelance-rate",
+    "targetMonthlyNet": 3000,
+    "billableHoursPerWeek": 20,
+    "vacationWeeks": 2,
+    "platformFeeRate": 0.20,
+    "effectiveTaxRate": 0.22,
+    "overheadMonthly": 100,
+    "currency": "$",
+    "title": "Fiverr Price Calculator: How to Net $3,000/Month (After 20% Cut)",
+    "metaDescription": "Calculate how much to price your Fiverr gigs and custom orders to walk away with $3,000 net in your bank after Fiverr's 20% platform commission and income taxes.",
+    "h1": "Fiverr Gig Pricing Formula for $3,000/Month Net",
+    "faqs": [
+      {
+        "question": "How much does Fiverr take from my earnings?",
+        "answer": "Fiverr retains 20% of every transaction, including tips. To net $3,000/month after taxes (~22%), you must bill $4,910 in gross gig sales each month."
+      }
+    ]
+  },
+  {
+    "slug": "freelance-web-developer-hourly-rate-india-to-net-1-lakh-per-month",
+    "cluster": "freelance-rate",
+    "targetMonthlyNet": 100000,
+    "billableHoursPerWeek": 25,
+    "vacationWeeks": 4,
+    "platformFeeRate": 0.05,
+    "effectiveTaxRate": 0.10,
+    "overheadMonthly": 5000,
+    "currency": "₹",
+    "title": "Freelance Hourly Rate in India: How to Net ₹1 Lakh/Month (Section 44ADA)",
+    "metaDescription": "Exact hourly rate formula for Indian freelance developers and designers to pocket ₹1,00,000/month net after Section 44ADA presumptive taxation and currency conversion fees.",
+    "h1": "Freelance Developer Rate for ₹1 Lakh Monthly Net (India)",
+    "faqs": [
+      {
+        "question": "What hourly rate in INR do I need to net ₹1,00,000 monthly?",
+        "answer": "Billing 25 hours/week for 48 weeks under Section 44ADA presumptive taxation (~10% effective tax rate) and ₹5,000 overhead, you must quote ₹1,046/hour (approx $12.50 USD/hr)."
+      },
+      {
+        "question": "How does Section 44ADA help Indian freelancers save tax?",
+        "answer": "Section 44ADA allows eligible professionals earning under ₹75 Lakhs annually to declare 50% of gross receipts as taxable profit, dramatically reducing effective income tax."
+      }
+    ]
+  },
+  {
+    "slug": "contractor-hourly-rate-uk-to-net-4000-per-month-outside-ir35",
+    "cluster": "freelance-rate",
+    "targetMonthlyNet": 4000,
+    "billableHoursPerWeek": 35,
+    "vacationWeeks": 5,
+    "platformFeeRate": 0.00,
+    "effectiveTaxRate": 0.20,
+    "overheadMonthly": 250,
+    "currency": "£",
+    "title": "UK Contractor Daily/Hourly Rate to Net £4,000/Month (Outside IR35)",
+    "metaDescription": "Calculate the exact hourly and day rate needed to net £4,000 take-home pay per month as an Outside IR35 UK limited company contractor after Corporation Tax.",
+    "h1": "UK Contractor Rate for £4,000 Monthly Net (Outside IR35)",
+    "faqs": [
+      {
+        "question": "What hourly rate is required to take home £4,000 net monthly in the UK?",
+        "answer": "Working Outside IR35 with 35 billable hours/week, 5 weeks annual leave, 19-25% corporation/dividend tax, and £250/month business expenses, your minimum rate is £34.80/hour (or £261/day)."
+      }
+    ]
+  }
+]

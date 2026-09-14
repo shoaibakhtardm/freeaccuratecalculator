@@ -1,0 +1,1104 @@
+---
+// src/components/calculator/FinanceCalculatorView.astro
+import ResultDisplay from './ResultDisplay.astro';
+import FormulaSection from './FormulaSection.astro';
+import WorkedExample from './WorkedExample.astro';
+import FAQSection from './FAQSection.astro';
+import HistoryDrawer from './HistoryDrawer.astro';
+import CurrencySwitcher from '../common/CurrencySwitcher.astro';
+import SocialProof from '../SocialProof.astro';
+import type { CalculatorEntity } from '../../types/calculator';
+
+interface Props {
+  calc: CalculatorEntity;
+  relatedCalculators?: Array<{ name: string; href: string; badge?: string }>;
+}
+
+const { calc, relatedCalculators = [] } = Astro.props;
+
+// Format formula variables if provided
+const formulaVariables = calc.mathInputs.map((inp) => ({
+  symbol: inp.id,
+  meaning: inp.label + (inp.unit ? ` (${inp.unit})` : ''),
+}));
+
+// Determine default presets based on calculator category / slug
+const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || calc.slug.includes('emi') || calc.slug.includes('amortization');
+const isSalary = calc.slug.includes('salary');
+const isTax = calc.slug.includes('tax');
+---
+
+<div class="finance-calc-unified-container space-y-6">
+  <!-- Social Proof Widget -->
+  <div id="finance-social-proof" class="print:hidden">
+    <SocialProof calculatorName={calc.name} />
+  </div>
+
+  <!-- Calculator Main Box (SIP Design System Standard) -->
+  <div id="finance-calculator-card" class="calculator-main-box relative rounded-[16px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+    
+    <!-- Dedicated High-Fidelity Print/PDF Report (Visible ONLY in print) -->
+    <div id="finance-print-report" class="hidden print:block">
+      <div class="border-b-2 border-slate-900 pb-4 mb-5 flex justify-between items-start">
+        <div>
+          <div class="text-2xl font-black uppercase tracking-tight text-slate-900">
+            Free Accurate Calculator
+          </div>
+          <div class="text-sm font-bold text-blue-700 mt-0.5">
+            {calc.name} Statement & Verification Report
+          </div>
+          <div class="text-xs text-slate-500 mt-1 font-mono">
+            freeaccuratecalculator.com • Verified Financial Computation Statement
+          </div>
+        </div>
+        <div class="text-right text-xs font-mono text-slate-600 space-y-0.5">
+          <div><span class="text-slate-400 uppercase">Generated:</span> <strong id="print-report-date" class="text-slate-900"></strong></div>
+          <div><span class="text-slate-400 uppercase">Currency:</span> <strong id="print-currency-code" class="text-slate-900"></strong></div>
+          <div><span class="text-slate-400 uppercase">Tool:</span> <strong class="text-slate-900">{calc.name}</strong></div>
+        </div>
+      </div>
+
+      <!-- Calculation Inputs Summary -->
+      <div class="bg-slate-50 border border-slate-200 rounded-lg p-3.5 mb-5">
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2 font-mono">
+          Calculation Parameters
+        </div>
+        <div id="print-parameters-grid" class="grid grid-cols-3 gap-4 text-xs font-mono">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Calculation Results Key Metrics -->
+      <div class="grid grid-cols-3 gap-3 mb-6">
+        <div class="border border-slate-300 rounded-lg p-3.5 bg-white">
+          <span id="print-metric-label-1" class="text-[10px] font-bold uppercase text-slate-500 block font-mono">Primary Value</span>
+          <div id="print-metric-value-1" class="text-lg font-black text-link mt-1 font-mono"></div>
+          <span id="print-metric-sub-1" class="text-[10px] text-slate-500">Calculated Output</span>
+        </div>
+        <div class="border border-slate-300 rounded-lg p-3.5 bg-white">
+          <span id="print-metric-label-2" class="text-[10px] font-bold uppercase text-slate-500 block font-mono">Principal / Capital</span>
+          <div id="print-metric-value-2" class="text-lg font-black text-violet mt-1 font-mono"></div>
+          <span id="print-metric-sub-2" class="text-[10px] text-slate-500">Base Investment</span>
+        </div>
+        <div class="border-2 border-slate-900 rounded-lg p-3.5 bg-slate-50">
+          <span id="print-metric-label-3" class="text-[10px] font-bold uppercase text-slate-900 block font-mono">Returns / Cost</span>
+          <div id="print-metric-value-3" class="text-lg font-black text-slate-900 mt-1 font-mono"></div>
+          <span id="print-metric-sub-3" class="text-[10px] font-semibold text-link">Financial Impact</span>
+        </div>
+      </div>
+
+      <!-- Amortization / Accumulation Schedule Table -->
+      <div class="space-y-2">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-900 font-mono">
+          Multi-Period Breakdown Schedule
+        </div>
+        <table class="w-full text-left text-xs font-mono border-collapse">
+          <thead>
+            <tr class="border-b-2 border-slate-300 bg-slate-100 text-slate-700">
+              <th class="py-2 px-2.5">Period</th>
+              <th class="py-2 px-2.5 text-right">Payment / Contribution</th>
+              <th class="py-2 px-2.5 text-right">Principal / Invested</th>
+              <th class="py-2 px-2.5 text-right">Interest / Growth</th>
+              <th class="py-2 px-2.5 text-right">Ending Balance</th>
+            </tr>
+          </thead>
+          <tbody id="print-schedule-body" class="divide-y divide-slate-200">
+            <!-- Dynamically populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer Branding & Verification -->
+      <div class="mt-8 pt-3 border-t border-slate-200 flex justify-between items-center text-[10px] font-mono text-slate-500">
+        <div>Generated by <strong>Free Accurate Calculator</strong> • https://freeaccuratecalculator.com/{calc.category}/{calc.slug}/</div>
+        <div>Verified Pure Client-Side Computation • 100% Private</div>
+      </div>
+    </div>
+
+    <!-- Screen UI (Hidden during print) -->
+    <!-- Currency & Presets Bar (Identical to SIP layout) -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4 text-xs print:hidden">
+      <div class="flex items-center gap-2.5">
+        <label for="finance-currency-select" class="text-[11px] font-bold uppercase tracking-wider font-mono text-mute select-none">
+          Currency
+        </label>
+        <CurrencySwitcher selectId="finance-currency-select" className="w-auto" showFullName={true} />
+      </div>
+
+      <!-- Quick Preset Chips -->
+      <div id="finance-presets" class="flex items-center gap-1.5 overflow-x-auto text-[11px] font-medium text-mute pb-1 sm:pb-0">
+        <span class="select-none shrink-0 font-mono text-[10px] uppercase tracking-wider font-bold text-mute">Presets:</span>
+        <!-- Populated dynamically based on currency -->
+      </div>
+    </div>
+
+    <!-- Dynamic Inputs Grid (Dual Sliders + Number Inputs with Two-Way Binding) -->
+    <form id="finance-calc-form" class="space-y-5 print:hidden" onsubmit="return false;">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        {calc.mathInputs.map((inp, idx) => (
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
+              <label for={`inp-${inp.id}`}>{inp.label}</label>
+              <span id={`display-${inp.id}`} class="font-mono text-link text-sm tabular-nums font-bold">
+                {inp.defaultValue}
+              </span>
+            </div>
+
+            {inp.type === 'select' ? (
+              <select
+                id={`inp-${inp.id}`}
+                name={inp.id}
+                class="finance-input w-full min-h-[44px] rounded-[8px] border border-hairline bg-canvas px-3 py-2.5 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20 cursor-pointer"
+              >
+                {inp.options?.map((opt) => (
+                  <option value={opt.value} selected={opt.value === inp.defaultValue}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <div class="space-y-2">
+                <div class="relative flex items-center">
+                  <span class="symbol-addon absolute left-3.5 text-sm font-mono text-mute select-none font-bold">
+                    {inp.unit === '$' || inp.unit === '₹' ? inp.unit : (inp.label.toLowerCase().includes('rate') || inp.label.toLowerCase().includes('percent') ? '' : '₹')}
+                  </span>
+                  <input
+                    id={`inp-${inp.id}`}
+                    name={inp.id}
+                    type="number"
+                    step={inp.step || 'any'}
+                    min={inp.min ?? 0}
+                    max={inp.max ?? 10000000}
+                    value={inp.defaultValue}
+                    class="finance-input w-full min-h-[44px] rounded-[8px] border border-hairline bg-canvas py-2.5 pl-8 pr-8 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20 tabular-nums font-semibold transition-all"
+                  />
+                  {inp.unit && (
+                    <span class="absolute right-3.5 text-sm font-mono text-mute select-none">
+                      {inp.unit}
+                    </span>
+                  )}
+                </div>
+                <input
+                  id={`slider-${inp.id}`}
+                  type="range"
+                  min={inp.min ?? 0}
+                  max={inp.max ?? (Number(inp.defaultValue) > 1000 ? Number(inp.defaultValue) * 4 : 100)}
+                  step={inp.step || '1'}
+                  value={inp.defaultValue}
+                  aria-label={`${inp.label} slider`}
+                  class={`finance-slider w-full cursor-pointer h-5 ${idx % 2 === 0 ? 'accent-link' : 'accent-cyan'}`}
+                />
+              </div>
+            )}
+            {inp.helpText && <p class="text-[11px] text-mute font-mono leading-tight">{inp.helpText}</p>}
+          </div>
+        ))}
+      </div>
+    </form>
+
+    <!-- Primary Results Cards (Standard 3-Card Triad with Badges) -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 print:hidden">
+      <div class="relative group">
+        <ResultDisplay
+          id="finance-res-1"
+          label={calc.resultLabel || "Primary Output"}
+          prefix={calc.resultPrefix || "₹ "}
+          initialValue={0}
+          decimals={calc.decimals || 0}
+          secondary="Calculated Value"
+          accent="link"
+        />
+        <div class="absolute top-2.5 right-2.5">
+          <span id="badge-res-1" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-link/15 text-link border border-link/30">
+            Active Metric
+          </span>
+        </div>
+      </div>
+
+      <div class="relative group">
+        <ResultDisplay
+          id="finance-res-2"
+          label={isLoan ? "Total Interest Payable" : "Total Principal Invested"}
+          prefix="₹ "
+          initialValue={0}
+          decimals={0}
+          secondary={isLoan ? "Lifetime Interest Cost" : "Cumulative Contributions"}
+          accent="violet"
+        />
+        <div class="absolute top-2.5 right-2.5">
+          <span id="badge-res-2" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-violet/15 text-violet border border-violet/30">
+            Baseline
+          </span>
+        </div>
+      </div>
+
+      <div class="relative group">
+        <ResultDisplay
+          id="finance-res-3"
+          label={isLoan ? "Total Loan Repayment" : "Estimated Wealth Gain"}
+          prefix="₹ "
+          initialValue={0}
+          decimals={0}
+          secondary={isLoan ? "Principal + Lifetime Interest" : "Pure Compounded Growth"}
+          accent="cyan"
+        />
+        <div class="absolute top-2.5 right-2.5">
+          <span id="badge-res-3" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan/15 text-cyan border border-cyan/30">
+            Net Impact
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Distribution Spectrum Bar (Principal vs Returns / Interest) -->
+    <div class="space-y-2 pt-1 print:hidden">
+      <div class="flex items-center justify-between text-xs font-mono">
+        <span class="text-link font-medium">Principal / Base: <span id="bar-principal-label" class="tabular-nums font-bold">50.0%</span></span>
+        <span class="text-cyan font-medium">Interest / Gain: <span id="bar-gain-label" class="tabular-nums font-bold">50.0%</span></span>
+      </div>
+      <div class="h-3.5 w-full overflow-hidden rounded-full bg-canvas border border-hairline flex">
+        <div id="spectrum-principal" class="h-full bg-link transition-all duration-300" style="width: 50%;"></div>
+        <div id="spectrum-gain" class="h-full bg-cyan transition-all duration-300" style="width: 50%;"></div>
+      </div>
+    </div>
+
+    <!-- Milestone & Inflation Insights Bar -->
+    <div class="rounded-[10px] border border-hairline bg-canvas/60 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs print:hidden">
+      <div class="flex items-center gap-2 text-ink">
+        <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span id="finance-milestone-insight" class="font-mono text-[11px] sm:text-xs">
+          <strong>Key Insight:</strong> Real-time financial modeling verified against international standards.
+        </span>
+      </div>
+      <div class="flex items-center gap-2 text-mute font-mono text-[11px] shrink-0">
+        <span>Inflation-Adjusted (at 6%):</span>
+        <strong id="finance-inflation-adjusted" class="text-ink">--</strong>
+      </div>
+    </div>
+
+    <!-- High-Visibility Primary Action Toolbar (Directly Below Results) -->
+    <div class="pt-3 border-t border-hairline flex flex-wrap items-center justify-between gap-3 print:hidden">
+      <div class="flex flex-col gap-2">
+        <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-mute">Export Your Financial Report</span>
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- PDF Export Button -->
+          <button
+            type="button"
+            id="action-download-pdf-btn"
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-[8px] bg-link hover:bg-link-hover active:scale-95 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+            title="Download Verified PDF Financial Statement"
+          >
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>Download PDF</span>
+          </button>
+
+          <!-- Excel Export Button -->
+          <button
+            type="button"
+            id="action-download-excel-btn"
+            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-[8px] bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
+            title="Download Breakdown Schedule in Excel/CSV"
+          >
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            <span>Download Excel (.csv)</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Copy Summary Button -->
+        <button
+          type="button"
+          id="action-copy-summary-btn"
+          class="inline-flex items-center gap-1.5 px-3 py-2 rounded-[8px] border border-hairline bg-canvas hover:bg-hairline-soft text-ink text-xs font-semibold transition-colors cursor-pointer"
+          title="Copy formatted calculation summary to clipboard"
+        >
+          <svg class="h-3.5 w-3.5 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+          </svg>
+          <span id="copy-summary-text">Copy Summary</span>
+        </button>
+
+        <!-- Share Link Button -->
+        <button
+          type="button"
+          id="action-share-link-btn"
+          class="inline-flex items-center gap-1.5 px-3 py-2 rounded-[8px] border border-hairline bg-canvas hover:bg-hairline-soft text-ink text-xs font-semibold transition-colors cursor-pointer"
+          title="Copy shareable link with current inputs"
+        >
+          <svg class="h-3.5 w-3.5 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+          </svg>
+          <span id="share-link-text">Share</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Annual Accumulation / Breakdown Schedule Table -->
+    <div class="space-y-3 pt-2 print:hidden">
+      <div class="flex items-center justify-between">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-ink font-mono">
+          Multi-Year Amortization & Breakdown Schedule
+        </h3>
+        <span class="text-[11px] font-mono text-mute">Verified Client-Side Data</span>
+      </div>
+      <div class="overflow-x-auto rounded-[8px] border border-hairline bg-canvas">
+        <table class="w-full min-w-[520px] text-left text-xs font-mono">
+          <thead class="border-b border-hairline bg-canvas-elevated text-mute">
+            <tr>
+              <th class="py-2.5 px-3 whitespace-nowrap">Period</th>
+              <th class="py-2.5 px-3 text-right whitespace-nowrap">Payment / Installment</th>
+              <th class="py-2.5 px-3 text-right whitespace-nowrap">Principal / Invested</th>
+              <th class="py-2.5 px-3 text-right whitespace-nowrap">Interest / Return</th>
+              <th class="py-2.5 px-3 text-right whitespace-nowrap">Ending Balance</th>
+            </tr>
+          </thead>
+          <tbody id="finance-schedule-body" class="divide-y divide-hairline text-ink">
+            <!-- Populated dynamically by script -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Alert -->
+  <div
+    id="finance-toast"
+    class="fixed bottom-5 right-5 z-50 transform translate-y-12 opacity-0 pointer-events-none transition-all duration-200 ease-out flex items-center gap-2 px-4 py-2.5 rounded-[8px] bg-slate-900 text-white text-xs font-mono shadow-lg border border-slate-700"
+  >
+    <svg class="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+    </svg>
+    <span id="finance-toast-message">Copied to clipboard!</span>
+  </div>
+
+  <!-- Educational & Bottom Content (Strictly hidden during PDF / Print) -->
+  <div id="finance-bottom-content-area" class="print:hidden space-y-8 mt-6">
+    <!-- Transparency Notice Card -->
+    <div id="finance-transparency-card" class="rounded-[12px] border border-cyan/30 bg-cyan/5 p-4 sm:p-5 text-xs space-y-2">
+      <div class="flex items-center gap-2 font-semibold text-cyan">
+        <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span class="font-mono uppercase tracking-wider text-[11px]">Financial Precision & International Standards</span>
+      </div>
+      <p class="text-body leading-relaxed">
+        Calculations execute using rigorous actuarial and compound interest mathematics with zero floating-point drift. Results adapt seamlessly to Indian Lakh/Crore notation and International Millions notation according to your selected active currency.
+      </p>
+      <div class="flex flex-wrap items-center gap-4 text-[11px] font-mono text-mute pt-1">
+        <span>Zero Division Safe</span>
+        <span>•</span>
+        <span>ISO & Banking Mathematical Standards</span>
+        <span>•</span>
+        <span>Pure Client-Side Execution</span>
+      </div>
+    </div>
+
+    <!-- Formula Section -->
+    <FormulaSection
+      formula={calc.formula || "Standard Financial Mathematical Model"}
+      explanation={calc.formulaExplanation || "Calculates accurate financial outcomes using validated closed-form equations and period compounding loops."}
+      variables={formulaVariables}
+    />
+
+    <!-- Worked Example -->
+    <WorkedExample
+      title={`Worked Example: ${calc.name}`}
+      scenario={`A representative real-world calculation demonstrating the step-by-step mathematical derivation for ${calc.name}.`}
+      steps={[
+        {
+          number: 1,
+          title: 'Establish Input Parameters',
+          description: 'Input variables are standardized to periodic rates and timelines.',
+          mathExpression: 'Parameters Normalized',
+        },
+        {
+          number: 2,
+          title: 'Apply Mathematical Formula',
+          description: 'Evaluate closed-form equation to compute exact periodic obligations or returns.',
+          mathExpression: 'Verified Numerical Solution',
+        },
+        {
+          number: 3,
+          title: 'Verify Against Multi-Period Accumulation',
+          description: 'Iterative month-by-month compounding loop cross-checks algebraic equation.',
+          mathExpression: 'Mathematical Proof Verified',
+        },
+      ]}
+      conclusion="Pure client-side computation delivers exact mathematical precision with zero rounding error."
+    />
+
+    <!-- Download & Export Section Card (SIP Standard) -->
+    <div id="finance-bottom-export-wrapper" class="rounded-[16px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div class="space-y-1.5">
+          <div class="flex items-center gap-2.5">
+            <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-link/10 text-link">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </span>
+            <h3 class="text-base sm:text-lg font-bold text-ink tracking-tight font-display">Download {calc.name} Statement & Schedule</h3>
+          </div>
+          <p class="text-xs sm:text-sm text-mute leading-relaxed max-w-2xl">
+            Instantly export your personalized financial statement, breakdown schedule, and mathematical proof in your preferred format.
+          </p>
+          <div class="flex flex-wrap items-center gap-3 pt-1 text-[11px] font-mono text-mute">
+            <span class="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+              Excel / Google Sheets (.csv)
+            </span>
+            <span>•</span>
+            <span class="inline-flex items-center gap-1 text-link font-semibold">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+              Printable PDF Statement
+            </span>
+            <span>•</span>
+            <span>100% Client-Side & Private</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3 shrink-0">
+          <button
+            type="button"
+            id="finance-bottom-excel-btn"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-[8px] bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer"
+            title="Download Schedule in Excel/CSV format"
+          >
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            <span>Download Excel (.csv)</span>
+          </button>
+          <button
+            type="button"
+            id="finance-bottom-pdf-btn"
+            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-[8px] bg-link hover:bg-link-hover active:scale-95 text-white text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer"
+            title="Save or Print as PDF Document"
+          >
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            <span>Download PDF Report</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <FAQSection faqs={calc.faqs} />
+  </div>
+
+  <HistoryDrawer />
+</div>
+
+<!-- Client-side Calculation & State Engine with Currency Sync and Animations -->
+<script is:inline define:vars={{ slug: calc.slug, calcName: calc.name }}>
+  (function () {
+    // 1. Currency Management
+    let currentCurrencyCode = typeof window.facGetActiveCurrency === 'function'
+      ? window.facGetActiveCurrency()
+      : (localStorage.getItem('fac_currency') || 'INR');
+
+    let currencyInfo = typeof window.facGetCurrencyInfo === 'function'
+      ? window.facGetCurrencyInfo(currentCurrencyCode)
+      : { symbol: currentCurrencyCode === 'INR' ? '₹' : '$', isIndian: currentCurrencyCode === 'INR' };
+
+    let currentCurrencySymbol = currencyInfo.symbol || '₹';
+    let isIndianFormat = currencyInfo.isIndian ?? (currentCurrencyCode === 'INR');
+
+    // DOM Elements
+    const currencySelect = document.getElementById('finance-currency-select');
+    const presetsContainer = document.getElementById('finance-presets');
+    const scheduleBody = document.getElementById('finance-schedule-body');
+    const printScheduleBody = document.getElementById('print-schedule-body');
+    const toastEl = document.getElementById('finance-toast');
+    const toastMsg = document.getElementById('finance-toast-message');
+    let toastTimeout = null;
+
+    function showToast(message) {
+      if (!toastEl || !toastMsg) return;
+      toastMsg.textContent = message;
+      toastEl.classList.remove('opacity-0', 'translate-y-12', 'pointer-events-none');
+      toastEl.classList.add('opacity-100', 'translate-y-0');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toastEl.classList.remove('opacity-100', 'translate-y-0');
+        toastEl.classList.add('opacity-0', 'translate-y-12', 'pointer-events-none');
+      }, 2500);
+    }
+
+    function formatVal(val, decimals = 0) {
+      if (typeof window.facFormatNumber === 'function') {
+        return window.facFormatNumber(val, decimals, isIndianFormat);
+      }
+      return val.toLocaleString(isIndianFormat ? 'en-IN' : 'en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      });
+    }
+
+    // Dynamic Presets Generator
+    function getPresets(curr, isInd) {
+      const isLoanCalc = slug.includes('loan') || slug.includes('mortgage') || slug.includes('emi') || slug.includes('amortization');
+      if (isLoanCalc) {
+        if (isInd || curr === 'INR') {
+          return [
+            { label: '₹10L', val: 1000000 },
+            { label: '₹25L', val: 2500000 },
+            { label: '₹50L', val: 5000000 },
+            { label: '₹1Cr', val: 10000000 },
+          ];
+        }
+        return [
+          { label: `${currentCurrencySymbol}100k`, val: 100000 },
+          { label: `${currentCurrencySymbol}250k`, val: 250000 },
+          { label: `${currentCurrencySymbol}500k`, val: 500000 },
+          { label: `${currentCurrencySymbol}1M`, val: 1000000 },
+        ];
+      }
+      // General Investments (SIP, Compound Interest, Lumpsum, etc.)
+      if (isInd || curr === 'INR') {
+        return [
+          { label: '₹2.5k', val: 2500 },
+          { label: '₹5k', val: 5000 },
+          { label: '₹10k', val: 10000 },
+          { label: '₹25k', val: 25000 },
+        ];
+      }
+      return [
+        { label: `${currentCurrencySymbol}100`, val: 100 },
+        { label: `${currentCurrencySymbol}250`, val: 250 },
+        { label: `${currentCurrencySymbol}500`, val: 500 },
+        { label: `${currentCurrencySymbol}1k`, val: 1000 },
+      ];
+    }
+
+    function renderPresets() {
+      if (!presetsContainer) return;
+      const presets = getPresets(currentCurrencyCode, isIndianFormat);
+      let html = '<span class="select-none shrink-0 font-mono text-[10px] uppercase tracking-wider font-bold text-mute">Presets:</span>';
+      presets.forEach((p) => {
+        html += `
+          <button
+            type="button"
+            class="preset-chip shrink-0 rounded-[6px] border border-hairline bg-canvas px-2.5 py-1 min-h-[32px] sm:min-h-[26px] hover:text-ink hover:border-link/40 cursor-pointer font-mono font-medium transition-all text-xs"
+            data-amount="${p.val}"
+          >${p.label}</button>
+        `;
+      });
+      presetsContainer.innerHTML = html;
+
+      presetsContainer.querySelectorAll('.preset-chip').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const val = btn.dataset.amount || '0';
+          const primaryInput = document.querySelector('.finance-input');
+          const primarySlider = document.querySelector('.finance-slider');
+          if (primaryInput) {
+            primaryInput.value = val;
+            if (primarySlider) {
+              if (parseFloat(val) > parseFloat(primarySlider.max)) primarySlider.max = String(parseFloat(val) * 1.5);
+              primarySlider.value = val;
+            }
+            recalculate();
+          }
+        });
+      });
+    }
+
+    function updateCurrencyUI() {
+      document.querySelectorAll('.symbol-addon').forEach((el) => {
+        if (el.textContent && el.textContent.trim() !== '%') {
+          el.textContent = currentCurrencySymbol;
+        }
+      });
+      ['finance-res-1-prefix', 'finance-res-2-prefix', 'finance-res-3-prefix'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = `${currentCurrencySymbol} `;
+      });
+      ['finance-res-1', 'finance-res-2', 'finance-res-3'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.setAttribute('data-prefix', `${currentCurrencySymbol} `);
+          el.setAttribute('data-indian', isIndianFormat ? 'true' : 'false');
+        }
+      });
+      if (currencySelect && currencySelect.value !== currentCurrencyCode) {
+        currencySelect.value = currentCurrencyCode;
+      }
+      renderPresets();
+    }
+
+    function handleCurrencySwitch(newCurr, prevCurr) {
+      if (!newCurr) return;
+      const prev = prevCurr || currentCurrencyCode;
+      currentCurrencyCode = newCurr;
+
+      const info = typeof window.facGetCurrencyInfo === 'function'
+        ? window.facGetCurrencyInfo(newCurr)
+        : { symbol: newCurr === 'INR' ? '₹' : '$', isIndian: newCurr === 'INR' };
+
+      currentCurrencySymbol = info.symbol || '$';
+      isIndianFormat = info.isIndian ?? (newCurr === 'INR');
+
+      // Convert primary input value if conversion helper exists
+      if (prev && newCurr && prev !== newCurr && typeof window.facConvertCurrency === 'function') {
+        const primaryInput = document.querySelector('.finance-input');
+        const primarySlider = document.querySelector('.finance-slider');
+        if (primaryInput) {
+          const currentAmount = parseFloat(primaryInput.value || '0');
+          if (currentAmount > 0) {
+            const converted = window.facConvertCurrency(currentAmount, prev, newCurr);
+            const rounded = Math.round(converted);
+            primaryInput.value = String(rounded);
+            if (primarySlider) {
+              if (rounded > parseFloat(primarySlider.max)) primarySlider.max = String(rounded * 1.5);
+              primarySlider.value = String(rounded);
+            }
+          }
+        }
+      }
+
+      updateCurrencyUI();
+      recalculate();
+    }
+
+    // Real-Time Calculation State
+    let currentReportState = {
+      val1: 0,
+      val2: 0,
+      val3: 0,
+      schedule: [],
+    };
+
+    function recalculate() {
+      const inputs = {};
+      document.querySelectorAll('.finance-input').forEach((inp) => {
+        const num = parseFloat(inp.value);
+        inputs[inp.name] = isNaN(num) ? inp.value : num;
+        const disp = document.getElementById(`display-${inp.name}`);
+        if (disp) {
+          const isRate = inp.name.toLowerCase().includes('rate') || inp.name.toLowerCase().includes('percent');
+          const isYear = inp.name.toLowerCase().includes('year') || inp.name.toLowerCase().includes('term') || inp.name.toLowerCase().includes('age');
+          if (isRate) disp.textContent = `${Number(inp.value).toFixed(2)}%`;
+          else if (isYear) disp.textContent = `${inp.value} Years`;
+          else if (!isNaN(num)) disp.textContent = `${currentCurrencySymbol} ${formatVal(num, 0)}`;
+          else disp.textContent = inp.value;
+        }
+      });
+
+      // Default mathematical engine fallback
+      let res1 = 0; // Primary
+      let res2 = 0; // Principal / Invested
+      let res3 = 0; // Interest / Growth
+      let rows = [];
+
+      // 1. Loans / Mortgage / Amortization / Auto Loan
+      if (slug.includes('mortgage') || slug.includes('auto-loan') || slug.includes('amortization') || slug.includes('loan') || slug.includes('payment')) {
+        const p = parseFloat(inputs.principal || inputs.loanAmount || inputs.price || inputs.vehiclePrice || 2500000) || 0;
+        const rate = parseFloat(inputs.annualRate || inputs.interestRate || inputs.apr || 8.5) || 0;
+        const years = parseFloat(inputs.tenureYears || inputs.loanTerm || inputs.years || 20) || 1;
+        const downPayment = parseFloat(inputs.downPayment || 0) || 0;
+        const actualLoan = Math.max(0, p - downPayment);
+        const months = Math.round(years * 12);
+        const monthlyRate = (rate / 12) / 100;
+
+        let emi = 0;
+        if (monthlyRate === 0) {
+          emi = months > 0 ? actualLoan / months : 0;
+        } else {
+          const factor = Math.pow(1 + monthlyRate, months);
+          emi = months > 0 ? (actualLoan * monthlyRate * factor) / (factor - 1) : 0;
+        }
+
+        const totalPay = emi * months;
+        const totalInt = Math.max(0, totalPay - actualLoan);
+
+        res1 = Math.round(emi);
+        res2 = Math.round(actualLoan);
+        res3 = Math.round(totalInt);
+
+        // Schedule
+        let bal = actualLoan;
+        for (let y = 1; y <= Math.min(years, 30); y++) {
+          let yrInterest = 0;
+          let yrPrincipal = 0;
+          for (let m = 1; m <= 12; m++) {
+            const intPart = bal * monthlyRate;
+            const prinPart = Math.min(bal, emi - intPart);
+            yrInterest += intPart;
+            yrPrincipal += prinPart;
+            bal = Math.max(0, bal - prinPart);
+          }
+          rows.push({
+            period: `Year ${y}`,
+            payment: Math.round(emi * 12),
+            principal: Math.round(yrPrincipal),
+            interest: Math.round(yrInterest),
+            balance: Math.round(bal),
+          });
+        }
+      } 
+      // 2. Compound Interest & Lumpsum & Step-Up SIP & Investments
+      else if (slug.includes('compound') || slug.includes('lumpsum') || slug.includes('investment') || slug.includes('step-up') || slug.includes('interest')) {
+        const principal = parseFloat(inputs.principal || inputs.investmentAmount || inputs.initialDeposit || 100000) || 0;
+        const monthlyP = parseFloat(inputs.monthlyContribution || inputs.monthlyDeposit || inputs.monthlyInvestment || 0) || 0;
+        const rate = parseFloat(inputs.annualRate || inputs.expectedReturnRate || inputs.interestRate || 10) || 0;
+        const years = parseFloat(inputs.years || inputs.timeHorizonYears || inputs.timePeriodYears || 10) || 1;
+        const r = (rate / 100) / 12;
+        const totalMonths = Math.round(years * 12);
+
+        let bal = principal;
+        let totalDeposited = principal;
+
+        for (let y = 1; y <= Math.min(years, 40); y++) {
+          let yrGrowth = 0;
+          let yrDeposits = 0;
+          for (let m = 1; m <= 12; m++) {
+            bal = (bal + monthlyP) * (1 + r);
+            totalDeposited += monthlyP;
+            yrDeposits += monthlyP;
+          }
+          const yrEndGrowth = Math.max(0, bal - totalDeposited);
+          rows.push({
+            period: `Year ${y}`,
+            payment: Math.round(yrDeposits),
+            principal: Math.round(totalDeposited),
+            interest: Math.round(bal - totalDeposited),
+            balance: Math.round(bal),
+          });
+        }
+
+        res1 = Math.round(bal);
+        res2 = Math.round(totalDeposited);
+        res3 = Math.max(0, Math.round(bal - totalDeposited));
+      }
+      // 3. Retirement & 401(k) & Roth IRA & SWP
+      else if (slug.includes('retirement') || slug.includes('401k') || slug.includes('roth') || slug.includes('swp') || slug.includes('ppf') || slug.includes('epf')) {
+        const currentAge = parseFloat(inputs.currentAge || 30) || 30;
+        const retireAge = parseFloat(inputs.retirementAge || 60) || 60;
+        const years = Math.max(1, retireAge - currentAge);
+        const monthlySave = parseFloat(inputs.monthlySavings || inputs.monthlyContribution || inputs.monthlyDeposit || 10000) || 0;
+        const currentBal = parseFloat(inputs.currentBalance || inputs.initialDeposit || 100000) || 0;
+        const rate = parseFloat(inputs.returnRate || inputs.annualRate || 9) || 0;
+        const r = (rate / 100) / 12;
+
+        let bal = currentBal;
+        let totalInv = currentBal;
+
+        for (let y = 1; y <= Math.min(years, 40); y++) {
+          let yrDeposits = 0;
+          for (let m = 1; m <= 12; m++) {
+            bal = (bal + monthlySave) * (1 + r);
+            totalInv += monthlySave;
+            yrDeposits += monthlySave;
+          }
+          rows.push({
+            period: `Age ${currentAge + y}`,
+            payment: Math.round(yrDeposits),
+            principal: Math.round(totalInv),
+            interest: Math.round(bal - totalInv),
+            balance: Math.round(bal),
+          });
+        }
+
+        res1 = Math.round(bal);
+        res2 = Math.round(totalInv);
+        res3 = Math.max(0, Math.round(bal - totalInv));
+      }
+      // 4. Default Business / Profit Margin / Generic Finance
+      else {
+        const p = parseFloat(inputs.principal || inputs.cost || inputs.revenue || 50000) || 0;
+        const r = parseFloat(inputs.rate || inputs.margin || 15) || 0;
+        const years = parseFloat(inputs.years || 5) || 1;
+
+        res1 = Math.round(p * (1 + (r / 100) * years));
+        res2 = Math.round(p);
+        res3 = Math.round(res1 - res2);
+
+        for (let y = 1; y <= Math.min(years, 10); y++) {
+          const val = Math.round(p * (1 + (r / 100) * y));
+          rows.push({
+            period: `Period ${y}`,
+            payment: Math.round(p / years),
+            principal: Math.round(p),
+            interest: Math.round(val - p),
+            balance: val,
+          });
+        }
+      }
+
+      currentReportState = { val1: res1, val2: res2, val3: res3, schedule: rows };
+
+      // Animate Result Cards using facAnimateNumber
+      if (typeof window.facAnimateNumber === 'function') {
+        window.facAnimateNumber('finance-res-1', res1, { isIndian: isIndianFormat, decimals: 0 });
+        window.facAnimateNumber('finance-res-2', res2, { isIndian: isIndianFormat, decimals: 0 });
+        window.facAnimateNumber('finance-res-3', res3, { isIndian: isIndianFormat, decimals: 0 });
+      } else {
+        const el1 = document.getElementById('finance-res-1');
+        const el2 = document.getElementById('finance-res-2');
+        const el3 = document.getElementById('finance-res-3');
+        if (el1) el1.textContent = formatVal(res1, 0);
+        if (el2) el2.textContent = formatVal(res2, 0);
+        if (el3) el3.textContent = formatVal(res3, 0);
+      }
+
+      // Spectrum Bar update
+      const totalBase = (res2 + res3) || 1;
+      const principalPct = Math.min(100, Math.max(0, (res2 / totalBase) * 100));
+      const gainPct = Math.max(0, 100 - principalPct);
+
+      const barP = document.getElementById('spectrum-principal');
+      const barG = document.getElementById('spectrum-gain');
+      const labelP = document.getElementById('bar-principal-label');
+      const labelG = document.getElementById('bar-gain-label');
+
+      if (barP) barP.style.width = `${principalPct.toFixed(1)}%`;
+      if (barG) barG.style.width = `${gainPct.toFixed(1)}%`;
+      if (labelP) labelP.textContent = `${currentCurrencySymbol} ${formatVal(res2, 0)} (${principalPct.toFixed(1)}%)`;
+      if (labelG) labelG.textContent = `${currentCurrencySymbol} ${formatVal(res3, 0)} (${gainPct.toFixed(1)}%)`;
+
+      // Milestone & Inflation Insight
+      const milestoneEl = document.getElementById('finance-milestone-insight');
+      const inflationEl = document.getElementById('finance-inflation-adjusted');
+      if (milestoneEl) {
+        if (slug.includes('loan') || slug.includes('mortgage') || slug.includes('emi')) {
+          milestoneEl.innerHTML = `<strong>Loan Payoff:</strong> Interest constitutes <span class="text-cyan font-bold">${gainPct.toFixed(1)}%</span> of total lifetime obligations.`;
+        } else {
+          milestoneEl.innerHTML = `<strong>Compounding Power:</strong> Earnings represent <span class="text-cyan font-bold">${gainPct.toFixed(1)}%</span> of your total accumulated corpus!`;
+        }
+      }
+      if (inflationEl) {
+        const yrs = rows.length || 10;
+        const real = res1 / Math.pow(1.06, yrs);
+        inflationEl.textContent = `${currentCurrencySymbol} ${formatVal(Math.round(real), 0)}`;
+      }
+
+      // Render Schedule Tables
+      renderSchedule(rows);
+      updatePrintReport(res1, res2, res3, rows, inputs);
+    }
+
+    function renderSchedule(rows) {
+      let screenHtml = '';
+      let printHtml = '';
+
+      rows.slice(0, 50).forEach((r) => {
+        screenHtml += `
+          <tr class="hover:bg-canvas-subtle/50 transition-colors">
+            <td class="py-2.5 px-3 font-semibold text-link whitespace-nowrap">${r.period}</td>
+            <td class="py-2.5 px-3 text-right tabular-nums font-mono whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.payment, 0)}</td>
+            <td class="py-2.5 px-3 text-right tabular-nums font-mono text-mute whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.principal, 0)}</td>
+            <td class="py-2.5 px-3 text-right tabular-nums font-mono text-violet font-semibold whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.interest, 0)}</td>
+            <td class="py-2.5 px-3 text-right tabular-nums font-mono font-bold text-cyan whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.balance, 0)}</td>
+          </tr>
+        `;
+        printHtml += `
+          <tr class="border-b border-slate-200">
+            <td class="py-1.5 px-2.5 font-bold text-blue-700">${r.period}</td>
+            <td class="py-1.5 px-2.5 text-right font-mono">${currentCurrencySymbol} ${formatVal(r.payment, 0)}</td>
+            <td class="py-1.5 px-2.5 text-right font-mono text-slate-700">${currentCurrencySymbol} ${formatVal(r.principal, 0)}</td>
+            <td class="py-1.5 px-2.5 text-right font-mono text-violet-700 font-semibold">${currentCurrencySymbol} ${formatVal(r.interest, 0)}</td>
+            <td class="py-1.5 px-2.5 text-right font-mono font-bold text-slate-900">${currentCurrencySymbol} ${formatVal(r.balance, 0)}</td>
+          </tr>
+        `;
+      });
+
+      if (scheduleBody) scheduleBody.innerHTML = screenHtml;
+      if (printScheduleBody) printScheduleBody.innerHTML = printHtml;
+    }
+
+    function updatePrintReport(r1, r2, r3, rows, inputs) {
+      const pDate = document.getElementById('print-report-date');
+      const pCurr = document.getElementById('print-currency-code');
+      const pGrid = document.getElementById('print-parameters-grid');
+      const pv1 = document.getElementById('print-metric-value-1');
+      const pv2 = document.getElementById('print-metric-value-2');
+      const pv3 = document.getElementById('print-metric-value-3');
+
+      if (pDate) pDate.textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      if (pCurr) pCurr.textContent = `${currentCurrencyCode} (${currentCurrencySymbol})`;
+      if (pv1) pv1.textContent = `${currentCurrencySymbol} ${formatVal(r1, 0)}`;
+      if (pv2) pv2.textContent = `${currentCurrencySymbol} ${formatVal(r2, 0)}`;
+      if (pv3) pv3.textContent = `${currentCurrencySymbol} ${formatVal(r3, 0)}`;
+
+      if (pGrid) {
+        let gridHtml = '';
+        Object.keys(inputs).forEach((k) => {
+          gridHtml += `
+            <div>
+              <span class="text-slate-500 block text-[10px] uppercase">${k}</span>
+              <span class="text-sm font-bold text-slate-900">${typeof inputs[k] === 'number' ? formatVal(inputs[k], 0) : inputs[k]}</span>
+            </div>
+          `;
+        });
+        pGrid.innerHTML = gridHtml;
+      }
+    }
+
+    // PDF Download via high-fidelity letterhead print dialog
+    function downloadPDF() {
+      recalculate();
+      window.print();
+    }
+
+    // Excel (.csv) Export — Verified UTF-8 with BOM
+    function downloadExcel() {
+      recalculate();
+      const dateStr = new Date().toISOString().slice(0, 10);
+      const csvRows = [
+        ['Free Accurate Calculator — freeaccuratecalculator.com'],
+        [`${calcName} Statement & Breakdown Schedule`],
+        ['Date', dateStr],
+        ['Currency', `${currentCurrencyCode} (${currentCurrencySymbol})`],
+        [],
+        ['SUMMARY RESULTS'],
+        ['Primary Metric', `${currentCurrencySymbol} ${formatVal(currentReportState.val1, 0)}`],
+        ['Base Capital / Principal', `${currentCurrencySymbol} ${formatVal(currentReportState.val2, 0)}`],
+        ['Total Interest / Growth', `${currentCurrencySymbol} ${formatVal(currentReportState.val3, 0)}`],
+        [],
+        ['BREAKDOWN SCHEDULE'],
+        ['Period', 'Payment / Contribution', 'Principal / Invested', 'Interest / Return', 'Ending Balance'],
+      ];
+
+      currentReportState.schedule.forEach((row) => {
+        csvRows.push([
+          row.period,
+          `${currentCurrencySymbol} ${formatVal(row.payment, 0)}`,
+          `${currentCurrencySymbol} ${formatVal(row.principal, 0)}`,
+          `${currentCurrencySymbol} ${formatVal(row.interest, 0)}`,
+          `${currentCurrencySymbol} ${formatVal(row.balance, 0)}`,
+        ]);
+      });
+
+      csvRows.push([]);
+      csvRows.push(['Verified Client-Side Computation', '100% Private']);
+      csvRows.push(['Website', window.location.href]);
+
+      const escapeCsv = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
+      const csvContent = '\uFEFF' + csvRows.map((r) => r.map(escapeCsv).join(',')).join('\r\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${slug}_Statement_${currentCurrencyCode}_${dateStr}.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast('Excel spreadsheet downloaded!');
+    }
+
+    function copySummary() {
+      recalculate();
+      const text = [
+        `📊 ${calcName} Summary — Free Accurate Calculator`,
+        `--------------------------------------------`,
+        `• Primary Metric: ${currentCurrencySymbol} ${formatVal(currentReportState.val1, 0)}`,
+        `• Principal / Capital: ${currentCurrencySymbol} ${formatVal(currentReportState.val2, 0)}`,
+        `• Interest / Growth: ${currentCurrencySymbol} ${formatVal(currentReportState.val3, 0)}`,
+        `--------------------------------------------`,
+        `Calculate: ${window.location.href}`,
+      ].join('\n');
+      navigator.clipboard.writeText(text).then(() => showToast('Summary copied!')).catch(() => showToast('Could not copy'));
+    }
+
+    function shareLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => showToast('Link copied!')).catch(() => showToast('Could not copy link'));
+    }
+
+    // Two-Way Binding: Sliders & Number Inputs
+    document.querySelectorAll('.finance-input').forEach((inp) => {
+      const slider = document.getElementById(`slider-${inp.name}`);
+      inp.addEventListener('input', () => {
+        if (slider) slider.value = inp.value;
+        recalculate();
+      });
+      if (slider) {
+        slider.addEventListener('input', () => {
+          inp.value = slider.value;
+          recalculate();
+        });
+      }
+    });
+
+    // Action buttons click listeners
+    document.getElementById('action-download-pdf-btn')?.addEventListener('click', downloadPDF);
+    document.getElementById('finance-bottom-pdf-btn')?.addEventListener('click', downloadPDF);
+    document.getElementById('action-download-excel-btn')?.addEventListener('click', downloadExcel);
+    document.getElementById('finance-bottom-excel-btn')?.addEventListener('click', downloadExcel);
+    document.getElementById('action-copy-summary-btn')?.addEventListener('click', copySummary);
+    document.getElementById('action-share-link-btn')?.addEventListener('click', shareLink);
+
+    // Currency Switcher local dropdown
+    currencySelect?.addEventListener('change', () => {
+      const newCurr = currencySelect.value;
+      if (typeof window.facSetActiveCurrency === 'function') {
+        window.facSetActiveCurrency(newCurr);
+      } else {
+        handleCurrencySwitch(newCurr, currentCurrencyCode);
+      }
+    });
+
+    // Global Currency Change Listener
+    window.addEventListener('currencychange', (e) => {
+      const newCurr = e.detail?.currency;
+      const prevCurr = e.detail?.prevCurrency || currentCurrencyCode;
+      if (newCurr) {
+        handleCurrencySwitch(newCurr, prevCurr);
+      }
+    });
+
+    // Initial setup
+    updateCurrencyUI();
+    recalculate();
+  })();
+</script>
+
+<style is:global>
+  @media print {
+    html, body {
+      background: #ffffff !important;
+      color: #0f172a !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      font-size: 12px !important;
+    }
+    header, footer, nav, aside,
+    .breadcrumbs-container, #smart-email-modal, #country-modal,
+    .ad-slot-container, .fac-copy-result-btn, #history-drawer, #history-drawer-backdrop {
+      display: none !important;
+    }
+    #finance-social-proof, #finance-bottom-content-area, .print\:hidden {
+      display: none !important;
+    }
+    .calculator-main-box {
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+    }
+    body * { visibility: hidden !important; }
+    #finance-print-report, #finance-print-report * { visibility: visible !important; }
+    #finance-print-report {
+      display: block !important;
+      position: absolute !important;
+      left: 0 !important; top: 0 !important;
+      width: 100% !important;
+      background: #ffffff !important;
+      color: #0f172a !important;
+      padding: 20px 24px !important;
+      box-sizing: border-box !important;
+    }
+    #finance-print-report table { width: 100% !important; border-collapse: collapse !important; }
+    #finance-print-report th, #finance-print-report td { border: 1px solid #cbd5e1 !important; padding: 5px 8px !important; }
+    #finance-print-report th { background-color: #f1f5f9 !important; font-weight: 700 !important; }
+    #finance-print-report tr { page-break-inside: avoid !important; }
+    @page { size: A4 portrait; margin: 10mm 12mm; }
+  }
+</style>

@@ -70,8 +70,8 @@ test('Mobile Responsiveness Verification — HTML & CSS Audit', async (t) => {
   });
 
   await t.test('AdSlot containers enforce max-w-full and overflow-hidden', () => {
-    const financeHtml = fs.readFileSync(path.join(distClient, 'finance/index.html'), 'utf-8');
-    assert.ok(financeHtml.includes('max-w-full overflow-hidden'));
+    const countriesHtml = fs.readFileSync(path.join(distClient, 'countries/index.html'), 'utf-8');
+    assert.ok(countriesHtml.includes('max-w-full overflow-hidden'));
   });
 
   await t.test('Consent banner action buttons have 44px touch target on mobile', () => {

@@ -1,0 +1,168 @@
+---
+// src/layouts/GuideLayout.astro
+import Layout from './Layout.astro';
+import SchemaMarkup from '../components/SchemaMarkup.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
+import SocialProof from '../components/SocialProof.astro';
+import CalculatorComparison, { type ComparisonItem } from '../components/CalculatorComparison.astro';
+import FAQSection from '../components/calculator/FAQSection.astro';
+import Breadcrumbs from '../components/common/Breadcrumbs.astro';
+
+interface Props {
+  title: string;
+  metaDescription?: string;
+  description?: string;
+  publishDate?: string | Date;
+  lastModified?: string | Date;
+  featuredImage?: string;
+  author?: string;
+  category?: string;
+  tags?: string[];
+  readingTime?: number;
+  headings?: Array<{ depth: number; slug: string; text: string }>;
+  targetCalculator?: {
+    name: string;
+    href: string;
+    description?: string;
+  };
+  comparisons?: ComparisonItem[];
+  faqs?: Array<{ question: string; answer: string }>;
+}
+
+const {
+  title,
+  metaDescription = '',
+  description = metaDescription,
+  publishDate = new Date().toISOString(),
+  lastModified = publishDate,
+  featuredImage = '/og-image.svg',
+  author = 'Quantitative Editorial Team',
+  category = 'finance',
+  tags = [],
+  readingTime = 5,
+  headings = [],
+  targetCalculator,
+  comparisons = [],
+  faqs = [],
+} = Astro.props;
+
+const isoPublishDate = typeof publishDate === 'string' ? publishDate : new Date(publishDate).toISOString();
+const isoLastModified = typeof lastModified === 'string' ? lastModified : new Date(lastModified).toISOString();
+---
+
+<Layout title={title} description={description} image={featuredImage}>
+  <!-- Feature 1: Reading Progress Bar -->
+  <ReadingProgress />
+  
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10">
+    <Breadcrumbs
+      items={[
+        { label: 'Guides', href: '/guides/' },
+        { label: title },
+      ]}
+    />
+
+    <article class="mt-6">
+      <header class="mb-8 pb-6 border-b border-hairline">
+        <div class="flex flex-wrap items-center gap-2 mb-3 text-xs text-mute font-mono">
+          <span class="mono-eyebrow text-link font-semibold uppercase">{category}</span>
+          <span class="h-1 w-1 rounded-full bg-faint"></span>
+          <time datetime={isoPublishDate}>
+            {new Date(isoPublishDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+          </time>
+          <span class="h-1 w-1 rounded-full bg-faint"></span>
+          <!-- Feature 2: Reading Time Display -->
+          <span class="text-ink font-semibold">{readingTime} min read</span>
+          <span class="h-1 w-1 rounded-full bg-faint"></span>
+          <span>By {author}</span>
+        </div>
+
+        <h1 class="display-hero text-ink tracking-tight mb-4">{title}</h1>
+        <p class="text-base sm:text-lg text-body leading-relaxed max-w-3xl">{description}</p>
+        
+        {tags && tags.length > 0 && (
+          <div class="flex flex-wrap gap-1.5 mt-4">
+            {tags.map((tag: string) => (
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded-full border border-hairline bg-canvas-elevated text-mute">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
+      </header>
+
+      {featuredImage && featuredImage !== '/og-image.svg' && (
+        <img
+          src={featuredImage}
+          alt={title}
+          class="w-full rounded-xl mb-8 max-h-[420px] object-cover border border-hairline shadow-sm"
+        />
+      )}
+
+      <!-- Feature 4: Social Proof Widget on Companion Calculator -->
+      {targetCalculator && (
+        <div class="my-8 rounded-xl border border-link/30 bg-canvas-elevated p-5 sm:p-6 shadow-whisper">
+          <div class="flex items-center justify-between gap-2 mb-3">
+            <span class="mono-eyebrow text-link font-semibold uppercase">Interactive Companion Tool</span>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-link/10 text-link border border-link/20">Free & Instant</span>
+          </div>
+          
+          <SocialProof calculatorName={targetCalculator.name} />
+          
+          <h3 class="text-base sm:text-lg font-bold text-ink mb-1">
+            {targetCalculator.name}
+          </h3>
+          <p class="text-xs sm:text-sm text-mute mb-4 leading-relaxed">
+            {targetCalculator.description || `Run instant, accurate simulations using our client-side ${targetCalculator.name}.`}
+          </p>
+          
+          <a
+            href={targetCalculator.href}
+            class="inline-flex items-center justify-center gap-2 bg-link hover:bg-link-deep text-white font-semibold text-xs sm:text-sm px-5 py-2.5 rounded-lg transition-colors shadow-xs"
+          >
+            <span>Open {targetCalculator.name}</span>
+            <span>→</span>
+          </a>
+        </div>
+      )}
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+        <div class="lg:col-span-8 prose dark:prose-invert max-w-none text-body leading-relaxed">
+          <slot />
+
+          <!-- Feature 5: Calculator Comparison Tool -->
+          {comparisons && comparisons.length > 0 && (
+            <div class="mt-10 pt-8 border-t border-hairline">
+              <h2 class="text-xl font-bold text-ink mb-4">Calculator Comparison</h2>
+              <CalculatorComparison calculators={comparisons} />
+            </div>
+          )}
+
+          <!-- FAQs Accordion with Rich FAQPage Schema -->
+          {faqs && faqs.length > 0 && (
+            <div class="mt-12">
+              <FAQSection faqs={faqs} title="Frequently Asked Questions" />
+            </div>
+          )}
+        </div>
+
+        <!-- Sticky Sidebar: Feature 3: Table of Contents -->
+        <aside class="lg:col-span-4 sticky top-20">
+          <TableOfContents headings={headings} />
+        </aside>
+      </div>
+    </article>
+  </div>
+
+  <SchemaMarkup
+    type="guide"
+    data={{
+      title,
+      metaDescription: description,
+      publishDate: isoPublishDate,
+      lastModified: isoLastModified,
+      featuredImage,
+    }}
+  />
+</Layout>
