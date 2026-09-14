@@ -1,5 +1,4 @@
 // src/components/SEO/CalculatorSchema.tsx
-import React from 'react';
 
 export interface HowToStepItem {
   name: string;
@@ -225,26 +224,18 @@ export function generateHowToSchema(props: CalculatorSchemaProps): Record<string
 }
 
 /**
- * CalculatorSchema Component
- * Dynamically injects SoftwareApplication and HowTo JSON-LD schema into the document.
+ * Builds the unified JSON-LD schema graph for SoftwareApplication + HowTo
  */
-export const CalculatorSchema: React.FC<CalculatorSchemaProps> = (props) => {
+export function buildCalculatorSchemaGraph(props: CalculatorSchemaProps): Record<string, any> {
   const softwareAppSchema = generateSoftwareApplicationSchema(props);
   const howToSchema = props.includeHowTo !== false ? generateHowToSchema(props) : null;
 
-  const graph = howToSchema
+  return howToSchema
     ? {
         '@context': 'https://schema.org',
         '@graph': [softwareAppSchema, howToSchema],
       }
     : softwareAppSchema;
+}
 
-  const jsonLdString = JSON.stringify(graph);
-
-  return React.createElement('script', {
-    type: 'application/ld+json',
-    dangerouslySetInnerHTML: { __html: jsonLdString },
-  });
-};
-
-export default CalculatorSchema;
+export default buildCalculatorSchemaGraph;

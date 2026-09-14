@@ -1,5 +1,4 @@
 // src/components/SEO/HreflangTags.tsx
-import React from 'react';
 
 export interface HreflangLink {
   lang: string;
@@ -186,36 +185,21 @@ export function computeHreflangTags(
 }
 
 /**
- * HreflangTags React Component
- * Injects self-referencing canonical and bidirectional hreflang links into document <head>.
+ * Generates raw HTML link tags for canonical and hreflangs.
  */
-export const HreflangTags: React.FC<HreflangTagsProps> = ({
-  currentPath,
+export function renderHreflangHtmlTags(
+  currentPath: string,
   siteOrigin = DEFAULT_ORIGIN,
-  customAlternates,
-}) => {
+  customAlternates?: Record<string, string>
+): string {
   const { canonicalUrl, hreflangLinks } = computeHreflangTags(currentPath, siteOrigin, customAlternates);
-
-  const elements: React.ReactElement[] = [
-    React.createElement('link', {
-      key: 'canonical',
-      rel: 'canonical',
-      href: canonicalUrl,
-    }),
-  ];
+  const lines: string[] = [`<link rel="canonical" href="${canonicalUrl}" />`];
 
   hreflangLinks.forEach((link) => {
-    elements.push(
-      React.createElement('link', {
-        key: `hreflang-${link.lang}`,
-        rel: 'alternate',
-        hrefLang: link.lang,
-        href: link.href,
-      })
-    );
+    lines.push(`<link rel="alternate" hreflang="${link.lang}" href="${link.href}" />`);
   });
 
-  return React.createElement(React.Fragment, null, elements);
-};
+  return lines.join('\n');
+}
 
-export default HreflangTags;
+export default computeHreflangTags;
