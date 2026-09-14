@@ -5,6 +5,7 @@ import AutocompleteSearch from '../components/common/AutocompleteSearch.astro';
 import CategoriesSection from '../components/CategoriesSection.astro';
 import { POPULAR_COUNTRIES } from '../data/countries';
 import { CATEGORY_ITEMS } from '../data/categories';
+import OrphanRescueLinks from '../components/SEO/OrphanRescueLinks.astro';
 
 const PROFESSION_ITEMS = [
   { name: 'Doctor', icon: '🩺', href: '/profession/doctor-pediatric-dosage-calculator/' },
@@ -224,6 +225,7 @@ const POPULAR_CALCULATORS = [
               alt={`${item.name} flag`}
               class="w-full h-full object-cover rounded-[3px] shadow-2xs"
               loading="lazy"
+              decoding="async"
               width="32"
               height="24"
             />
@@ -331,6 +333,9 @@ const POPULAR_CALCULATORS = [
       </div>
     </div>
   </section>
+
+  <!-- High-Value Regional & Specialized Deep Calculator Index -->
+  <OrphanRescueLinks limit={8} />
 </Layout>
 
 <script is:inline>

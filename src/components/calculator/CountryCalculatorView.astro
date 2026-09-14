@@ -61,6 +61,8 @@ const relatedCalculators = CALCULATORS.filter((c) => popularSet.has(c.id) && c.i
             src={country.flagUrl}
             alt={`${country.name} flag`}
             class="w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
             width="28"
             height="20"
           />

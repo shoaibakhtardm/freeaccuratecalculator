@@ -3,6 +3,7 @@
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../common/Breadcrumbs.astro';
 import CategoriesSection from '../CategoriesSection.astro';
+import OrphanRescueLinks from '../SEO/OrphanRescueLinks.astro';
 import type { CountryConfig } from '../../data/countries';
 
 export interface DirectoryToolItem {
@@ -116,7 +117,7 @@ const {
           </span>
           {pillFlagUrl && (
             <span class="inline-flex h-3.5 w-5 shrink-0 items-center justify-center rounded-[2px] overflow-hidden border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
-              <img src={pillFlagUrl} alt="" class="w-full h-full object-cover" width="20" height="14" />
+              <img src={pillFlagUrl} alt="" class="w-full h-full object-cover" loading="lazy" decoding="async" width="20" height="14" />
             </span>
           )}
           {!pillFlagUrl && pillIcon && <span class="text-xs">{pillIcon}</span>}
@@ -149,7 +150,7 @@ const {
         <div class="flex items-center gap-2">
           {directoryFlagUrl ? (
             <span class="flex h-5 w-7 shrink-0 items-center justify-center rounded-[2px] overflow-hidden border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
-              <img src={directoryFlagUrl} alt="" class="w-full h-full object-cover" width="28" height="20" />
+              <img src={directoryFlagUrl} alt="" class="w-full h-full object-cover" loading="lazy" decoding="async" width="28" height="20" />
             </span>
           ) : (
             <span class="text-xl">{directoryIcon}</span>
@@ -255,7 +256,7 @@ const {
             <div class="flex h-8 w-8 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-base sm:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/40 transition-transform">
               {calc.flagUrl ? (
                 <span class="flex h-5 w-7 shrink-0 items-center justify-center rounded-[2px] overflow-hidden border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
-                  <img src={calc.flagUrl} alt="" class="w-full h-full object-cover" width="28" height="20" />
+                  <img src={calc.flagUrl} alt="" class="w-full h-full object-cover" loading="lazy" decoding="async" width="28" height="20" />
                 </span>
               ) : (
                 calc.icon || '🧮'
@@ -378,6 +379,13 @@ const {
         ))}
       </div>
     </section>
+
+    <!-- Contextual Zero-CLS Regional Internal Linking Grid -->
+    <OrphanRescueLinks
+      currentCategory={country ? undefined : (breadcrumbs[0]?.label || '').toLowerCase()}
+      currentCountry={country?.name}
+      limit={8}
+    />
   </div>
 </Layout>
 

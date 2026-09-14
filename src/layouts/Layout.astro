@@ -129,14 +129,34 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
 <!doctype html>
 <html lang={Astro.currentLocale || currentLocale} dir={languages[(Astro.currentLocale || currentLocale) as SupportedLanguage]?.dir || currentDir || 'ltr'} class="scroll-smooth">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N96Q2B7GJ7"></script>
+    <!-- Defer Google Tag Manager until Idle / First Interaction (Zero TBT & LCP impact) -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      window.gtag = gtag;
       gtag('js', new Date());
-
       gtag('config', 'G-N96Q2B7GJ7');
+
+      (function() {
+        let loaded = false;
+        function loadGtag() {
+          if (loaded) return;
+          loaded = true;
+          const s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=G-N96Q2B7GJ7';
+          document.head.appendChild(s);
+        }
+
+        if ('requestIdleCallback' in window) {
+          window.requestIdleCallback(loadGtag, { timeout: 3500 });
+        } else {
+          window.addEventListener('load', () => setTimeout(loadGtag, 2000), { once: true });
+        }
+        ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach((event) => {
+          window.addEventListener(event, loadGtag, { once: true, passive: true });
+        });
+      })();
 
       // Early embed mode detection to prevent CLS
       try {
@@ -250,6 +270,7 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
     <meta name="description" content={pageDescription} />
     <link rel="canonical" href={finalCanonical} />
     <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title="Free Accurate Calculator RSS Feed" href="/rss.xml" />
     {noindex ? (
       <>

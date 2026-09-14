@@ -4,3 +4,75 @@
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://pagead2.googlesyndication.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https: https://www.google-analytics.com; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://analytics.google.com https://www.googletagmanager.com; frame-src 'self' https://www.googletagmanager.com;
+
+# Cache immutable hashed assets for 1 year
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache fonts and static SVG flags for 1 year
+/flags/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/sheets/*
+  Cache-Control: public, max-age=2592000
+
+# Edge Cache for Static Calculators and Hubs (30 Days TTL, <100ms TTFB)
+/finance/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+  CDN-Cache-Control: max-age=2592000
+
+/math/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+  CDN-Cache-Control: max-age=2592000
+
+/health/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+  CDN-Cache-Control: max-age=2592000
+
+/everyday/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+  CDN-Cache-Control: max-age=2592000
+
+/guides/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+  CDN-Cache-Control: max-age=2592000
+
+/countries/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+  CDN-Cache-Control: max-age=2592000
+
+/business/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+  CDN-Cache-Control: max-age=2592000
+
+/insurance/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+  CDN-Cache-Control: max-age=2592000
+
+/legal/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+  CDN-Cache-Control: max-age=2592000
+
+/real-estate/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+  CDN-Cache-Control: max-age=2592000
+
+/technology/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+  CDN-Cache-Control: max-age=2592000
+
+/converter/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+  CDN-Cache-Control: max-age=2592000
+
+/profession/*
+  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
+  CDN-Cache-Control: max-age=2592000
+
+# Sitemaps and Robots
+/sitemap*.xml
+  Cache-Control: public, max-age=3600, stale-while-revalidate=600
+
+/robots.txt
+  Cache-Control: public, max-age=3600, stale-while-revalidate=600
+

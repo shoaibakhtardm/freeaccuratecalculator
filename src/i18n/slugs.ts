@@ -45,6 +45,8 @@ export const VERIFIED_LOCALIZED_ROUTES: Record<string, LocalizedRouteConfig> = {
  */
 export const LOCALIZED_SLUGS = VERIFIED_LOCALIZED_ROUTES;
 
+import { computeHreflangTags } from '../components/SEO/HreflangTags';
+
 /**
  * Resolves the full international alternate URLs for a given canonical route or slug.
  */
@@ -52,57 +54,6 @@ export function getAlternateHreflangLinks(
   currentPath: string,
   siteOrigin: string = 'https://freeaccuratecalculator.com'
 ): Array<{ lang: string; href: string }> {
-  // 1. Normalize path
-  const trimmed = currentPath.split('?')[0].split('#')[0];
-  const withLeading = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
-  const normalized = withLeading.endsWith('/') ? withLeading : `${withLeading}/`;
-
-  // 2. Check if this is the homepage (root or any language root)
-  const isHomepage =
-    normalized === '/' ||
-    /^\/(?:en|fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)\/$/.test(normalized);
-
-  if (isHomepage) {
-    const links = ALL_SUPPORTED_LOCALES.map((locale) => ({
-      lang: locale,
-      href: locale === DEFAULT_LOCALE ? `${siteOrigin}/` : `${siteOrigin}/${locale}/`,
-    }));
-    links.push({
-      lang: 'x-default',
-      href: `${siteOrigin}/`,
-    });
-    return links;
-  }
-
-  // 3. Strip locale prefix to identify base canonical path
-  const strippedPath = normalized.replace(
-    /^\/(?:en|fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)\//,
-    '/'
-  );
-
-  // 4. Check for verified multi-language routes
-  for (const [key, config] of Object.entries(VERIFIED_LOCALIZED_ROUTES)) {
-    if (strippedPath === config.canonicalPath || strippedPath.includes(`/${key}/`)) {
-      const links: Array<{ lang: string; href: string }> = [];
-      for (const [locale, routePath] of Object.entries(config.locales)) {
-        links.push({
-          lang: locale,
-          href: `${siteOrigin}${routePath}`,
-        });
-      }
-      links.push({
-        lang: 'x-default',
-        href: `${siteOrigin}${config.canonicalPath}`,
-      });
-      return links;
-    }
-  }
-
-  // 5. Default / English-only page: emit canonical English and x-default only.
-  // This guarantees 0 ghost 404 hreflangs for the 280+ English calculators.
-  const canonicalUrl = `${siteOrigin}${strippedPath}`;
-  return [
-    { lang: 'en', href: canonicalUrl },
-    { lang: 'x-default', href: canonicalUrl },
-  ];
+  const result = computeHreflangTags(currentPath, siteOrigin);
+  return result.hreflangLinks;
 }

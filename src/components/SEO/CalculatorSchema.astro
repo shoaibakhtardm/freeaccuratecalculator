@@ -132,10 +132,55 @@ if (Array.isArray(faq) && faq.length > 0) {
     })),
   };
 }
+// 3. HowTo JSON-LD Schema (for Google Search Rich Snippets)
+const howToSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: `How to Calculate with ${name}`,
+  description: `Step-by-step guide to calculating accurate figures with the online ${name}. ${description}`,
+  totalTime: 'PT1M',
+  estimatedCost: {
+    '@type': 'MonetaryAmount',
+    currency: 'USD',
+    value: '0',
+  },
+  tool: [
+    {
+      '@type': 'HowToTool',
+      name: `${name} Engine`,
+    },
+  ],
+  step: [
+    {
+      '@type': 'HowToStep',
+      position: 1,
+      name: 'Enter Primary Variables',
+      text: `Enter your specific figures into the inputs on the ${name} interface.`,
+      url: `${resolvedUrl}#inputs`,
+    },
+    {
+      '@type': 'HowToStep',
+      position: 2,
+      name: 'Review Calculation Parameters',
+      text: 'Select your preferred calculation mode, currency, or unit system (Metric or Imperial).',
+      url: `${resolvedUrl}#controls`,
+    },
+    {
+      '@type': 'HowToStep',
+      position: 3,
+      name: 'Execute and View Verified Results',
+      text: `The ${name} dynamically computes the exact formula in real-time, rendering summary charts, breakdowns, and audit tables.`,
+      url: `${resolvedUrl}#results`,
+    },
+  ],
+};
 ---
 
 <!-- WebApplication / SoftwareApplication Structured Data -->
 <script type="application/ld+json" set:html={JSON.stringify(webApplicationSchema)} />
+
+<!-- HowTo Structured Data (Rich Results Snippets) -->
+<script type="application/ld+json" set:html={JSON.stringify(howToSchema)} />
 
 <!-- FAQPage Structured Data (People Also Ask target) -->
 {faqPageSchema && (

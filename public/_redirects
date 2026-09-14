@@ -12,3 +12,15 @@
 /privacy                            /privacy-policy                301
 /blog                               /guides                        301
 /blog/*                             /guides/:splat                 301
+/index.html                         /                             301
+/home                               /                             301
+
+# Deep-nested country category routes redirected to canonical country calculator URLs
+/countries/:country/finance/:slug       /countries/:country/:slug      301
+/countries/:country/math/:slug          /countries/:country/:slug      301
+/countries/:country/health/:slug        /countries/:country/:slug      301
+/countries/:country/business/:slug      /countries/:country/:slug      301
+/countries/:country/insurance/:slug     /countries/:country/:slug      301
+/countries/:country/everyday/:slug      /countries/:country/:slug      301
+/countries/:country/technology/:slug    /countries/:country/:slug      301
+
