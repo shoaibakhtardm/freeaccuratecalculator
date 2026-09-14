@@ -1,7 +1,9 @@
 // src/data/countryPageConfig.ts
 import type { CountryConfig } from './countries';
-import { CALCULATORS, type CalculatorEntry } from './calculatorRegistry';
+import { CALCULATORS, CATEGORY_METADATA, type CalculatorEntry } from './calculatorRegistry';
 import { SEARCHABLE_CALCULATORS } from './searchDatabase';
+import { getCategoryById } from './categories';
+import { CATEGORY_PAGE_CONFIGS } from './categoryConfig';
 import type {
   DirectoryToolItem,
   EducationCard,
@@ -9,6 +11,7 @@ import type {
 } from '../components/directory/DirectoryPageView.astro';
 
 export interface CountryPageConfig {
+  country?: CountryConfig;
   title: string;
   description: string;
   jsonLd: any;
@@ -477,6 +480,7 @@ export function getCountryPageConfig(country: CountryConfig): CountryPageConfig 
   ];
 
   return {
+    country,
     title: fullTitle,
     description,
     jsonLd,
@@ -501,5 +505,186 @@ export function getCountryPageConfig(country: CountryConfig): CountryPageConfig 
     glowGradient: 'from-indigo-500/20 via-blue-500/10 to-transparent',
     headlineGradient: 'from-blue-600 via-indigo-600 to-purple-600',
     headlineGradientDark: 'dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300',
+  };
+}
+
+/**
+ * Generates the complete, standardized configuration for any country-category directory page
+ * (e.g., /countries/india/finance/, /countries/united-states/health/)
+ */
+export function getCountryCategoryPageConfig(
+  country: CountryConfig,
+  categoryId: string
+): CountryPageConfig {
+  const cleanCountryName = country.name;
+  const catItem = getCategoryById(categoryId);
+  const catMeta = CATEGORY_METADATA[categoryId as keyof typeof CATEGORY_METADATA];
+  const catConfig = CATEGORY_PAGE_CONFIGS[categoryId];
+
+  const cleanCatName = catItem?.name || catMeta?.name?.replace(/\s+Calculators$/i, '') || categoryId;
+  const fullTitle = `${cleanCountryName} ${cleanCatName} Calculators — Free Online Tools (${country.currencySymbol})`;
+  const description = `Accurate ${cleanCountryName} ${cleanCatName.toLowerCase()} calculators customized with ${country.currency} (${country.currencySymbol}) currency, statutory formulas, and instant edge calculation. 100% free and private.`;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: fullTitle,
+    description: description,
+    url: `https://freeaccuratecalculator.com/countries/${country.slug}/${categoryId}/`,
+  };
+
+  const breadcrumbs = [
+    { label: 'Countries', href: '/countries/' },
+    { label: cleanCountryName, href: `/countries/${country.slug}/` },
+    { label: cleanCatName },
+  ];
+
+  const pillBadgeText = `${cleanCountryName} • ${cleanCatName} Calculators`;
+  const headline = `${cleanCountryName} ${cleanCatName} Calculators.`;
+  const headlineHighlight = catConfig?.headlineHighlight || 'Fast, Accurate & Clean.';
+  const subheadlineText = `High-precision ${cleanCatName.toLowerCase()} tools customized for ${cleanCountryName}. Defaulted to ${country.currency} (${country.currencySymbol}) precision with zero data storage and instant client-side calculation.`;
+
+  const directoryTitle = `${cleanCountryName} ${cleanCatName} Tools`;
+  const backLink = { label: `← All ${cleanCountryName} Calculators`, href: `/countries/${country.slug}/` };
+  const searchPlaceholder = `Search ${cleanCountryName} ${cleanCatName.toLowerCase()} calculators...`;
+
+  // 1. Gather all tools in this category for this country
+  const seenIds = new Set<string>();
+  const tools: DirectoryToolItem[] = [];
+
+  // 1a. Tools in country's popularCalculators that belong to this category
+  for (const id of country.popularCalculators) {
+    const meta = KNOWN_TOOLS_METADATA[id];
+    const regCalc = CALCULATORS.find((c) => c.id === id);
+    const toolCat = meta?.category || regCalc?.category;
+
+    if (toolCat === categoryId && !seenIds.has(id)) {
+      seenIds.add(id);
+      tools.push({
+        id,
+        name: meta?.name || regCalc?.name || id,
+        shortName: meta?.shortName || id.replace(/-calculator$/, ''),
+        href: `/countries/${country.slug}/${id}/`,
+        description:
+          meta?.description ||
+          regCalc?.description ||
+          `Calculate with ${country.currencySymbol} precision.`,
+        category: categoryId,
+        badge: meta?.badge || `${country.currencySymbol} Verified`,
+        icon: meta?.icon || catItem?.icon || '🧮',
+      });
+    }
+  }
+
+  // 1b. Remaining tools from CALCULATORS for this category
+  const remainingCalcs = CALCULATORS.filter((c) => c.category === categoryId);
+  for (const regCalc of remainingCalcs) {
+    if (!seenIds.has(regCalc.id)) {
+      seenIds.add(regCalc.id);
+      const meta = KNOWN_TOOLS_METADATA[regCalc.id];
+      const isCountryPrerendered = country.popularCalculators.includes(regCalc.id);
+      const href = isCountryPrerendered
+        ? `/countries/${country.slug}/${regCalc.id}/`
+        : `/${categoryId}/${regCalc.id}/`;
+
+      tools.push({
+        id: regCalc.id,
+        name: meta?.name || regCalc.name,
+        shortName: meta?.shortName || regCalc.name.replace(/\s+Calculator$/i, ''),
+        href,
+        description:
+          meta?.description ||
+          regCalc.description ||
+          `Calculate with precision for ${cleanCountryName}.`,
+        category: categoryId,
+        badge: meta?.badge || (isCountryPrerendered ? `${country.currencySymbol} Verified` : 'Verified Tool'),
+        icon: meta?.icon || catItem?.icon || '🧮',
+      });
+    }
+  }
+
+  // Ensure tool count is a multiple of 3 if count >= 3, for strict 3-by-3 visual alignment
+  if (tools.length >= 3) {
+    const remainder = tools.length % 3;
+    if (remainder !== 0) {
+      tools.splice(tools.length - remainder, remainder);
+    }
+  }
+
+  const allSearchableToolsJson = JSON.stringify(SEARCHABLE_CALCULATORS);
+
+  const educationHeading = `Why Use Free Accurate ${cleanCountryName} ${cleanCatName} Tools?`;
+  const educationSubheading = `Engineered for ${cleanCountryName} standards, statutory accuracy, and 100% browser privacy`;
+
+  const educationCards: EducationCard[] = catConfig?.educationCards?.map((c) => ({
+    icon: c.icon,
+    title: c.title,
+    desc: c.desc,
+  })) || [
+    {
+      icon: '🪙',
+      title: `${country.currency} (${country.currencySymbol}) Precision`,
+      desc: `Pre-calibrated with ${country.currency} formatting and ${cleanCountryName} statutory numerical conventions for seamless local calculations.`,
+    },
+    {
+      icon: '🔒',
+      title: '100% Client-Side Privacy',
+      desc: `Zero server transmission or data logging. All computations run directly within your browser session memory.`,
+    },
+    {
+      icon: '📐',
+      title: 'Mathematical Rigor',
+      desc: `Formulas verified against standard academic, financial, and scientific benchmarks to eliminate floating-point errors.`,
+    },
+  ];
+
+  const faqsHeading = `Frequently Asked Questions About ${cleanCountryName} ${cleanCatName} Calculations`;
+  const faqsSubheading = `Clear answers regarding currency defaults, calculation accuracy, and privacy`;
+
+  const faqs: FAQItem[] = [
+    {
+      question: `Are these ${cleanCatName.toLowerCase()} calculators customized for ${cleanCountryName}?`,
+      answer: `Yes. Tools that compute monetary amounts default to ${country.currency} (${country.currencySymbol}) and apply ${cleanCountryName}'s numerical grouping (${country.numberSystem === 'lakh-crore' ? 'Lakh/Crore' : 'thousands standard'}) and relevant statutory rules.`,
+    },
+    {
+      question: `How accurate are the ${cleanCountryName} ${cleanCatName.toLowerCase()} calculations?`,
+      answer: `Every tool uses mathematically verified formulas audited against standard banking, scientific, and statutory standards for exact precision without rounding drift.`,
+    },
+    {
+      question: `Is my personal data saved when using ${cleanCountryName} calculators?`,
+      answer: `Never. Our platform operates 100% client-side in your local browser memory. No inputs, calculations, or identifiers are ever stored or uploaded to any remote server.`,
+    },
+    {
+      question: `Can I access other categories for ${cleanCountryName}?`,
+      answer: `Yes. You can explore all calculator categories for ${cleanCountryName} via the category grid on this page or return to the main ${cleanCountryName} country directory.`,
+    },
+  ];
+
+  return {
+    country,
+    title: fullTitle,
+    description,
+    jsonLd,
+    breadcrumbs,
+    pillBadgeText,
+    pillFlagUrl: country.flagUrl,
+    headline,
+    headlineHighlight,
+    subheadlineText,
+    directoryTitle,
+    directoryFlagUrl: country.flagUrl,
+    backLink,
+    searchPlaceholder,
+    tools,
+    allSearchableToolsJson,
+    educationHeading,
+    educationSubheading,
+    educationCards,
+    faqsHeading,
+    faqsSubheading,
+    faqs,
+    glowGradient: catConfig?.gradient?.glow || 'from-indigo-500/20 via-blue-500/10 to-transparent',
+    headlineGradient: catConfig?.gradient?.light || 'from-blue-600 via-indigo-600 to-purple-600',
+    headlineGradientDark: catConfig?.gradient?.dark || 'dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300',
   };
 }

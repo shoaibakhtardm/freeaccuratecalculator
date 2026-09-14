@@ -1,12 +1,14 @@
 ---
 // src/components/common/AutocompleteSearch.astro
-import { SEARCHABLE_CALCULATORS } from '../../data/searchDatabase';
+import { SEARCHABLE_CALCULATORS, type SearchCalculatorItem } from '../../data/searchDatabase';
+import type { CountryConfig } from '../../data/countries';
 
 interface Props {
   id?: string;
   placeholder?: string;
   categoryFilter?: string;
   className?: string;
+  country?: CountryConfig;
 }
 
 const {
@@ -14,9 +16,21 @@ const {
   placeholder = "Search 📈 SIP Calculator...",
   categoryFilter,
   className = '',
+  country,
 } = Astro.props;
 
-const searchDataJson = JSON.stringify(SEARCHABLE_CALCULATORS);
+// Prepare localized dataset if country is provided
+const dataset: SearchCalculatorItem[] = country
+  ? SEARCHABLE_CALCULATORS.map((calc) => {
+      const isCountryCalc = country.popularCalculators.includes(calc.slug);
+      return {
+        ...calc,
+        href: isCountryCalc ? `/countries/${country.slug}/${calc.slug}/` : calc.href,
+      };
+    })
+  : SEARCHABLE_CALCULATORS;
+
+const searchDataJson = JSON.stringify(dataset);
 ---
 
 <div

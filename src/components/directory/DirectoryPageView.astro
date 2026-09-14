@@ -2,6 +2,8 @@
 // src/components/directory/DirectoryPageView.astro
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../common/Breadcrumbs.astro';
+import CategoriesSection from '../CategoriesSection.astro';
+import type { CountryConfig } from '../../data/countries';
 
 export interface DirectoryToolItem {
   id: string;
@@ -28,6 +30,9 @@ export interface FAQItem {
 }
 
 export interface Props {
+  country?: CountryConfig;
+  showCategories?: boolean;
+  showTools?: boolean;
   title: string;
   description: string;
   jsonLd: any;
@@ -57,6 +62,9 @@ export interface Props {
 }
 
 const {
+  country,
+  showCategories = true,
+  showTools = true,
   title,
   description,
   jsonLd,
@@ -134,7 +142,8 @@ const {
     </section>
 
     <!-- [3-BY-3 DIRECTORY]: Strictly 3 Columns on Mobile & Desktop -->
-    <section class="space-y-4 sm:space-y-5">
+    {showTools && (
+      <section class="space-y-4 sm:space-y-5">
       <!-- Section Header without numbers & Back Link -->
       <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
         <div class="flex items-center gap-2">
@@ -303,6 +312,12 @@ const {
         </div>
       </div>
     </section>
+    )}
+
+    <!-- Categories Section (Exact Homepage Style, Scoped to Country, with Embedded Live Spotlight Search) -->
+    {country && showCategories && (
+      <CategoriesSection country={country} />
+    )}
 
     <!-- Educational & Domain Value Section -->
     <section class="rounded-3xl border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-900/70 p-6 sm:p-9 space-y-6 shadow-sm dark:shadow-xl backdrop-blur-xl">
@@ -373,6 +388,7 @@ const {
 <script is:inline>
   (function () {
     const dirSearchInput = document.getElementById('directory-filter-input');
+    if (!dirSearchInput) return;
     const dirClearBtn = document.getElementById('directory-filter-clear');
     const dirCounter = document.getElementById('directory-match-counter');
     const dirDropdown = document.getElementById('directory-filter-dropdown');

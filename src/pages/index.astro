@@ -2,31 +2,9 @@
 // src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
 import AutocompleteSearch from '../components/common/AutocompleteSearch.astro';
+import CategoriesSection from '../components/CategoriesSection.astro';
 import { POPULAR_COUNTRIES } from '../data/countries';
-
-// 20 categories arranged 3-by-3 ("tin tin karke")
-const CATEGORY_ITEMS = [
-  { id: 'finance', name: 'Finance', icon: '💰' },
-  { id: 'insurance', name: 'Insurance', icon: '🛡️' },
-  { id: 'legal', name: 'Legal', icon: '⚖️' },
-  { id: 'business', name: 'Business', icon: '💼' },
-  { id: 'construction', name: 'Construction', icon: '🏗️' },
-  { id: 'real-estate', name: 'Real Estate', icon: '🏢' },
-  { id: 'technology', name: 'Technology', icon: '💻' },
-  { id: 'health', name: 'Health', icon: '🩺' },
-  { id: 'statistics', name: 'Statistics', icon: '📊' },
-  { id: 'marketing', name: 'Marketing', icon: '📈' },
-  { id: 'math', name: 'Math', icon: '📐' },
-  { id: 'automotive', name: 'Automotive', icon: '🚗' },
-  { id: 'biology', name: 'Biology', icon: '🧬' },
-  { id: 'chemistry', name: 'Chemistry', icon: '🧪' },
-  { id: 'physics', name: 'Physics', icon: '⚛️' },
-  { id: 'food', name: 'Food', icon: '🍎' },
-  { id: 'sports', name: 'Sports', icon: '⚽' },
-  { id: 'ecology', name: 'Ecology', icon: '🌱' },
-  { id: 'everyday', name: 'Everyday', icon: '☀️' },
-  { id: 'converter', name: 'Converter', icon: '🔄' },
-] as const;
+import { CATEGORY_ITEMS } from '../data/categories';
 
 const PROFESSION_ITEMS = [
   { name: 'Doctor', icon: '🩺', href: '/profession/doctor-pediatric-dosage-calculator/' },
@@ -154,36 +132,7 @@ const POPULAR_CALCULATORS = [
       </div>
 
       <!-- 3-by-3 Category Navigation Grid ("tin tin karke" - UI/UX Designer Scaled Edition) -->
-      <nav
-        aria-label="Calculator Categories"
-        class="mt-8 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-3 sm:p-5 md:p-6 shadow-sm dark:shadow-xl backdrop-blur-xl box-border text-center"
-      >
-        <div class="flex items-center justify-center border-b border-slate-200/80 dark:border-slate-800/80 pb-3 sm:pb-3.5 mb-3.5 sm:mb-4 px-1 text-center">
-          <h2 class="font-outfit text-xs sm:text-sm font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white flex items-center justify-center gap-2">
-            <span class="text-base sm:text-lg">📁</span>
-            <span>Categories</span>
-          </h2>
-        </div>
-
-        <!-- 20 Categories in 3-Column Grid Layout (Top Emoji, Bottom Single-Line Text) -->
-        <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
-          {CATEGORY_ITEMS.map((cat) => (
-            <a
-              href={`/${cat.id}/`}
-              data-category={cat.id}
-              title={`Explore ${cat.name} Calculators`}
-              class="category-filter-btn group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[68px] sm:min-h-[78px] md:min-h-[86px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/50 dark:hover:border-indigo-400/50 p-2 sm:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 active:scale-[0.97]"
-            >
-              <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-base sm:text-lg md:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 transition-transform mb-1 sm:mb-1.5">
-                {cat.icon}
-              </span>
-              <span class="w-full text-center font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-[11px] sm:text-xs md:text-sm leading-tight whitespace-nowrap overflow-hidden">
-                {cat.name}
-              </span>
-            </a>
-          ))}
-        </div>
-      </nav>
+      <CategoriesSection />
     </div>
   </section>
 
