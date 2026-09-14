@@ -37,6 +37,8 @@ jobs:
 
       - name: Build Production Bundle (Astro & Cloudflare Worker)
         run: npm run build
+        env:
+          BASE_URL: 'https://freeaccuratecalculator.com'
 
       - name: Run Test Suite (Formula, Tax, SEO & Responsiveness)
         run: npm run test

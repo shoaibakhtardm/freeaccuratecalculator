@@ -5,6 +5,10 @@ import path from 'node:path';
 const distClientDir = path.resolve('dist/client');
 const publicDir = path.resolve('public');
 
+if (!fs.existsSync(publicDir)) {
+  fs.mkdirSync(publicDir, { recursive: true });
+}
+
 const distSitemap0 = path.join(distClientDir, 'sitemap-0.xml');
 const distSitemapIndex = path.join(distClientDir, 'sitemap-index.xml');
 const distSitemapXml = path.join(distClientDir, 'sitemap.xml');

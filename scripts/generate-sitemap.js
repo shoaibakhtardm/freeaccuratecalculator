@@ -2,9 +2,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const SITE_URL = 'https://freeaccuratecalculator.com';
+const SITE_URL = process.env.BASE_URL || 'https://freeaccuratecalculator.com';
 const distClientDir = path.resolve('dist/client');
 const publicDir = path.resolve('public');
+
+// Ensure target directory exists in fresh CI runner
+if (!fs.existsSync(publicDir)) {
+  fs.mkdirSync(publicDir, { recursive: true });
+}
 
 // 1. Recursive helper to discover all generated HTML routes from dist/client if built
 function getAllHtmlRoutes(dir, baseDir = dir) {
