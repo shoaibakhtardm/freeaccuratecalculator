@@ -58,11 +58,11 @@ const footerSections = [
   {
     title: "Global Editions",
     links: [
-      { label: "India Calculators 🇮🇳", href: "/countries/india/" },
-      { label: "United States 🇺🇸", href: "/countries/united-states/" },
-      { label: "United Kingdom 🇬🇧", href: "/countries/united-kingdom/" },
-      { label: "Canada 🇨🇦", href: "/countries/canada/" },
-      { label: "Australia 🇦🇺", href: "/countries/australia/" },
+      { label: "India Calculators", flagUrl: "/flags/in.svg", href: "/countries/india/" },
+      { label: "United States", flagUrl: "/flags/us.svg", href: "/countries/united-states/" },
+      { label: "United Kingdom", flagUrl: "/flags/gb.svg", href: "/countries/united-kingdom/" },
+      { label: "Canada", flagUrl: "/flags/ca.svg", href: "/countries/canada/" },
+      { label: "Australia", flagUrl: "/flags/au.svg", href: "/countries/australia/" },
       { label: "Browse All Nations →", href: "/countries/" },
     ],
   },
@@ -112,9 +112,21 @@ const footerSections = [
                 <li>
                   <a
                     href={link.href}
-                    class="inline-block py-0.5 text-xs text-muted-foreground hover:text-foreground hover:underline transition-colors duration-150"
+                    class="inline-flex items-center gap-1.5 py-0.5 text-xs text-muted-foreground hover:text-foreground hover:underline transition-colors duration-150"
                   >
-                    {link.label}
+                    {link.flagUrl && (
+                      <span class="inline-flex h-3 w-4 shrink-0 items-center justify-center rounded-[1.5px] overflow-hidden border border-slate-300/80 dark:border-slate-700/80 shadow-2xs">
+                        <img
+                          src={link.flagUrl}
+                          alt=""
+                          class="w-full h-full object-cover"
+                          loading="lazy"
+                          width="16"
+                          height="12"
+                        />
+                      </span>
+                    )}
+                    <span>{link.label}</span>
                   </a>
                 </li>
               ))}

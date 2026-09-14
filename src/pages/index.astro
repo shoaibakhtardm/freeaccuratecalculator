@@ -2,6 +2,7 @@
 // src/pages/index.astro
 import Layout from '../layouts/Layout.astro';
 import AutocompleteSearch from '../components/common/AutocompleteSearch.astro';
+import { POPULAR_COUNTRIES } from '../data/countries';
 
 // 20 categories arranged 3-by-3 ("tin tin karke")
 const CATEGORY_ITEMS = [
@@ -40,28 +41,12 @@ const PROFESSION_ITEMS = [
   { name: 'Pilot', icon: '✈️', href: '/profession/pilot-fuel-burn-calculator/' },
 ] as const;
 
-const TOP_20_COUNTRIES = [
-  { name: 'United States', flag: '🇺🇸', emoji: '🗽', href: '/countries/united-states/' },
-  { name: 'United Kingdom', flag: '🇬🇧', emoji: '💂', href: '/countries/united-kingdom/' },
-  { name: 'Canada', flag: '🇨🇦', emoji: '🍁', href: '/countries/canada/' },
-  { name: 'Australia', flag: '🇦🇺', emoji: '🦘', href: '/countries/australia/' },
-  { name: 'Germany', flag: '🇩🇪', emoji: '🏰', href: '/countries/germany/' },
-  { name: 'Switzerland', flag: '🇨🇭', emoji: '🏔️', href: '/countries/switzerland/' },
-  { name: 'Norway', flag: '🇳🇴', emoji: '❄️', href: '/countries/norway/' },
-  { name: 'Netherlands', flag: '🇳🇱', emoji: '🌷', href: '/countries/netherlands/' },
-  { name: 'Sweden', flag: '🇸🇪', emoji: '👑', href: '/countries/sweden/' },
-  { name: 'France', flag: '🇫🇷', emoji: '🗼', href: '/countries/france/' },
-  { name: 'Ireland', flag: '🇮🇪', emoji: '☘️', href: '/countries/ireland/' },
-  { name: 'Singapore', flag: '🇸🇬', emoji: '🦁', href: '/countries/singapore/' },
-  { name: 'New Zealand', flag: '🇳🇿', emoji: '🥝', href: '/countries/new-zealand/' },
-  { name: 'Denmark', flag: '🇩🇰', emoji: '🚲', href: '/countries/denmark/' },
-  { name: 'Japan', flag: '🇯🇵', emoji: '🗻', href: '/countries/japan/' },
-  { name: 'United Arab Emirates', flag: '🇦🇪', emoji: '🕌', href: '/countries/united-arab-emirates/' },
-  { name: 'Austria', flag: '🇦🇹', emoji: '🎻', href: '/countries/austria/' },
-  { name: 'Belgium', flag: '🇧🇪', emoji: '🍫', href: '/countries/belgium/' },
-  { name: 'Italy', flag: '🇮🇹', emoji: '🏛️', href: '/countries/italy/' },
-  { name: 'Spain', flag: '🇪🇸', emoji: '💃', href: '/countries/spain/' },
-] as const;
+const TOP_20_COUNTRIES = POPULAR_COUNTRIES.slice(0, 20).map((c) => ({
+  name: c.name,
+  flagUrl: c.flagUrl,
+  emoji: c.flag,
+  href: `/countries/${c.slug}/`,
+})) as const;
 
 const websiteSchema = {
   '@context': 'https://schema.org',
@@ -284,8 +269,15 @@ const POPULAR_CALCULATORS = [
           title={`Explore ${item.name} Calculators`}
           class="group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[72px] sm:min-h-[80px] md:min-h-[88px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/50 dark:hover:border-indigo-400/50 p-2 sm:p-2.5 md:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 active:scale-[0.97]"
         >
-          <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-base sm:text-lg md:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 transition-transform mb-1 sm:mb-1.5">
-            {item.emoji}
+          <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 overflow-hidden shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 transition-transform mb-1 sm:mb-1.5 p-1.5">
+            <img
+              src={item.flagUrl}
+              alt={`${item.name} flag`}
+              class="w-full h-full object-cover rounded-[3px] shadow-2xs"
+              loading="lazy"
+              width="32"
+              height="24"
+            />
           </span>
           <span class="w-full text-center font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-[10px] sm:text-xs md:text-sm leading-[1.15] break-words line-clamp-2 px-0.5">
             {item.name}

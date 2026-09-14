@@ -7,7 +7,7 @@ import WorkedExample from '../../../components/calculator/WorkedExample.astro';
 import FAQSection from '../../../components/calculator/FAQSection.astro';
 import HistoryDrawer from '../../../components/calculator/HistoryDrawer.astro';
 import CurrencySwitcher from '../../../components/common/CurrencySwitcher.astro';
-import { POPULAR_COUNTRIES, type CountryConfig } from '../../../data/countries';
+import { COUNTRY_LIST, type CountryConfig } from '../../../data/countries';
 import { CALCULATORS, CATEGORY_METADATA, type CalculatorEntry } from '../../../data/calculatorRegistry';
 
 export async function getStaticPaths() {
@@ -16,7 +16,7 @@ export async function getStaticPaths() {
     props: { country: CountryConfig; calc: CalculatorEntry };
   }> = [];
 
-  for (const country of POPULAR_COUNTRIES) {
+  for (const country of COUNTRY_LIST) {
     const popularSet = new Set(country.popularCalculators);
     // Prerender all popular calculators for this country + key priority tools
     const calcsForCountry = CALCULATORS.filter((c) => popularSet.has(c.id));
@@ -81,7 +81,15 @@ const relatedCalculators = CALCULATORS.filter((c) => popularSet.has(c.id) && c.i
     <!-- Country & Currency Banner -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4">
       <div class="flex items-center gap-2">
-        <span class="text-xl" role="img" aria-label={country.name}>{country.flag}</span>
+        <span class="flex h-5 w-7 shrink-0 items-center justify-center rounded-[2px] overflow-hidden border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
+          <img
+            src={country.flagUrl}
+            alt={`${country.name} flag`}
+            class="w-full h-full object-cover"
+            width="28"
+            height="20"
+          />
+        </span>
         <div>
           <span class="mono-eyebrow text-ink">{country.name} Edition</span>
           <span class="text-[11px] font-mono text-mute block sm:inline sm:ml-2">
