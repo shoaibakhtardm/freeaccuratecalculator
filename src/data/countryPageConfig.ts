@@ -4,6 +4,7 @@ import { CALCULATORS, CATEGORY_METADATA, type CalculatorEntry } from './calculat
 import { SEARCHABLE_CALCULATORS } from './searchDatabase';
 import { getCategoryById } from './categories';
 import { CATEGORY_PAGE_CONFIGS } from './categoryConfig';
+import { frCategories, frUI, frToolNames } from './i18n';
 import type {
   DirectoryToolItem,
   EducationCard,
@@ -12,6 +13,8 @@ import type {
 
 export interface CountryPageConfig {
   country?: CountryConfig;
+  categoryId?: string;
+  isFrench?: boolean;
   title: string;
   description: string;
   jsonLd: any;
@@ -542,14 +545,22 @@ export function getCountryCategoryPageConfig(
   country: CountryConfig,
   categoryId: string
 ): CountryPageConfig {
-  const cleanCountryName = country.name;
+  const isFr = country.slug === 'france';
+  const cleanCountryName = isFr ? 'France' : country.name;
   const catItem = getCategoryById(categoryId);
   const catMeta = CATEGORY_METADATA[categoryId as keyof typeof CATEGORY_METADATA];
   const catConfig = CATEGORY_PAGE_CONFIGS[categoryId];
 
-  const cleanCatName = catItem?.name || catMeta?.name?.replace(/\s+Calculators$/i, '') || categoryId;
-  const fullTitle = `${cleanCountryName} ${cleanCatName} Calculators — Free Online Tools (${country.currencySymbol})`;
-  const description = `Accurate ${cleanCountryName} ${cleanCatName.toLowerCase()} calculators customized with ${country.currency} (${country.currencySymbol}) currency, statutory formulas, and instant edge calculation. 100% free and private.`;
+  const defaultCatName = catItem?.name || catMeta?.name?.replace(/\s+Calculators$/i, '') || categoryId;
+  const cleanCatName = isFr ? (frCategories[categoryId] || defaultCatName) : defaultCatName;
+
+  const fullTitle = isFr
+    ? `Calculatrices de ${cleanCatName} Gratuites et Précises France 2026`
+    : `${cleanCountryName} ${cleanCatName} Calculators — Free Online Tools (${country.currencySymbol})`;
+
+  const description = isFr
+    ? `Outils de calcul gratuits et précis pour la catégorie ${cleanCatName} en France. 100% confidentiel, sans publicité et conforme aux normes françaises.`
+    : `Accurate ${cleanCountryName} ${cleanCatName.toLowerCase()} calculators customized with ${country.currency} (${country.currencySymbol}) currency, statutory formulas, and instant edge calculation. 100% free and private.`;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -559,20 +570,35 @@ export function getCountryCategoryPageConfig(
     url: `https://freeaccuratecalculator.com/countries/${country.slug}/${categoryId}/`,
   };
 
-  const breadcrumbs = [
-    { label: 'Countries', href: '/countries/' },
-    { label: cleanCountryName, href: `/countries/${country.slug}/` },
-    { label: cleanCatName },
-  ];
+  const breadcrumbs = isFr
+    ? [
+        { label: frUI.breadcrumbHome, href: '/' },
+        { label: frUI.breadcrumbCountries, href: '/countries/' },
+        { label: frUI.breadcrumbFrance, href: '/countries/france/' },
+        { label: cleanCatName },
+      ]
+    : [
+        { label: 'Countries', href: '/countries/' },
+        { label: cleanCountryName, href: `/countries/${country.slug}/` },
+        { label: cleanCatName },
+      ];
 
-  const pillBadgeText = `${cleanCountryName} • ${cleanCatName} Calculators`;
-  const headline = `${cleanCountryName} ${cleanCatName} Calculators.`;
-  const headlineHighlight = catConfig?.headlineHighlight || 'Fast, Accurate & Clean.';
-  const subheadlineText = `High-precision ${cleanCatName.toLowerCase()} tools customized for ${cleanCountryName}. Defaulted to ${country.currency} (${country.currencySymbol}) precision with zero data storage and instant client-side calculation.`;
+  const pillBadgeText = isFr
+    ? `France • Calculatrices de ${cleanCatName}`
+    : `${cleanCountryName} • ${cleanCatName} Calculators`;
 
-  const directoryTitle = `${cleanCountryName} ${cleanCatName} Tools`;
-  const backLink = { label: `← All ${cleanCountryName} Calculators`, href: `/countries/${country.slug}/` };
-  const searchPlaceholder = `Search ${cleanCountryName} ${cleanCatName.toLowerCase()} calculators...`;
+  const headline = isFr ? 'Calculatrices de' : `${cleanCountryName} ${cleanCatName} Calculators.`;
+  const headlineHighlight = isFr ? `${cleanCatName} pour la France` : (catConfig?.headlineHighlight || 'Fast, Accurate & Clean.');
+  const subheadlineText = isFr
+    ? `Outils de calcul de ${cleanCatName.toLowerCase()} haute précision calibrés pour la France. Standard Euro (€), formules certifiées, zéro stockage de données et calcul instantané.`
+    : `High-precision ${cleanCatName.toLowerCase()} tools customized for ${cleanCountryName}. Defaulted to ${country.currency} (${country.currencySymbol}) precision with zero data storage and instant client-side calculation.`;
+
+  const directoryTitle = isFr ? `Calculatrices de ${cleanCatName}` : `${cleanCountryName} ${cleanCatName} Tools`;
+  const backLink = isFr
+    ? { label: '← Toutes les Calculatrices France', href: '/countries/france/' }
+    : { label: `← All ${cleanCountryName} Calculators`, href: `/countries/${country.slug}/` };
+
+  const searchPlaceholder = isFr ? frUI.searchPlaceholder : `Search ${cleanCountryName} ${cleanCatName.toLowerCase()} calculators...`;
 
   // 1. Gather all tools in this category for this country
   const seenIds = new Set<string>();
@@ -586,17 +612,19 @@ export function getCountryCategoryPageConfig(
 
     if (toolCat === categoryId && !seenIds.has(id)) {
       seenIds.add(id);
+      const frTool = isFr ? frToolNames[id] : null;
       tools.push({
         id,
-        name: meta?.name || regCalc?.name || id,
-        shortName: meta?.shortName || id.replace(/-calculator$/, ''),
-        href: `/countries/${country.slug}/${id}/`,
+        name: frTool?.name || meta?.name || regCalc?.name || id,
+        shortName: frTool?.shortName || meta?.shortName || id.replace(/-calculator$/, ''),
+        href: `/countries/${country.slug}/${categoryId}/${id}/`,
         description:
+          frTool?.desc ||
           meta?.description ||
           regCalc?.description ||
-          `Calculate with ${country.currencySymbol} precision.`,
+          (isFr ? `Calculez avec précision pour la France en Euro (€).` : `Calculate with ${country.currencySymbol} precision.`),
         category: categoryId,
-        badge: meta?.badge || `${country.currencySymbol} Verified`,
+        badge: isFr ? 'Norme FR' : (meta?.badge || `${country.currencySymbol} Verified`),
         icon: meta?.icon || catItem?.icon || '🧮',
       });
     }
@@ -606,7 +634,17 @@ export function getCountryCategoryPageConfig(
   const remainingCalcs = CALCULATORS.filter((c) => {
     if (c.category !== categoryId) return false;
     if (country.slug === 'france') {
-      if (['401k-calculator', 'roth-ira-calculator', 'ppf-calculator', 'epf-calculator', 'gratuity-calculator'].includes(c.id)) {
+      if ([
+        '401k-calculator',
+        'roth-ira-calculator',
+        'ppf-calculator',
+        'epf-calculator',
+        'gratuity-calculator',
+        'age-calculator',
+        'calorie-calculator',
+        'bmi-calculator',
+        'date-calculator',
+      ].includes(c.id)) {
         return false;
       }
     }
@@ -616,22 +654,29 @@ export function getCountryCategoryPageConfig(
     if (!seenIds.has(regCalc.id)) {
       seenIds.add(regCalc.id);
       const meta = KNOWN_TOOLS_METADATA[regCalc.id];
-      const isCountryPrerendered = country.popularCalculators.includes(regCalc.id);
-      const href = isCountryPrerendered
-        ? `/countries/${country.slug}/${regCalc.id}/`
+      const isCountryPrerendered = isFr || country.popularCalculators.includes(regCalc.id);
+      let href = isCountryPrerendered
+        ? `/countries/${country.slug}/${categoryId}/${regCalc.id}/`
         : `/${categoryId}/${regCalc.id}/`;
 
+      if (isFr) {
+        if (regCalc.id === 'sales-tax-calculator') href = `/countries/france/${categoryId}/vat-calculator/`;
+        if (regCalc.id === 'loan-calculator') href = `/countries/france/${categoryId}/emi-calculator/`;
+      }
+
+      const frTool = isFr ? frToolNames[regCalc.id] : null;
       tools.push({
         id: regCalc.id,
-        name: meta?.name || regCalc.name,
-        shortName: meta?.shortName || regCalc.name.replace(/\s+Calculator$/i, ''),
+        name: frTool?.name || meta?.name || regCalc.name,
+        shortName: frTool?.shortName || meta?.shortName || regCalc.name.replace(/\s+Calculator$/i, ''),
         href,
         description:
+          frTool?.desc ||
           meta?.description ||
           regCalc.description ||
-          `Calculate with precision for ${cleanCountryName}.`,
+          (isFr ? `Calculez avec précision pour la France en Euro (€).` : `Calculate with precision for ${cleanCountryName}.`),
         category: categoryId,
-        badge: meta?.badge || (isCountryPrerendered ? `${country.currencySymbol} Verified` : 'Verified Tool'),
+        badge: isFr ? 'Norme FR' : (meta?.badge || (isCountryPrerendered ? `${country.currencySymbol} Verified` : 'Verified Tool')),
         icon: meta?.icon || catItem?.icon || '🧮',
       });
     }
@@ -652,55 +697,104 @@ export function getCountryCategoryPageConfig(
 
   const allSearchableToolsJson = JSON.stringify(SEARCHABLE_CALCULATORS);
 
-  const educationHeading = `Why Use Free Accurate ${cleanCountryName} ${cleanCatName} Tools?`;
-  const educationSubheading = `Engineered for ${cleanCountryName} standards, statutory accuracy, and 100% browser privacy`;
+  const educationHeading = isFr
+    ? frUI.whyUseTitle
+    : `Why Use Free Accurate ${cleanCountryName} ${cleanCatName} Tools?`;
 
-  const educationCards: EducationCard[] = catConfig?.educationCards?.map((c) => ({
-    icon: c.icon,
-    title: c.title,
-    desc: c.desc,
-  })) || [
-    {
-      icon: '🪙',
-      title: `${country.currency} (${country.currencySymbol}) Precision`,
-      desc: `Pre-calibrated with ${country.currency} formatting and ${cleanCountryName} statutory numerical conventions for seamless local calculations.`,
-    },
-    {
-      icon: '🔒',
-      title: '100% Client-Side Privacy',
-      desc: `Zero server transmission or data logging. All computations run directly within your browser session memory.`,
-    },
-    {
-      icon: '📐',
-      title: 'Mathematical Rigor',
-      desc: `Formulas verified against standard academic, financial, and scientific benchmarks to eliminate floating-point errors.`,
-    },
-  ];
+  const educationSubheading = isFr
+    ? `Conçus selon les normes françaises, garantis avec une précision légale et 100% confidentiels`
+    : `Engineered for ${cleanCountryName} standards, statutory accuracy, and 100% browser privacy`;
 
-  const faqsHeading = `Frequently Asked Questions About ${cleanCountryName} ${cleanCatName} Calculations`;
-  const faqsSubheading = `Clear answers regarding currency defaults, calculation accuracy, and privacy`;
+  const educationCards: EducationCard[] = isFr
+    ? [
+        {
+          icon: '💶',
+          title: 'Précision Euro (€) & Normes Françaises',
+          desc: 'Formatage monétaire en Euro (€) et conformité stricte avec les formules de calcul et barèmes légaux applicables en France.',
+        },
+        {
+          icon: '🔒',
+          title: 'Confidentialité 100% Locale',
+          desc: 'Aucune donnée financière ou personnelle n’est envoyée à des serveurs distants. Tous les calculs s’effectuent en mémoire dans votre navigateur.',
+        },
+        {
+          icon: '⚡',
+          title: 'Calculs Instantanés & Zéro Dérive',
+          desc: 'Algorithmes audités et optimisés pour éliminer les erreurs d’arrondi à virgule flottante et garantir des résultats exacts.',
+        },
+      ]
+    : catConfig?.educationCards?.map((c) => ({
+        icon: c.icon,
+        title: c.title,
+        desc: c.desc,
+      })) || [
+        {
+          icon: '🪙',
+          title: `${country.currency} (${country.currencySymbol}) Precision`,
+          desc: `Pre-calibrated with ${country.currency} formatting and ${cleanCountryName} statutory numerical conventions for seamless local calculations.`,
+        },
+        {
+          icon: '🔒',
+          title: '100% Client-Side Privacy',
+          desc: `Zero server transmission or data logging. All computations run directly within your browser session memory.`,
+        },
+        {
+          icon: '📐',
+          title: 'Mathematical Rigor',
+          desc: `Formulas verified against standard academic, financial, and scientific benchmarks to eliminate floating-point errors.`,
+        },
+      ];
 
-  const faqs: FAQItem[] = [
-    {
-      question: `Are these ${cleanCatName.toLowerCase()} calculators customized for ${cleanCountryName}?`,
-      answer: `Yes. Tools that compute monetary amounts default to ${country.currency} (${country.currencySymbol}) and apply ${cleanCountryName}'s numerical grouping (${country.numberSystem === 'lakh-crore' ? 'Lakh/Crore' : 'thousands standard'}) and relevant statutory rules.`,
-    },
-    {
-      question: `How accurate are the ${cleanCountryName} ${cleanCatName.toLowerCase()} calculations?`,
-      answer: `Every tool uses mathematically verified formulas audited against standard banking, scientific, and statutory standards for exact precision without rounding drift.`,
-    },
-    {
-      question: `Is my personal data saved when using ${cleanCountryName} calculators?`,
-      answer: `Never. Our platform operates 100% client-side in your local browser memory. No inputs, calculations, or identifiers are ever stored or uploaded to any remote server.`,
-    },
-    {
-      question: `Can I access other categories for ${cleanCountryName}?`,
-      answer: `Yes. You can explore all calculator categories for ${cleanCountryName} via the category grid on this page or return to the main ${cleanCountryName} country directory.`,
-    },
-  ];
+  const faqsHeading = isFr
+    ? `Questions Fréquemment Posées sur les Calculatrices de ${cleanCatName}`
+    : `Frequently Asked Questions About ${cleanCountryName} ${cleanCatName} Calculations`;
+
+  const faqsSubheading = isFr
+    ? `Réponses claires sur la conformité en France, les formules et la confidentialité des calculs`
+    : `Clear answers regarding currency defaults, calculation accuracy, and privacy`;
+
+  const faqs: FAQItem[] = isFr
+    ? [
+        {
+          question: `Ces calculatrices de ${cleanCatName.toLowerCase()} sont-elles adaptées à la France ?`,
+          answer: `Oui. Les calculs financiers et statistiques utilisent la devise Euro (€), le formatage numérique français (séparateur décimal et groupement par millier), ainsi que les barèmes réglementaires français.`,
+        },
+        {
+          question: `Quelle est la précision des résultats pour la catégorie ${cleanCatName.toLowerCase()} ?`,
+          answer: `Chaque calculatrice applique des algorithmes mathématiques conformes aux normes professionnelles et académiques pour éliminer toute dérive d’arrondi.`,
+        },
+        {
+          question: `Mes données de calcul sont-elles enregistrées ?`,
+          answer: `Non, jamais. La totalité du traitement s'exécute côté client dans votre navigateur web sans aucun transfert vers des serveurs tiers.`,
+        },
+        {
+          question: `Puis-je consulter d'autres catégories pour la France ?`,
+          answer: `Oui. Vous pouvez parcourir toutes les catégories françaises via la grille sur cette page ou revenir au répertoire principal France.`,
+        },
+      ]
+    : [
+        {
+          question: `Are these ${cleanCatName.toLowerCase()} calculators customized for ${cleanCountryName}?`,
+          answer: `Yes. Tools that compute monetary amounts default to ${country.currency} (${country.currencySymbol}) and apply ${cleanCountryName}'s numerical grouping (${country.numberSystem === 'lakh-crore' ? 'Lakh/Crore' : 'thousands standard'}) and relevant statutory rules.`,
+        },
+        {
+          question: `How accurate are the ${cleanCountryName} ${cleanCatName.toLowerCase()} calculations?`,
+          answer: `Every tool uses mathematically verified formulas audited against standard banking, scientific, and statutory standards for exact precision without rounding drift.`,
+        },
+        {
+          question: `Is my personal data saved when using ${cleanCountryName} calculators?`,
+          answer: `Never. Our platform operates 100% client-side in your local browser memory. No inputs, calculations, or identifiers are ever stored or uploaded to any remote server.`,
+        },
+        {
+          question: `Can I access other categories for ${cleanCountryName}?`,
+          answer: `Yes. You can explore all calculator categories for ${cleanCountryName} via the category grid on this page or return to the main ${cleanCountryName} country directory.`,
+        },
+      ];
 
   return {
     country,
+    categoryId,
+    isFrench: isFr,
     title: fullTitle,
     description,
     jsonLd,

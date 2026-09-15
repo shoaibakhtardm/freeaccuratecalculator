@@ -1,0 +1,426 @@
+---
+// src/pages/countries/france/indemnites-kilometriques.astro
+import Layout from '../../../layouts/Layout.astro';
+import ThemeToggle from '../../../components/ThemeToggle.astro';
+import { getCountryBySlug } from '../../../data/countries';
+
+const country = getCountryBySlug('france')!;
+
+const pageTitle = "Calculateur Indemnités Kilométriques 2026 | Barème Fiscal Officiel France";
+const pageDescription = "Calculez gratuitement vos indemnités kilométriques selon le barème officiel des impôts (DGFiP 2026). Prise en compte de la puissance fiscale (CV) et bonus électrique (+20%).";
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'FinancialProduct',
+      name: "Calculateur Indemnités Kilométriques 2026 France",
+      description: pageDescription,
+      inLanguage: 'fr-FR',
+      url: 'https://freeaccuratecalculator.com/countries/france/indemnites-kilometriques/',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://freeaccuratecalculator.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Pays', item: 'https://freeaccuratecalculator.com/countries/' },
+        { '@type': 'ListItem', position: 3, name: 'France', item: 'https://freeaccuratecalculator.com/countries/france/' },
+        { '@type': 'ListItem', position: 4, name: 'Automobile', item: 'https://freeaccuratecalculator.com/countries/france/automotive/' },
+        { '@type': 'ListItem', position: 5, name: 'Indemnités Kilométriques', item: 'https://freeaccuratecalculator.com/countries/france/indemnites-kilometriques/' },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: "Quel est le barème kilométrique applicable en 2026 ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Le barème kilométrique officiel est publié par la Direction Générale des Finances Publiques (DGFiP). Il s'articule en trois tranches de distance (jusqu'à 5 000 km, de 5 001 à 20 000 km, et au-delà de 20 000 km) et varie selon la puissance fiscale du véhicule (de 3 CV et moins jusqu'à 7 CV et plus).",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "Les véhicules 100% électriques bénéficient-ils d'une majoration fiscale ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Oui. En application de la réglementation fiscale française, le montant des frais kilométriques calculé selon le barème officiel est majoré de 20% pour tous les véhicules à motorisation 100% électrique.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "Quelles dépenses sont déjà couvertes par le barème kilométrique ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Le barème forfaitaire englobe la dépréciation du véhicule, l'assurance annuelle, les frais de carburant ou d'électricité, ainsi que les dépenses courantes d'entretien et de pneumatiques. Les frais de péage et de stationnement peuvent être ajoutés en sus sur justificatifs.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "Où reporter ce montant sur sa déclaration de revenus ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Le total déductible doit être additionné à vos éventuels autres frais professionnels et reporté dans la case 1AK (ou 1BK pour le déclarant 2) de la déclaration d'impôt sur le revenu n° 2042.",
+          },
+        },
+      ],
+    },
+  ],
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} jsonLd={jsonLd} lang="fr-FR" locale="fr">
+  <Fragment slot="head">
+    <link rel="canonical" href="https://freeaccuratecalculator.com/countries/france/indemnites-kilometriques/" />
+    <link rel="alternate" hreflang="fr" href="https://freeaccuratecalculator.com/countries/france/indemnites-kilometriques/" />
+    <link rel="alternate" hreflang="en" href="https://freeaccuratecalculator.com/countries/france/indemnites-kilometriques/?lang=en" />
+  </Fragment>
+
+  <!-- [HEADER] -->
+  <header
+    id="main-header"
+    class="sticky top-0 left-0 right-0 z-50 w-full bg-white/90 dark:bg-gray-950/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80 transition-all duration-300"
+  >
+    <div class="h-[2.5px] w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-[0_1px_6px_rgba(99,102,241,0.4)]" aria-hidden="true"></div>
+
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between h-[66px] sm:h-20 gap-2 sm:gap-4">
+      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        <a
+          href="/countries/france/"
+          aria-label="Calculatrices Gratuites France"
+          class="group relative inline-flex items-center gap-2 sm:gap-3.5 select-none shrink-0 py-1 rounded-2xl transition-all duration-300 hover:scale-[1.015]"
+        >
+          <div class="relative p-[1.2px] rounded-2xl bg-gradient-to-b from-blue-400/80 via-indigo-500/60 to-purple-700/80 shadow-sm">
+            <div class="relative flex h-9 w-9 sm:h-10.5 sm:w-10.5 items-center justify-center rounded-[13px] sm:rounded-[14.5px] bg-gradient-to-br from-blue-600 via-indigo-800 to-slate-950 text-white">
+              <span class="text-xl">🚗</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col justify-center text-left min-w-0">
+            <div class="flex items-center gap-1.5 leading-none">
+              <span class="font-outfit text-[19px] sm:text-[23px] font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent">
+                Free Accurate
+              </span>
+            </div>
+            <span class="font-outfit text-[11px] sm:text-[12px] font-semibold text-slate-500 dark:text-slate-400">
+              Indemnités Km France
+            </span>
+          </div>
+        </a>
+
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200/90 dark:border-slate-800/90 bg-slate-50 dark:bg-slate-900/80 text-xs font-bold text-slate-800 dark:text-slate-200">
+          <span>🇫🇷</span>
+          <span>France</span>
+        </span>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <a
+          href="/countries/france/automotive/"
+          class="text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors hidden md:inline-block"
+        >
+          ← Calculatrices Automobile
+        </a>
+        <ThemeToggle id="theme-toggle" />
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+      <a href="/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Accueil</a>
+      <span>/</span>
+      <a href="/countries/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Pays</a>
+      <span>/</span>
+      <a href="/countries/france/" class="hover:text-indigo-600 dark:hover:text-indigo-400">France</a>
+      <span>/</span>
+      <a href="/countries/france/automotive/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Automobile</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold">Indemnités Kilométriques</span>
+    </nav>
+
+    <!-- Hero Title -->
+    <div class="space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/50">
+        <span>Barème Officiel DGFiP 2026</span>
+        <span>•</span>
+        <span>Majoration Électrique +20%</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white font-outfit">
+        Calculateur d'Indemnités Kilométriques 2026
+      </h1>
+      <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
+        Estimez précisément le montant déductible de vos déplacements professionnels au titre des frais réels selon la puissance fiscale (CV) de votre véhicule et votre kilométrage annuel.
+      </p>
+    </div>
+
+    <!-- CALCULATOR CONTAINER -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      <!-- FORM INPUTS (7 cols) -->
+      <div class="lg:col-span-7 bg-white dark:bg-slate-900/90 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 p-5 sm:p-7 shadow-sm space-y-5">
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3">
+          1. Caractéristiques du Véhicule & Distance
+        </h2>
+
+        <!-- Puissance Fiscale -->
+        <div class="space-y-1.5">
+          <label for="ik-power" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Puissance Fiscale (Chevaux Fiscaux - CV)
+          </label>
+          <select
+            id="ik-power"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer"
+          >
+            <option value="3">3 CV et moins</option>
+            <option value="4">4 CV</option>
+            <option value="5" selected>5 CV (Puissance standard)</option>
+            <option value="6">6 CV</option>
+            <option value="7">7 CV et plus (Plafond fiscal)</option>
+          </select>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">Consultez la case P.6 de votre certificat d'immatriculation (carte grise).</p>
+        </div>
+
+        <!-- Motorisation -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Type de Motorisation
+          </label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 cursor-pointer hover:border-indigo-500 transition-colors">
+              <input type="radio" name="ik-motor" value="thermique" checked class="text-indigo-600 focus:ring-indigo-500" />
+              <div>
+                <div class="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-200">Essence / Diesel / Hybride</div>
+                <div class="text-[10px] text-slate-400">Barème officiel standard</div>
+              </div>
+            </label>
+            <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 cursor-pointer hover:border-indigo-500 transition-colors">
+              <input type="radio" name="ik-motor" value="electrique" class="text-indigo-600 focus:ring-indigo-500" />
+              <div>
+                <div class="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-200">100% Électrique ⚡</div>
+                <div class="text-[10px] text-emerald-600 dark:text-emerald-400 font-bold">+20% de majoration fiscale</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Distance annuelle -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center">
+            <label for="ik-distance" class="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+              Distance Annuelle Professionnelle
+            </label>
+            <span class="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400" id="ik-distance-display">12 500 km</span>
+          </div>
+          <div class="relative">
+            <input
+              type="number"
+              id="ik-distance"
+              min="100"
+              max="100000"
+              step="500"
+              value="12500"
+              class="w-full px-3.5 py-2.5 pr-14 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400 font-bold">km</span>
+          </div>
+          <input type="range" id="ik-distance-range" min="1000" max="40000" step="500" value="12500" class="w-full accent-indigo-600 cursor-pointer" />
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">Total des kilomètres effectués dans l'année pour vos trajets domicile-travail et rendez-vous professionnels.</p>
+        </div>
+      </div>
+
+      <!-- RESULTS PANEL (5 cols) -->
+      <div class="lg:col-span-5 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 text-white rounded-2xl border border-indigo-800/40 p-5 sm:p-7 shadow-xl space-y-6 sticky top-24">
+        <div>
+          <span class="text-xs uppercase tracking-wider text-indigo-300 font-semibold">Déduction Fiscale DGFiP</span>
+          <h3 class="text-xl font-bold font-outfit mt-0.5">Indemnité Kilométrique Déductible</h3>
+        </div>
+
+        <!-- Big Number -->
+        <div class="bg-white/5 rounded-2xl p-5 border border-white/10 text-center space-y-1">
+          <div class="text-[11px] font-mono tracking-wider text-indigo-300 uppercase">Montant Total Déductible</div>
+          <div class="text-4xl sm:text-5xl font-black font-outfit text-white tracking-tight" id="ik-result-main">
+            5 857,50 €
+          </div>
+          <div class="text-xs text-indigo-200/80 font-medium" id="ik-tranche-badge">
+            Tranche 2 : de 5 001 à 20 000 km
+          </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="space-y-2.5 text-xs sm:text-sm">
+          <div class="flex justify-between items-center py-1.5 border-b border-white/10">
+            <span class="text-slate-300">Coût kilométrique moyen</span>
+            <span class="font-bold text-white font-mono" id="ik-avg-rate">0,47 € / km</span>
+          </div>
+          <div class="flex justify-between items-center py-1.5 border-b border-white/10">
+            <span class="text-slate-300">Formule appliquée</span>
+            <span class="font-bold text-slate-200 font-mono text-[11px]" id="ik-formula-text">(d × 0,357) + 1 395 €</span>
+          </div>
+          <div class="flex justify-between items-center py-1.5 border-b border-white/10">
+            <span class="text-slate-300">Majoration électrique (+20%)</span>
+            <span class="font-bold text-emerald-400 font-mono" id="ik-electric-bonus">0,00 €</span>
+          </div>
+          <div class="flex justify-between items-center py-1.5">
+            <span class="text-slate-300">Économie d'impôt (TMI 30%)</span>
+            <span class="font-bold text-emerald-400 font-mono" id="ik-tax-saving">1 757,25 €</span>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-indigo-950/70 border border-indigo-500/30 text-[11px] text-indigo-200 leading-relaxed">
+          🚗 <strong>Rappel justificatif :</strong> Vous devez être propriétaire ou copropriétaire du véhicule (ou titulaire d'un contrat de leasing LOA/LLD) et tenir un carnet de bord des déplacements professionnels.
+        </div>
+      </div>
+    </div>
+
+    <!-- 150-200 WORDS EXPLANATORY CONTENT (CRUCIAL FOR TECHNICAL SEO) -->
+    <article class="bg-white dark:bg-slate-900/60 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 p-6 sm:p-8 space-y-4 text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
+      <h2 class="text-lg sm:text-xl font-bold font-outfit text-slate-900 dark:text-white">
+        Comment fonctionne le barème officiel des indemnités kilométriques en France ?
+      </h2>
+      <p>
+        Le <strong>barème des frais kilométriques</strong> est fixé chaque année par arrêté ministériel et publié au Bulletin Officiel des Finances Publiques (BOFiP). Il permet aux salariés optant pour les frais réels ainsi qu'aux dirigeants d'entreprise et professions libérales de déduire forfaitairement les dépenses liées à l'utilisation de leur véhicule personnel à des fins professionnelles.
+      </p>
+      <p>
+        Ce barème prend en considération la <strong>puissance fiscale du véhicule (exprimée en chevaux fiscaux CV)</strong> ainsi que la distance totale parcourue au cours de l'année civile, découpée en trois tranches progressives :
+      </p>
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>Jusqu'à 5 000 km :</strong> calcul direct par multiplication du kilométrage (ex. d × 0,636 € pour une voiture de 5 CV).</li>
+        <li><strong>De 5 001 km à 20 000 km :</strong> application d'un coefficient kilométrique intermédiaire combiné à une somme fixe (ex. (d × 0,357 €) + 1 395 €).</li>
+        <li><strong>Au-delà de 20 000 km :</strong> calcul linéaire au taux réduit (ex. d × 0,427 €).</li>
+      </ul>
+      <p>
+        Afin d'encourager la transition écologique, l'administration fiscale applique une <strong>majoration automatique de 20%</strong> sur le montant total calculé lorsque le véhicule utilisé est 100% électrique. Ce montant déductible couvre l'usure du véhicule, le carburant, l'assurance et l'entretien annuel. En revanche, les péages autoroutiers et tickets de stationnement peuvent être déduits en supplément sur présentation des justificatifs.
+      </p>
+    </article>
+  </main>
+</Layout>
+
+<script is:inline>
+  (function () {
+    const formatEUR = (val) => {
+      return new Intl.NumberFormat('fr-FR', {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(val);
+    };
+
+    const powerEl = document.getElementById('ik-power');
+    const distanceEl = document.getElementById('ik-distance');
+    const distanceRange = document.getElementById('ik-distance-range');
+    const distanceDisplay = document.getElementById('ik-distance-display');
+
+    const resultMain = document.getElementById('ik-result-main');
+    const trancheBadge = document.getElementById('ik-tranche-badge');
+    const avgRateEl = document.getElementById('ik-avg-rate');
+    const formulaTextEl = document.getElementById('ik-formula-text');
+    const electricBonusEl = document.getElementById('ik-electric-bonus');
+    const taxSavingEl = document.getElementById('ik-tax-saving');
+
+    // Barème Officiel DGFiP 2026 (Voitures)
+    const BAREME = {
+      '3': {
+        t1: (d) => d * 0.529,
+        t2: (d) => (d * 0.316) + 1065,
+        t3: (d) => d * 0.370,
+        labelT1: 'd × 0,529 €',
+        labelT2: '(d × 0,316) + 1 065 €',
+        labelT3: 'd × 0,370 €',
+      },
+      '4': {
+        t1: (d) => d * 0.606,
+        t2: (d) => (d * 0.340) + 1330,
+        t3: (d) => d * 0.407,
+        labelT1: 'd × 0,606 €',
+        labelT2: '(d × 0,340) + 1 330 €',
+        labelT3: 'd × 0,407 €',
+      },
+      '5': {
+        t1: (d) => d * 0.636,
+        t2: (d) => (d * 0.357) + 1395,
+        t3: (d) => d * 0.427,
+        labelT1: 'd × 0,636 €',
+        labelT2: '(d × 0,357) + 1 395 €',
+        labelT3: 'd × 0,427 €',
+      },
+      '6': {
+        t1: (d) => d * 0.665,
+        t2: (d) => (d * 0.374) + 1457,
+        t3: (d) => d * 0.447,
+        labelT1: 'd × 0,665 €',
+        labelT2: '(d × 0,374) + 1 457 €',
+        labelT3: 'd × 0,447 €',
+      },
+      '7': {
+        t1: (d) => d * 0.697,
+        t2: (d) => (d * 0.394) + 1515,
+        t3: (d) => d * 0.470,
+        labelT1: 'd × 0,697 €',
+        labelT2: '(d × 0,394) + 1 515 €',
+        labelT3: 'd × 0,470 €',
+      },
+    };
+
+    function calculateIK() {
+      const cv = powerEl.value;
+      const d = parseFloat(distanceEl.value) || 0;
+      const isElectric = document.querySelector('input[name="ik-motor"]:checked')?.value === 'electrique';
+
+      const config = BAREME[cv] || BAREME['5'];
+
+      let rawAmount = 0;
+      let trancheName = '';
+      let formulaStr = '';
+
+      if (d <= 5000) {
+        rawAmount = config.t1(d);
+        trancheName = 'Tranche 1 : jusqu’à 5 000 km';
+        formulaStr = config.labelT1;
+      } else if (d <= 20000) {
+        rawAmount = config.t2(d);
+        trancheName = 'Tranche 2 : de 5 001 à 20 000 km';
+        formulaStr = config.labelT2;
+      } else {
+        rawAmount = config.t3(d);
+        trancheName = 'Tranche 3 : au-delà de 20 000 km';
+        formulaStr = config.labelT3;
+      }
+
+      let bonus = 0;
+      let finalAmount = rawAmount;
+      if (isElectric) {
+        bonus = rawAmount * 0.20;
+        finalAmount = rawAmount + bonus;
+      }
+
+      const avgRate = d > 0 ? (finalAmount / d) : 0;
+      const taxSaving30 = finalAmount * 0.30;
+
+      if (resultMain) resultMain.textContent = formatEUR(finalAmount);
+      if (trancheBadge) trancheBadge.textContent = trancheName;
+      if (avgRateEl) avgRateEl.textContent = `${avgRate.toFixed(2).replace('.', ',')} € / km`;
+      if (formulaTextEl) formulaTextEl.textContent = formulaStr;
+      if (electricBonusEl) electricBonusEl.textContent = isElectric ? `+ ${formatEUR(bonus)}` : '0,00 € (Non éligible)';
+      if (taxSavingEl) taxSavingEl.textContent = formatEUR(taxSaving30);
+    }
+
+    distanceEl.addEventListener('input', (e) => {
+      distanceRange.value = e.target.value;
+      distanceDisplay.textContent = `${parseInt(e.target.value, 10).toLocaleString('fr-FR')} km`;
+      calculateIK();
+    });
+    distanceRange.addEventListener('input', (e) => {
+      distanceEl.value = e.target.value;
+      distanceDisplay.textContent = `${parseInt(e.target.value, 10).toLocaleString('fr-FR')} km`;
+      calculateIK();
+    });
+
+    powerEl.addEventListener('change', calculateIK);
+    document.querySelectorAll('input[name="ik-motor"]').forEach((r) => r.addEventListener('change', calculateIK));
+
+    calculateIK();
+  })();
+</script>

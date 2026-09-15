@@ -9,6 +9,8 @@ export interface Props {
 const { id = 'fac-language-modal' } = Astro.props;
 const currentLocale = (Astro.currentLocale || 'en').toLowerCase();
 const localeList = ALL_SUPPORTED_LOCALES.map((code) => LOCALES[code]);
+const pathname = Astro.url.pathname;
+const isFrench = pathname.includes('/countries/france') || pathname.startsWith('/fr') || currentLocale === 'fr';
 ---
 
 <div
@@ -33,17 +35,17 @@ const localeList = ALL_SUPPORTED_LOCALES.map((code) => LOCALES[code]);
         </span>
         <div>
           <h2 id="fac-modal-title" class="text-base font-bold text-slate-900 dark:text-white">
-            Select Language & Region
+            {isFrench ? "Choisir la Langue et la Région" : "Select Language & Region"}
           </h2>
-          <p class="text-xs text-slate-500 dark:text-slate-400">
-            Choose your preferred display language and regional formatting
+          <p id="fac-modal-subtitle" class="text-xs text-slate-500 dark:text-slate-400">
+            {isFrench ? "Choisissez votre langue d'affichage et le formatage régional préférés" : "Choose your preferred display language and regional formatting"}
           </p>
         </div>
       </div>
       <button
         type="button"
-        class="fac-modal-close p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-        aria-label="Close modal"
+        class="fac-modal-close p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+        aria-label={isFrench ? "Fermer la modal" : "Close modal"}
       >
         <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -63,7 +65,7 @@ const localeList = ALL_SUPPORTED_LOCALES.map((code) => LOCALES[code]);
         <input
           type="text"
           class="fac-lang-search w-full pl-9 pr-4 py-2 text-xs sm:text-sm bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-700/80 rounded-xl placeholder-slate-400 text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-          placeholder="Filter by language name or country..."
+          placeholder={isFrench ? "Filtrer par langue ou pays..." : "Filter by language name or country..."}
           autocomplete="off"
         />
       </div>
@@ -124,12 +126,13 @@ const localeList = ALL_SUPPORTED_LOCALES.map((code) => LOCALES[code]);
 
     <!-- Modal Footer -->
     <div class="px-5 py-3 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/70 dark:bg-slate-900/70 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-      <span>Global Languages + RTL Supported</span>
+      <span id="fac-modal-footer-text">{isFrench ? "Langues mondiales + Prise en charge RTL" : "Global Languages + RTL Supported"}</span>
       <button
         type="button"
-        class="fac-modal-close font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+        id="fac-modal-dismiss-btn"
+        class="fac-modal-close font-semibold text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors cursor-pointer"
       >
-        Dismiss
+        {isFrench ? "Fermer" : "Dismiss"}
       </button>
     </div>
   </div>
@@ -144,6 +147,22 @@ const localeList = ALL_SUPPORTED_LOCALES.map((code) => LOCALES[code]);
     const closeBtns = modal.querySelectorAll('.fac-modal-close');
     const searchInput = modal.querySelector('.fac-lang-search');
     const langItems = modal.querySelectorAll('.fac-lang-item');
+
+    // Dynamic French localization check
+    const path = window.location.pathname;
+    const docLang = document.documentElement.lang || '';
+    const isFr = path.includes('/countries/france') || path.startsWith('/fr') || docLang.startsWith('fr');
+    if (isFr) {
+      const titleEl = document.getElementById('fac-modal-title');
+      const subEl = document.getElementById('fac-modal-subtitle');
+      const footText = document.getElementById('fac-modal-footer-text');
+      const dismissBtn = document.getElementById('fac-modal-dismiss-btn');
+      if (titleEl) titleEl.textContent = 'Choisir la Langue et la Région';
+      if (subEl) subEl.textContent = "Choisissez votre langue d'affichage et le formatage régional préférés";
+      if (footText) footText.textContent = 'Langues mondiales + Prise en charge RTL';
+      if (dismissBtn) dismissBtn.textContent = 'Fermer';
+      if (searchInput) searchInput.setAttribute('placeholder', 'Filtrer par langue ou pays...');
+    }
 
     function openModal() {
       modal.classList.remove('opacity-0', 'pointer-events-none', 'invisible');

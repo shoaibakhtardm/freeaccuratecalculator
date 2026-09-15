@@ -558,7 +558,7 @@ const isCurrencyCalculator =
           const isRate = inp.name.toLowerCase().includes('rate') || inp.name.toLowerCase().includes('percent') || inp.name.toLowerCase().includes('apr');
           const isYear = inp.name.toLowerCase().includes('year') || inp.name.toLowerCase().includes('term') || inp.name.toLowerCase().includes('age');
           if (isRate) disp.textContent = `${Number(inp.value).toFixed(2)}%`;
-          else if (isYear) disp.textContent = `${inp.value} Years`;
+          else if (isYear) disp.textContent = `${inp.value} ${window.__facYearsLabel || 'Years'}`;
           else if (!isNaN(num)) disp.textContent = isCurrCalc ? `${currentCurrencySymbol} ${formatVal(num, 0)}` : formatVal(num, 2);
           else disp.textContent = inp.value;
         }
@@ -635,7 +635,7 @@ const isCurrencyCalculator =
             yrInvested += curMonthly;
           }
           rows.push({
-            period: `Year ${y}`,
+            period: `${window.__facYearPrefix || 'Year'} ${y}`,
             payment: Math.round(yrInvested),
             principal: Math.round(totalInvested),
             interest: Math.max(0, Math.round(futureValue - totalInvested)),
@@ -662,7 +662,7 @@ const isCurrencyCalculator =
           const interest = bal * rate;
           bal += interest;
           rows.push({
-            period: `Year ${y}`,
+            period: `${window.__facYearPrefix || 'Year'} ${y}`,
             payment: Math.round(annualDeposit),
             principal: Math.round(totalDep),
             interest: Math.round(bal - totalDep),
@@ -671,72 +671,64 @@ const isCurrencyCalculator =
         }
         res1 = Math.round(bal);
         res2 = Math.round(totalDep);
-        res3 = Math.max(0, Math.round(bal - totalDep));
+        res3 = Math.round(bal - totalDep);
       }
-      // 4. EPF Calculator (Employees' Provident Fund)
+      // 4. EPF Calculator (Employee Provident Fund)
       else if (slug.includes('epf')) {
-        const basic = parseFloat(inputs.basic_salary || inputs.monthly_salary || 50000) || 50000;
-        const empPct = (parseFloat(inputs.employee_pct || 12) || 12) / 100;
-        const emprPct = (parseFloat(inputs.employer_epf_pct || 3.67) || 3.67) / 100;
-        const hike = (parseFloat(inputs.annual_hike || 5) || 5) / 100;
-        const curAge = parseFloat(inputs.current_age || 25) || 25;
-        const retAge = parseFloat(inputs.retirement_age || 58) || 58;
-        const years = Math.min(Math.max(1, retAge - curAge), 40);
+        const basicSalary = parseFloat(inputs.basic_salary || inputs.salary || 30000) || 30000;
+        const currentAge = parseFloat(inputs.current_age || inputs.age || 25) || 25;
+        const retireAge = parseFloat(inputs.retire_age || inputs.retirement_age || 58) || 58;
+        const annualIncrement = (parseFloat(inputs.annual_increment || inputs.growth_rate || 5) || 5) / 100;
         const epfRate = (parseFloat(inputs.interest_rate || 8.25) || 8.25) / 100;
 
-        let bal = 0;
-        let totalDeposited = 0;
-        let curBasic = basic;
+        let totalYears = Math.min(Math.max(1, Math.round(retireAge - currentAge)), 40);
+        let curSalary = basicSalary;
+        let totalCorpus = 0;
+        let totalEmpContrib = 0;
+        let totalEmprContrib = 0;
 
-        for (let y = 1; y <= years; y++) {
-          let yrDep = 0;
-          for (let m = 1; m <= 12; m++) {
-            const monthlyContribution = curBasic * (empPct + emprPct);
-            yrDep += monthlyContribution;
-            bal += monthlyContribution;
-          }
-          totalDeposited += yrDep;
-          const intVal = bal * epfRate;
-          bal += intVal;
+        for (let y = 1; y <= totalYears; y++) {
+          const empMonthly = curSalary * 0.12;
+          const emprMonthly = curSalary * 0.0367;
+          const annualContrib = (empMonthly + emprMonthly) * 12;
+          totalCorpus = (totalCorpus + annualContrib) * (1 + epfRate);
+          totalEmpContrib += empMonthly * 12;
+          totalEmprContrib += emprMonthly * 12;
+
           rows.push({
-            period: `Age ${Math.round(curAge + y)} (Yr ${y})`,
-            payment: Math.round(yrDep),
-            principal: Math.round(totalDeposited),
-            interest: Math.round(bal - totalDeposited),
-            balance: Math.round(bal),
+            period: `${window.__facYearPrefix || 'Year'} ${y}`,
+            payment: Math.round(annualContrib),
+            principal: Math.round(totalEmpContrib + totalEmprContrib),
+            interest: Math.round(totalCorpus - (totalEmpContrib + totalEmprContrib)),
+            balance: Math.round(totalCorpus),
           });
-          curBasic = curBasic * (1 + hike);
+
+          curSalary = curSalary * (1 + annualIncrement);
         }
-        res1 = Math.round(bal);
-        res2 = Math.round(totalDeposited);
-        res3 = Math.max(0, Math.round(bal - totalDeposited));
+
+        res1 = Math.round(totalCorpus);
+        res2 = Math.round(totalEmpContrib + totalEmprContrib);
+        res3 = Math.round(totalCorpus - (totalEmpContrib + totalEmprContrib));
       }
-      // 5. Income Tax Calculator
-      else if (slug.includes('tax')) {
-        const gross = parseFloat(inputs.gross_income || inputs.annual_salary || inputs.income || 1000000) || 1000000;
-        const deductions = parseFloat(inputs.deductions || 75000) || 75000;
-        const taxable = Math.max(0, gross - deductions);
-
-        // Indian New Regime 2026 default
+      // 5. Income Tax Estimator
+      else if (slug.includes('tax') || slug.includes('income')) {
+        const income = parseFloat(inputs.gross_income || inputs.income || 75000) || 0;
+        const deductions = parseFloat(inputs.deductions || 0) || 0;
+        const taxable = Math.max(0, income - deductions);
         let tax = 0;
-        if (taxable <= 300000) tax = 0;
-        else if (taxable <= 700000) tax = (taxable - 300000) * 0.05;
-        else if (taxable <= 1000000) tax = 20000 + (taxable - 700000) * 0.10;
-        else if (taxable <= 1200000) tax = 50000 + (taxable - 1000000) * 0.15;
-        else if (taxable <= 1500000) tax = 80000 + (taxable - 1200000) * 0.20;
-        else tax = 140000 + (taxable - 1500000) * 0.30;
 
-        // 87A Rebate
-        if (taxable <= 700000) tax = 0;
-        // 4% Cess
+        if (taxable > 1500000) tax = 150000 + (taxable - 1500000) * 0.30;
+        else if (taxable > 1200000) tax = 90000 + (taxable - 1200000) * 0.20;
+        else if (taxable > 800000) tax = 30000 + (taxable - 800000) * 0.15;
+        else if (taxable > 400000) tax = (taxable - 400000) * 0.05;
+
         const cess = tax * 0.04;
         const totalTax = Math.round(tax + cess);
-        const takeHome = Math.round(gross - totalTax);
+        const takeHome = Math.max(0, income - totalTax);
 
         rows.push(
-          { period: 'Gross Annual Income', payment: Math.round(gross), principal: Math.round(gross), interest: 0, balance: Math.round(gross) },
-          { period: 'Total Standard Deductions', payment: Math.round(deductions), principal: Math.round(taxable), interest: 0, balance: Math.round(taxable) },
-          { period: 'Income Tax (Before Cess)', payment: Math.round(tax), principal: Math.round(tax), interest: 0, balance: Math.round(tax) },
+          { period: 'Base Taxable Income', payment: Math.round(taxable), principal: Math.round(taxable), interest: 0, balance: Math.round(taxable) },
+          { period: 'Standard Income Tax', payment: Math.round(tax), principal: Math.round(tax), interest: 0, balance: Math.round(tax) },
           { period: 'Health & Education Cess (4%)', payment: Math.round(cess), principal: Math.round(cess), interest: 0, balance: Math.round(cess) },
           { period: 'Net Take-Home Pay', payment: Math.round(takeHome), principal: Math.round(takeHome), interest: 0, balance: Math.round(takeHome) }
         );
@@ -764,7 +756,7 @@ const isCurrencyCalculator =
             yrDeposits += monthlyP;
           }
           rows.push({
-            period: `Year ${y}`,
+            period: `${window.__facYearPrefix || 'Year'} ${y}`,
             payment: Math.round(yrDeposits),
             principal: Math.round(totalDeposited),
             interest: Math.max(0, Math.round(bal - totalDeposited)),
@@ -784,7 +776,16 @@ const isCurrencyCalculator =
       const leg2LabelEl = document.getElementById('legend-2-label');
       const heroLabelEl = document.getElementById('hero-result-label');
 
-      if (slug.includes('ppf')) {
+      if (typeof window.__facCustomDynamicLabels === 'function') {
+        const custom = window.__facCustomDynamicLabels(slug);
+        if (custom) {
+          if (heroLabelEl && custom.hero) heroLabelEl.textContent = custom.hero;
+          if (sec1LabelEl && custom.sec1) sec1LabelEl.textContent = custom.sec1;
+          if (sec2LabelEl && custom.sec2) sec2LabelEl.textContent = custom.sec2;
+          if (leg1LabelEl && custom.leg1) leg1LabelEl.textContent = custom.leg1;
+          if (leg2LabelEl && custom.leg2) leg2LabelEl.textContent = custom.leg2;
+        }
+      } else if (slug.includes('ppf')) {
         if (heroLabelEl) heroLabelEl.textContent = 'Total Maturity Amount (EEE Tax-Free)';
         if (sec1LabelEl) sec1LabelEl.textContent = 'Total Capital Deposited';
         if (sec2LabelEl) sec2LabelEl.textContent = 'Total Interest Earned';
@@ -899,7 +900,7 @@ const isCurrencyCalculator =
           if (input) range.value = input.value;
         });
         recalculate();
-        showToast('Reset parameters to initial defaults');
+        showToast(window.__facToastResetMsg || 'Reset parameters to initial defaults');
       });
     }
 
@@ -908,7 +909,7 @@ const isCurrencyCalculator =
     if (copyBtn) {
       copyBtn.addEventListener('click', () => {
         const txt = `${calcName}: ${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val1, 0)}`;
-        navigator.clipboard.writeText(txt).then(() => showToast('Result copied to clipboard!'));
+        navigator.clipboard.writeText(txt).then(() => showToast(window.__facToastCopyMsg || 'Result copied to clipboard!'));
       });
     }
 
@@ -945,7 +946,7 @@ const isCurrencyCalculator =
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        showToast('Schedule exported to CSV!');
+        showToast(window.__facToastExportMsg || 'Schedule exported to CSV!');
       });
     }
 

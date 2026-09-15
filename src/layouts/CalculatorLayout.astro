@@ -102,6 +102,7 @@ const combinedSchemas = [softwareAppSchema, ...extraSchemas];
   jsonLd={combinedSchemas}
   lang={lang}
 >
+  <slot name="header" slot="header" />
   <div class="max-w-7xl mx-auto">
     <!-- Breadcrumbs -->
     <Breadcrumbs

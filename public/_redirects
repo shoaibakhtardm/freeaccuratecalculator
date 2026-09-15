@@ -15,12 +15,46 @@
 /index.html                         /                             301
 /home                               /                             301
 
-# Deep-nested country category routes redirected to canonical country calculator URLs
-/countries/:country/finance/:slug       /countries/:country/:slug      301
-/countries/:country/math/:slug          /countries/:country/:slug      301
-/countries/:country/health/:slug        /countries/:country/:slug      301
-/countries/:country/business/:slug      /countries/:country/:slug      301
-/countries/:country/insurance/:slug     /countries/:country/:slug      301
-/countries/:country/everyday/:slug      /countries/:country/:slug      301
-/countries/:country/technology/:slug    /countries/:country/:slug      301
+
+# Generic calculators removed from France pages redirected to relevant French tools
+/countries/france/age-calculator/           /countries/france/retirement-calculator/    301
+/countries/france/age-calculator            /countries/france/retirement-calculator/    301
+/countries/france/calorie-calculator/       /countries/france/health/                   301
+/countries/france/calorie-calculator        /countries/france/health/                   301
+/countries/france/bmi-calculator/           /countries/france/health/                   301
+/countries/france/bmi-calculator            /countries/france/health/                   301
+/countries/france/date-calculator/          /countries/france/everyday/                 301
+/countries/france/date-calculator           /countries/france/everyday/                 301
+
+# French slug redirects
+/calculateur-age                            /countries/france/retirement-calculator/    301
+/calculateur-age/                           /countries/france/retirement-calculator/    301
+/calculateur-calories                       /countries/france/health/                   301
+/calculateur-calories/                      /countries/france/health/                   301
+/calculateur-imc                            /countries/france/health/                   301
+/calculateur-imc/                           /countries/france/health/                   301
+/calculateur-dates                          /countries/france/everyday/                 301
+/calculateur-dates/                         /countries/france/everyday/                 301
+
+# Aliases for new French calculators
+/countries/france/apl-simulator/            /countries/france/simulateur-apl/           301
+/countries/france/apl-simulator             /countries/france/simulateur-apl/           301
+/countries/france/severance-calculator/     /countries/france/indemnite-licenciement/   301
+/countries/france/severance-calculator      /countries/france/indemnite-licenciement/   301
+/countries/france/real-expenses-calculator/ /countries/france/frais-reels-abattement/   301
+/countries/france/real-expenses-calculator  /countries/france/frais-reels-abattement/   301
+/countries/france/mileage-allowance-calculator/ /countries/france/indemnites-kilometriques/ 301
+/countries/france/mileage-allowance-calculator  /countries/france/indemnites-kilometriques/ 301
+/countries/france/math/percentage-calculator/   /fr/math/percentage-calculator/             301
+/countries/france/math/percentage-calculator    /fr/math/percentage-calculator/             301
+/countries/france/percentage-calculator/        /fr/math/percentage-calculator/             301
+/countries/france/percentage-calculator         /fr/math/percentage-calculator/             301
+/countries/france/finance/simulateur-apl/       /countries/france/simulateur-apl/           301
+/countries/france/finance/simulateur-apl        /countries/france/simulateur-apl/           301
+/countries/france/finance/indemnite-licenciement/ /countries/france/indemnite-licenciement/ 301
+/countries/france/finance/indemnite-licenciement  /countries/france/indemnite-licenciement/ 301
+/countries/france/finance/frais-reels-abattement/ /countries/france/frais-reels-abattement/ 301
+/countries/france/finance/frais-reels-abattement  /countries/france/frais-reels-abattement/ 301
+/countries/france/finance/indemnites-kilometriques/ /countries/france/indemnites-kilometriques/ 301
+/countries/france/finance/indemnites-kilometriques  /countries/france/indemnites-kilometriques/ 301
 

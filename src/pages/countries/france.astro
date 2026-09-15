@@ -14,11 +14,60 @@ const currentYear = new Date().getFullYear();
 
 const jsonLd = {
   '@context': 'https://schema.org',
-  '@type': 'CollectionPage',
-  name: pageTitle,
-  description: pageDescription,
-  url: 'https://freeaccuratecalculator.com/countries/france/',
-  inLanguage: 'fr-FR',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      name: pageTitle,
+      description: pageDescription,
+      url: 'https://freeaccuratecalculator.com/countries/france/',
+      inLanguage: 'fr-FR',
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Ces calculatrices sont-elles personnalisées pour la France ?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Oui. Chaque outil s'initialise par défaut en EUR (€) et respecte le formatage numérique français, l'amortissement d'emprunt à capital décroissant et les conventions réglementaires locales.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Comment le formatage des nombres est-il géré pour la France ?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Les calculs sont affichés en utilisant le système de groupement international standard (ex. 1 000 000 €) conformément aux normes officielles françaises.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Mes informations financières ou personnelles sont-elles stockées ?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Jamais. Tous les calculs s'exécutent à 100 % localement dans votre navigateur client sans transmission, journalisation ni enregistrement de données. Aucun compte ni donnée personnelle n'est requis.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Puis-je changer le symbole de la devise ?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Oui. Bien que l'euro (€) soit configuré par défaut pour la France, les calculatrices financières incluent un sélecteur instantané pour analyser des devises internationales.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Ces calculatrices sont-elles entièrement gratuites ?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Oui. Tous les outils sur Free Accurate Calculator sont gratuits en permanence, avec un accès illimité, sans mur payant et sans aucun abonnement requis.',
+          },
+        },
+      ],
+    },
+  ],
 };
 
 // 20 Categories mapped to French and English
@@ -49,139 +98,19 @@ const CATEGORIES_DATA = [
 // (Foreign regional tools 401k, Roth IRA, PPF, EPF, Gratuity completely REMOVED)
 const FRANCE_TOOLS_DATA = [
   {
-    id: 'age-calculator',
-    nameFr: "Calculateur d'Âge",
-    nameEn: 'Age Calculator',
-    shortNameFr: 'Âge',
-    shortNameEn: 'Age',
-    icon: '🎂',
-    badgeFr: 'Précision Calendrier',
-    badgeEn: 'Calendar Precision',
-    descFr: "Calcul de l'âge exact en années, mois et jours avec précision calendrier.",
-    descEn: 'Exact age calculation in years, months, and days.',
-    categoryFr: 'Quotidien',
-    searchKeywords: "age anniversaire naissance jours duree calendrier date naissance",
-    href: '/countries/france/age-calculator/',
-  },
-  {
-    id: 'calorie-calculator',
-    nameFr: 'Calculateur de Calories',
-    nameEn: 'Calorie Calculator',
-    shortNameFr: 'Calories',
-    shortNameEn: 'Calorie',
-    icon: '🍎',
-    badgeFr: 'Mifflin-St Jeor',
-    badgeEn: 'Mifflin-St Jeor',
-    descFr: 'Estimation des besoins caloriques journaliers selon la formule Mifflin-St Jeor.',
-    descEn: 'Daily caloric expenditure estimate using Mifflin-St Jeor equation.',
-    categoryFr: 'Santé',
-    searchKeywords: 'calorie calories tdee depense energetique metabolisme regime nutrition repas',
-    href: '/countries/france/calorie-calculator/',
-  },
-  {
-    id: 'date-calculator',
-    nameFr: 'Calculateur de Dates',
-    nameEn: 'Date Calculator',
-    shortNameFr: 'Dates',
-    shortNameEn: 'Date',
-    icon: '📅',
-    badgeFr: 'Durée & Jours',
-    badgeEn: 'Time Duration',
-    descFr: 'Calcul de la durée entre deux dates et décompte des jours ouvrés.',
-    descEn: 'Calculate duration between two dates and business days.',
-    categoryFr: 'Quotidien',
-    searchKeywords: 'date dates jours calendrier duree ouvrees ouvrees delai temps',
-    href: '/countries/france/date-calculator/',
-  },
-  {
-    id: 'percentage-calculator',
-    nameFr: 'Calculateur de Pourcentage',
-    nameEn: 'Percentage Calculator',
-    shortNameFr: 'Pourcentage',
-    shortNameEn: 'Percentage',
-    icon: '📐',
-    badgeFr: 'Multi-Modes',
-    badgeEn: 'Multi-Mode',
-    descFr: 'Calculs de hausse, baisse relative et pourcentages inversés multi-modes.',
-    descEn: 'Percentage change, increases, discounts, and multi-mode ratio calculations.',
-    categoryFr: 'Mathématiques',
-    searchKeywords: 'pourcentage promo remise reduction taux proportion solde fraction',
-    href: '/countries/france/percentage-calculator/',
-  },
-  {
-    id: 'retirement-calculator',
-    nameFr: 'Calculateur de Retraite',
-    nameEn: 'Retirement Calculator',
-    shortNameFr: 'Retraite',
-    shortNameEn: 'Retirement',
-    icon: '🏖️',
-    badgeFr: 'Planification',
-    badgeEn: 'Retirement Plan',
-    descFr: 'Simulation et planification de rente pour préparer votre retraite future.',
-    descEn: 'Retirement wealth projection and pension income simulation.',
-    categoryFr: 'Finance',
-    searchKeywords: 'retraite pension capital rente simulation depart epargne trimestres',
-    href: '/countries/france/retirement-calculator/',
-  },
-  {
-    id: 'vat-calculator',
-    nameFr: 'Calculateur de TVA',
-    nameEn: 'Sales Tax Calculator',
-    shortNameFr: 'TVA',
-    shortNameEn: 'VAT',
+    id: 'frais-reels-abattement',
+    nameFr: 'Frais Réels vs Abattement 10%',
+    nameEn: 'Actual Expenses vs 10% Flat',
+    shortNameFr: 'Frais Réels',
+    shortNameEn: 'Actual Expenses',
     icon: '🧾',
-    badgeFr: 'TVA 20% & 5,5%',
-    badgeEn: 'Tax Inclusive',
-    descFr: 'Calcul de la taxe sur la valeur ajoutée aux taux français 20%, 10% et 5,5%.',
-    descEn: 'French VAT calculation for standard 20%, intermediate 10%, and reduced 5.5% rates.',
+    badgeFr: 'Optimisation Fiscale',
+    badgeEn: 'Tax Optimization',
+    descFr: "Comparateur d'optimisation fiscale entre abattement forfaitaire 10% et frais réels.",
+    descEn: 'Tax comparison between automatic 10% deduction and itemized expenses.',
     categoryFr: 'Finance',
-    searchKeywords: 'tva taxe hors taxe ttc ht valeur ajoutee taux 20 5.5 facturation',
-    href: '/finance/sales-tax-calculator/',
-  },
-  {
-    id: 'bmi-calculator',
-    nameFr: 'Calculateur IMC',
-    nameEn: 'BMI Calculator',
-    shortNameFr: 'IMC',
-    shortNameEn: 'BMI',
-    icon: '⚖️',
-    badgeFr: 'Norme OMS',
-    badgeEn: 'WHO Standard',
-    descFr: "Indice de Masse Corporelle selon les critères officiels de l'OMS.",
-    descEn: 'Body Mass Index assessment based on WHO clinical standards.',
-    categoryFr: 'Santé',
-    searchKeywords: 'imc bmi masse corporelle poids taille surpoids corpulence sante',
-    href: '/countries/france/bmi-calculator/',
-  },
-  {
-    id: 'step-up-sip-calculator',
-    nameFr: 'Épargne avec Boost',
-    nameEn: 'Step-Up SIP',
-    shortNameFr: 'Boost Épargne',
-    shortNameEn: 'Step-Up SIP',
-    icon: '🚀',
-    badgeFr: 'Boost Annuel',
-    badgeEn: 'Annual Boost',
-    descFr: "Projection de capital avec augmentation annuelle programmée des versements.",
-    descEn: 'Systematic savings with annual incremental contributions and compound growth.',
-    categoryFr: 'Finance',
-    searchKeywords: 'epargne boost versements incrementation progressive investissement placement',
-    href: '/countries/france/step-up-sip-calculator/',
-  },
-  {
-    id: 'sip-calculator',
-    nameFr: 'Épargne Programmée',
-    nameEn: 'SIP Calculator',
-    shortNameFr: 'Épargne Prog.',
-    shortNameEn: 'SIP',
-    icon: '📈',
-    badgeFr: 'Fonds & Épargne',
-    badgeEn: 'Mutual Fund',
-    descFr: "Calcul de rendement pour plans d'épargne réguliers et placements.",
-    descEn: 'Periodic systematic investment plan and wealth compound returns.',
-    categoryFr: 'Finance',
-    searchKeywords: 'epargne programmee fonds placement interets versement regulier',
-    href: '/countries/france/sip-calculator/',
+    searchKeywords: 'frais reels abattement 10 declaration impot impots deduction kilometrique repas',
+    href: '/countries/france/frais-reels-abattement/',
   },
   {
     id: 'income-tax-calculator',
@@ -197,6 +126,36 @@ const FRANCE_TOOLS_DATA = [
     categoryFr: 'Finance',
     searchKeywords: 'impot impots revenu bareme fiscal tranches tmi quotient familial bercy',
     href: '/countries/france/income-tax-calculator/',
+  },
+  {
+    id: 'indemnite-licenciement',
+    nameFr: 'Indemnité de Licenciement',
+    nameEn: 'Severance Pay Calculator',
+    shortNameFr: 'Licenciement',
+    shortNameEn: 'Severance',
+    icon: '⚖️',
+    badgeFr: 'Code du Travail',
+    badgeEn: 'Labor Code',
+    descFr: "Calcul de l'indemnité légale de licenciement selon l'ancienneté et exonération fiscale.",
+    descEn: 'Statutory severance compensation under the French Labor Code.',
+    categoryFr: 'Juridique',
+    searchKeywords: 'licenciement indemnite rupture contrat travail anciennete preavis rupture conventionnelle',
+    href: '/countries/france/indemnite-licenciement/',
+  },
+  {
+    id: 'indemnites-kilometriques',
+    nameFr: 'Indemnités Kilométriques 2026',
+    nameEn: 'Mileage Allowance 2026',
+    shortNameFr: 'Indemnités Km',
+    shortNameEn: 'Mileage',
+    icon: '🚗',
+    badgeFr: 'Barème DGFIP',
+    badgeEn: 'DGFIP Scale',
+    descFr: "Calcul du barème kilométrique officiel des impôts pour véhicule thermique ou électrique.",
+    descEn: 'Official French tax mileage allowance schedule with 20% EV bonus.',
+    categoryFr: 'Automobile',
+    searchKeywords: 'indemnites kilometriques bareme km impot frais trajet domicile travail cv electrique',
+    href: '/countries/france/indemnites-kilometriques/',
   },
   {
     id: 'compound-interest-calculator',
@@ -226,7 +185,22 @@ const FRANCE_TOOLS_DATA = [
     descEn: 'Reducing balance loan amortization schedule and monthly payments.',
     categoryFr: 'Finance',
     searchKeywords: 'mensualite pret credit emprunt echeance amortissement capital taux',
-    href: '/finance/emi-calculator/',
+    href: '/countries/france/emi-calculator/',
+  },
+  {
+    id: 'percentage-calculator',
+    nameFr: 'Calculateur de Pourcentage',
+    nameEn: 'Percentage Calculator',
+    shortNameFr: 'Pourcentage',
+    shortNameEn: 'Percentage',
+    icon: '📐',
+    badgeFr: 'Multi-Modes',
+    badgeEn: 'Multi-Mode',
+    descFr: 'Calculs de hausse, baisse relative et pourcentages inversés multi-modes.',
+    descEn: 'Percentage change, increases, discounts, and multi-mode ratio calculations.',
+    categoryFr: 'Mathématiques',
+    searchKeywords: 'pourcentage promo remise reduction taux proportion solde fraction',
+    href: '/countries/france/percentage-calculator/',
   },
   {
     id: 'auto-loan-calculator',
@@ -234,7 +208,7 @@ const FRANCE_TOOLS_DATA = [
     nameEn: 'Auto Loan Calculator',
     shortNameFr: 'Prêt Auto',
     shortNameEn: 'Auto Loan',
-    icon: '🚗',
+    icon: '🚙',
     badgeFr: 'Crédit Véhicule',
     badgeEn: 'Vehicle APR',
     descFr: 'Simulation de crédit automobile, mensualités et coût total du véhicule.',
@@ -259,6 +233,21 @@ const FRANCE_TOOLS_DATA = [
     href: '/countries/france/mortgage-calculator/',
   },
   {
+    id: 'retirement-calculator',
+    nameFr: 'Calculateur de Retraite',
+    nameEn: 'Retirement Calculator',
+    shortNameFr: 'Retraite',
+    shortNameEn: 'Retirement',
+    icon: '🏖️',
+    badgeFr: 'Planification',
+    badgeEn: 'Retirement Plan',
+    descFr: 'Simulation et planification de rente pour préparer votre retraite future.',
+    descEn: 'Retirement wealth projection and pension income simulation.',
+    categoryFr: 'Finance',
+    searchKeywords: 'retraite pension capital rente simulation depart epargne trimestres',
+    href: '/countries/france/retirement-calculator/',
+  },
+  {
     id: 'salary-calculator',
     nameFr: 'Salaire Net',
     nameEn: 'Salary Calculator',
@@ -272,6 +261,66 @@ const FRANCE_TOOLS_DATA = [
     categoryFr: 'Finance',
     searchKeywords: 'salaire brut net fiche paie cotisations charges bulletin remuneration',
     href: '/countries/france/salary-calculator/',
+  },
+  {
+    id: 'simulateur-apl',
+    nameFr: 'Simulateur APL 2026',
+    nameEn: 'APL Housing Aid Simulator',
+    shortNameFr: 'APL',
+    shortNameEn: 'APL',
+    icon: '🏢',
+    badgeFr: 'Barème CAF 2026',
+    badgeEn: 'CAF Scale',
+    descFr: "Estimation de l'Aide Personnalisée au Logement selon la zone CAF et les revenus.",
+    descEn: 'Personalized housing aid estimation based on CAF zones and household income.',
+    categoryFr: 'Immobilier',
+    searchKeywords: 'apl caf aide personnalisee logement loyer simulation etudiant meuble zone',
+    href: '/countries/france/simulateur-apl/',
+  },
+  {
+    id: 'sip-calculator',
+    nameFr: 'Épargne Programmée',
+    nameEn: 'SIP Calculator',
+    shortNameFr: 'Épargne Prog.',
+    shortNameEn: 'SIP',
+    icon: '📈',
+    badgeFr: 'Fonds & Épargne',
+    badgeEn: 'Mutual Fund',
+    descFr: "Calcul de rendement pour plans d'épargne réguliers et placements.",
+    descEn: 'Periodic systematic investment plan and wealth compound returns.',
+    categoryFr: 'Finance',
+    searchKeywords: 'epargne programmee fonds placement interets versement regulier',
+    href: '/countries/france/sip-calculator/',
+  },
+  {
+    id: 'step-up-sip-calculator',
+    nameFr: 'Épargne avec Boost',
+    nameEn: 'Step-Up SIP',
+    shortNameFr: 'Boost Épargne',
+    shortNameEn: 'Step-Up SIP',
+    icon: '🚀',
+    badgeFr: 'Boost Annuel',
+    badgeEn: 'Annual Boost',
+    descFr: "Projection de capital avec augmentation annuelle programmée des versements.",
+    descEn: 'Systematic savings with annual incremental contributions and compound growth.',
+    categoryFr: 'Finance',
+    searchKeywords: 'epargne boost versements incrementation progressive investissement placement',
+    href: '/countries/france/step-up-sip-calculator/',
+  },
+  {
+    id: 'vat-calculator',
+    nameFr: 'Calculateur de TVA',
+    nameEn: 'Sales Tax Calculator',
+    shortNameFr: 'TVA',
+    shortNameEn: 'VAT',
+    icon: '🧾',
+    badgeFr: 'TVA 20% & 5,5%',
+    badgeEn: 'Tax Inclusive',
+    descFr: 'Calcul de la taxe sur la valeur ajoutée aux taux français 20%, 10% et 5,5%.',
+    descEn: 'French VAT calculation for standard 20%, intermediate 10%, and reduced 5.5% rates.',
+    categoryFr: 'Finance',
+    searchKeywords: 'tva taxe hors taxe ttc ht valeur ajoutee taux 20 5.5 facturation',
+    href: '/countries/france/vat-calculator/',
   },
 ];
 
@@ -826,6 +875,7 @@ const FAQS_DATA = [
         <div
           id="no-results-msg"
           class="hidden col-span-3 w-full py-10 px-4 text-center rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50"
+          style="display: none;"
         >
           <div class="text-3xl sm:text-4xl mb-2">🔍</div>
           <p class="font-outfit text-sm sm:text-base font-bold text-slate-800 dark:text-slate-200">
@@ -855,11 +905,16 @@ const FAQS_DATA = [
               {calc.icon}
             </div>
 
-            <!-- Title: line-clamp-2 to prevent UI overflow -->
-            <div class="my-1.5 w-full min-w-0 px-0.5">
-              <h3 class="font-outfit text-[11.5px] sm:text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
-                <span class="tool-name-mobile inline sm:hidden" data-tool-id={calc.id}>{calc.shortNameFr}</span>
-                <span class="tool-name-desktop hidden sm:inline" data-tool-id={calc.id}>{calc.nameFr}</span>
+            <!-- Title & Prefix: proper separation and space between prefix and tool name -->
+            <div class="my-1.5 w-full min-w-0 px-0.5 flex flex-col items-center justify-center gap-1">
+              <span
+                class="tool-card-prefix inline-block text-[10px] sm:text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider select-none leading-none"
+                data-tool-id={calc.id}
+              >
+                {calc.shortNameFr}
+              </span>
+              <h3 class="font-outfit text-[11.5px] sm:text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 leading-tight">
+                <span class="tool-card-name" data-tool-id={calc.id}>{calc.nameFr}</span>
               </h3>
             </div>
 
@@ -1195,21 +1250,21 @@ const FAQS_DATA = [
           'converter': 'Convertisseur',
         },
         tools: {
-          'age-calculator': { name: "Calculateur d'Âge", short: 'Âge', badge: 'Précision Calendrier' },
-          'calorie-calculator': { name: 'Calculateur de Calories', short: 'Calories', badge: 'Mifflin-St Jeor' },
-          'date-calculator': { name: 'Calculateur de Dates', short: 'Dates', badge: 'Durée & Jours' },
-          'percentage-calculator': { name: 'Calculateur de Pourcentage', short: 'Pourcentage', badge: 'Multi-Mode' },
-          'retirement-calculator': { name: 'Calculateur de Retraite', short: 'Retraite', badge: 'Rente & Capital' },
-          'vat-calculator': { name: 'Calculateur de TVA', short: 'TVA', badge: 'TVA 20% & 5,5%' },
-          'bmi-calculator': { name: "Calculateur d'IMC", short: 'IMC', badge: 'Norme OMS' },
-          'step-up-sip-calculator': { name: 'Épargne avec Boost', short: 'Boost Épargne', badge: 'Boost Annuel' },
-          'sip-calculator': { name: 'Épargne Programmée', short: 'Épargne Prog.', badge: 'Fonds & Épargne' },
+          'frais-reels-abattement': { name: 'Frais Réels vs Abattement 10%', short: 'Frais Réels', badge: 'Optimisation Fiscale' },
           'income-tax-calculator': { name: 'Impôt sur le Revenu', short: 'Impôt Revenu', badge: 'Barème 2026' },
+          'indemnite-licenciement': { name: 'Indemnité de Licenciement', short: 'Licenciement', badge: 'Code du Travail' },
+          'indemnites-kilometriques': { name: 'Indemnités Kilométriques 2026', short: 'Indemnités Km', badge: 'Barème DGFIP' },
           'compound-interest-calculator': { name: 'Intérêts Composés', short: 'Intérêts Comp.', badge: 'Croissance Capital' },
           'emi-calculator': { name: 'Mensualités de Prêt', short: 'Mensualités', badge: 'Capital Décroissant' },
+          'percentage-calculator': { name: 'Calculateur de Pourcentage', short: 'Pourcentage', badge: 'Multi-Mode' },
           'auto-loan-calculator': { name: 'Prêt Auto', short: 'Prêt Auto', badge: 'Crédit Véhicule' },
           'mortgage-calculator': { name: 'Prêt Immobilier', short: 'Prêt Immo', badge: 'Amortissement' },
+          'retirement-calculator': { name: 'Calculateur de Retraite', short: 'Retraite', badge: 'Rente & Capital' },
           'salary-calculator': { name: 'Salaire Net', short: 'Salaire Net', badge: 'Net Après Charges' },
+          'simulateur-apl': { name: 'Simulateur APL 2026', short: 'APL', badge: 'Barème CAF 2026' },
+          'sip-calculator': { name: 'Épargne Programmée', short: 'Épargne Prog.', badge: 'Fonds & Épargne' },
+          'step-up-sip-calculator': { name: 'Épargne avec Boost', short: 'Boost Épargne', badge: 'Boost Annuel' },
+          'vat-calculator': { name: 'Calculateur de TVA', short: 'TVA', badge: 'TVA 20% & 5,5%' },
         },
         faqs: {
           'faq-1': {
@@ -1244,7 +1299,7 @@ const FAQS_DATA = [
         heroH1Highlight: "Fast, Accurate & Clean.",
         heroSubtitle: "Calculators optimized for France's financial conventions, EUR (€) formatting, and standard international groupings. Zero cold starts and instant client privacy.",
         categoriesHeading: "Categories",
-        categoriesPlaceholder: "Search a calculator (e.g. loan, vat, bmi, salary, age)...",
+        categoriesPlaceholder: "Search a calculator (e.g. loan, vat, salary, apl, mileage)...",
         toolsHeading: "Popular France Calculators",
         featureHeading: "Why Use Free Accurate France Calculators?",
         featureSubheading: "Engineered for France financial standards, statutory formulas, and complete client privacy.",
@@ -1259,7 +1314,7 @@ const FAQS_DATA = [
         dropdownTitle: "Suggested Tools",
         dropdownEnterHint: "press enter ↵ to open",
         noResultsTitle: "No calculators found",
-        noResultsSubtitle: "Try searching for loan, vat, bmi, salary, or age",
+        noResultsSubtitle: "Try searching for loan, vat, salary, apl, mileage",
         footerBadge: "Popular France Calculators",
         footerNavHint: "navigate",
         footerEscHint: "close",
@@ -1271,8 +1326,8 @@ const FAQS_DATA = [
           "Official 2026 Income Tax Slabs...",
           "Reducing Balance EMI Calculator...",
           "Retirement & Savings Projection...",
-          "Exact Age Calculator...",
-          "Calorie & TDEE Calculator..."
+          "APL Housing Aid Simulator 2026...",
+          "Official Mileage Allowance 2026..."
         ],
         categories: {
           'finance': 'Finance',
@@ -1297,21 +1352,21 @@ const FAQS_DATA = [
           'converter': 'Converter',
         },
         tools: {
-          'age-calculator': { name: 'Age Calculator', short: 'Age', badge: 'Calendar Precision' },
-          'calorie-calculator': { name: 'Calorie Calculator', short: 'Calorie', badge: 'Mifflin-St Jeor' },
-          'date-calculator': { name: 'Date Calculator', short: 'Date', badge: 'Time Duration' },
-          'percentage-calculator': { name: 'Percentage Calculator', short: 'Percentage', badge: 'Multi-Mode' },
-          'retirement-calculator': { name: 'Retirement Calculator', short: 'Retirement', badge: 'Retirement Plan' },
-          'vat-calculator': { name: 'Sales Tax Calculator', short: 'VAT', badge: 'Tax Inclusive' },
-          'bmi-calculator': { name: 'BMI Calculator', short: 'BMI', badge: 'WHO Standard' },
-          'step-up-sip-calculator': { name: 'Step-Up SIP', short: 'Step-Up SIP', badge: 'Annual Boost' },
-          'sip-calculator': { name: 'SIP Calculator', short: 'SIP', badge: 'Mutual Fund' },
+          'frais-reels-abattement': { name: 'Actual Expenses vs 10% Flat', short: 'Actual Expenses', badge: 'Tax Optimization' },
           'income-tax-calculator': { name: 'Income Tax Calculator', short: 'Income Tax', badge: 'Statutory Slabs' },
+          'indemnite-licenciement': { name: 'Severance Pay Calculator', short: 'Severance', badge: 'Labor Code' },
+          'indemnites-kilometriques': { name: 'Mileage Allowance 2026', short: 'Mileage', badge: 'DGFIP Scale' },
           'compound-interest-calculator': { name: 'Compound Interest', short: 'Compound Int', badge: 'Wealth Growth' },
           'emi-calculator': { name: 'EMI Calculator', short: 'EMI', badge: 'Reducing Balance' },
+          'percentage-calculator': { name: 'Percentage Calculator', short: 'Percentage', badge: 'Multi-Mode' },
           'auto-loan-calculator': { name: 'Auto Loan Calculator', short: 'Auto Loan', badge: 'Vehicle APR' },
           'mortgage-calculator': { name: 'Mortgage Calculator', short: 'Mortgage', badge: 'Amortization' },
+          'retirement-calculator': { name: 'Retirement Calculator', short: 'Retirement', badge: 'Retirement Plan' },
           'salary-calculator': { name: 'Salary Calculator', short: 'Salary Take-Home', badge: 'Net Pay' },
+          'simulateur-apl': { name: 'APL Housing Aid Simulator', short: 'APL', badge: 'CAF Scale' },
+          'sip-calculator': { name: 'SIP Calculator', short: 'SIP', badge: 'Mutual Fund' },
+          'step-up-sip-calculator': { name: 'Step-Up SIP', short: 'Step-Up SIP', badge: 'Annual Boost' },
+          'vat-calculator': { name: 'Sales Tax Calculator', short: 'VAT', badge: 'Tax Inclusive' },
         },
         faqs: {
           'faq-1': {
@@ -1367,6 +1422,10 @@ const FAQS_DATA = [
     const dirFooterEscHint = document.getElementById('directory-footer-esc-hint');
     const cards = document.querySelectorAll('.calc-card');
     const noResultsDiv = document.getElementById('no-results-msg');
+    if (noResultsDiv) {
+      noResultsDiv.classList.add('hidden');
+      noResultsDiv.style.display = 'none';
+    }
     const dataStoreEl = document.getElementById('france-searchable-tools-json');
 
     let allSearchableTools = [];
@@ -1472,8 +1531,10 @@ const FAQS_DATA = [
       if (noResultsDiv) {
         if (matchCount === 0 && q.length > 0) {
           noResultsDiv.classList.remove('hidden');
+          noResultsDiv.style.display = 'block';
         } else {
           noResultsDiv.classList.add('hidden');
+          noResultsDiv.style.display = 'none';
         }
       }
 
@@ -1632,12 +1693,12 @@ const FAQS_DATA = [
       const toolsHeading = document.getElementById('tools-directory-heading');
       if (toolsHeading) toolsHeading.textContent = data.toolsHeading;
 
-      document.querySelectorAll('.tool-name-mobile').forEach((el) => {
+      document.querySelectorAll('.tool-card-prefix, .tool-name-mobile').forEach((el) => {
         const id = el.getAttribute('data-tool-id');
         if (id && data.tools[id]) el.textContent = data.tools[id].short;
       });
 
-      document.querySelectorAll('.tool-name-desktop').forEach((el) => {
+      document.querySelectorAll('.tool-card-name, .tool-name-desktop').forEach((el) => {
         const id = el.getAttribute('data-tool-id');
         if (id && data.tools[id]) el.textContent = data.tools[id].name;
       });

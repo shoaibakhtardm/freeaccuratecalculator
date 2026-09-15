@@ -15,6 +15,26 @@ export default defineConfig({
       prefixDefaultLocale: false,
     },
   },
+  redirects: {
+    '/countries/france/age-calculator': '/countries/france/retirement-calculator/',
+    '/countries/france/calorie-calculator': '/countries/france/health/',
+    '/countries/france/bmi-calculator': '/countries/france/health/',
+    '/countries/france/date-calculator': '/countries/france/everyday/',
+    '/calculateur-age': '/countries/france/retirement-calculator/',
+    '/calculateur-calories': '/countries/france/health/',
+    '/calculateur-imc': '/countries/france/health/',
+    '/calculateur-dates': '/countries/france/everyday/',
+    '/countries/france/apl-simulator': '/countries/france/simulateur-apl/',
+    '/countries/france/severance-calculator': '/countries/france/indemnite-licenciement/',
+    '/countries/france/real-expenses-calculator': '/countries/france/frais-reels-abattement/',
+    '/countries/france/mileage-allowance-calculator': '/countries/france/indemnites-kilometriques/',
+    '/countries/france/math/percentage-calculator': '/fr/math/percentage-calculator/',
+    '/countries/france/percentage-calculator': '/fr/math/percentage-calculator/',
+    '/countries/france/finance/simulateur-apl': '/countries/france/simulateur-apl/',
+    '/countries/france/finance/indemnite-licenciement': '/countries/france/indemnite-licenciement/',
+    '/countries/france/finance/frais-reels-abattement': '/countries/france/frais-reels-abattement/',
+    '/countries/france/finance/indemnites-kilometriques': '/countries/france/indemnites-kilometriques/',
+  },
   integrations: [
     sitemap({
       i18n: {

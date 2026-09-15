@@ -6,6 +6,7 @@ import { COUNTRY_LIST, type CountryConfig } from '../../../data/countries';
 import { CALCULATORS, type CalculatorEntry } from '../../../data/calculatorRegistry';
 import { getCountryCategories, type CategoryItem } from '../../../data/categories';
 import { getCountryCategoryPageConfig, type CountryPageConfig } from '../../../data/countryPageConfig';
+import { frCategories, frUI } from '../../../data/i18n';
 
 export async function getStaticPaths() {
   const paths: Array<{
@@ -20,9 +21,20 @@ export async function getStaticPaths() {
   }> = [];
 
   for (const country of COUNTRY_LIST) {
-    // 1. Prerender popular calculators for this country
+    // 1. Prerender popular calculators for this country (all non-foreign calculators for France)
     const popularSet = new Set(country.popularCalculators);
-    const calcsForCountry = CALCULATORS.filter((c) => popularSet.has(c.id));
+    const calcsForCountry = country.slug === 'france'
+      ? CALCULATORS.filter(
+          (c) =>
+            ![
+              '401k-calculator',
+              'roth-ira-calculator',
+              'ppf-calculator',
+              'epf-calculator',
+              'gratuity-calculator',
+            ].includes(c.id)
+        )
+      : CALCULATORS.filter((c) => popularSet.has(c.id));
 
     for (const calc of calcsForCountry) {
       paths.push({
@@ -36,6 +48,22 @@ export async function getStaticPaths() {
           calc,
         },
       });
+
+      // Special aliases for France calculators
+      if (country.slug === 'france') {
+        if (calc.id === 'sales-tax-calculator') {
+          paths.push({
+            params: { country: 'france', slug: 'vat-calculator' },
+            props: { type: 'calculator', country, calc },
+          });
+        }
+        if (calc.id === 'loan-calculator') {
+          paths.push({
+            params: { country: 'france', slug: 'emi-calculator' },
+            props: { type: 'calculator', country, calc },
+          });
+        }
+      }
     }
 
     // 2. Prerender country category directory pages
@@ -69,10 +97,11 @@ interface Props {
 }
 
 const { type, country, calc, categoryConfig } = Astro.props;
+const isFrench = country?.slug === 'france' || Astro.params.country === 'france';
 ---
 
 {type === 'category' && categoryConfig ? (
-  <DirectoryPageView {...categoryConfig} />
+  <DirectoryPageView {...categoryConfig} isFrench={isFrench} />
 ) : (
   calc && <CountryCalculatorView country={country} calc={calc} />
 )}

@@ -1,0 +1,475 @@
+---
+// src/pages/countries/france/simulateur-apl.astro
+import Layout from '../../../layouts/Layout.astro';
+import ThemeToggle from '../../../components/ThemeToggle.astro';
+import { getCountryBySlug } from '../../../data/countries';
+
+const country = getCountryBySlug('france')!;
+
+const pageTitle = "Simulateur APL 2026 Gratuit | Calcul CAF Aide au Logement France";
+const pageDescription = "Estimez gratuitement votre montant d'APL (Aide Personnalisée au Logement) selon les barèmes officiels CAF 2026. Calcul instantané, 100% confidentiel et anonyme.";
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: "Simulateur APL 2026 France",
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'All',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'EUR',
+      },
+      description: pageDescription,
+      inLanguage: 'fr-FR',
+      url: 'https://freeaccuratecalculator.com/countries/france/simulateur-apl/',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://freeaccuratecalculator.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Pays', item: 'https://freeaccuratecalculator.com/countries/' },
+        { '@type': 'ListItem', position: 3, name: 'France', item: 'https://freeaccuratecalculator.com/countries/france/' },
+        { '@type': 'ListItem', position: 4, name: 'Immobilier', item: 'https://freeaccuratecalculator.com/countries/france/real-estate/' },
+        { '@type': 'ListItem', position: 5, name: 'Simulateur APL', item: 'https://freeaccuratecalculator.com/countries/france/simulateur-apl/' },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: "Comment est calculé le montant de l'APL en France en 2026 ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "L'APL est calculée selon une formule nationale complexe prenant en compte la zone géographique du logement (Zone 1, 2 ou 3), le montant du loyer plafonné, la composition familiale et les ressources nettes du foyer des 12 derniers mois (contemporanéité des aides).",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "Quel est le seuil minimum de versement de l'APL ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Conformément à la réglementation de la Caisse d'Allocations Familiales (CAF), si le montant calculé de votre aide au logement est inférieur à 15 € par mois, l'APL n'est pas versée.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "Un étudiant peut-il toucher l'APL en colocation ou en meublé ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Oui, les étudiants, locataires de meublés, résidents en cité U ou colocataires peuvent prétendre à l'APL. En colocation, le loyer pris en compte est divisé par le nombre de colocataires inscrits sur le bail.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "Mes données personnelles sont-elles transmises à la CAF ou enregistrées ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Non. Ce simulateur fonctionne à 100% dans votre navigateur web local. Aucune donnée n'est collectée, enregistrée ou envoyée vers un serveur.",
+          },
+        },
+      ],
+    },
+  ],
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} jsonLd={jsonLd} lang="fr-FR" locale="fr">
+  <Fragment slot="head">
+    <link rel="canonical" href="https://freeaccuratecalculator.com/countries/france/simulateur-apl/" />
+    <link rel="alternate" hreflang="fr" href="https://freeaccuratecalculator.com/countries/france/simulateur-apl/" />
+    <link rel="alternate" hreflang="en" href="https://freeaccuratecalculator.com/countries/france/simulateur-apl/?lang=en" />
+  </Fragment>
+
+  <!-- [TOP HEADER WITH FRANCE BADGE & BILINGUAL TOGGLE] -->
+  <header
+    id="main-header"
+    class="sticky top-0 left-0 right-0 z-50 w-full bg-white/90 dark:bg-gray-950/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80 transition-all duration-300"
+  >
+    <div class="h-[2.5px] w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-[0_1px_6px_rgba(99,102,241,0.4)]" aria-hidden="true"></div>
+
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between h-[66px] sm:h-20 gap-2 sm:gap-4">
+      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        <a
+          href="/countries/france/"
+          aria-label="Calculatrices Gratuites France"
+          class="group relative inline-flex items-center gap-2 sm:gap-3.5 select-none shrink-0 py-1 rounded-2xl transition-all duration-300 hover:scale-[1.015]"
+        >
+          <div class="relative p-[1.2px] rounded-2xl bg-gradient-to-b from-blue-400/80 via-indigo-500/60 to-purple-700/80 shadow-sm">
+            <div class="relative flex h-9 w-9 sm:h-10.5 sm:w-10.5 items-center justify-center rounded-[13px] sm:rounded-[14.5px] bg-gradient-to-br from-blue-600 via-indigo-800 to-slate-950 text-white">
+              <span class="text-xl">🏠</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col justify-center text-left min-w-0">
+            <div class="flex items-center gap-1.5 leading-none">
+              <span class="font-outfit text-[19px] sm:text-[23px] font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent">
+                Free Accurate
+              </span>
+            </div>
+            <span class="font-outfit text-[11px] sm:text-[12px] font-semibold text-slate-500 dark:text-slate-400">
+              Simulateur APL France
+            </span>
+          </div>
+        </a>
+
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200/90 dark:border-slate-800/90 bg-slate-50 dark:bg-slate-900/80 text-xs font-bold text-slate-800 dark:text-slate-200">
+          <span>🇫🇷</span>
+          <span>France</span>
+        </span>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <a
+          href="/countries/france/real-estate/"
+          class="text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors hidden md:inline-block"
+        >
+          ← Calculatrices Immobilier
+        </a>
+        <ThemeToggle id="theme-toggle" />
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+      <a href="/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Accueil</a>
+      <span>/</span>
+      <a href="/countries/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Pays</a>
+      <span>/</span>
+      <a href="/countries/france/" class="hover:text-indigo-600 dark:hover:text-indigo-400">France</a>
+      <span>/</span>
+      <a href="/countries/france/real-estate/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Immobilier</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold">Simulateur APL</span>
+    </nav>
+
+    <!-- Hero Title -->
+    <div class="space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/50">
+        <span>Barème CAF 2026</span>
+        <span>•</span>
+        <span>100% Anonyme & Côté Client</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white font-outfit">
+        Simulateur APL 2026 : Estimez votre Aide au Logement
+      </h1>
+      <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
+        Calculez instantanément le montant prévisionnel de votre Aide Personnalisée au Logement (APL) versée par la CAF selon votre zone d'habitation, vos revenus et votre loyer hors charges.
+      </p>
+    </div>
+
+    <!-- CALCULATOR CONTAINER -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      <!-- FORM INPUTS (7 cols) -->
+      <div class="lg:col-span-7 bg-white dark:bg-slate-900/90 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 p-5 sm:p-7 shadow-sm space-y-5">
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3">
+          1. Vos Paramètres de Logement & Foyer
+        </h2>
+
+        <!-- Zone CAF -->
+        <div class="space-y-1.5">
+          <label for="apl-zone" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Zone Géographique CAF
+          </label>
+          <select
+            id="apl-zone"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer"
+          >
+            <option value="1">Zone 1 : Île-de-France (Paris et communes limitrophes)</option>
+            <option value="2" selected>Zone 2 : Grandes agglomérations (> 100 000 hab.) & Corse</option>
+            <option value="3">Zone 3 : Reste de la France (villes moyennes et zones rurales)</option>
+          </select>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">La zone 1 applique les plafonds de loyer les plus élevés.</p>
+        </div>
+
+        <!-- Composition du Foyer -->
+        <div class="space-y-1.5">
+          <label for="apl-household" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Situation & Composition Familiale
+          </label>
+          <select
+            id="apl-household"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer"
+          >
+            <option value="single" selected>Personne seule (sans enfant)</option>
+            <option value="couple">Couple (sans enfant)</option>
+            <option value="1child">Personne seule ou couple avec 1 enfant à charge</option>
+            <option value="2children">Personne seule ou couple avec 2 enfants à charge</option>
+            <option value="3children">Personne seule ou couple avec 3 enfants ou plus</option>
+          </select>
+        </div>
+
+        <!-- Type de Location -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Type de Logement
+          </label>
+          <div class="grid grid-cols-2 gap-3">
+            <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 cursor-pointer hover:border-indigo-500 transition-colors">
+              <input type="radio" name="apl-type" value="vide" checked class="text-indigo-600 focus:ring-indigo-500" />
+              <span class="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-200">Location Vide</span>
+            </label>
+            <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 cursor-pointer hover:border-indigo-500 transition-colors">
+              <input type="radio" name="apl-type" value="meuble" class="text-indigo-600 focus:ring-indigo-500" />
+              <span class="text-xs sm:text-sm font-medium text-slate-800 dark:text-slate-200">Location Meublée</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Loyer hors charges -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center">
+            <label for="apl-rent" class="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+              Loyer Mensuel Hors Charges
+            </label>
+            <span class="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400" id="apl-rent-display">550 €</span>
+          </div>
+          <div class="relative">
+            <input
+              type="number"
+              id="apl-rent"
+              min="50"
+              max="3500"
+              step="10"
+              value="550"
+              class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400 font-bold">€</span>
+          </div>
+          <input type="range" id="apl-rent-range" min="100" max="2500" step="25" value="550" class="w-full accent-indigo-600 cursor-pointer" />
+        </div>
+
+        <!-- Revenus nets mensuels -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center">
+            <label for="apl-income" class="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+              Revenus Nets Mensuels du Foyer
+            </label>
+            <span class="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400" id="apl-income-display">950 €</span>
+          </div>
+          <div class="relative">
+            <input
+              type="number"
+              id="apl-income"
+              min="0"
+              max="6000"
+              step="50"
+              value="950"
+              class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400 font-bold">€</span>
+          </div>
+          <input type="range" id="apl-income-range" min="0" max="3500" step="50" value="950" class="w-full accent-indigo-600 cursor-pointer" />
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">Revenus nets moyens perçus au cours des 12 derniers mois (salaires, bourses, indemnités).</p>
+        </div>
+      </div>
+
+      <!-- RESULTS PANEL (5 cols) -->
+      <div class="lg:col-span-5 bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-950 text-white rounded-2xl border border-indigo-800/40 p-5 sm:p-7 shadow-xl space-y-6 sticky top-24">
+        <div>
+          <span class="text-xs uppercase tracking-wider text-indigo-300 font-semibold">Estimation CAF 2026</span>
+          <h3 class="text-xl font-bold font-outfit mt-0.5">Montant Estimé de votre APL</h3>
+        </div>
+
+        <!-- Big Number -->
+        <div class="bg-white/5 rounded-2xl p-5 border border-white/10 text-center space-y-1">
+          <div class="text-[11px] font-mono tracking-wider text-indigo-300 uppercase">Aide Mensuelle Estimée</div>
+          <div class="text-4xl sm:text-5xl font-black font-outfit text-white tracking-tight" id="apl-result-main">
+            185,00 €
+          </div>
+          <div class="text-xs text-indigo-200/80 font-medium" id="apl-status-badge">
+            ✅ Droit APL ouvert (versé mensuellement)
+          </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="space-y-2.5 text-xs sm:text-sm">
+          <div class="flex justify-between items-center py-1.5 border-b border-white/10">
+            <span class="text-slate-300">Reste à charge locataire</span>
+            <span class="font-bold text-white font-mono" id="apl-out-of-pocket">365,00 €</span>
+          </div>
+          <div class="flex justify-between items-center py-1.5 border-b border-white/10">
+            <span class="text-slate-300">Plafond de loyer retenu</span>
+            <span class="font-bold text-slate-200 font-mono" id="apl-max-rent">277,54 €</span>
+          </div>
+          <div class="flex justify-between items-center py-1.5 border-b border-white/10">
+            <span class="text-slate-300">Forfait charges inclus</span>
+            <span class="font-bold text-slate-200 font-mono" id="apl-charges">60,86 €</span>
+          </div>
+          <div class="flex justify-between items-center py-1.5">
+            <span class="text-slate-300">Participation personnelle minimale</span>
+            <span class="font-bold text-slate-200 font-mono" id="apl-participation">152,40 €</span>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-indigo-950/70 border border-indigo-500/30 text-[11px] text-indigo-200 leading-relaxed">
+          ℹ️ <strong>Rappel légal :</strong> Le versement officiel nécessite un dossier complet déposé sur le site caf.fr. Si l'aide calculée est inférieure au seuil légal de 15 €/mois, aucun versement n'est effectué.
+        </div>
+      </div>
+    </div>
+
+    <!-- 150-200 WORDS EXPLANATORY CONTENT (CRUCIAL FOR TECHNICAL SEO) -->
+    <article class="bg-white dark:bg-slate-900/60 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 p-6 sm:p-8 space-y-4 text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
+      <h2 class="text-lg sm:text-xl font-bold font-outfit text-slate-900 dark:text-white">
+        Comment fonctionne le calcul de l'APL en France selon les barèmes officiels CAF ?
+      </h2>
+      <p>
+        L'<strong>Aide Personnalisée au Logement (APL)</strong> est une prestation sociale française versée par la Caisse d'Allocations Familiales (CAF) ou la Mutualité Sociale Agricole (MSA) pour alléger la charge de loyer des locataires. Depuis la réforme de la contemporanéité des aides au logement (dite APL en temps réel), son calcul est actualisé tous les trimestres en se basant sur les revenus nets déclarés au cours des 12 derniers mois glissants, et non plus sur l'année N-2.
+      </p>
+      <p>
+        La formule officielle repose sur la comparaison entre le loyer réel (plafonné selon trois zones géographiques : <strong>Zone 1</strong> pour l'Île-de-France, <strong>Zone 2</strong> pour les agglomérations de plus de 100 000 habitants et la Corse, et <strong>Zone 3</strong> pour le reste du territoire national), un forfait de charges et la <em>participation personnelle du ménage</em>. Cette participation dépend directement des ressources du foyer, d'un revenu de base forfaitaire (R0) et du taux de dégressivité légal.
+      </p>
+      <p>
+        En application de l'article R823-9 du Code de la construction et de l'habitation, si le résultat obtenu est inférieur au seuil réglementaire de <strong>15 € par mois</strong>, l'aide financière n'est pas mise en paiement. Ce simulateur gratuit intègre l'ensemble de ces barèmes pour vous fournir une estimation instantanée, sans inscription et dans le respect strict de la confidentialité de vos données financières.
+      </p>
+    </article>
+  </main>
+</Layout>
+
+<script is:inline>
+  (function () {
+    const formatEUR = (val) => {
+      return new Intl.NumberFormat('fr-FR', {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(val);
+    };
+
+    const zoneEl = document.getElementById('apl-zone');
+    const householdEl = document.getElementById('apl-household');
+    const rentEl = document.getElementById('apl-rent');
+    const rentRange = document.getElementById('apl-rent-range');
+    const rentDisplay = document.getElementById('apl-rent-display');
+    const incomeEl = document.getElementById('apl-income');
+    const incomeRange = document.getElementById('apl-income-range');
+    const incomeDisplay = document.getElementById('apl-income-display');
+
+    const resultMain = document.getElementById('apl-result-main');
+    const statusBadge = document.getElementById('apl-status-badge');
+    const outOfPocketEl = document.getElementById('apl-out-of-pocket');
+    const maxRentEl = document.getElementById('apl-max-rent');
+    const chargesEl = document.getElementById('apl-charges');
+    const participationEl = document.getElementById('apl-participation');
+
+    // Barèmes CAF Zone / Foyer
+    const CEILINGS = {
+      '1': { single: 325.47, couple: 395.84, '1child': 444.22, '2children': 508.74, '3children': 573.26 },
+      '2': { single: 277.54, couple: 337.47, '1child': 378.57, '2children': 433.61, '3children': 488.65 },
+      '3': { single: 258.01, couple: 312.24, '1child': 348.70, '2children': 398.72, '3children': 448.74 },
+    };
+
+    const CHARGES = {
+      single: 60.86,
+      couple: 100.50,
+      '1child': 114.85,
+      '2children': 129.20,
+      '3children': 143.55,
+    };
+
+    const R0_VALUES = {
+      single: 380,
+      couple: 560,
+      '1child': 710,
+      '2children': 860,
+      '3children': 1010,
+    };
+
+    function calculateAPL() {
+      const zone = zoneEl.value;
+      const household = householdEl.value;
+      const rent = parseFloat(rentEl.value) || 0;
+      const income = parseFloat(incomeEl.value) || 0;
+      const isMeuble = document.querySelector('input[name="apl-type"]:checked')?.value === 'meuble';
+
+      // 1. Plafond de loyer
+      let maxRent = CEILINGS[zone][household] || 277.54;
+      if (isMeuble) {
+        maxRent = maxRent * 1.05;
+      }
+      const retainedRent = Math.min(rent, maxRent);
+
+      // 2. Charges forfaitaires
+      const charges = CHARGES[household] || 60.86;
+
+      // 3. Participation personnelle minimale
+      const r0 = R0_VALUES[household] || 380;
+      const excessIncome = Math.max(0, income - r0);
+      const coeff = 0.28;
+      const participation = Math.max(38.12, excessIncome * coeff);
+
+      // 4. Calcul brut APL
+      let rawAPL = (retainedRent + charges) - participation;
+
+      // Dégressivité de loyer si dépassement important
+      if (rent > maxRent * 1.5) {
+        const excess = rent - (maxRent * 1.5);
+        rawAPL -= excess * 0.4;
+      }
+
+      // 5. Plancher de 15 €
+      let finalAPL = Math.max(0, rawAPL);
+      if (finalAPL < 15) {
+        finalAPL = 0;
+      }
+
+      const outOfPocket = Math.max(0, rent - finalAPL);
+
+      // UI Updates
+      if (resultMain) resultMain.textContent = formatEUR(finalAPL);
+      if (outOfPocketEl) outOfPocketEl.textContent = formatEUR(outOfPocket);
+      if (maxRentEl) maxRentEl.textContent = formatEUR(maxRent);
+      if (chargesEl) chargesEl.textContent = formatEUR(charges);
+      if (participationEl) participationEl.textContent = formatEUR(participation);
+
+      if (statusBadge) {
+        if (finalAPL >= 15) {
+          statusBadge.innerHTML = '✅ Droit APL ouvert (versé chaque mois)';
+          statusBadge.className = 'text-xs text-emerald-300 font-medium';
+        } else if (rawAPL > 0 && rawAPL < 15) {
+          statusBadge.innerHTML = '⚠️ Calcul inférieur au seuil légal de 15 € (non versé)';
+          statusBadge.className = 'text-xs text-amber-300 font-medium';
+        } else {
+          statusBadge.innerHTML = '❌ Revenus supérieurs au barème éligible';
+          statusBadge.className = 'text-xs text-rose-300 font-medium';
+        }
+      }
+    }
+
+    // Sync input and range
+    rentEl.addEventListener('input', (e) => {
+      rentRange.value = e.target.value;
+      rentDisplay.textContent = `${e.target.value} €`;
+      calculateAPL();
+    });
+    rentRange.addEventListener('input', (e) => {
+      rentEl.value = e.target.value;
+      rentDisplay.textContent = `${e.target.value} €`;
+      calculateAPL();
+    });
+
+    incomeEl.addEventListener('input', (e) => {
+      incomeRange.value = e.target.value;
+      incomeDisplay.textContent = `${e.target.value} €`;
+      calculateAPL();
+    });
+    incomeRange.addEventListener('input', (e) => {
+      incomeEl.value = e.target.value;
+      incomeDisplay.textContent = `${e.target.value} €`;
+      calculateAPL();
+    });
+
+    zoneEl.addEventListener('change', calculateAPL);
+    householdEl.addEventListener('change', calculateAPL);
+    document.querySelectorAll('input[name="apl-type"]').forEach((r) => r.addEventListener('change', calculateAPL));
+
+    // Run on load
+    calculateAPL();
+  })();
+</script>

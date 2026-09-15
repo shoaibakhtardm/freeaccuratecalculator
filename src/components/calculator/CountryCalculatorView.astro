@@ -2,9 +2,12 @@
 // src/components/calculator/CountryCalculatorView.astro
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 import MasterCalculatorWrapper from './MasterCalculatorWrapper.astro';
+import ThemeToggle from '../ThemeToggle.astro';
 import type { CountryConfig } from '../../data/countries';
 import { CALCULATORS, CATEGORY_METADATA, type CalculatorEntry } from '../../data/calculatorRegistry';
 import type { CalculatorEntity } from '../../types/calculator';
+import { FRANCE_CALCULATORS_DATA } from '../../data/franceCalculatorsData';
+import { frCategories, enCategories, frToolNames } from '../../data/i18n';
 
 interface Props {
   country: CountryConfig;
@@ -14,7 +17,25 @@ interface Props {
 const { country, calc } = Astro.props;
 const catMeta = CATEGORY_METADATA[calc.category];
 
-const isFinanceOrInsurance = calc.category === 'finance' || calc.category === 'insurance' || calc.category === 'real-estate' || calc.category === 'business';
+const isFrance = country.slug === 'france';
+const pathnameSlug = Astro.url.pathname.split('/').filter(Boolean).pop() || calc.id;
+const activeCalcId = pathnameSlug === 'vat-calculator'
+  ? 'vat-calculator'
+  : pathnameSlug === 'emi-calculator'
+  ? 'emi-calculator'
+  : calc.id;
+
+const franceData = isFrance ? (FRANCE_CALCULATORS_DATA[activeCalcId] || FRANCE_CALCULATORS_DATA[calc.id] || null) : null;
+const frInfo = isFrance ? (frToolNames[activeCalcId] || frToolNames[calc.id] || null) : null;
+
+const frCategoryName = isFrance ? (frCategories[calc.category] || catMeta?.name || calc.category) : '';
+const enCategoryName = isFrance ? (enCategories[calc.category] || catMeta?.name || calc.category) : '';
+
+const isFinanceOrInsurance =
+  calc.category === 'finance' ||
+  calc.category === 'insurance' ||
+  calc.category === 'real-estate' ||
+  calc.category === 'business';
 
 const isCurrencyCalculator =
   isFinanceOrInsurance ||
@@ -22,60 +43,127 @@ const isCurrencyCalculator =
   calc.defaultResult.prefix === '$';
 
 // Country-tailored title and metadata
-const localizedTitle = `${country.name} ${calc.name} (${country.currencySymbol}) — Free Online Calculator`;
-const localizedH1 = `${country.name} ${calc.name}`;
-const localizedDesc = `Accurate ${country.name} ${calc.name} with ${country.currency} (${country.currencySymbol}) formatting and ${country.numberSystem === 'lakh-crore' ? 'Lakh/Crore' : 'standard'} numerical precision. Free, instant client-side calculation.`;
+const localizedTitle = isFrance
+  ? (franceData ? franceData.titleFr : `${frInfo?.name || calc.name} France (${country.currencySymbol}) — Calculateur Gratuit`)
+  : `${country.name} ${calc.name} (${country.currencySymbol}) — Free Online Calculator`;
+
+const localizedH1 = isFrance
+  ? (franceData ? franceData.h1Fr : `${frInfo?.name || calc.name} France`)
+  : `${country.name} ${calc.name}`;
+
+const localizedDesc = isFrance
+  ? (franceData ? franceData.descFr : (frInfo?.desc ? `${frInfo.desc} Calculateur gratuit, instantané et conforme aux normes françaises.` : `Calculateur de précision pour la France en Euro (€). Calcul instantané 100% côté client sans stockage de données.`))
+  : `Accurate ${country.name} ${calc.name} with ${country.currency} (${country.currencySymbol}) formatting and ${country.numberSystem === 'lakh-crore' ? 'Lakh/Crore' : 'standard'} numerical precision. Free, instant client-side calculation.`;
 
 // Related calculators within this country
 const popularSet = new Set(country.popularCalculators);
 const relatedCalculators = CALCULATORS.filter((c) => popularSet.has(c.id) && c.id !== calc.id)
   .slice(0, 4)
-  .map((c) => ({
-    name: `${c.name}`,
-    title: `${c.name}`,
-    href: `/countries/${country.slug}/${c.id}/`,
-    badge: country.currencySymbol,
-  }));
+  .map((c) => {
+    const frRel = isFrance ? (FRANCE_CALCULATORS_DATA[c.id] || null) : null;
+    const frTool = isFrance ? (frToolNames[c.id] || null) : null;
+    const name = frRel ? frRel.nameFr : (frTool ? frTool.name : c.name);
+    return {
+      name,
+      title: name,
+      href: `/countries/${country.slug}/${c.id}/`,
+      badge: country.currencySymbol,
+    };
+  });
 
-const adaptedCalc: CalculatorEntity = {
-  slug: calc.id,
-  title: localizedTitle,
-  metaDescription: localizedDesc,
-  category: calc.category,
-  name: `${country.name} ${calc.name}`,
-  badge: `${country.currencySymbol} Edition`,
-  formula: calc.formula?.expression || 'Standard Mathematical Model',
-  formulaExplanation: calc.formula?.explanation || 'Verified client-side algorithmic calculations.',
-  engineType: isFinanceOrInsurance ? 'finance' : calc.category === 'health' ? 'health' : 'arithmetic',
-  resultLabel: calc.defaultResult.label,
-  resultPrefix: isCurrencyCalculator ? country.currencySymbol : (calc.defaultResult.prefix || ''),
-  resultUnit: calc.defaultResult.suffix,
-  decimals: calc.defaultResult.decimals,
-  mathInputs: calc.inputs.map((inp) => ({
+const localizedMathInputs = calc.inputs.map((inp) => {
+  const frInp = franceData?.inputs[inp.id];
+  return {
     id: inp.id,
-    label: inp.label.replace(/\(\$\)/g, `(${country.currencySymbol})`).replace(/\$/g, country.currencySymbol),
-    type: inp.type === 'select' ? 'select' : 'number',
+    label: isFrance && frInp?.labelFr
+      ? frInp.labelFr
+      : inp.label.replace(/\(\$\)/g, `(${country.currencySymbol})`).replace(/\$/g, country.currencySymbol),
+    type: (inp.type === 'select' ? 'select' : 'number') as 'select' | 'number',
     defaultValue: inp.defaultValue,
     min: inp.min,
     max: inp.max,
     step: inp.step,
     unit: inp.unit === '$' ? country.currencySymbol : inp.unit,
-    options: inp.options,
-    helpText: inp.helpText,
-  })),
-  example: calc.example,
-  faqs: (calc.faqs && calc.faqs.length >= 5
-    ? calc.faqs.slice(0, 5)
-    : [
-        ...((calc.faqs as any) || []),
-        { question: `How accurate is the ${country.name} ${calc.name}?`, answer: `The ${country.name} ${calc.name} uses verified client-side algorithms tailored to ${country.currency} (${country.currencySymbol}) precision.` },
-        { question: `Can I export my ${country.name} calculation?`, answer: `Yes, you can copy the full statement or download verified PDF/CSV statements directly.` },
-        { question: `Are my numbers stored on any server?`, answer: `No. All calculations are executed 100% on your device using client-side JavaScript for complete privacy.` },
-        { question: `What currency format is applied?`, answer: `Values are formatted in ${country.currency} (${country.currencySymbol}) honoring ${country.numberSystem === 'lakh-crore' ? 'Lakh/Crore' : 'international standard'} grouping.` },
-        { question: `What mathematical formulas are used?`, answer: `Standard validated compound equations and official actuarial standards are used throughout.` },
-      ]
-  ).slice(0, 5) as any,
+    options: isFrance && frInp?.options
+      ? frInp.options.map((o) => ({ value: o.value, label: o.labelFr }))
+      : inp.options,
+    helpText: isFrance && frInp?.helpFr ? frInp.helpFr : inp.helpText,
+  };
+});
+
+const defaultFaqs = isFrance
+  ? [
+      { question: `Quelle est la précision de ce calculateur ?`, answer: `Ce calculateur utilise des algorithmes vérifiés côté client, calibrés selon les normes françaises et le formatage en Euro (€).` },
+      { question: `Puis-je exporter mes résultats de calcul ?`, answer: `Oui, vous pouvez copier le récapitulatif complet dans votre presse-papiers ou télécharger un récapitulatif directement.` },
+      { question: `Mes données financières ou personnelles sont-elles enregistrées ?`, answer: `Non, absolument aucune donnée n'est envoyée ni enregistrée sur nos serveurs. Tous les calculs s'exécutent à 100% dans votre navigateur pour une confidentialité totale.` },
+      { question: `Quel format monétaire et numérique est appliqué ?`, answer: `Les résultats respectent la norme française : devise en Euro (€), espace insécable pour les milliers et virgule pour les décimales.` },
+      { question: `Quelles formules mathématiques sont utilisées ?`, answer: `Les équations actuarielles et modèles mathématiques officiels en vigueur sont rigoureusement appliqués.` },
+    ]
+  : (calc.faqs && calc.faqs.length >= 5
+      ? calc.faqs.slice(0, 5)
+      : [
+          ...((calc.faqs as any) || []),
+          { question: `How accurate is the ${country.name} ${calc.name}?`, answer: `The ${country.name} ${calc.name} uses verified client-side algorithms tailored to ${country.currency} (${country.currencySymbol}) precision.` },
+          { question: `Can I export my ${country.name} calculation?`, answer: `Yes, you can copy the full statement or download verified PDF/CSV statements directly.` },
+          { question: `Are my numbers stored on any server?`, answer: `No. All calculations are executed 100% on your device using client-side JavaScript for complete privacy.` },
+          { question: `What currency format is applied?`, answer: `Values are formatted in ${country.currency} (${country.currencySymbol}) honoring ${country.numberSystem === 'lakh-crore' ? 'Lakh/Crore' : 'international standard'} grouping.` },
+          { question: `What mathematical formulas are used?`, answer: `Standard validated compound equations and official actuarial standards are used throughout.` },
+        ].slice(0, 5));
+
+const effectiveFranceData = isFrance
+  ? (franceData || {
+      nameFr: frInfo?.name || calc.name,
+      nameEn: calc.name,
+      titleFr: localizedTitle,
+      titleEn: `${country.name} ${calc.name} (${country.currencySymbol}) — Free Online Calculator`,
+      h1Fr: localizedH1,
+      h1En: `${country.name} ${calc.name}`,
+      descFr: localizedDesc,
+      descEn: `Accurate ${country.name} ${calc.name} with ${country.currency} (${country.currencySymbol}) formatting. Free, instant client-side calculation.`,
+      resultLabelFr: calc.defaultResult.label || 'Résultat Estimé',
+      resultLabelEn: calc.defaultResult.label || 'Estimated Result',
+      secCard1LabelFr: 'Détail 1',
+      secCard1LabelEn: 'Breakdown 1',
+      secCard2LabelFr: 'Détail 2',
+      secCard2LabelEn: 'Breakdown 2',
+      inputs: {},
+      formulaTitleFr: 'Formule & Méthode de Calcul',
+      formulaTitleEn: 'Formula & Calculation Method',
+      formulaExpFr: calc.formula?.explanation || 'Calculs algorithmiques vérifiés côté client.',
+      formulaExpEn: calc.formula?.explanation || 'Verified client-side algorithmic calculations.',
+      faqsFr: defaultFaqs,
+      faqsEn: calc.faqs && calc.faqs.length >= 5 ? calc.faqs.slice(0, 5) : [],
+    })
+  : null;
+
+const adaptedCalc: CalculatorEntity = {
+  slug: activeCalcId,
+  title: localizedTitle,
+  metaDescription: localizedDesc,
+  category: calc.category,
+  name: isFrance ? (effectiveFranceData?.nameFr || `${country.name} ${calc.name}`) : `${country.name} ${calc.name}`,
+  badge: isFrance ? 'Édition France (EUR €)' : `${country.currencySymbol} Edition`,
+  formula: calc.formula?.expression || 'Standard Mathematical Model',
+  formulaExplanation: isFrance && effectiveFranceData
+    ? effectiveFranceData.formulaExpFr
+    : (calc.formula?.explanation || 'Verified client-side algorithmic calculations.'),
+  engineType: isFinanceOrInsurance ? 'finance' : calc.category === 'health' ? 'health' : 'arithmetic',
+  resultLabel: isFrance && effectiveFranceData ? effectiveFranceData.resultLabelFr : calc.defaultResult.label,
+  resultPrefix: isCurrencyCalculator ? country.currencySymbol : (calc.defaultResult.prefix || ''),
+  resultUnit: calc.defaultResult.suffix,
+  decimals: calc.defaultResult.decimals,
+  mathInputs: localizedMathInputs,
+  example: isFrance && effectiveFranceData?.exampleFr ? (effectiveFranceData.exampleFr as any) : calc.example,
+  faqs: (isFrance && effectiveFranceData ? effectiveFranceData.faqsFr : defaultFaqs) as any,
 };
+
+const categoryLabel = isFrance
+  ? `${frCategoryName} France`
+  : `${country.name} ${catMeta?.name || 'Calculators'}`;
+
+const categoryHref = isFrance
+  ? `/countries/france/${calc.category}/`
+  : `/countries/${country.slug}/${calc.category}/`;
 ---
 
 <CalculatorLayout
@@ -84,12 +172,125 @@ const adaptedCalc: CalculatorEntity = {
   h1={localizedH1}
   subtitle={localizedDesc}
   category={{
-    label: `${country.name} ${catMeta?.name || 'Calculators'}`,
-    href: `/countries/${country.slug}/${calc.category}/`,
+    label: categoryLabel,
+    href: categoryHref,
   }}
-  calculatorName={localizedH1}
+  calculatorName={adaptedCalc.name}
   relatedCalculators={relatedCalculators}
+  faqs={adaptedCalc.faqs as any}
+  lang={isFrance ? 'fr-FR' : 'en'}
 >
+  {isFrance && (
+    <Fragment slot="header">
+      <header
+        id="main-header"
+        class="sticky top-0 left-0 right-0 z-50 w-full bg-white/90 dark:bg-gray-950/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80 transition-all duration-300"
+      >
+        <!-- Royal Jewel Ribbon at Top -->
+        <div
+          class="h-[2.5px] w-full bg-gradient-to-r from-blue-600 via-indigo-600 via-purple-600 to-pink-500 shadow-[0_1px_6px_rgba(99,102,241,0.4)]"
+          aria-hidden="true"
+        ></div>
+
+        <div
+          class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between h-[66px] sm:h-20 gap-2 sm:gap-4"
+        >
+          <!-- Logo with France Badge -->
+          <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+            <a
+              href="/countries/france/"
+              aria-label="Calculatrices Gratuites France"
+              class="group relative inline-flex items-center gap-2 sm:gap-3.5 select-none shrink-0 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:focus-visible:ring-indigo-400 rounded-2xl transition-all duration-300 hover:scale-[1.015] active:scale-[0.985]"
+            >
+              <div class="relative shrink-0 flex items-center justify-center">
+                <div
+                  class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 opacity-25 dark:opacity-40 blur-md group-hover:opacity-75 transition-all duration-500 pointer-events-none"
+                  aria-hidden="true"
+                ></div>
+                <div
+                  class="relative p-[1.2px] sm:p-[1.5px] rounded-2xl bg-gradient-to-b from-blue-400/80 via-indigo-500/60 to-purple-700/80 shadow-sm sm:shadow-md shadow-indigo-500/20 group-hover:shadow-xl group-hover:scale-105 transition-all duration-300 ease-out"
+                >
+                  <div
+                    class="relative flex h-8.5 w-8.5 sm:h-10.5 sm:w-10.5 items-center justify-center rounded-[13px] sm:rounded-[14.5px] bg-gradient-to-br from-blue-600 via-indigo-800 to-slate-950 text-white overflow-hidden"
+                  >
+                    <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/30 pointer-events-none" aria-hidden="true"></div>
+                    <svg class="h-4.5 w-4.5 sm:h-5.5 sm:w-5.5 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <rect x="3.5" y="2.5" width="17" height="19" rx="3.5"></rect>
+                      <rect x="6.5" y="5.5" width="11" height="4" rx="1.5" fill="currentColor" fill-opacity="0.2"></rect>
+                      <line x1="8.5" y1="7.5" x2="15.5" y2="7.5" stroke-linecap="round"></line>
+                      <circle cx="8" cy="13" r="1.1" fill="currentColor"></circle>
+                      <circle cx="12" cy="13" r="1.1" fill="currentColor"></circle>
+                      <rect x="15" y="12" width="2.2" height="2.2" rx="0.6" fill="currentColor" class="text-amber-400"></rect>
+                      <circle cx="8" cy="17" r="1.1" fill="currentColor"></circle>
+                      <circle cx="12" cy="17" r="1.1" fill="currentColor"></circle>
+                      <rect x="15" y="16" width="2.2" height="2.2" rx="0.6" fill="currentColor" class="text-cyan-400"></rect>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Brand Wordmark -->
+              <div class="flex flex-col justify-center text-left min-w-0">
+                <div class="flex items-center gap-1.5 leading-none">
+                  <span class="font-outfit text-[20px] sm:text-[24px] font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent inline-block">
+                    Free
+                  </span>
+                  <span class="relative flex h-2 w-2 -mt-0.5" aria-hidden="true">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                  </span>
+                </div>
+                <div class="flex items-center gap-1 leading-none mt-0.5 sm:mt-1">
+                  <span class="font-outfit text-[11px] sm:text-[12.5px] font-extrabold tracking-tight text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors whitespace-nowrap">
+                    Accurate
+                  </span>
+                  <span class="font-outfit text-[11px] sm:text-[12.5px] font-medium tracking-tight text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                    Calculator
+                  </span>
+                </div>
+              </div>
+            </a>
+
+            <!-- France Badge -->
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border border-slate-200/90 dark:border-slate-800/90 bg-slate-50 dark:bg-slate-900/80 text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 shadow-2xs select-none">
+              <span>🇫🇷</span>
+              <span>France</span>
+            </span>
+          </div>
+
+          <!-- Language Toggle "🇫🇷 FR | 🇬🇧 EN" + Theme Toggle -->
+          <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            <button
+              type="button"
+              id="fac-france-lang-toggle"
+              class="group relative flex items-center justify-between gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-white/85 dark:bg-slate-900/85 hover:bg-slate-50 dark:hover:bg-slate-800/90 hover:border-indigo-500/40 dark:hover:border-indigo-400/40 shadow-xs hover:shadow-md hover:shadow-indigo-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:focus-visible:ring-indigo-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-950 min-h-[44px] sm:min-h-[38px] h-11 sm:h-9 cursor-pointer transition-all duration-300 select-none text-xs font-semibold"
+              aria-label="Changer de langue (FR / EN)"
+            >
+              <span
+                id="header-lang-fr"
+                class="inline-flex items-center gap-1 font-bold text-indigo-600 dark:text-indigo-400 transition-colors"
+              >
+                <span class="text-sm">🇫🇷</span>
+                <span>FR</span>
+              </span>
+              <span class="text-slate-300 dark:text-slate-600 select-none">|</span>
+              <span
+                id="header-lang-en"
+                class="inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
+              >
+                <span class="text-sm">🇬🇧</span>
+                <span>EN</span>
+              </span>
+            </button>
+
+            <!-- Theme Toggle -->
+            <ThemeToggle id="theme-toggle" />
+          </div>
+        </div>
+      </header>
+    </Fragment>
+  )}
+
   <MasterCalculatorWrapper
     calc={adaptedCalc}
     relatedCalculators={relatedCalculators}
@@ -100,3 +301,332 @@ const adaptedCalc: CalculatorEntity = {
     countryName={country.name}
   />
 </CalculatorLayout>
+
+{isFrance && effectiveFranceData && (
+  <script is:inline define:vars={{ franceData: effectiveFranceData, activeCalcId, categoryInfo: { fr: frCategoryName, en: enCategoryName, slug: calc.category } }}>
+    (function () {
+      let currentLang = localStorage.getItem('fac_france_lang') || 'fr';
+
+      // Set global hooks for MasterCalculatorWrapper
+      window.__facYearsLabel = currentLang === 'fr' ? 'Ans' : 'Years';
+      window.__facYearPrefix = currentLang === 'fr' ? 'Année' : 'Year';
+      window.__facToastResetMsg = currentLang === 'fr' ? 'Paramètres réinitialisés aux valeurs par défaut' : 'Reset parameters to initial defaults';
+      window.__facToastCopyMsg = currentLang === 'fr' ? 'Résultat copié dans le presse-papiers !' : 'Result copied to clipboard!';
+      window.__facToastExportMsg = currentLang === 'fr' ? 'Échéancier exporté en CSV !' : 'Schedule exported to CSV!';
+
+      window.__facCustomDynamicLabels = function () {
+        if (currentLang === 'fr') {
+          return {
+            hero: franceData.resultLabelFr,
+            sec1: franceData.secCard1LabelFr,
+            sec2: franceData.secCard2LabelFr,
+            leg1: franceData.secCard1LabelFr,
+            leg2: franceData.secCard2LabelFr,
+          };
+        } else {
+          return {
+            hero: franceData.resultLabelEn,
+            sec1: franceData.secCard1LabelEn,
+            sec2: franceData.secCard2LabelEn,
+            leg1: franceData.secCard1LabelEn,
+            leg2: franceData.secCard2LabelEn,
+          };
+        }
+      };
+
+      function updateLanguage(targetLang) {
+        currentLang = targetLang;
+        localStorage.setItem('fac_france_lang', currentLang);
+
+        window.__facYearsLabel = currentLang === 'fr' ? 'Ans' : 'Years';
+        window.__facYearPrefix = currentLang === 'fr' ? 'Année' : 'Year';
+        window.__facToastResetMsg = currentLang === 'fr' ? 'Paramètres réinitialisés aux valeurs par défaut' : 'Reset parameters to initial defaults';
+        window.__facToastCopyMsg = currentLang === 'fr' ? 'Résultat copié dans le presse-papiers !' : 'Result copied to clipboard!';
+        window.__facToastExportMsg = currentLang === 'fr' ? 'Échéancier exporté en CSV !' : 'Schedule exported to CSV!';
+
+        // 1. Toggle Button styling
+        const frSpan = document.getElementById('header-lang-fr');
+        const enSpan = document.getElementById('header-lang-en');
+        if (frSpan && enSpan) {
+          if (currentLang === 'fr') {
+            frSpan.className = 'inline-flex items-center gap-1 font-bold text-indigo-600 dark:text-indigo-400 transition-colors';
+            enSpan.className = 'inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors';
+          } else {
+            frSpan.className = 'inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors';
+            enSpan.className = 'inline-flex items-center gap-1 font-bold text-indigo-600 dark:text-indigo-400 transition-colors';
+          }
+        }
+
+        // 2. Document Title
+        document.title = currentLang === 'fr' ? franceData.titleFr : franceData.titleEn;
+
+        // 3. Breadcrumbs
+        const breadcrumbNav = document.querySelector('nav[aria-label="Breadcrumbs"]');
+        if (breadcrumbNav) {
+          const homeLink = breadcrumbNav.querySelector('a[href="/"] span');
+          if (homeLink) homeLink.textContent = currentLang === 'fr' ? 'Accueil' : 'Home';
+
+          const catLink = breadcrumbNav.querySelector(`a[href*="/countries/france/${categoryInfo.slug}/"]`) || breadcrumbNav.querySelector('a[href*="/countries/france/"]');
+          if (catLink) {
+            const catSpan = catLink.querySelector('span') || catLink;
+            catSpan.textContent = currentLang === 'fr' ? `${categoryInfo.fr} France` : `France ${categoryInfo.en}`;
+          }
+
+          const lastSpan = breadcrumbNav.querySelector('span:last-child');
+          if (lastSpan && !lastSpan.closest('a')) {
+            lastSpan.textContent = currentLang === 'fr' ? franceData.nameFr : franceData.nameEn;
+          }
+        }
+
+        // 4. Eyebrow, H1, Subtitle
+        const eyebrowEl = document.querySelector('.mono-eyebrow.text-link');
+        if (eyebrowEl) eyebrowEl.textContent = currentLang === 'fr' ? `${categoryInfo.fr} France` : `France ${categoryInfo.en}`;
+
+        const eyebrowSub = document.querySelector('.text-\\[11px\\].font-mono.text-mute');
+        if (eyebrowSub) eyebrowSub.textContent = currentLang === 'fr' ? 'Moteur de Calcul Instantané en Local' : 'Instant Client-Side Engine';
+
+        const h1El = document.querySelector('h1.display-hero');
+        if (h1El) h1El.textContent = currentLang === 'fr' ? franceData.h1Fr : franceData.h1En;
+
+        const subEl = document.querySelector('p.text-sm.text-body.max-w-2xl');
+        if (subEl) subEl.textContent = currentLang === 'fr' ? franceData.descFr : franceData.descEn;
+
+        // 5. Header Action Buttons
+        const embedBtnSpan = document.querySelector('#fac-embed-btn span');
+        if (embedBtnSpan) embedBtnSpan.textContent = currentLang === 'fr' ? 'Intégrer' : 'Embed';
+
+        const shareBtnSpan = document.querySelector('#fac-share-btn span');
+        if (shareBtnSpan) shareBtnSpan.textContent = currentLang === 'fr' ? 'Partager' : 'Share';
+
+        // 6. Calculator Card Header
+        const calcCardTitle = document.querySelector('#master-calculator-card h2');
+        if (calcCardTitle) calcCardTitle.textContent = currentLang === 'fr' ? franceData.nameFr : franceData.nameEn;
+
+        const resetBtnSpan = document.querySelector('#master-reset-btn span');
+        if (resetBtnSpan) resetBtnSpan.textContent = currentLang === 'fr' ? 'Réinitialiser' : 'Reset';
+
+        // 7. Inputs Labels, Help Texts, and Select Options
+        if (franceData.inputs) {
+          Object.keys(franceData.inputs).forEach((inpId) => {
+            const inpData = franceData.inputs[inpId];
+            const labelEl = document.querySelector(`label[for="input-${inpId}"]`);
+            if (labelEl && inpData) {
+              labelEl.textContent = currentLang === 'fr' ? inpData.labelFr : inpData.labelEn;
+            }
+
+            const inputEl = document.getElementById(`input-${inpId}`);
+            if (inputEl) {
+              const cardEl = inputEl.closest('.input-card');
+              if (cardEl && inpData.helpFr && inpData.helpEn) {
+                const helpEl = cardEl.querySelector('p.text-\\[11px\\]');
+                if (helpEl) helpEl.textContent = currentLang === 'fr' ? inpData.helpFr : inpData.helpEn;
+              }
+
+              if (inputEl.tagName === 'SELECT' && inpData.options) {
+                inpData.options.forEach((opt) => {
+                  const optionEl = inputEl.querySelector(`option[value="${opt.value}"]`);
+                  if (optionEl) {
+                    optionEl.textContent = currentLang === 'fr' ? opt.labelFr : opt.labelEn;
+                  }
+                });
+              }
+            }
+          });
+        }
+
+        // 8. Results Card Labels
+        const heroResultLabel = document.getElementById('hero-result-label');
+        if (heroResultLabel) heroResultLabel.textContent = currentLang === 'fr' ? franceData.resultLabelFr : franceData.resultLabelEn;
+
+        const heroSub = document.getElementById('hero-result-sub');
+        if (heroSub) {
+          heroSub.textContent = currentLang === 'fr'
+            ? 'Calcul mathématique vérifié selon vos paramètres actifs'
+            : 'Verified mathematical calculation based on active inputs';
+        }
+
+        const sec1Label = document.getElementById('sec-card-1-label');
+        if (sec1Label) sec1Label.textContent = currentLang === 'fr' ? franceData.secCard1LabelFr : franceData.secCard1LabelEn;
+
+        const sec2Label = document.getElementById('sec-card-2-label');
+        if (sec2Label) sec2Label.textContent = currentLang === 'fr' ? franceData.secCard2LabelFr : franceData.secCard2LabelEn;
+
+        const donutCenter = document.getElementById('donut-center-label');
+        if (donutCenter) donutCenter.textContent = currentLang === 'fr' ? 'Répartition' : 'Distribution';
+
+        const leg1 = document.getElementById('legend-1-label');
+        if (leg1) leg1.textContent = currentLang === 'fr' ? franceData.secCard1LabelFr : franceData.secCard1LabelEn;
+
+        const leg2 = document.getElementById('legend-2-label');
+        if (leg2) leg2.textContent = currentLang === 'fr' ? franceData.secCard2LabelFr : franceData.secCard2LabelEn;
+
+        // 9. Calculator Action Buttons
+        const copyBtnSpan = document.querySelector('#master-copy-btn span');
+        if (copyBtnSpan) copyBtnSpan.textContent = currentLang === 'fr' ? 'Copier le Résultat' : 'Copy Result';
+
+        const masterShareSpan = document.querySelector('#master-share-btn span');
+        if (masterShareSpan) masterShareSpan.textContent = currentLang === 'fr' ? 'Partager' : 'Share';
+
+        const pdfBtnSpan = document.querySelector('#action-download-pdf-btn span');
+        if (pdfBtnSpan) pdfBtnSpan.textContent = currentLang === 'fr' ? 'Télécharger le Bilan PDF' : 'Download PDF Statement';
+
+        const excelBtnSpan = document.querySelector('#action-download-excel-btn span');
+        if (excelBtnSpan) excelBtnSpan.textContent = currentLang === 'fr' ? 'Exporter en CSV (.csv)' : 'Export CSV (.csv)';
+
+        // 10. Schedule Table
+        const schedContainer = document.getElementById('master-schedule-container');
+        if (schedContainer) {
+          const h3 = schedContainer.querySelector('h3');
+          if (h3) h3.textContent = currentLang === 'fr' ? 'Tableau d’Amortissement & Progression Détaillée' : 'Detailed Progression Schedule';
+
+          const p = schedContainer.querySelector('p');
+          if (p) p.textContent = currentLang === 'fr' ? 'Évolution période par période et solde cumulé' : 'Year-by-year and period progression analysis';
+
+          const spanMode = schedContainer.querySelector('span.text-xs.font-mono.text-link');
+          if (spanMode) spanMode.textContent = currentLang === 'fr' ? 'Vue Tableau' : 'Table View';
+
+          const ths = schedContainer.querySelectorAll('table thead tr th');
+          if (ths && ths.length >= 5) {
+            ths[0].textContent = currentLang === 'fr' ? 'Période' : 'Period';
+            ths[1].textContent = currentLang === 'fr' ? 'Flux Périodique' : 'Periodic Flow';
+            ths[2].textContent = currentLang === 'fr' ? 'Capital Cumulé' : 'Cumulative Base';
+            ths[3].textContent = currentLang === 'fr' ? 'Intérêts / Gains' : 'Interest / Return';
+            ths[4].textContent = currentLang === 'fr' ? 'Solde Restant' : 'Balance';
+          }
+        }
+
+        function findSectionByKeyword(keyword) {
+          const sections = document.querySelectorAll('section');
+          for (const s of sections) {
+            if (s.textContent && s.textContent.toLowerCase().includes(keyword.toLowerCase())) return s;
+          }
+          return null;
+        }
+
+        // 11. Formula Section
+        const formulaSec = findSectionByKeyword('Mathematical Definition') || findSectionByKeyword('Formule') || findSectionByKeyword('Formula');
+        if (formulaSec) {
+          const h2 = formulaSec.querySelector('h2');
+          if (h2) h2.textContent = currentLang === 'fr' ? franceData.formulaTitleFr : franceData.formulaTitleEn;
+
+          const p = formulaSec.querySelector('p.text-body');
+          if (p) p.textContent = currentLang === 'fr' ? franceData.formulaExpFr : franceData.formulaExpEn;
+        }
+
+        // 12. Worked Example Section
+        const exampleData = currentLang === 'fr' ? franceData.exampleFr : franceData.exampleEn;
+        if (exampleData) {
+          const exampleSec = findSectionByKeyword('Worked Example') || findSectionByKeyword('Exemple Concret') || findSectionByKeyword('Exemple');
+          if (exampleSec) {
+            const h2 = exampleSec.querySelector('h2');
+            if (h2 && exampleData.title) h2.textContent = exampleData.title;
+
+            const scenarioP = exampleSec.querySelector('p.text-body');
+            if (scenarioP && exampleData.scenario) scenarioP.textContent = exampleData.scenario;
+          }
+        }
+
+        // 13. FAQ Section
+        const faqsData = currentLang === 'fr' ? franceData.faqsFr : franceData.faqsEn;
+        if (faqsData && faqsData.length > 0) {
+          const faqSec = findSectionByKeyword('Knowledge Base') || findSectionByKeyword('Foire Aux Questions') || findSectionByKeyword('Frequently Asked Questions');
+          if (faqSec) {
+            const h2 = faqSec.querySelector('h2');
+            if (h2) h2.textContent = currentLang === 'fr' ? 'Foire Aux Questions (FAQ)' : 'Frequently Asked Questions';
+
+            const details = faqSec.querySelectorAll('details');
+            details.forEach((det, idx) => {
+              if (faqsData[idx]) {
+                const qSpan = det.querySelector('summary span:first-child');
+                if (qSpan) qSpan.textContent = faqsData[idx].question;
+
+                const aP = det.querySelector('div p');
+                if (aP) aP.textContent = faqsData[idx].answer;
+              }
+            });
+          }
+        }
+
+        // 14. Social Proof & Share Result
+        const socialProofSpan = document.querySelector('#social-proof span.text-green-800');
+        if (socialProofSpan) {
+          const userCountEl = document.getElementById('user-count');
+          const count = userCountEl ? userCountEl.textContent : '127';
+          const toolName = currentLang === 'fr' ? franceData.nameFr : franceData.nameEn;
+          socialProofSpan.innerHTML = currentLang === 'fr'
+            ? `<strong id="user-count">${count}</strong> personnes ont calculé <strong>${toolName}</strong> aujourd'hui`
+            : `<strong id="user-count">${count}</strong> people calculated <strong>${toolName}</strong> today`;
+        }
+
+        const copyLinkBtn = document.getElementById('copy-link-btn');
+        const shareResCard = copyLinkBtn ? copyLinkBtn.closest('.rounded-xl') : null;
+        if (shareResCard) {
+          const shareMute = shareResCard.querySelector('span.text-mute');
+          if (shareMute) {
+            shareMute.textContent = currentLang === 'fr'
+              ? 'Calcul utile et précis ? Partagez votre simulation :'
+              : 'Found this accurate? Share your calculation:';
+          }
+        }
+
+        const copyLinkText = document.getElementById('copy-btn-text');
+        if (copyLinkText) copyLinkText.textContent = currentLang === 'fr' ? 'Copier le Lien' : 'Copy Link';
+
+        // 15. History Drawer
+        const histDetails = document.getElementById('history-list')?.closest('details');
+        if (histDetails) {
+          const histSummary = histDetails.querySelector('summary div span:nth-of-type(1)');
+          if (histSummary) {
+            histSummary.textContent = currentLang === 'fr'
+              ? 'Historique Récent des Calculs (Privé / Local)'
+              : 'Recent Calculation History (Private / Local)';
+          }
+        }
+
+        const histEmpty = document.getElementById('history-empty');
+        if (histEmpty) {
+          histEmpty.textContent = currentLang === 'fr'
+            ? 'Aucun calcul précédent enregistré.'
+            : 'No previous calculations recorded yet.';
+        }
+
+        const histClear = document.getElementById('history-clear-btn');
+        if (histClear) {
+          histClear.textContent = currentLang === 'fr' ? 'Effacer l’historique' : 'Clear History';
+        }
+
+        // Trigger input event to re-render schedule rows with localized period
+        const firstInput = document.querySelector('.master-input');
+        if (firstInput) {
+          firstInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      }
+
+      // Attach Toggle Button Event Listener
+      const toggleBtn = document.getElementById('fac-france-lang-toggle');
+      const frSpan = document.getElementById('header-lang-fr');
+      const enSpan = document.getElementById('header-lang-en');
+
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', function (e) {
+          if (enSpan && (e.target === enSpan || enSpan.contains(e.target))) {
+            updateLanguage('en');
+            return;
+          }
+          if (frSpan && (e.target === frSpan || frSpan.contains(e.target))) {
+            updateLanguage('fr');
+            return;
+          }
+          updateLanguage(currentLang === 'fr' ? 'en' : 'fr');
+        });
+      }
+
+      // Initialize state on page load
+      if (currentLang === 'en') {
+        updateLanguage('en');
+      } else {
+        updateLanguage('fr');
+      }
+    })();
+  </script>
+)}

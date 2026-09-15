@@ -1,5 +1,7 @@
 ---
 // src/components/common/LocaleDetectionToast.astro
+const pathname = Astro.url.pathname;
+const isFrench = pathname.includes('/countries/france') || pathname.startsWith('/fr') || (Astro.currentLocale === 'fr');
 ---
 
 <div
@@ -20,11 +22,19 @@
 
     <!-- Content -->
     <div class="flex-1 min-w-0">
-      <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-        Language Detected
+      <h3 id="fac-toast-title" class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+        {isFrench ? "Langue Détectée" : "Language Detected"}
       </h3>
       <p id="fac-toast-text" class="text-sm font-medium text-slate-800 dark:text-slate-200 mt-0.5">
-        We detected your preferred language is <strong id="fac-toast-lang-name" class="text-indigo-600 dark:text-indigo-400"></strong>. Would you like to switch?
+        {isFrench ? (
+          <>
+            Nous avons détecté que votre langue préférée est le <strong id="fac-toast-lang-name" class="text-indigo-600 dark:text-indigo-400"></strong>. Souhaitez-vous changer ?
+          </>
+        ) : (
+          <>
+            We detected your preferred language is <strong id="fac-toast-lang-name" class="text-indigo-600 dark:text-indigo-400"></strong>. Would you like to switch?
+          </>
+        )}
       </p>
 
       <!-- Action Buttons -->
@@ -34,14 +44,14 @@
           id="fac-toast-switch-btn"
           class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs hover:shadow-md transition-all cursor-pointer"
         >
-          Switch Now
+          {isFrench ? "Changer maintenant" : "Switch Now"}
         </button>
         <button
           type="button"
           id="fac-toast-dismiss-btn"
           class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium transition-colors cursor-pointer"
         >
-          Stay on English
+          {isFrench ? "Rester en Français" : "Stay on English"}
         </button>
       </div>
     </div>
@@ -50,8 +60,8 @@
     <button
       type="button"
       id="fac-toast-close-x"
-      class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 -mr-1 -mt-1 rounded-lg transition-colors"
-      aria-label="Dismiss language suggestion"
+      class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 -mr-1 -mt-1 rounded-lg transition-colors cursor-pointer"
+      aria-label={isFrench ? "Fermer la suggestion de langue" : "Dismiss language suggestion"}
     >
       <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
@@ -69,10 +79,28 @@
     const toast = document.getElementById('fac-locale-toast');
     if (!toast) return;
 
-    // Only suggest if visitor is currently on English path
     const path = window.location.pathname;
+    const docLang = document.documentElement.lang || '';
+    const isFrPage = path.includes('/countries/france') || path.startsWith('/fr') || docLang.startsWith('fr');
+
+    const switchBtn = document.getElementById('fac-toast-switch-btn');
+    const dismissBtn = document.getElementById('fac-toast-dismiss-btn');
+    const closeX = document.getElementById('fac-toast-close-x');
+    const titleEl = document.getElementById('fac-toast-title');
+    const textEl = document.getElementById('fac-toast-text');
+
+    if (isFrPage) {
+      if (titleEl) titleEl.textContent = 'Langue Détectée';
+      if (textEl) {
+        textEl.innerHTML = 'Nous avons détecté que votre langue préférée est le <strong id="fac-toast-lang-name" class="text-indigo-600 dark:text-indigo-400"></strong>. Souhaitez-vous changer ?';
+      }
+      if (switchBtn) switchBtn.textContent = 'Changer maintenant';
+      if (dismissBtn) dismissBtn.textContent = 'Rester en Français';
+    }
+
+    // Only suggest if visitor is currently on English path or French page
     const isEnglishPath = !/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi)(\/|$)/i.test(path);
-    if (!isEnglishPath) return;
+    if (!isEnglishPath && !isFrPage) return;
 
     // Check if preference has already been set or dismissed
     try {
@@ -84,6 +112,7 @@
 
     const browserLocaleMap = {
       fr: { code: 'fr', name: 'Français', flag: '🇫🇷' },
+      en: { code: 'en', name: 'English', flag: '🇬🇧' },
       de: { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
       es: { code: 'es', name: 'Español', flag: '🇪🇸' },
       ar: { code: 'ar', name: 'العربية', flag: '🇸🇦' },
@@ -100,6 +129,8 @@
     for (const l of languages) {
       const tag = (l || '').toLowerCase().trim();
       const primary = tag.split('-')[0];
+      if (isFrPage && primary === 'fr') continue; // Don't suggest French if already on French page
+      if (!isFrPage && primary === 'en') continue; // Don't suggest English if already on English page
       if (browserLocaleMap[primary]) {
         detected = browserLocaleMap[primary];
         break;
@@ -109,10 +140,6 @@
     if (!detected) return;
 
     const langNameEl = document.getElementById('fac-toast-lang-name');
-    const switchBtn = document.getElementById('fac-toast-switch-btn');
-    const dismissBtn = document.getElementById('fac-toast-dismiss-btn');
-    const closeX = document.getElementById('fac-toast-close-x');
-
     if (langNameEl) langNameEl.textContent = `${detected.flag} ${detected.name}`;
 
     // Show toast with gentle delay for smooth user experience
@@ -144,15 +171,16 @@
       });
     }
 
-    function stayOnEnglish() {
+    function stayOnCurrent() {
       try {
-        localStorage.setItem('fac_locale', 'en');
-        localStorage.setItem('preferred_locale', 'en');
+        const stayCode = isFrPage ? 'fr' : 'en';
+        localStorage.setItem('fac_locale', stayCode);
+        localStorage.setItem('preferred_locale', stayCode);
       } catch (_) {}
       hideToast();
     }
 
-    if (dismissBtn) dismissBtn.addEventListener('click', stayOnEnglish);
-    if (closeX) closeX.addEventListener('click', stayOnEnglish);
+    if (dismissBtn) dismissBtn.addEventListener('click', stayOnCurrent);
+    if (closeX) closeX.addEventListener('click', stayOnCurrent);
   })();
 </script>

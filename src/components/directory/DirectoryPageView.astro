@@ -32,6 +32,8 @@ export interface FAQItem {
 
 export interface Props {
   country?: CountryConfig;
+  categoryId?: string;
+  isFrench?: boolean;
   showCategories?: boolean;
   showTools?: boolean;
   title: string;
@@ -64,6 +66,8 @@ export interface Props {
 
 const {
   country,
+  categoryId,
+  isFrench: isFrenchProp,
   showCategories = true,
   showTools = true,
   title,
@@ -93,9 +97,25 @@ const {
   headlineGradient = 'from-blue-600 via-indigo-600 to-purple-600',
   headlineGradientDark = 'dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300',
 } = Astro.props;
+
+const isFrench = isFrenchProp ?? (country?.slug === 'france' || Astro.url.pathname.includes('/countries/france') || Astro.currentLocale === 'fr');
+const rawPath = Astro.url.pathname.replace(/\/$/, '');
 ---
 
-<Layout title={title} description={description} jsonLd={jsonLd}>
+<Layout
+  title={title}
+  description={description}
+  jsonLd={jsonLd}
+  lang={isFrench ? 'fr-FR' : 'en'}
+  locale={isFrench ? 'fr' : 'en'}
+>
+  {isFrench && (
+    <Fragment slot="head">
+      <link rel="alternate" hreflang="fr" href={`https://freeaccuratecalculator.com${rawPath}/`} />
+      <link rel="alternate" hreflang="en" href={`https://freeaccuratecalculator.com${rawPath}/?lang=en`} />
+      <link rel="alternate" hreflang="x-default" href={`https://freeaccuratecalculator.com${rawPath}/`} />
+    </Fragment>
+  )}
   <div class="max-w-7xl mx-auto space-y-8">
     <!-- Breadcrumbs -->
     <Breadcrumbs items={breadcrumbs} />
@@ -203,7 +223,7 @@ const {
             type="search"
             autocomplete="off"
             spellcheck="false"
-            placeholder=""
+            placeholder={searchPlaceholder}
             class="fac-search-input relative z-20 w-full rounded-2xl bg-transparent py-2.5 sm:py-3 pl-10 pr-24 text-xs sm:text-sm font-bold text-slate-900 dark:text-white placeholder:font-medium placeholder-slate-400 dark:placeholder-slate-400 shadow-2xs outline-none border-none ring-0 transition-all tracking-tight sm:tracking-normal"
             aria-label={searchPlaceholder}
           />
@@ -212,14 +232,14 @@ const {
               type="button"
               id="directory-filter-clear"
               class="hidden p-1 rounded-full text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 hover:bg-cyan-500/10 dark:hover:bg-cyan-500/20 transition-colors cursor-pointer"
-              aria-label="Clear search"
+              aria-label={isFrench ? "Effacer la recherche" : "Clear search"}
             >
               <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
             <span id="directory-match-counter" class="text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-900/60">
-              All Tools
+              {isFrench ? "Tous les Outils" : "All Tools"}
             </span>
           </div>
         </div>
@@ -231,22 +251,48 @@ const {
           role="listbox"
         >
           <div class="px-3.5 py-2 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-            <span id="directory-dropdown-title">Suggested Tools</span>
-            <span class="text-[10px] lowercase font-normal hidden sm:inline">press enter ↵ to open</span>
+            <span id="directory-dropdown-title">{isFrench ? "Outils Suggérés" : "Suggested Tools"}</span>
+            <span class="text-[10px] lowercase font-normal hidden sm:inline">{isFrench ? "appuyez sur entrée ↵ pour ouvrir" : "press enter ↵ to open"}</span>
           </div>
           <div id="directory-dropdown-list" class="max-h-[280px] overflow-y-auto p-1.5 space-y-1"></div>
         </div>
       </div>
 
-      <!-- THE 3-BY-3 GRID: 3 Columns on Mobile, Tablet & Desktop (Exact 3-by-3 Rhythm) -->
+      <!-- THE 3-BY-3 GRID: 3 Columns on Mobile, Tablet & Desktop -->
       <div
         id="calculator-grid"
         class="grid grid-cols-3 gap-2 sm:gap-3.5 md:gap-4.5"
       >
+        <!-- No Results Container: strictly hidden by default -->
+        <div
+          id="no-results-msg"
+          class="hidden col-span-3 w-full py-10 px-4 text-center rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50"
+          style="display: none;"
+        >
+          <span class="text-3xl mb-2 inline-block">🔍</span>
+          <h3 class="font-outfit text-sm sm:text-base font-bold text-slate-800 dark:text-slate-200">
+            {isFrench ? "Aucune calculatrice trouvée pour cette recherche." : "No calculators found"}
+          </h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            {isFrench
+              ? "Essayez avec des termes comme prêt, tva, salaire, imc, âge ou vérifiez l'orthographe."
+              : 'Try searching for another keyword like "sip", "emi", "tax", "age", or "bmi".'}
+          </p>
+          <div class="mt-3">
+            <button
+              type="button"
+              id="reset-directory-search-btn"
+              class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-colors cursor-pointer"
+            >
+              <span>{isFrench ? "Afficher Tous les Outils" : "Show All Tools"}</span>
+            </button>
+          </div>
+        </div>
+
         {tools.map((calc) => (
           <a
             href={calc.href}
-            title={`Calculate with ${calc.name}`}
+            title={isFrench ? `Calculer avec ${calc.name}` : `Calculate with ${calc.name}`}
             class="calc-card group relative flex flex-col items-center justify-between text-center min-w-0 min-h-[110px] sm:min-h-[140px] md:min-h-[155px] rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/50 hover:shadow-md p-2.5 sm:p-4 md:p-5 transition-all duration-200 shadow-2xs active:scale-[0.98] cursor-pointer"
             data-name={calc.name.toLowerCase()}
             data-desc={(calc.description || '').toLowerCase()}
@@ -263,18 +309,22 @@ const {
               )}
             </div>
 
-            <!-- Title: Optimized for 3-Column Width on all devices -->
-            <div class="my-1.5 w-full min-w-0 px-0.5">
-              <h3 class="font-outfit text-[11.5px] sm:text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2">
-                <span class="inline sm:hidden">{calc.shortName}</span>
-                <span class="hidden sm:inline">{calc.name}</span>
+            <!-- Title: Separated prefix and name with proper flex column spacing -->
+            <div class="my-1.5 w-full min-w-0 px-0.5 flex flex-col items-center justify-center gap-1">
+              <span class="inline-block text-[10px] sm:text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider select-none leading-none">{calc.shortName}</span>
+              <h3 class="font-outfit text-[11.5px] sm:text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 leading-tight">
+                <span>{calc.name}</span>
               </h3>
             </div>
 
-            <!-- Bottom Badge & Sub-Niche Tag -->
-            <div class="flex items-center justify-center w-full">
+            <!-- Bottom Badge & Action Button: "Lancer l'Outil" -->
+            <div class="flex flex-col items-center justify-center w-full gap-1.5">
               <span class="inline-flex items-center px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] md:text-[11px] font-mono font-semibold rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-900/60 truncate max-w-full">
                 {calc.badge}
+              </span>
+              <span class="text-[10px] sm:text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 group-hover:underline flex items-center gap-0.5">
+                <span>{isFrench ? "Lancer l'Outil" : "Launch Tool"}</span>
+                <span class="text-xs transition-transform group-hover:translate-x-0.5">→</span>
               </span>
             </div>
           </a>
@@ -286,30 +336,12 @@ const {
         <div class="flex items-center justify-between px-1">
           <h3 class="font-outfit text-xs sm:text-sm font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400 flex items-center gap-1.5">
             <span>✦</span>
-            <span id="cross-category-title">Matching Tools Found Across Database</span>
+            <span id="cross-category-title">{isFrench ? "Calculatrices Correspondantes dans la Base" : "Matching Tools Found Across Database"}</span>
           </h3>
           <span class="text-[11px] text-slate-500 dark:text-slate-400 font-mono" id="cross-category-badge"></span>
         </div>
         <div id="cross-category-grid" class="grid grid-cols-3 gap-2 sm:gap-3.5 md:gap-4.5">
           <!-- Dynamically populated 3*3 cards for tools found across categories -->
-        </div>
-      </div>
-
-      <!-- No Results Container -->
-      <div id="no-results-msg" class="hidden py-10 text-center space-y-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50">
-        <span class="text-3xl">🔍</span>
-        <h3 class="text-sm font-bold text-slate-900 dark:text-white">No calculators found</h3>
-        <p class="text-xs text-slate-500 dark:text-slate-400">
-          Try searching for another keyword like "sip", "emi", "tax", "age", or "bmi".
-        </p>
-        <div>
-          <button
-            type="button"
-            id="reset-directory-search-btn"
-            class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-colors cursor-pointer"
-          >
-            <span>Show All Tools</span>
-          </button>
         </div>
       </div>
     </section>
@@ -457,17 +489,33 @@ const {
       });
     }
 
+    const path = window.location.pathname;
+    const isFr = path.includes('/countries/france') || (document.documentElement.lang || '').startsWith('fr');
+
+    if (noResults) {
+      noResults.style.display = 'none';
+      noResults.classList.add('hidden');
+    }
+
+    function removeAccents(str) {
+      return (str || '').normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
     function filterTools(query) {
       const q = (query || '').toLowerCase().trim();
+      const cleanQ = removeAccents(q);
       let visibleCount = 0;
       firstMatchHref = null;
 
-      // 1. Filter local cards
+      // 1. Filter local cards with accent-insensitive matching
       cards.forEach((card) => {
-        const name = card.dataset.name || '';
-        const desc = card.dataset.desc || '';
-        const subniche = card.dataset.subniche || '';
-        const match = !q || name.includes(q) || desc.includes(q) || subniche.includes(q);
+        const name = (card.dataset.name || '').toLowerCase();
+        const desc = (card.dataset.desc || '').toLowerCase();
+        const subniche = (card.dataset.subniche || '').toLowerCase();
+        const fullHaystack = `${name} ${desc} ${subniche}`;
+        const cleanHaystack = removeAccents(fullHaystack);
+
+        const match = !q || fullHaystack.includes(q) || cleanHaystack.includes(cleanQ);
         card.style.display = match ? 'flex' : 'none';
         if (match) {
           visibleCount++;
@@ -480,10 +528,13 @@ const {
       if (!q) {
         closeDropdown();
         if (crossContainer) crossContainer.classList.add('hidden');
-        if (noResults) noResults.style.display = 'none';
+        if (noResults) {
+          noResults.style.display = 'none';
+          noResults.classList.add('hidden');
+        }
         if (dirClearBtn) dirClearBtn.classList.add('hidden');
         if (dirCounter) {
-          dirCounter.textContent = 'All Tools';
+          dirCounter.textContent = isFr ? 'Tous les Outils' : 'All Tools';
           dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-900/60';
         }
         return;
@@ -494,16 +545,19 @@ const {
       // 2. Score & Rank across ALL calculators globally
       const matchedAll = [];
       for (const item of allTools) {
-        const nameLower = item.name.toLowerCase();
+        const nameLower = (item.name || '').toLowerCase();
         const catLower = (item.categoryName || item.category || '').toLowerCase();
         const keywords = (item.keywords || []).map((k) => k.toLowerCase());
 
+        const cleanName = removeAccents(nameLower);
+        const cleanKeywords = keywords.map(removeAccents);
+
         let score = 0;
-        if (nameLower === q) score += 100;
-        else if (nameLower.startsWith(q)) score += 80;
-        else if (nameLower.includes(` ${q}`)) score += 60;
-        else if (nameLower.includes(q)) score += 40;
-        else if (keywords.some((k) => k.includes(q))) score += 35;
+        if (nameLower === q || cleanName === cleanQ) score += 100;
+        else if (nameLower.startsWith(q) || cleanName.startsWith(cleanQ)) score += 80;
+        else if (nameLower.includes(` ${q}`) || cleanName.includes(` ${cleanQ}`)) score += 60;
+        else if (nameLower.includes(q) || cleanName.includes(cleanQ)) score += 40;
+        else if (keywords.some((k) => k.includes(q)) || cleanKeywords.some((k) => k.includes(cleanQ))) score += 35;
         else if (catLower.includes(q)) score += 20;
 
         if (score > 0) {
@@ -520,9 +574,10 @@ const {
           firstMatchHref = currentDropdownMatches[0].href;
         }
         if (dirDropdownTitle) {
-          dirDropdownTitle.textContent = 'Suggested Tools';
+          dirDropdownTitle.textContent = isFr ? 'Outils Suggérés' : 'Suggested Tools';
         }
         if (dirDropdownList) {
+          const openText = isFr ? 'Ouvrir ↗' : 'Open ↗';
           dirDropdownList.innerHTML = currentDropdownMatches
             .map(
               (item, idx) => `
@@ -544,7 +599,7 @@ const {
                 </div>
                 <div class="flex items-center gap-1.5 shrink-0">
                   <span class="text-[9px] font-mono font-medium px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                    Open ↗
+                    ${openText}
                   </span>
                 </div>
               </a>
@@ -560,13 +615,13 @@ const {
       // 4. Update Directory Counter Pill
       if (dirCounter) {
         if (visibleCount > 0) {
-          dirCounter.textContent = 'Filtered';
+          dirCounter.textContent = isFr ? 'Filtré' : 'Filtered';
           dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-900/60';
         } else if (matchedAll.length > 0) {
-          dirCounter.textContent = 'Global Match';
+          dirCounter.textContent = isFr ? 'Recherche Globale' : 'Global Match';
           dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-900/60';
         } else {
-          dirCounter.textContent = '0 Matches';
+          dirCounter.textContent = isFr ? '0 Résultat' : '0 Matches';
           dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200/60 dark:border-rose-900/60';
         }
       }
@@ -574,12 +629,12 @@ const {
       // 5. Handle Cross-Category Results Grid
       if (visibleCount === 0 && matchedAll.length > 0) {
         if (crossContainer) crossContainer.classList.remove('hidden');
-        if (crossBadge) crossBadge.textContent = 'Suggested Tools';
+        if (crossBadge) crossBadge.textContent = isFr ? 'Outils Suggérés' : 'Suggested Tools';
         if (crossGrid) {
           crossGrid.innerHTML = matchedAll.slice(0, 9).map((calc) => `
             <a
               href="${escapeHtml(calc.href)}"
-              title="Calculate with ${escapeHtml(calc.name)}"
+              title="${isFr ? 'Calculer avec ' : 'Calculate with '}${escapeHtml(calc.name)}"
               class="group relative flex flex-col items-center justify-between text-center min-w-0 min-h-[110px] sm:min-h-[140px] md:min-h-[155px] rounded-2xl border border-indigo-200/60 dark:border-indigo-900/40 bg-white/90 dark:bg-slate-900/90 hover:bg-indigo-50/40 dark:hover:bg-indigo-950/30 hover:border-indigo-500/50 hover:shadow-md p-2.5 sm:p-4 md:p-5 transition-all duration-200 shadow-2xs active:scale-[0.98] cursor-pointer"
             >
               <div class="flex h-8 w-8 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-base sm:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/40 transition-transform">
@@ -602,11 +657,17 @@ const {
         if (crossContainer) crossContainer.classList.add('hidden');
       }
 
-      // 6. No Results State
-      if (visibleCount === 0 && matchedAll.length === 0) {
-        if (noResults) noResults.style.display = 'block';
+      // 6. No Results State: STRICTLY only when q is NOT empty AND no matches found
+      if (q.length > 0 && visibleCount === 0 && matchedAll.length === 0) {
+        if (noResults) {
+          noResults.style.display = 'block';
+          noResults.classList.remove('hidden');
+        }
       } else {
-        if (noResults) noResults.style.display = 'none';
+        if (noResults) {
+          noResults.style.display = 'none';
+          noResults.classList.add('hidden');
+        }
       }
     }
 

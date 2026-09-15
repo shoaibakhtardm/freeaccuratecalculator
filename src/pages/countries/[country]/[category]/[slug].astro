@@ -1,0 +1,77 @@
+---
+// src/pages/countries/[country]/[category]/[slug].astro
+import CountryCalculatorView from '../../../../components/calculator/CountryCalculatorView.astro';
+import { COUNTRY_LIST, type CountryConfig } from '../../../../data/countries';
+import { CALCULATORS, type CalculatorEntry } from '../../../../data/calculatorRegistry';
+
+export async function getStaticPaths() {
+  const paths: Array<{
+    params: { country: string; category: string; slug: string };
+    props: {
+      country: CountryConfig;
+      calc: CalculatorEntry;
+    };
+  }> = [];
+
+  for (const country of COUNTRY_LIST) {
+    const popularSet = new Set(country.popularCalculators);
+    const calcsForCountry = country.slug === 'france'
+      ? CALCULATORS.filter(
+          (c) =>
+            ![
+              '401k-calculator',
+              'roth-ira-calculator',
+              'ppf-calculator',
+              'epf-calculator',
+              'gratuity-calculator',
+              'age-calculator',
+              'calorie-calculator',
+              'bmi-calculator',
+              'date-calculator',
+            ].includes(c.id)
+        )
+      : CALCULATORS.filter((c) => popularSet.has(c.id));
+
+    for (const calc of calcsForCountry) {
+      paths.push({
+        params: {
+          country: country.slug,
+          category: calc.category,
+          slug: calc.id,
+        },
+        props: {
+          country,
+          calc,
+        },
+      });
+
+      // Special aliases for France calculators
+      if (country.slug === 'france') {
+        if (calc.id === 'sales-tax-calculator') {
+          paths.push({
+            params: { country: 'france', category: 'finance', slug: 'vat-calculator' },
+            props: { country, calc },
+          });
+        }
+        if (calc.id === 'loan-calculator') {
+          paths.push({
+            params: { country: 'france', category: 'finance', slug: 'emi-calculator' },
+            props: { country, calc },
+          });
+        }
+      }
+    }
+  }
+
+  return paths;
+}
+
+interface Props {
+  country: CountryConfig;
+  calc: CalculatorEntry;
+}
+
+const { country, calc } = Astro.props;
+---
+
+<CountryCalculatorView country={country} calc={calc} />

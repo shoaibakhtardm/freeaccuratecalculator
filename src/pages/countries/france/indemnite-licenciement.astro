@@ -1,0 +1,421 @@
+---
+// src/pages/countries/france/indemnite-licenciement.astro
+import Layout from '../../../layouts/Layout.astro';
+import ThemeToggle from '../../../components/ThemeToggle.astro';
+import { getCountryBySlug } from '../../../data/countries';
+
+const country = getCountryBySlug('france')!;
+
+const pageTitle = "Calculateur Indemnité de Licenciement 2026 | Code du Travail France";
+const pageDescription = "Calculez gratuitement votre indemnité légale de licenciement selon le Code du travail (art. R1234-2). Estimation de l'exonération fiscale et sociale (2 PASS).";
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: "Calculateur Indemnité de Licenciement France",
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'All',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'EUR',
+      },
+      description: pageDescription,
+      inLanguage: 'fr-FR',
+      url: 'https://freeaccuratecalculator.com/countries/france/indemnite-licenciement/',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://freeaccuratecalculator.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Pays', item: 'https://freeaccuratecalculator.com/countries/' },
+        { '@type': 'ListItem', position: 3, name: 'France', item: 'https://freeaccuratecalculator.com/countries/france/' },
+        { '@type': 'ListItem', position: 4, name: 'Juridique', item: 'https://freeaccuratecalculator.com/countries/france/legal/' },
+        { '@type': 'ListItem', position: 5, name: 'Indemnité de Licenciement', item: 'https://freeaccuratecalculator.com/countries/france/indemnite-licenciement/' },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: "Quelle est la condition minimale d'ancienneté pour toucher l'indemnité légale de licenciement ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Selon l'article L1234-9 du Code du travail, le salarié doit justifier d'au moins 8 mois d'ancienneté ininterrompue au service du même employeur à la date de notification du licenciement.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "Comment est calculé le salaire de référence pour l'indemnité ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Le salaire mensuel de référence est la formule la plus avantageuse entre la moyenne mensuelle des 12 derniers mois précédant le licenciement et la moyenne des 3 derniers mois (les primes annuelles étant intégrées au prorata).",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "L'indemnité légale de licenciement est-elle soumise à l'impôt sur le revenu ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "L'indemnité légale de licenciement est totalement exonérée d'impôt sur le revenu dans la limite du montant légal ou conventionnel, ou jusqu'à 2 fois le Plafond Annuel de la Sécurité Sociale (PASS 2026 : 47 100 €, soit 94 200 € d'exonération).",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "Une convention collective peut-elle prévoir une indemnité supérieure ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Oui. Si votre convention collective de branche prévoit une formule de calcul plus avantageuse que le barème légal du Code du travail, c'est obligatoirement le montant conventionnel supérieur qui s'applique.",
+          },
+        },
+      ],
+    },
+  ],
+};
+---
+
+<Layout title={pageTitle} description={pageDescription} jsonLd={jsonLd} lang="fr-FR" locale="fr">
+  <Fragment slot="head">
+    <link rel="canonical" href="https://freeaccuratecalculator.com/countries/france/indemnite-licenciement/" />
+    <link rel="alternate" hreflang="fr" href="https://freeaccuratecalculator.com/countries/france/indemnite-licenciement/" />
+    <link rel="alternate" hreflang="en" href="https://freeaccuratecalculator.com/countries/france/indemnite-licenciement/?lang=en" />
+  </Fragment>
+
+  <!-- [TOP HEADER WITH FRANCE BADGE & BILINGUAL TOGGLE] -->
+  <header
+    id="main-header"
+    class="sticky top-0 left-0 right-0 z-50 w-full bg-white/90 dark:bg-gray-950/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80 transition-all duration-300"
+  >
+    <div class="h-[2.5px] w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-[0_1px_6px_rgba(99,102,241,0.4)]" aria-hidden="true"></div>
+
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between h-[66px] sm:h-20 gap-2 sm:gap-4">
+      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
+        <a
+          href="/countries/france/"
+          aria-label="Calculatrices Gratuites France"
+          class="group relative inline-flex items-center gap-2 sm:gap-3.5 select-none shrink-0 py-1 rounded-2xl transition-all duration-300 hover:scale-[1.015]"
+        >
+          <div class="relative p-[1.2px] rounded-2xl bg-gradient-to-b from-blue-400/80 via-indigo-500/60 to-purple-700/80 shadow-sm">
+            <div class="relative flex h-9 w-9 sm:h-10.5 sm:w-10.5 items-center justify-center rounded-[13px] sm:rounded-[14.5px] bg-gradient-to-br from-blue-600 via-indigo-800 to-slate-950 text-white">
+              <span class="text-xl">⚖️</span>
+            </div>
+          </div>
+
+          <div class="flex flex-col justify-center text-left min-w-0">
+            <div class="flex items-center gap-1.5 leading-none">
+              <span class="font-outfit text-[19px] sm:text-[23px] font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent">
+                Free Accurate
+              </span>
+            </div>
+            <span class="font-outfit text-[11px] sm:text-[12px] font-semibold text-slate-500 dark:text-slate-400">
+              Indemnité Licenciement France
+            </span>
+          </div>
+        </a>
+
+        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200/90 dark:border-slate-800/90 bg-slate-50 dark:bg-slate-900/80 text-xs font-bold text-slate-800 dark:text-slate-200">
+          <span>🇫🇷</span>
+          <span>France</span>
+        </span>
+      </div>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <a
+          href="/countries/france/legal/"
+          class="text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors hidden md:inline-block"
+        >
+          ← Calculatrices Juridiques
+        </a>
+        <ThemeToggle id="theme-toggle" />
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+      <a href="/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Accueil</a>
+      <span>/</span>
+      <a href="/countries/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Pays</a>
+      <span>/</span>
+      <a href="/countries/france/" class="hover:text-indigo-600 dark:hover:text-indigo-400">France</a>
+      <span>/</span>
+      <a href="/countries/france/legal/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Juridique</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold">Indemnité de Licenciement</span>
+    </nav>
+
+    <!-- Hero Title -->
+    <div class="space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200/50 dark:border-blue-800/50">
+        <span>Article R1234-2 Code du Travail</span>
+        <span>•</span>
+        <span>Plafond 2 PASS (94 200 €)</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white font-outfit">
+        Calculateur d'Indemnité Légale de Licenciement 2026
+      </h1>
+      <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
+        Estimez précisément le montant brut de votre indemnité légale de rupture de CDI, son régime d'exonération de cotisations sociales et son impact sur votre net imposable.
+      </p>
+    </div>
+
+    <!-- CALCULATOR CONTAINER -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      <!-- FORM INPUTS (7 cols) -->
+      <div class="lg:col-span-7 bg-white dark:bg-slate-900/90 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 p-5 sm:p-7 shadow-sm space-y-5">
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3">
+          1. Vos Informations Salariales & Ancienneté
+        </h2>
+
+        <!-- Salaire Brut de Référence -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center">
+            <label for="lic-salary" class="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+              Salaire Mensuel Brut de Référence
+            </label>
+            <span class="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400" id="lic-salary-display">2 800 €</span>
+          </div>
+          <div class="relative">
+            <input
+              type="number"
+              id="lic-salary"
+              min="500"
+              max="25000"
+              step="50"
+              value="2800"
+              class="w-full px-3.5 py-2.5 pr-10 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400 font-bold">€</span>
+          </div>
+          <input type="range" id="lic-salary-range" min="1000" max="10000" step="50" value="2800" class="w-full accent-indigo-600 cursor-pointer" />
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">Moyenne des 12 derniers mois ou des 3 derniers mois (la formule la plus avantageuse pour le salarié).</p>
+        </div>
+
+        <!-- Ancienneté : Années & Mois -->
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label for="lic-years" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+              Années Complètes
+            </label>
+            <input
+              type="number"
+              id="lic-years"
+              min="0"
+              max="45"
+              step="1"
+              value="8"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+          </div>
+          <div class="space-y-1.5">
+            <label for="lic-months" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+              Mois Supplémentaires
+            </label>
+            <input
+              type="number"
+              id="lic-months"
+              min="0"
+              max="11"
+              step="1"
+              value="6"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <!-- Motif du licenciement -->
+        <div class="space-y-1.5">
+          <label for="lic-reason" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Motif du Licenciement
+          </label>
+          <select
+            id="lic-reason"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer"
+          >
+            <option value="standard" selected>Motif personnel ou économique (Formule standard)</option>
+            <option value="inaptitude_pro">Inaptitude d'origine professionnelle (AT/MP - Indemnité Doublée)</option>
+          </select>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">Attention : la faute grave ou lourde prive de l'indemnité légale de licenciement.</p>
+        </div>
+      </div>
+
+      <!-- RESULTS PANEL (5 cols) -->
+      <div class="lg:col-span-5 bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-950 text-white rounded-2xl border border-indigo-800/40 p-5 sm:p-7 shadow-xl space-y-6 sticky top-24">
+        <div>
+          <span class="text-xs uppercase tracking-wider text-indigo-300 font-semibold">Barème Légal Code du Travail</span>
+          <h3 class="text-xl font-bold font-outfit mt-0.5">Montant Estimé de l'Indemnité</h3>
+        </div>
+
+        <!-- Big Number -->
+        <div class="bg-white/5 rounded-2xl p-5 border border-white/10 text-center space-y-1">
+          <div class="text-[11px] font-mono tracking-wider text-indigo-300 uppercase">Indemnité Légale Brute</div>
+          <div class="text-4xl sm:text-5xl font-black font-outfit text-white tracking-tight" id="lic-result-main">
+            5 950,00 €
+          </div>
+          <div class="text-xs text-emerald-300 font-medium" id="lic-status-badge">
+            ✅ 100% Exonéré d'impôt sur le revenu (≤ 2 PASS)
+          </div>
+        </div>
+
+        <!-- Breakdown -->
+        <div class="space-y-2.5 text-xs sm:text-sm">
+          <div class="flex justify-between items-center py-1.5 border-b border-white/10">
+            <span class="text-slate-300">Ancienneté retenue</span>
+            <span class="font-bold text-white font-mono" id="lic-tenure-display">8 ans et 6 mois</span>
+          </div>
+          <div class="flex justify-between items-center py-1.5 border-b border-white/10">
+            <span class="text-slate-300">Part tranche 1 (≤ 10 ans à 1/4)</span>
+            <span class="font-bold text-slate-200 font-mono" id="lic-part1">5 950,00 €</span>
+          </div>
+          <div class="flex justify-between items-center py-1.5 border-b border-white/10">
+            <span class="text-slate-300">Part tranche 2 (> 10 ans à 1/3)</span>
+            <span class="font-bold text-slate-200 font-mono" id="lic-part2">0,00 €</span>
+          </div>
+          <div class="flex justify-between items-center py-1.5 border-b border-white/10">
+            <span class="text-slate-300">Plafond exonération sociale (2 PASS 2026)</span>
+            <span class="font-bold text-slate-200 font-mono">94 200,00 €</span>
+          </div>
+          <div class="flex justify-between items-center py-1.5">
+            <span class="text-slate-300">Net imposable estimé</span>
+            <span class="font-bold text-emerald-400 font-mono" id="lic-net-taxable">0,00 €</span>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-indigo-950/70 border border-indigo-500/30 text-[11px] text-indigo-200 leading-relaxed">
+          ⚖️ <strong>Précision juridique :</strong> Ce calcul applique l'indemnité minimale légale (art. R1234-2). Si votre convention collective prévoit un barème supérieur, votre employeur doit vous verser le montant le plus favorable.
+        </div>
+      </div>
+    </div>
+
+    <!-- 150-200 WORDS EXPLANATORY CONTENT (CRUCIAL FOR TECHNICAL SEO) -->
+    <article class="bg-white dark:bg-slate-900/60 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 p-6 sm:p-8 space-y-4 text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
+      <h2 class="text-lg sm:text-xl font-bold font-outfit text-slate-900 dark:text-white">
+        Comment est calculée l'indemnité légale de licenciement en France selon le Code du travail ?
+      </h2>
+      <p>
+        En droit du travail français, l'<strong>indemnité légale de licenciement</strong> est régie par les articles L1234-9 et R1234-2 du Code du travail. Tout salarié titulaire d'un contrat à durée indéterminée (CDI) licencié pour un motif autre qu'une faute grave ou une faute lourde a droit à cette compensation financière dès lors qu'il justifie d'au moins <strong>8 mois d'ancienneté ininterrompue</strong> au sein de l'entreprise à la date de notification de la rupture.
+      </p>
+      <p>
+        La formule de calcul officielle applique un taux progressif découpé en deux tranches :
+      </p>
+      <ul class="list-disc pl-5 space-y-1">
+        <li><strong>Pour les 10 premières années d'ancienneté :</strong> 1/4 de mois de salaire brut de référence par année d'ancienneté.</li>
+        <li><strong>Pour les années au-delà de 10 ans :</strong> 1/3 de mois de salaire brut de référence par année d'ancienneté supplémentaire.</li>
+      </ul>
+      <p>
+        En cas d'année incomplète, l'indemnité est calculée exactement au prorata du nombre de mois complets de présence (1/12 par mois). Sur le plan fiscal et social, l'article 80 duodecies du Code Général des Impôts prévoit une exonération totale d'impôt sur le revenu dans la limite du montant légal ou conventionnel, et jusqu'à <strong>2 fois le Plafond Annuel de la Sécurité Sociale (PASS 2026 : 47 100 €, soit 94 200 €)</strong>.
+      </p>
+    </article>
+  </main>
+</Layout>
+
+<script is:inline>
+  (function () {
+    const formatEUR = (val) => {
+      return new Intl.NumberFormat('fr-FR', {
+        style: 'currency',
+        currency: 'EUR',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(val);
+    };
+
+    const salaryEl = document.getElementById('lic-salary');
+    const salaryRange = document.getElementById('lic-salary-range');
+    const salaryDisplay = document.getElementById('lic-salary-display');
+    const yearsEl = document.getElementById('lic-years');
+    const monthsEl = document.getElementById('lic-months');
+    const reasonEl = document.getElementById('lic-reason');
+
+    const resultMain = document.getElementById('lic-result-main');
+    const statusBadge = document.getElementById('lic-status-badge');
+    const tenureDisplay = document.getElementById('lic-tenure-display');
+    const part1El = document.getElementById('lic-part1');
+    const part2El = document.getElementById('lic-part2');
+    const netTaxableEl = document.getElementById('lic-net-taxable');
+
+    const PASS_2026 = 47100;
+    const MAX_EXO_2_PASS = 2 * PASS_2026; // 94 200 €
+
+    function calculateSeverance() {
+      const salary = parseFloat(salaryEl.value) || 0;
+      const years = parseInt(yearsEl.value, 10) || 0;
+      const months = parseInt(monthsEl.value, 10) || 0;
+      const isAccidentPro = reasonEl.value === 'inaptitude_pro';
+
+      const totalTenure = years + (months / 12);
+
+      if (tenureDisplay) {
+        tenureDisplay.textContent = `${years} an${years > 1 ? 's' : ''} et ${months} mois`;
+      }
+
+      // Condition: 8 mois minimum (8 / 12 = 0.6667)
+      if (totalTenure < (8 / 12)) {
+        if (resultMain) resultMain.textContent = '0,00 €';
+        if (statusBadge) {
+          statusBadge.innerHTML = '⚠️ Ancienneté inférieure à 8 mois (aucun droit légal)';
+          statusBadge.className = 'text-xs text-amber-300 font-medium';
+        }
+        if (part1El) part1El.textContent = '0,00 €';
+        if (part2El) part2El.textContent = '0,00 €';
+        if (netTaxableEl) netTaxableEl.textContent = '0,00 €';
+        return;
+      }
+
+      // 1. Tranche jusqu'à 10 ans (1/4 de mois par an)
+      const tenureTranche1 = Math.min(totalTenure, 10);
+      const part1 = (1 / 4) * salary * tenureTranche1;
+
+      // 2. Tranche au-delà de 10 ans (1/3 de mois par an)
+      const tenureTranche2 = Math.max(0, totalTenure - 10);
+      const part2 = (1 / 3) * salary * tenureTranche2;
+
+      let totalGross = part1 + part2;
+
+      // Si inaptitude professionnelle : indemnité légale doublée (art. L1226-14)
+      if (isAccidentPro) {
+        totalGross = totalGross * 2;
+      }
+
+      // Exonération fiscale et sociale (2 PASS)
+      const exemptAmount = Math.min(totalGross, MAX_EXO_2_PASS);
+      const netTaxable = Math.max(0, totalGross - exemptAmount);
+
+      if (resultMain) resultMain.textContent = formatEUR(totalGross);
+      if (part1El) part1El.textContent = formatEUR(part1);
+      if (part2El) part2El.textContent = formatEUR(part2);
+      if (netTaxableEl) netTaxableEl.textContent = formatEUR(netTaxable);
+
+      if (statusBadge) {
+        if (totalGross <= MAX_EXO_2_PASS) {
+          statusBadge.innerHTML = `✅ 100% Exonéré d'impôt sur le revenu (≤ ${formatEUR(MAX_EXO_2_PASS)})`;
+          statusBadge.className = 'text-xs text-emerald-300 font-medium';
+        } else {
+          statusBadge.innerHTML = `⚠️ Part imposable : ${formatEUR(netTaxable)} (dépassement 2 PASS)`;
+          statusBadge.className = 'text-xs text-amber-300 font-medium';
+        }
+      }
+    }
+
+    salaryEl.addEventListener('input', (e) => {
+      salaryRange.value = e.target.value;
+      salaryDisplay.textContent = `${e.target.value} €`;
+      calculateSeverance();
+    });
+    salaryRange.addEventListener('input', (e) => {
+      salaryEl.value = e.target.value;
+      salaryDisplay.textContent = `${e.target.value} €`;
+      calculateSeverance();
+    });
+
+    yearsEl.addEventListener('input', calculateSeverance);
+    monthsEl.addEventListener('input', calculateSeverance);
+    reasonEl.addEventListener('change', calculateSeverance);
+
+    calculateSeverance();
+  })();
+</script>
