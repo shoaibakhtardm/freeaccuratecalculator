@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 
 export const prerender = false;
 
-const INDEXNOW_KEY = 'fac948a31e804f90918ef86520b22a07';
+const INDEXNOW_KEY = 'fb0c52eb093a417fa396b0532ec058a1';
 const HOST = 'freeaccuratecalculator.com';
 
 const ENDPOINTS = [

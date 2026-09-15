@@ -24,7 +24,7 @@ jobs:
       - name: Submit All Live URLs via Batch IndexNow
         run: node scripts/indexnow.mjs
         env:
-          INDEXNOW_KEY: "fac948a31e804f90918ef86520b22a07"
+          INDEXNOW_KEY: "fb0c52eb093a417fa396b0532ec058a1"
 
       - name: Ping Direct IndexNow API Fallback
         run: |
@@ -32,8 +32,8 @@ jobs:
           -H "Content-Type: application/json; charset=utf-8" \
           -d '{
             "host": "freeaccuratecalculator.com",
-            "key": "fac948a31e804f90918ef86520b22a07",
-            "keyLocation": "https://freeaccuratecalculator.com/fac948a31e804f90918ef86520b22a07.txt",
+            "key": "fb0c52eb093a417fa396b0532ec058a1",
+            "keyLocation": "https://freeaccuratecalculator.com/fb0c52eb093a417fa396b0532ec058a1.txt",
             "urlList": [
               "https://freeaccuratecalculator.com/",
               "https://freeaccuratecalculator.com/sitemap.xml",

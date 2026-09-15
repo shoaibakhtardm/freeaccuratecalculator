@@ -328,20 +328,46 @@ export function getCountryTools(country: CountryConfig): DirectoryToolItem[] {
         ? `/countries/${country.slug}/${id}/`
         : `/${category}/${id}/`;
 
+      const frenchNameMap: Record<string, { name: string; shortName: string; badge: string }> = {
+        'age-calculator': { name: "Calculateur d'Âge", shortName: 'Âge', badge: 'Précision Calendrier' },
+        'calorie-calculator': { name: 'Calculateur de Calories', shortName: 'Calories', badge: 'Mifflin-St Jeor' },
+        'date-calculator': { name: 'Calculateur de Dates', shortName: 'Dates', badge: 'Durée & Jours' },
+        'percentage-calculator': { name: 'Calculateur de Pourcentage', shortName: 'Pourcentage', badge: 'Multi-Modes' },
+        'retirement-calculator': { name: 'Calculateur de Retraite', shortName: 'Retraite', badge: 'Planification' },
+        'vat-calculator': { name: 'Calculateur de TVA', shortName: 'TVA', badge: 'TVA 20% & 5,5%' },
+        'bmi-calculator': { name: 'Calculateur IMC', shortName: 'IMC', badge: 'Norme OMS' },
+        'step-up-sip-calculator': { name: 'Épargne avec Boost', shortName: 'Boost Épargne', badge: 'Boost Annuel' },
+        'sip-calculator': { name: 'Épargne Programmée', shortName: 'Épargne Prog.', badge: 'Fonds & Épargne' },
+        'income-tax-calculator': { name: 'Impôt sur le Revenu', shortName: 'Impôt Revenu', badge: 'Barème 2026' },
+        'compound-interest-calculator': { name: 'Intérêts Composés', shortName: 'Intérêts Comp.', badge: 'Croissance Capital' },
+        'emi-calculator': { name: 'Mensualités de Prêt', shortName: 'Mensualités', badge: 'Capital Décroissant' },
+        'auto-loan-calculator': { name: 'Prêt Auto', shortName: 'Prêt Auto', badge: 'Crédit Véhicule' },
+        'mortgage-calculator': { name: 'Prêt Immobilier', shortName: 'Prêt Immo', badge: 'Amortissement' },
+        'salary-calculator': { name: 'Salaire Net', shortName: 'Salaire Net', badge: 'Net Après Charges' },
+      };
+
+      const frMeta = country.slug === 'france' ? frenchNameMap[id] : null;
+
       tools.push({
         id,
-        name: meta?.name || regCalc?.name || id,
-        shortName: meta?.shortName || id.replace(/-calculator$/, ''),
+        name: frMeta?.name || meta?.name || regCalc?.name || id,
+        shortName: frMeta?.shortName || meta?.shortName || id.replace(/-calculator$/, ''),
         href,
         description:
           meta?.description ||
           regCalc?.description ||
           `Calculate with ${country.currencySymbol} precision.`,
         category,
-        badge: meta?.badge || `${country.currencySymbol} Verified`,
+        badge: frMeta?.badge || meta?.badge || `${country.currencySymbol} Verified`,
         icon: meta?.icon || '🧮',
       });
     }
+  }
+
+  // If France, sort alphabetically by French name and return exact 15 tools
+  if (country.slug === 'france') {
+    tools.sort((a, b) => a.name.localeCompare(b.name, 'fr'));
+    return tools;
   }
 
   // 2. Add universal financial tools until we reach at least 15, 18, or 21 tools (multiple of 3)
@@ -577,7 +603,15 @@ export function getCountryCategoryPageConfig(
   }
 
   // 1b. Remaining tools from CALCULATORS for this category
-  const remainingCalcs = CALCULATORS.filter((c) => c.category === categoryId);
+  const remainingCalcs = CALCULATORS.filter((c) => {
+    if (c.category !== categoryId) return false;
+    if (country.slug === 'france') {
+      if (['401k-calculator', 'roth-ira-calculator', 'ppf-calculator', 'epf-calculator', 'gratuity-calculator'].includes(c.id)) {
+        return false;
+      }
+    }
+    return true;
+  });
   for (const regCalc of remainingCalcs) {
     if (!seenIds.has(regCalc.id)) {
       seenIds.add(regCalc.id);
@@ -601,6 +635,11 @@ export function getCountryCategoryPageConfig(
         icon: meta?.icon || catItem?.icon || '🧮',
       });
     }
+  }
+
+  // If France, sort alphabetically by name
+  if (country.slug === 'france') {
+    tools.sort((a, b) => a.name.localeCompare(b.name, 'fr'));
   }
 
   // Ensure tool count is a multiple of 3 if count >= 3, for strict 3-by-3 visual alignment

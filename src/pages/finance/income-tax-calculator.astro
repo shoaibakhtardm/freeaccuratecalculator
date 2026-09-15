@@ -6,7 +6,6 @@ import FormulaSection from '../../components/calculator/FormulaSection.astro';
 import WorkedExample from '../../components/calculator/WorkedExample.astro';
 import FAQSection from '../../components/calculator/FAQSection.astro';
 import HistoryDrawer from '../../components/calculator/HistoryDrawer.astro';
-import CurrencySwitcher from '../../components/common/CurrencySwitcher.astro';
 import { INDIA_TAX_CONFIG_2026, US_TAX_CONFIG_2026 } from '../../data/countries';
 
 const faqs = [
@@ -76,8 +75,12 @@ const formulaVariables = [
     </div>
   </div>
 
-  <!-- Calculator Main Box -->
-  <div id="tax-calculator-card" class="tax-main-box relative rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+  <!-- Calculator Main Box (SIP Design Standard) -->
+  <div id="tax-calculator-card" class="tax-main-box relative rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6 overflow-hidden transition-all">
+
+    <!-- Subtle Ambient Gradient Glow -->
+    <div class="pointer-events-none absolute -top-32 -right-32 w-80 h-80 rounded-full bg-link/10 blur-3xl print:hidden"></div>
+    <div class="pointer-events-none absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-cyan/10 blur-3xl print:hidden"></div>
 
     <!-- PRINT-ONLY REPORT -->
     <div id="tax-print-report" class="hidden print:block">
@@ -121,20 +124,16 @@ const formulaVariables = [
     <!-- END PRINT REPORT -->
     <!-- Controls Header -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4 text-xs">
-      <div class="flex flex-wrap items-center gap-3">
+      <div class="flex flex-wrap items-center gap-4">
         <div class="flex items-center gap-2">
-          <label for="tax-country-select" class="mono-eyebrow text-mute">Country / Jurisdiction:</label>
+          <label for="tax-country-select" class="mono-eyebrow text-ink">Country & Tax Law:</label>
           <select
             id="tax-country-select"
-            class="rounded-[6px] border border-hairline bg-canvas px-3 py-1.5 min-h-[44px] sm:min-h-[32px] font-mono text-xs text-ink focus:border-link focus:outline-none"
+            class="rounded-lg border border-hairline bg-canvas px-3 py-1.5 text-xs font-mono font-semibold text-ink focus:border-link focus:outline-none cursor-pointer"
           >
             <option value="IN" selected>🇮🇳 India (FY 2026–27 / AY 2027–28)</option>
             <option value="US">🇺🇸 United States (Tax Year 2026 IRS)</option>
           </select>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="mono-eyebrow text-mute">Currency:</span>
-          <CurrencySwitcher selectId="tax-currency-select" className="w-auto" showFullName={false} />
         </div>
       </div>
 

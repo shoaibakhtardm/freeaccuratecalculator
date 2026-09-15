@@ -5,7 +5,7 @@ import { COUNTRY_LIST, type CountryConfig } from '../../../data/countries';
 import { getCountryPageConfig } from '../../../data/countryPageConfig';
 
 export async function getStaticPaths() {
-  return COUNTRY_LIST.map((country) => ({
+  return COUNTRY_LIST.filter((country) => country.slug !== 'france').map((country) => ({
     params: { country: country.slug },
     props: { country },
   }));

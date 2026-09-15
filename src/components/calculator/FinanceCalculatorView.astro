@@ -1,31 +1,35 @@
 ---
 // src/components/calculator/FinanceCalculatorView.astro
-import ResultDisplay from './ResultDisplay.astro';
 import FormulaSection from './FormulaSection.astro';
 import WorkedExample from './WorkedExample.astro';
 import FAQSection from './FAQSection.astro';
 import HistoryDrawer from './HistoryDrawer.astro';
-import CurrencySwitcher from '../common/CurrencySwitcher.astro';
 import SocialProof from '../SocialProof.astro';
 import type { CalculatorEntity } from '../../types/calculator';
 
 interface Props {
   calc: CalculatorEntity;
   relatedCalculators?: Array<{ name: string; href: string; badge?: string }>;
+  defaultCurrency?: string;
+  defaultSymbol?: string;
+  defaultIsIndian?: boolean;
 }
 
-const { calc, relatedCalculators = [] } = Astro.props;
+const {
+  calc,
+  relatedCalculators = [],
+  defaultCurrency = 'USD',
+  defaultSymbol = '$',
+  defaultIsIndian = false,
+} = Astro.props;
 
-// Format formula variables if provided
+// Format formula variables
 const formulaVariables = calc.mathInputs.map((inp) => ({
   symbol: inp.id,
   meaning: inp.label + (inp.unit ? ` (${inp.unit})` : ''),
 }));
 
-// Determine default presets based on calculator category / slug
-const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || calc.slug.includes('emi') || calc.slug.includes('amortization');
-const isSalary = calc.slug.includes('salary');
-const isTax = calc.slug.includes('tax');
+const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || calc.slug.includes('emi') || calc.slug.includes('amortization') || calc.slug.includes('payment');
 ---
 
 <div class="finance-calc-unified-container space-y-6">
@@ -34,65 +38,57 @@ const isTax = calc.slug.includes('tax');
     <SocialProof calculatorName={calc.name} />
   </div>
 
-  <!-- Calculator Main Box (SIP Design System Standard) -->
-  <div id="finance-calculator-card" class="calculator-main-box relative rounded-[16px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+  <!-- Calculator Main Box (SIP Design Standard) -->
+  <div id="finance-calculator-card" class="calculator-main-box relative rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6 overflow-hidden transition-all pb-24 sm:pb-8">
+
+    <!-- Subtle Ambient Gradient Glow -->
+    <div class="pointer-events-none absolute -top-32 -right-32 w-80 h-80 rounded-full bg-link/10 blur-3xl print:hidden"></div>
+    <div class="pointer-events-none absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-cyan/10 blur-3xl print:hidden"></div>
     
     <!-- Dedicated High-Fidelity Print/PDF Report (Visible ONLY in print) -->
-    <div id="finance-print-report" class="hidden print:block">
+    <div id="finance-print-report" class="hidden print:block font-mono text-slate-900">
       <div class="border-b-2 border-slate-900 pb-4 mb-5 flex justify-between items-start">
         <div>
-          <div class="text-2xl font-black uppercase tracking-tight text-slate-900">
-            Free Accurate Calculator
-          </div>
-          <div class="text-sm font-bold text-blue-700 mt-0.5">
-            {calc.name} Statement & Verification Report
-          </div>
-          <div class="text-xs text-slate-500 mt-1 font-mono">
-            freeaccuratecalculator.com • Verified Financial Computation Statement
-          </div>
+          <div class="text-2xl font-black uppercase tracking-tight">Free Accurate Calculator</div>
+          <div class="text-sm font-bold text-blue-700 mt-0.5">{calc.name} Statement & Verification Report</div>
+          <div class="text-xs text-slate-500 mt-1">freeaccuratecalculator.com • Verified Financial Computation Statement</div>
         </div>
-        <div class="text-right text-xs font-mono text-slate-600 space-y-0.5">
-          <div><span class="text-slate-400 uppercase">Generated:</span> <strong id="print-report-date" class="text-slate-900"></strong></div>
-          <div><span class="text-slate-400 uppercase">Currency:</span> <strong id="print-currency-code" class="text-slate-900"></strong></div>
-          <div><span class="text-slate-400 uppercase">Tool:</span> <strong class="text-slate-900">{calc.name}</strong></div>
+        <div class="text-right text-xs text-slate-600 space-y-0.5">
+          <div><span class="text-slate-400 uppercase">Generated:</span> <strong id="print-report-date"></strong></div>
+          <div><span class="text-slate-400 uppercase">Currency:</span> <strong id="print-currency-code"></strong></div>
+          <div><span class="text-slate-400 uppercase">Tool:</span> <strong>{calc.name}</strong></div>
         </div>
       </div>
 
-      <!-- Calculation Inputs Summary -->
+      <!-- Inputs Summary -->
       <div class="bg-slate-50 border border-slate-200 rounded-lg p-3.5 mb-5">
-        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2 font-mono">
-          Calculation Parameters
-        </div>
-        <div id="print-parameters-grid" class="grid grid-cols-3 gap-4 text-xs font-mono">
-          <!-- Populated dynamically -->
-        </div>
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Calculation Parameters</div>
+        <div id="print-parameters-grid" class="grid grid-cols-3 gap-4 text-xs font-mono"></div>
       </div>
 
-      <!-- Calculation Results Key Metrics -->
+      <!-- Metrics -->
       <div class="grid grid-cols-3 gap-3 mb-6">
         <div class="border border-slate-300 rounded-lg p-3.5 bg-white">
-          <span id="print-metric-label-1" class="text-[10px] font-bold uppercase text-slate-500 block font-mono">Primary Value</span>
-          <div id="print-metric-value-1" class="text-lg font-black text-link mt-1 font-mono"></div>
+          <span id="print-metric-label-1" class="text-[10px] font-bold uppercase text-slate-500 block">Primary Value</span>
+          <div id="print-metric-value-1" class="text-lg font-black text-link mt-1"></div>
           <span id="print-metric-sub-1" class="text-[10px] text-slate-500">Calculated Output</span>
         </div>
         <div class="border border-slate-300 rounded-lg p-3.5 bg-white">
-          <span id="print-metric-label-2" class="text-[10px] font-bold uppercase text-slate-500 block font-mono">Principal / Capital</span>
-          <div id="print-metric-value-2" class="text-lg font-black text-violet mt-1 font-mono"></div>
-          <span id="print-metric-sub-2" class="text-[10px] text-slate-500">Base Investment</span>
+          <span id="print-metric-label-2" class="text-[10px] font-bold uppercase text-slate-500 block">Principal / Base</span>
+          <div id="print-metric-value-2" class="text-lg font-black text-violet mt-1"></div>
+          <span id="print-metric-sub-2" class="text-[10px] text-slate-500">Base Investment / Loan</span>
         </div>
         <div class="border-2 border-slate-900 rounded-lg p-3.5 bg-slate-50">
-          <span id="print-metric-label-3" class="text-[10px] font-bold uppercase text-slate-900 block font-mono">Returns / Cost</span>
-          <div id="print-metric-value-3" class="text-lg font-black text-slate-900 mt-1 font-mono"></div>
+          <span id="print-metric-label-3" class="text-[10px] font-bold uppercase text-slate-900 block">Interest / Gain</span>
+          <div id="print-metric-value-3" class="text-lg font-black text-slate-900 mt-1"></div>
           <span id="print-metric-sub-3" class="text-[10px] font-semibold text-link">Financial Impact</span>
         </div>
       </div>
 
-      <!-- Amortization / Accumulation Schedule Table -->
+      <!-- Schedule Table -->
       <div class="space-y-2">
-        <div class="text-xs font-bold uppercase tracking-wider text-slate-900 font-mono">
-          Multi-Period Breakdown Schedule
-        </div>
-        <table class="w-full text-left text-xs font-mono border-collapse">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-900">Multi-Period Breakdown Schedule</div>
+        <table class="w-full text-left text-xs border-collapse">
           <thead>
             <tr class="border-b-2 border-slate-300 bg-slate-100 text-slate-700">
               <th class="py-2 px-2.5">Period</th>
@@ -102,45 +98,47 @@ const isTax = calc.slug.includes('tax');
               <th class="py-2 px-2.5 text-right">Ending Balance</th>
             </tr>
           </thead>
-          <tbody id="print-schedule-body" class="divide-y divide-slate-200">
-            <!-- Dynamically populated -->
-          </tbody>
+          <tbody id="print-schedule-body" class="divide-y divide-slate-200"></tbody>
         </table>
       </div>
 
-      <!-- Footer Branding & Verification -->
-      <div class="mt-8 pt-3 border-t border-slate-200 flex justify-between items-center text-[10px] font-mono text-slate-500">
+      <div class="mt-8 pt-3 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-500">
         <div>Generated by <strong>Free Accurate Calculator</strong> • https://freeaccuratecalculator.com/{calc.category}/{calc.slug}/</div>
         <div>Verified Pure Client-Side Computation • 100% Private</div>
       </div>
     </div>
 
     <!-- Screen UI (Hidden during print) -->
-    <!-- Currency & Presets Bar (Identical to SIP layout) -->
+
+    <!-- Top Bar: Currency, Mode & Silent Trust Indicator -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4 text-xs print:hidden">
-      <div class="flex items-center gap-2.5">
-        <label for="finance-currency-select" class="text-[11px] font-bold uppercase tracking-wider font-mono text-mute select-none">
-          Currency
-        </label>
-        <CurrencySwitcher selectId="finance-currency-select" className="w-auto" showFullName={true} />
+      <div class="flex items-center gap-3">
+        <div class="inline-flex p-1 rounded-xl bg-canvas border border-hairline">
+          <span class="px-3 py-1.5 rounded-lg text-xs font-semibold font-mono bg-canvas-elevated text-link shadow-xs border border-link/20">
+            {calc.name} Standard
+          </span>
+        </div>
       </div>
 
-      <!-- Quick Preset Chips -->
-      <div id="finance-presets" class="flex items-center gap-1.5 overflow-x-auto text-[11px] font-medium text-mute pb-1 sm:pb-0">
-        <span class="select-none shrink-0 font-mono text-[10px] uppercase tracking-wider font-bold text-mute">Presets:</span>
-        <!-- Populated dynamically based on currency -->
+      <div class="flex items-center gap-2 font-mono text-mute">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span id="finance-header-currency-label" class="font-semibold text-ink">{defaultCurrency} ({defaultSymbol})</span>
+        <span>•</span>
+        <span>100% Private Client-Side</span>
       </div>
     </div>
 
-    <!-- Dynamic Inputs Grid (Dual Sliders + Number Inputs with Two-Way Binding) -->
-    <form id="finance-calc-form" class="space-y-5 print:hidden" onsubmit="return false;">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+    <!-- Inputs & Results Grid (SIP Two-Column Standard) -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 print:hidden">
+
+      <!-- Left Column: Inputs & Sliders with Steppers -->
+      <form id="finance-calc-form" class="space-y-4" onsubmit="return false;">
         {calc.mathInputs.map((inp, idx) => (
-          <div class="space-y-2">
+          <div class="space-y-2 p-4 rounded-xl border border-hairline bg-canvas/40">
             <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
               <label for={`inp-${inp.id}`}>{inp.label}</label>
-              <span id={`display-${inp.id}`} class="font-mono text-link text-sm tabular-nums font-bold">
-                {inp.defaultValue}
+              <span id={`display-${inp.id}`} class="font-mono text-link text-base tabular-nums font-bold">
+                {inp.defaultValue} {inp.unit || ''}
               </span>
             </div>
 
@@ -148,7 +146,7 @@ const isTax = calc.slug.includes('tax');
               <select
                 id={`inp-${inp.id}`}
                 name={inp.id}
-                class="finance-input w-full min-h-[44px] rounded-[8px] border border-hairline bg-canvas px-3 py-2.5 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20 cursor-pointer"
+                class="finance-input w-full min-h-[46px] rounded-xl border border-hairline bg-canvas-elevated px-3 py-2.5 text-base font-mono text-ink focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20 cursor-pointer shadow-2xs"
               >
                 {inp.options?.map((opt) => (
                   <option value={opt.value} selected={opt.value === inp.defaultValue}>
@@ -158,176 +156,248 @@ const isTax = calc.slug.includes('tax');
               </select>
             ) : (
               <div class="space-y-2">
-                <div class="relative flex items-center">
-                  <span class="symbol-addon absolute left-3.5 text-sm font-mono text-mute select-none font-bold">
-                    {inp.unit === '$' || inp.unit === '₹' ? inp.unit : (inp.label.toLowerCase().includes('rate') || inp.label.toLowerCase().includes('percent') ? '' : '₹')}
-                  </span>
-                  <input
-                    id={`inp-${inp.id}`}
-                    name={inp.id}
-                    type="number"
-                    step={inp.step || 'any'}
-                    min={inp.min ?? 0}
-                    max={inp.max ?? 10000000}
-                    value={inp.defaultValue}
-                    class="finance-input w-full min-h-[44px] rounded-[8px] border border-hairline bg-canvas py-2.5 pl-8 pr-8 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20 tabular-nums font-semibold transition-all"
-                  />
-                  {inp.unit && (
-                    <span class="absolute right-3.5 text-sm font-mono text-mute select-none">
-                      {inp.unit}
+                <div class="relative flex items-center gap-2">
+                  <div class="relative flex-1">
+                    <span class="symbol-addon absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-mono text-mute select-none font-bold">
+                      {inp.unit === '$' || inp.unit === '₹' ? inp.unit : (inp.label.toLowerCase().includes('rate') || inp.label.toLowerCase().includes('percent') ? '' : '₹')}
                     </span>
-                  )}
+                    <input
+                      id={`inp-${inp.id}`}
+                      name={inp.id}
+                      type="number"
+                      step={inp.step || 'any'}
+                      min={inp.min ?? 0}
+                      max={inp.max ?? 10000000}
+                      value={inp.defaultValue}
+                      class={`finance-input w-full min-h-[46px] min-h-[44px] rounded-xl border border-hairline bg-canvas-elevated py-2.5 ${inp.label.toLowerCase().includes('rate') ? 'pl-3 pr-8' : 'pl-8 pr-3'} text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20 tabular-nums font-semibold transition-all shadow-2xs`}
+                    />
+                    {inp.unit && (
+                      <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-mono text-mute select-none font-bold">
+                        {inp.unit}
+                      </span>
+                    )}
+                  </div>
+
+                  <!-- Quick Steppers -->
+                  <div class="flex items-center gap-1">
+                    <button
+                      type="button"
+                      class="finance-stepper-btn min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl border border-hairline bg-canvas-elevated text-mute hover:text-ink hover:border-link/50 active:scale-95 transition-all text-sm font-mono font-bold cursor-pointer"
+                      data-input={`inp-${inp.id}`}
+                      data-dir="minus"
+                    >−</button>
+                    <button
+                      type="button"
+                      class="finance-stepper-btn min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl border border-hairline bg-canvas-elevated text-mute hover:text-ink hover:border-link/50 active:scale-95 transition-all text-sm font-mono font-bold cursor-pointer"
+                      data-input={`inp-${inp.id}`}
+                      data-dir="plus"
+                    >+</button>
+                  </div>
                 </div>
-                <input
-                  id={`slider-${inp.id}`}
-                  type="range"
-                  min={inp.min ?? 0}
-                  max={inp.max ?? (Number(inp.defaultValue) > 1000 ? Number(inp.defaultValue) * 4 : 100)}
-                  step={inp.step || '1'}
-                  value={inp.defaultValue}
-                  aria-label={`${inp.label} slider`}
-                  class={`finance-slider w-full cursor-pointer h-5 ${idx % 2 === 0 ? 'accent-link' : 'accent-cyan'}`}
-                />
+
+                <!-- Custom Slider -->
+                <div class="py-1">
+                  <input
+                    id={`slider-${inp.id}`}
+                    type="range"
+                    min={inp.min ?? 0}
+                    max={inp.max ?? (Number(inp.defaultValue) > 1000 ? Number(inp.defaultValue) * 4 : 100)}
+                    step={inp.step || '1'}
+                    value={inp.defaultValue}
+                    aria-label={`${inp.label} slider`}
+                    class="finance-slider custom-range-slider w-full cursor-pointer h-2.5 rounded-lg appearance-none bg-hairline"
+                  />
+                </div>
               </div>
             )}
             {inp.helpText && <p class="text-[11px] text-mute font-mono leading-tight">{inp.helpText}</p>}
           </div>
         ))}
-      </div>
-    </form>
+      </form>
 
-    <!-- Primary Results Cards (Standard 3-Card Triad with Badges) -->
-    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 print:hidden">
-      <div class="relative group">
-        <ResultDisplay
-          id="finance-res-1"
-          label={calc.resultLabel || "Primary Output"}
-          prefix={calc.resultPrefix || "₹ "}
-          initialValue={0}
-          decimals={calc.decimals || 0}
-          secondary="Calculated Value"
-          accent="link"
-        />
-        <div class="absolute top-2.5 right-2.5">
-          <span id="badge-res-1" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-link/15 text-link border border-link/30">
-            Active Metric
-          </span>
+      <!-- Right Column: SIP Hero Result Card, Secondary Metrics & SVG Donut -->
+      <div class="space-y-5">
+        <!-- Hero Primary Result Card -->
+        <div class="relative overflow-hidden rounded-2xl border-2 border-link/30 bg-gradient-to-br from-link/10 via-canvas-elevated to-cyan/10 p-5 sm:p-6 shadow-sm">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <span id="hero-result-label" class="text-xs font-mono font-bold uppercase tracking-wider text-mute">
+                {calc.resultLabel || "Primary Output"}
+              </span>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span id="hero-result-symbol" class="text-2xl sm:text-3xl font-bold font-mono text-ink">{defaultSymbol}</span>
+                <span id="hero-result-val" class="text-3xl sm:text-4xl font-extrabold font-mono text-ink tabular-nums tracking-tight">
+                  0
+                </span>
+              </div>
+              <p id="hero-result-sub" class="text-xs text-mute mt-1 font-mono">
+                {isLoan ? "Scheduled periodic installment obligation" : "Expected financial corpus projection"}
+              </p>
+            </div>
+
+            <!-- Multiplier / Return Badge -->
+            <div class="shrink-0 text-right">
+              <span id="finance-multiplier-badge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-bold bg-cyan/20 text-cyan border border-cyan/40 shadow-xs">
+                Active Calculation
+              </span>
+              <div id="finance-secondary-badge" class="text-[11px] font-mono font-semibold text-mute mt-1">
+                Verified Engine
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Spectrum Bar -->
+          <div class="space-y-2 mt-5 pt-4 border-t border-hairline">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="text-link font-semibold flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-link inline-block"></span>
+                Base: <span id="bar-principal-label" class="tabular-nums font-bold">50.0%</span>
+              </span>
+              <span class="text-cyan font-semibold flex items-center gap-1.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-cyan inline-block"></span>
+                Growth / Interest: <span id="bar-gain-label" class="tabular-nums font-bold">50.0%</span>
+              </span>
+            </div>
+            <div class="h-3 w-full overflow-hidden rounded-full bg-hairline flex">
+              <div id="spectrum-principal" class="h-full bg-link transition-all duration-300 rounded-l-full" style="width: 50%;"></div>
+              <div id="spectrum-gain" class="h-full bg-cyan transition-all duration-300 rounded-r-full" style="width: 50%;"></div>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="relative group">
-        <ResultDisplay
-          id="finance-res-2"
-          label={isLoan ? "Total Interest Payable" : "Total Principal Invested"}
-          prefix="₹ "
-          initialValue={0}
-          decimals={0}
-          secondary={isLoan ? "Lifetime Interest Cost" : "Cumulative Contributions"}
-          accent="violet"
-        />
-        <div class="absolute top-2.5 right-2.5">
-          <span id="badge-res-2" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-violet/15 text-violet border border-violet/30">
-            Baseline
-          </span>
+        <!-- 2 Secondary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-4 rounded-xl border border-hairline bg-canvas/40 flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span id="sec-card-1-label" class="text-[11px] font-mono font-bold uppercase tracking-wider text-mute">
+                {isLoan ? "Principal Borrowed" : "Total Invested"}
+              </span>
+              <span class="w-2 h-2 rounded-full bg-link"></span>
+            </div>
+            <div class="mt-2 text-xl sm:text-2xl font-bold font-mono text-ink tabular-nums">
+              <span id="sec-card-1-sym">{defaultSymbol}</span> <span id="sec-card-1-val">0</span>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-xl border border-hairline bg-canvas/40 flex flex-col justify-between">
+            <div class="flex items-center justify-between">
+              <span id="sec-card-2-label" class="text-[11px] font-mono font-bold uppercase tracking-wider text-mute">
+                {isLoan ? "Total Interest" : "Estimated Wealth Gain"}
+              </span>
+              <span class="w-2 h-2 rounded-full bg-cyan"></span>
+            </div>
+            <div class="mt-2 text-xl sm:text-2xl font-bold font-mono text-cyan tabular-nums">
+              <span id="sec-card-2-sym">{defaultSymbol}</span> <span id="sec-card-2-val">0</span>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="relative group">
-        <ResultDisplay
-          id="finance-res-3"
-          label={isLoan ? "Total Loan Repayment" : "Estimated Wealth Gain"}
-          prefix="₹ "
-          initialValue={0}
-          decimals={0}
-          secondary={isLoan ? "Principal + Lifetime Interest" : "Pure Compounded Growth"}
-          accent="cyan"
-        />
-        <div class="absolute top-2.5 right-2.5">
-          <span id="badge-res-3" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan/15 text-cyan border border-cyan/30">
-            Net Impact
-          </span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Distribution Spectrum Bar (Principal vs Returns / Interest) -->
-    <div class="space-y-2 pt-1 print:hidden">
-      <div class="flex items-center justify-between text-xs font-mono">
-        <span class="text-link font-medium">Principal / Base: <span id="bar-principal-label" class="tabular-nums font-bold">50.0%</span></span>
-        <span class="text-cyan font-medium">Interest / Gain: <span id="bar-gain-label" class="tabular-nums font-bold">50.0%</span></span>
-      </div>
-      <div class="h-3.5 w-full overflow-hidden rounded-full bg-canvas border border-hairline flex">
-        <div id="spectrum-principal" class="h-full bg-link transition-all duration-300" style="width: 50%;"></div>
-        <div id="spectrum-gain" class="h-full bg-cyan transition-all duration-300" style="width: 50%;"></div>
-      </div>
-    </div>
-
-    <!-- Milestone & Inflation Insights Bar -->
-    <div class="rounded-[10px] border border-hairline bg-canvas/60 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs print:hidden">
-      <div class="flex items-center gap-2 text-ink">
-        <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span id="finance-milestone-insight" class="font-mono text-[11px] sm:text-xs">
-          <strong>Key Insight:</strong> Real-time financial modeling verified against international standards.
-        </span>
-      </div>
-      <div class="flex items-center gap-2 text-mute font-mono text-[11px] shrink-0">
-        <span>Inflation-Adjusted (at 6%):</span>
-        <strong id="finance-inflation-adjusted" class="text-ink">--</strong>
-      </div>
-    </div>
-
-    <!-- High-Visibility Primary Action Toolbar (Directly Below Results) -->
-    <div class="pt-3 border-t border-hairline flex flex-wrap items-center justify-between gap-3 print:hidden">
-      <div class="flex flex-col gap-2">
-        <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-mute">Export Your Financial Report</span>
-        <div class="flex flex-wrap items-center gap-2">
-          <!-- PDF Export Button -->
-          <button
-            type="button"
-            id="action-download-pdf-btn"
-            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-[8px] bg-link hover:bg-link-hover active:scale-95 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
-            title="Download Verified PDF Financial Statement"
-          >
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        <!-- Interactive SVG Donut Visualizer -->
+        <div class="p-4 sm:p-5 rounded-2xl border border-hairline bg-canvas/40 flex flex-col sm:flex-row items-center justify-around gap-4">
+          <div class="relative w-36 h-36 shrink-0 flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 140 140">
+              <circle cx="70" cy="70" r="54" stroke="currentColor" stroke-width="14" fill="transparent" class="text-hairline" />
+              <circle id="donut-ring-1" cx="70" cy="70" r="54" stroke="var(--color-link, #0070f3)" stroke-width="14" fill="transparent" stroke-dasharray="339.29" stroke-dashoffset="170" class="transition-all duration-500 ease-out" />
+              <circle id="donut-ring-2" cx="70" cy="70" r="54" stroke="var(--color-cyan, #0f766e)" stroke-width="14" fill="transparent" stroke-dasharray="339.29" stroke-dashoffset="170" class="transition-all duration-500 ease-out" />
             </svg>
-            <span>Download PDF</span>
-          </button>
+            <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+              <span id="donut-center-pct" class="text-base font-mono font-black text-ink tabular-nums">50.0%</span>
+              <span class="text-[9px] font-mono uppercase tracking-widest text-mute font-bold">Ratio</span>
+            </div>
+          </div>
 
-          <!-- Excel Export Button -->
-          <button
-            type="button"
-            id="action-download-excel-btn"
-            class="inline-flex items-center gap-2 px-3.5 py-2 rounded-[8px] bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-semibold shadow-xs transition-all cursor-pointer"
-            title="Download Breakdown Schedule in Excel/CSV"
-          >
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            <span>Download Excel (.csv)</span>
-          </button>
+          <div class="space-y-2 text-xs font-mono w-full sm:w-auto">
+            <div class="flex items-center justify-between sm:justify-start gap-4">
+              <span class="flex items-center gap-1.5 text-mute">
+                <span class="w-2.5 h-2.5 rounded bg-link inline-block"></span>
+                Base Component:
+              </span>
+              <span id="legend-ring-1-pct" class="font-bold text-ink">50.0%</span>
+            </div>
+            <div class="flex items-center justify-between sm:justify-start gap-4">
+              <span class="flex items-center gap-1.5 text-mute">
+                <span class="w-2.5 h-2.5 rounded bg-cyan inline-block"></span>
+                Gain / Interest:
+              </span>
+              <span id="legend-ring-2-pct" class="font-bold text-cyan">50.0%</span>
+            </div>
+            <div class="pt-2 border-t border-hairline flex items-center justify-between sm:justify-start gap-4 text-[11px]">
+              <span class="text-mute">Total Sum:</span>
+              <span id="legend-total-val" class="font-bold text-ink">₹ 0</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Loan & Financial Intelligence Matrix -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-2 print:hidden">
+      <div class="p-3.5 rounded-xl border border-hairline bg-canvas/40 flex items-start gap-3">
+        <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-500 flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+        </div>
+        <div>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-mute block">Precision Math</span>
+          <span class="text-xs font-mono font-bold text-ink block mt-0.5">Closed-Form Exact</span>
+          <p class="text-[10px] text-mute mt-0.5 leading-tight">Verified without approximation drift.</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-2">
-        <!-- Copy Summary Button -->
+      <div class="p-3.5 rounded-xl border border-hairline bg-canvas/40 flex items-start gap-3">
+        <div class="w-8 h-8 rounded-lg bg-link/10 text-link flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+        </div>
+        <div>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-mute block">Inflation Proof (6%)</span>
+          <span id="matrix-inflation-val" class="text-xs font-mono font-bold text-ink block mt-0.5">--</span>
+          <p class="text-[10px] text-mute mt-0.5 leading-tight">Real purchasing power outcome.</p>
+        </div>
+      </div>
+
+      <div class="p-3.5 rounded-xl border border-hairline bg-canvas/40 flex items-start gap-3">
+        <div class="w-8 h-8 rounded-lg bg-violet/10 text-violet flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </div>
+        <div>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-mute block">Total Obligation / Worth</span>
+          <span id="matrix-total-val" class="text-xs font-mono font-bold text-ink block mt-0.5">--</span>
+          <p class="text-[10px] text-mute mt-0.5 leading-tight">Cumulative financial commitment.</p>
+        </div>
+      </div>
+
+      <div class="p-3.5 rounded-xl border border-hairline bg-canvas/40 flex items-start gap-3">
+        <div class="w-8 h-8 rounded-lg bg-cyan/10 text-cyan flex items-center justify-center shrink-0 mt-0.5">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        </div>
+        <div>
+          <span class="text-[10px] font-mono uppercase tracking-wider text-mute block">Tenure Milestone</span>
+          <span id="matrix-tenure-milestone" class="text-xs font-mono font-bold text-ink block mt-0.5">Complete</span>
+          <p class="text-[10px] text-mute mt-0.5 leading-tight">Full amortization horizon.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Toolbar (Copy Summary & Share Link) -->
+    <div class="pt-2 border-t border-hairline flex items-center justify-between gap-3 print:hidden">
+      <span class="text-xs font-mono font-semibold text-mute">Quick Actions:</span>
+      <div class="flex items-center gap-2.5">
         <button
           type="button"
           id="action-copy-summary-btn"
-          class="inline-flex items-center gap-1.5 px-3 py-2 rounded-[8px] border border-hairline bg-canvas hover:bg-hairline-soft text-ink text-xs font-semibold transition-colors cursor-pointer"
-          title="Copy formatted calculation summary to clipboard"
+          class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-hairline bg-canvas hover:bg-hairline-soft text-ink text-xs font-semibold font-mono transition-all cursor-pointer shadow-xs active:scale-95"
+          title="Copy formatted summary to clipboard"
         >
-          <svg class="h-3.5 w-3.5 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg class="h-3.5 w-3.5 text-link" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
           </svg>
           <span id="copy-summary-text">Copy Summary</span>
         </button>
 
-        <!-- Share Link Button -->
         <button
           type="button"
           id="action-share-link-btn"
-          class="inline-flex items-center gap-1.5 px-3 py-2 rounded-[8px] border border-hairline bg-canvas hover:bg-hairline-soft text-ink text-xs font-semibold transition-colors cursor-pointer"
+          class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-hairline bg-canvas hover:bg-hairline-soft text-ink text-xs font-semibold font-mono transition-all cursor-pointer shadow-xs active:scale-95"
           title="Copy shareable link with current inputs"
         >
           <svg class="h-3.5 w-3.5 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -339,36 +409,59 @@ const isTax = calc.slug.includes('tax');
     </div>
 
     <!-- Annual Accumulation / Breakdown Schedule Table -->
-    <div class="space-y-3 pt-2 print:hidden">
+    <div id="schedule-section-card" class="space-y-3 pt-2 print:hidden">
       <div class="flex items-center justify-between">
-        <h3 class="text-xs font-bold uppercase tracking-wider text-ink font-mono">
+        <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-ink font-mono">
           Multi-Year Amortization & Breakdown Schedule
         </h3>
         <span class="text-[11px] font-mono text-mute">Verified Client-Side Data</span>
       </div>
-      <div class="overflow-x-auto rounded-[8px] border border-hairline bg-canvas">
+      <div class="overflow-x-auto rounded-xl border border-hairline bg-canvas">
         <table class="w-full min-w-[520px] text-left text-xs font-mono">
           <thead class="border-b border-hairline bg-canvas-elevated text-mute">
             <tr>
-              <th class="py-2.5 px-3 whitespace-nowrap">Period</th>
-              <th class="py-2.5 px-3 text-right whitespace-nowrap">Payment / Installment</th>
-              <th class="py-2.5 px-3 text-right whitespace-nowrap">Principal / Invested</th>
-              <th class="py-2.5 px-3 text-right whitespace-nowrap">Interest / Return</th>
-              <th class="py-2.5 px-3 text-right whitespace-nowrap">Ending Balance</th>
+              <th class="py-3 px-3.5 whitespace-nowrap">Period</th>
+              <th class="py-3 px-3.5 text-right whitespace-nowrap">Payment / Installment</th>
+              <th class="py-3 px-3.5 text-right whitespace-nowrap">Principal / Invested</th>
+              <th class="py-3 px-3.5 text-right whitespace-nowrap">Interest / Return</th>
+              <th class="py-3 px-3.5 text-right whitespace-nowrap">Ending Balance</th>
             </tr>
           </thead>
-          <tbody id="finance-schedule-body" class="divide-y divide-hairline text-ink">
-            <!-- Populated dynamically by script -->
-          </tbody>
+          <tbody id="finance-schedule-body" class="divide-y divide-hairline text-ink"></tbody>
         </table>
       </div>
+    </div>
+  </div>
+
+  <!-- Mobile Sticky Floating HUD -->
+  <div
+    id="mobile-sticky-hud"
+    class="fixed bottom-0 left-0 right-0 z-40 sm:hidden bg-slate-900/95 backdrop-blur-md text-white px-4 py-2.5 border-t border-slate-700 shadow-2xl flex items-center justify-between print:hidden"
+  >
+    <div class="space-y-0.5">
+      <div class="text-[10px] font-mono uppercase tracking-wider text-slate-400">
+        {calc.resultLabel || "Calculated Value"}
+      </div>
+      <div class="flex items-baseline gap-1.5 font-mono">
+        <span id="mobile-hud-val" class="text-base font-bold text-white tabular-nums">0</span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2">
+      <button
+        type="button"
+        id="mobile-hud-scroll-btn"
+        class="px-3 py-1.5 rounded-lg bg-link text-white text-xs font-mono font-semibold active:scale-95 transition-transform"
+      >
+        View Table
+      </button>
     </div>
   </div>
 
   <!-- Toast Notification Alert -->
   <div
     id="finance-toast"
-    class="fixed bottom-5 right-5 z-50 transform translate-y-12 opacity-0 pointer-events-none transition-all duration-200 ease-out flex items-center gap-2 px-4 py-2.5 rounded-[8px] bg-slate-900 text-white text-xs font-mono shadow-lg border border-slate-700"
+    class="fixed bottom-5 right-5 z-50 transform translate-y-12 opacity-0 pointer-events-none transition-all duration-200 ease-out flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-900 text-white text-xs font-mono shadow-xl border border-slate-700"
   >
     <svg class="h-4 w-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -376,68 +469,14 @@ const isTax = calc.slug.includes('tax');
     <span id="finance-toast-message">Copied to clipboard!</span>
   </div>
 
-  <!-- Educational & Bottom Content (Strictly hidden during PDF / Print) -->
+  <!-- Educational & Bottom Content -->
   <div id="finance-bottom-content-area" class="print:hidden space-y-8 mt-6">
-    <!-- Transparency Notice Card -->
-    <div id="finance-transparency-card" class="rounded-[12px] border border-cyan/30 bg-cyan/5 p-4 sm:p-5 text-xs space-y-2">
-      <div class="flex items-center gap-2 font-semibold text-cyan">
-        <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span class="font-mono uppercase tracking-wider text-[11px]">Financial Precision & International Standards</span>
-      </div>
-      <p class="text-body leading-relaxed">
-        Calculations execute using rigorous actuarial and compound interest mathematics with zero floating-point drift. Results adapt seamlessly to Indian Lakh/Crore notation and International Millions notation according to your selected active currency.
-      </p>
-      <div class="flex flex-wrap items-center gap-4 text-[11px] font-mono text-mute pt-1">
-        <span>Zero Division Safe</span>
-        <span>•</span>
-        <span>ISO & Banking Mathematical Standards</span>
-        <span>•</span>
-        <span>Pure Client-Side Execution</span>
-      </div>
-    </div>
-
-    <!-- Formula Section -->
-    <FormulaSection
-      formula={calc.formula || "Standard Financial Mathematical Model"}
-      explanation={calc.formulaExplanation || "Calculates accurate financial outcomes using validated closed-form equations and period compounding loops."}
-      variables={formulaVariables}
-    />
-
-    <!-- Worked Example -->
-    <WorkedExample
-      title={`Worked Example: ${calc.name}`}
-      scenario={`A representative real-world calculation demonstrating the step-by-step mathematical derivation for ${calc.name}.`}
-      steps={[
-        {
-          number: 1,
-          title: 'Establish Input Parameters',
-          description: 'Input variables are standardized to periodic rates and timelines.',
-          mathExpression: 'Parameters Normalized',
-        },
-        {
-          number: 2,
-          title: 'Apply Mathematical Formula',
-          description: 'Evaluate closed-form equation to compute exact periodic obligations or returns.',
-          mathExpression: 'Verified Numerical Solution',
-        },
-        {
-          number: 3,
-          title: 'Verify Against Multi-Period Accumulation',
-          description: 'Iterative month-by-month compounding loop cross-checks algebraic equation.',
-          mathExpression: 'Mathematical Proof Verified',
-        },
-      ]}
-      conclusion="Pure client-side computation delivers exact mathematical precision with zero rounding error."
-    />
-
     <!-- Download & Export Section Card (SIP Standard) -->
-    <div id="finance-bottom-export-wrapper" class="rounded-[16px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper">
+    <div id="finance-bottom-export-wrapper" class="rounded-[20px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div class="space-y-1.5">
           <div class="flex items-center gap-2.5">
-            <span class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-link/10 text-link">
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-link/10 text-link">
               <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
@@ -462,32 +501,41 @@ const isTax = calc.slug.includes('tax');
           </div>
         </div>
 
-        <div class="flex flex-wrap items-center gap-3 shrink-0">
+        <div class="flex flex-row items-center gap-2.5 sm:gap-3 shrink-0 flex-nowrap w-full md:w-auto">
           <button
             type="button"
-            id="finance-bottom-excel-btn"
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-[8px] bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer"
+            id="action-download-pdf-btn"
+            class="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-link hover:bg-link-hover active:scale-95 text-white text-xs sm:text-sm font-semibold font-mono shadow-xs transition-all cursor-pointer whitespace-nowrap min-h-[44px]"
+            title="Download PDF Report"
+          >
+            <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>Download PDF</span>
+          </button>
+
+          <button
+            type="button"
+            id="action-download-excel-btn"
+            class="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs sm:text-sm font-semibold font-mono shadow-xs transition-all cursor-pointer whitespace-nowrap min-h-[44px]"
             title="Download Schedule in Excel/CSV format"
           >
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
             </svg>
             <span>Download Excel (.csv)</span>
           </button>
-          <button
-            type="button"
-            id="finance-bottom-pdf-btn"
-            class="inline-flex items-center gap-2 px-4 py-2.5 rounded-[8px] bg-link hover:bg-link-hover active:scale-95 text-white text-xs sm:text-sm font-semibold shadow-xs transition-all cursor-pointer"
-            title="Save or Print as PDF Document"
-          >
-            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-            </svg>
-            <span>Download PDF Report</span>
-          </button>
         </div>
       </div>
     </div>
+
+    <!-- Formula Section -->
+    <FormulaSection
+      title={`${calc.name} Mathematical Formula`}
+      expression={calc.formula || "Standard Financial Mathematical Model"}
+      explanation={calc.formulaExplanation || "Calculates accurate financial outcomes using validated closed-form equations and period compounding loops."}
+      variables={formulaVariables}
+    />
 
     <!-- FAQ Section -->
     <FAQSection faqs={calc.faqs} />
@@ -496,24 +544,21 @@ const isTax = calc.slug.includes('tax');
   <HistoryDrawer />
 </div>
 
-<!-- Client-side Calculation & State Engine with Currency Sync and Animations -->
-<script is:inline define:vars={{ slug: calc.slug, calcName: calc.name }}>
+<!-- Client-side Calculation & State Engine -->
+<script is:inline define:vars={{ slug: calc.slug, calcName: calc.name, initCurrCode: defaultCurrency, initCurrSym: defaultSymbol, initIsIndian: defaultIsIndian }}>
   (function () {
-    // 1. Currency Management
+    // 1. Silent Currency Management
     let currentCurrencyCode = typeof window.facGetActiveCurrency === 'function'
       ? window.facGetActiveCurrency()
-      : (localStorage.getItem('fac_currency') || 'INR');
+      : (localStorage.getItem('fac_currency') || initCurrCode || 'USD');
 
-    let currencyInfo = typeof window.facGetCurrencyInfo === 'function'
+    let currentCurrencyInfo = typeof window.facGetCurrencyInfo === 'function'
       ? window.facGetCurrencyInfo(currentCurrencyCode)
-      : { symbol: currentCurrencyCode === 'INR' ? '₹' : '$', isIndian: currentCurrencyCode === 'INR' };
+      : null;
 
-    let currentCurrencySymbol = currencyInfo.symbol || '₹';
-    let isIndianFormat = currencyInfo.isIndian ?? (currentCurrencyCode === 'INR');
+    let currentCurrencySymbol = currentCurrencyInfo?.symbol || (currentCurrencyCode === 'INR' ? '₹' : (initCurrSym || '$'));
+    let isIndianFormat = currentCurrencyInfo ? (currentCurrencyInfo.isIndian ?? (currentCurrencyCode === 'INR')) : (initIsIndian ?? (currentCurrencyCode === 'INR'));
 
-    // DOM Elements
-    const currencySelect = document.getElementById('finance-currency-select');
-    const presetsContainer = document.getElementById('finance-presets');
     const scheduleBody = document.getElementById('finance-schedule-body');
     const printScheduleBody = document.getElementById('print-schedule-body');
     const toastEl = document.getElementById('finance-toast');
@@ -533,141 +578,31 @@ const isTax = calc.slug.includes('tax');
     }
 
     function formatVal(val, decimals = 0) {
-      if (typeof window.facFormatNumber === 'function') {
-        return window.facFormatNumber(val, decimals, isIndianFormat);
+      if (isNaN(val) || !isFinite(val)) return '0';
+      if (isIndianFormat) {
+        const parts = Math.round(val).toString().split('.');
+        let lastThree = parts[0].substring(parts[0].length - 3);
+        const otherNumbers = parts[0].substring(0, parts[0].length - 3);
+        if (otherNumbers !== '') lastThree = ',' + lastThree;
+        return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
       }
-      return val.toLocaleString(isIndianFormat ? 'en-IN' : 'en-US', {
+      return val.toLocaleString('en-US', {
         minimumFractionDigits: decimals,
         maximumFractionDigits: decimals,
       });
     }
 
-    // Dynamic Presets Generator
-    function getPresets(curr, isInd) {
-      const isLoanCalc = slug.includes('loan') || slug.includes('mortgage') || slug.includes('emi') || slug.includes('amortization');
-      if (isLoanCalc) {
-        if (isInd || curr === 'INR') {
-          return [
-            { label: '₹10L', val: 1000000 },
-            { label: '₹25L', val: 2500000 },
-            { label: '₹50L', val: 5000000 },
-            { label: '₹1Cr', val: 10000000 },
-          ];
-        }
-        return [
-          { label: `${currentCurrencySymbol}100k`, val: 100000 },
-          { label: `${currentCurrencySymbol}250k`, val: 250000 },
-          { label: `${currentCurrencySymbol}500k`, val: 500000 },
-          { label: `${currentCurrencySymbol}1M`, val: 1000000 },
-        ];
-      }
-      // General Investments (SIP, Compound Interest, Lumpsum, etc.)
-      if (isInd || curr === 'INR') {
-        return [
-          { label: '₹2.5k', val: 2500 },
-          { label: '₹5k', val: 5000 },
-          { label: '₹10k', val: 10000 },
-          { label: '₹25k', val: 25000 },
-        ];
-      }
-      return [
-        { label: `${currentCurrencySymbol}100`, val: 100 },
-        { label: `${currentCurrencySymbol}250`, val: 250 },
-        { label: `${currentCurrencySymbol}500`, val: 500 },
-        { label: `${currentCurrencySymbol}1k`, val: 1000 },
-      ];
-    }
-
-    function renderPresets() {
-      if (!presetsContainer) return;
-      const presets = getPresets(currentCurrencyCode, isIndianFormat);
-      let html = '<span class="select-none shrink-0 font-mono text-[10px] uppercase tracking-wider font-bold text-mute">Presets:</span>';
-      presets.forEach((p) => {
-        html += `
-          <button
-            type="button"
-            class="preset-chip shrink-0 rounded-[6px] border border-hairline bg-canvas px-2.5 py-1 min-h-[32px] sm:min-h-[26px] hover:text-ink hover:border-link/40 cursor-pointer font-mono font-medium transition-all text-xs"
-            data-amount="${p.val}"
-          >${p.label}</button>
-        `;
-      });
-      presetsContainer.innerHTML = html;
-
-      presetsContainer.querySelectorAll('.preset-chip').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          const val = btn.dataset.amount || '0';
-          const primaryInput = document.querySelector('.finance-input');
-          const primarySlider = document.querySelector('.finance-slider');
-          if (primaryInput) {
-            primaryInput.value = val;
-            if (primarySlider) {
-              if (parseFloat(val) > parseFloat(primarySlider.max)) primarySlider.max = String(parseFloat(val) * 1.5);
-              primarySlider.value = val;
-            }
-            recalculate();
-          }
-        });
-      });
-    }
-
     function updateCurrencyUI() {
-      document.querySelectorAll('.symbol-addon').forEach((el) => {
+      document.querySelectorAll('.symbol-addon, #hero-result-symbol, #sec-card-1-sym, #sec-card-2-sym').forEach((el) => {
         if (el.textContent && el.textContent.trim() !== '%') {
           el.textContent = currentCurrencySymbol;
         }
       });
-      ['finance-res-1-prefix', 'finance-res-2-prefix', 'finance-res-3-prefix'].forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) el.textContent = `${currentCurrencySymbol} `;
-      });
-      ['finance-res-1', 'finance-res-2', 'finance-res-3'].forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.setAttribute('data-prefix', `${currentCurrencySymbol} `);
-          el.setAttribute('data-indian', isIndianFormat ? 'true' : 'false');
-        }
-      });
-      if (currencySelect && currencySelect.value !== currentCurrencyCode) {
-        currencySelect.value = currentCurrencyCode;
-      }
-      renderPresets();
+      const headerLabel = document.getElementById('finance-header-currency-label');
+      if (headerLabel) headerLabel.textContent = `${currentCurrencyCode} (${currentCurrencySymbol})`;
     }
 
-    function handleCurrencySwitch(newCurr, prevCurr) {
-      if (!newCurr) return;
-      const prev = prevCurr || currentCurrencyCode;
-      currentCurrencyCode = newCurr;
-
-      const info = typeof window.facGetCurrencyInfo === 'function'
-        ? window.facGetCurrencyInfo(newCurr)
-        : { symbol: newCurr === 'INR' ? '₹' : '$', isIndian: newCurr === 'INR' };
-
-      currentCurrencySymbol = info.symbol || '$';
-      isIndianFormat = info.isIndian ?? (newCurr === 'INR');
-
-      // Convert primary input value if conversion helper exists
-      if (prev && newCurr && prev !== newCurr && typeof window.facConvertCurrency === 'function') {
-        const primaryInput = document.querySelector('.finance-input');
-        const primarySlider = document.querySelector('.finance-slider');
-        if (primaryInput) {
-          const currentAmount = parseFloat(primaryInput.value || '0');
-          if (currentAmount > 0) {
-            const converted = window.facConvertCurrency(currentAmount, prev, newCurr);
-            const rounded = Math.round(converted);
-            primaryInput.value = String(rounded);
-            if (primarySlider) {
-              if (rounded > parseFloat(primarySlider.max)) primarySlider.max = String(rounded * 1.5);
-              primarySlider.value = String(rounded);
-            }
-          }
-        }
-      }
-
-      updateCurrencyUI();
-      recalculate();
-    }
-
-    // Real-Time Calculation State
+    // Calculation State
     let currentReportState = {
       val1: 0,
       val2: 0,
@@ -682,7 +617,7 @@ const isTax = calc.slug.includes('tax');
         inputs[inp.name] = isNaN(num) ? inp.value : num;
         const disp = document.getElementById(`display-${inp.name}`);
         if (disp) {
-          const isRate = inp.name.toLowerCase().includes('rate') || inp.name.toLowerCase().includes('percent');
+          const isRate = inp.name.toLowerCase().includes('rate') || inp.name.toLowerCase().includes('percent') || inp.name.toLowerCase().includes('apr');
           const isYear = inp.name.toLowerCase().includes('year') || inp.name.toLowerCase().includes('term') || inp.name.toLowerCase().includes('age');
           if (isRate) disp.textContent = `${Number(inp.value).toFixed(2)}%`;
           else if (isYear) disp.textContent = `${inp.value} Years`;
@@ -691,20 +626,34 @@ const isTax = calc.slug.includes('tax');
         }
       });
 
-      // Default mathematical engine fallback
-      let res1 = 0; // Primary
+      let res1 = 0; // Primary Output
       let res2 = 0; // Principal / Invested
-      let res3 = 0; // Interest / Growth
+      let res3 = 0; // Interest / Return
       let rows = [];
 
-      // 1. Loans / Mortgage / Amortization / Auto Loan
-      if (slug.includes('mortgage') || slug.includes('auto-loan') || slug.includes('amortization') || slug.includes('loan') || slug.includes('payment')) {
-        const p = parseFloat(inputs.principal || inputs.loanAmount || inputs.price || inputs.vehiclePrice || 2500000) || 0;
-        const rate = parseFloat(inputs.annualRate || inputs.interestRate || inputs.apr || 8.5) || 0;
-        const years = parseFloat(inputs.tenureYears || inputs.loanTerm || inputs.years || 20) || 1;
-        const downPayment = parseFloat(inputs.downPayment || 0) || 0;
-        const actualLoan = Math.max(0, p - downPayment);
-        const months = Math.round(years * 12);
+      // 1. Loans, Mortgage, Auto Loan, Amortization, Payment
+      if (slug.includes('mortgage') || slug.includes('auto-loan') || slug.includes('amortization') || slug.includes('loan') || slug.includes('payment') || slug.includes('emi')) {
+        const homePrice = parseFloat(inputs.home_price || inputs.homePrice || 0);
+        const p = parseFloat(inputs.loan_amount || inputs.principal || inputs.loanAmount || inputs.price || inputs.vehiclePrice || (homePrice > 0 ? homePrice : 20000)) || 0;
+        const rate = parseFloat(inputs.interest_rate || inputs.annualRate || inputs.interestRate || inputs.apr || (slug.includes('mortgage') ? 6.5 : 8.5)) || 0;
+        
+        let months = 0;
+        if (inputs.loan_term_months) {
+          months = Math.round(parseFloat(inputs.loan_term_months) || 12);
+        } else {
+          const years = parseFloat(inputs.loan_term || inputs.tenureYears || inputs.loanTerm || inputs.years || (slug.includes('mortgage') ? 30 : 10)) || 1;
+          months = Math.round(years * 12);
+        }
+
+        const downPayment = parseFloat(inputs.down_payment || inputs.downPayment || 0) || 0;
+        const tradeIn = parseFloat(inputs.trade_in || 0) || 0;
+        const salesTaxPercent = parseFloat(inputs.sales_tax_percent || 0) || 0;
+        const propTax = parseFloat(inputs.property_tax || inputs.propertyTax || 0) || 0;
+        const homeIns = parseFloat(inputs.home_insurance || inputs.homeInsurance || 0) || 0;
+        const monthlyEscrow = (propTax + homeIns) / 12;
+
+        const salesTax = p * (salesTaxPercent / 100);
+        const actualLoan = Math.max(0, p - downPayment - tradeIn + salesTax);
         const monthlyRate = (rate / 12) / 100;
 
         let emi = 0;
@@ -715,19 +664,20 @@ const isTax = calc.slug.includes('tax');
           emi = months > 0 ? (actualLoan * monthlyRate * factor) / (factor - 1) : 0;
         }
 
-        const totalPay = emi * months;
-        const totalInt = Math.max(0, totalPay - actualLoan);
+        const totalMonthlyPayment = emi + monthlyEscrow;
+        const totalInterest = Math.max(0, (emi * months) - actualLoan);
 
-        res1 = Math.round(emi);
+        res1 = Math.round(slug.includes('mortgage') && monthlyEscrow > 0 ? totalMonthlyPayment : emi);
         res2 = Math.round(actualLoan);
-        res3 = Math.round(totalInt);
+        res3 = Math.round(totalInterest);
 
-        // Schedule
         let bal = actualLoan;
-        for (let y = 1; y <= Math.min(years, 30); y++) {
+        const totalYears = Math.ceil(months / 12);
+        for (let y = 1; y <= Math.min(totalYears, 30); y++) {
           let yrInterest = 0;
           let yrPrincipal = 0;
-          for (let m = 1; m <= 12; m++) {
+          const monthsInYear = Math.min(12, months - (y - 1) * 12);
+          for (let m = 1; m <= monthsInYear; m++) {
             const intPart = bal * monthlyRate;
             const prinPart = Math.min(bal, emi - intPart);
             yrInterest += intPart;
@@ -736,34 +686,664 @@ const isTax = calc.slug.includes('tax');
           }
           rows.push({
             period: `Year ${y}`,
-            payment: Math.round(emi * 12),
+            payment: Math.round((emi + monthlyEscrow) * monthsInYear),
+            principal: Math.round(yrPrincipal),
+            interest: Math.round(yrInterest + (monthlyEscrow * monthsInYear)),
+            balance: Math.round(bal),
+          });
+        }
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = slug.includes('mortgage') ? 'Total Monthly Payment (PITI)' : 'Monthly Payment Obligation';
+        if (heroSubLbl) heroSubLbl.textContent = slug.includes('mortgage') 
+          ? `P&I: ${currentCurrencySymbol} ${formatVal(emi, 0)} | Escrow: ${currentCurrencySymbol} ${formatVal(monthlyEscrow, 0)}`
+          : 'Fixed periodic installment needed to extinguish debt';
+        if (s1Lbl) s1Lbl.textContent = 'Principal Financed';
+        if (s2Lbl) s2Lbl.textContent = 'Total Interest Cost';
+      } 
+      // 2. Step-Up SIP (Annual contribution increment)
+      else if (slug.includes('step-up')) {
+        let p = Math.max(0, parseFloat(inputs.initial_investment || inputs.monthly_investment || inputs.monthlyContribution || 10000));
+        const stepUp = Math.max(0, parseFloat(inputs.step_up_percent || inputs.stepUp || 10)) / 100;
+        const annualRate = Math.max(0, parseFloat(inputs.return_rate || inputs.annual_rate || inputs.interestRate || 12)) / 100;
+        const monthlyRate = annualRate / 12;
+        const years = Math.max(1, Math.round(parseFloat(inputs.time_years || inputs.years || 10)));
+
+        let balance = 0;
+        let totalInvested = 0;
+        let currentMonthly = p;
+
+        for (let y = 1; y <= Math.min(years, 40); y++) {
+          let yearInvested = 0;
+          for (let m = 1; m <= 12; m++) {
+            balance = (balance + currentMonthly) * (1 + monthlyRate);
+            totalInvested += currentMonthly;
+            yearInvested += currentMonthly;
+          }
+          rows.push({
+            period: `Year ${y}`,
+            payment: Math.round(yearInvested),
+            principal: Math.round(totalInvested),
+            interest: Math.max(0, Math.round(balance - totalInvested)),
+            balance: Math.round(balance),
+          });
+          if (y < years) {
+            currentMonthly = currentMonthly * (1 + stepUp);
+          }
+        }
+
+        res1 = Math.round(balance);
+        res2 = Math.round(totalInvested);
+        res3 = Math.max(0, Math.round(balance - totalInvested));
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Estimated Step-Up Maturity Corpus';
+        if (heroSubLbl) heroSubLbl.textContent = 'Accumulated portfolio wealth with annual increments';
+        if (s1Lbl) s1Lbl.textContent = 'Total Capital Invested';
+        if (s2Lbl) s2Lbl.textContent = 'Estimated Wealth Gain';
+      }
+      // 3. Lumpsum Investment
+      else if (slug.includes('lumpsum')) {
+        const p = Math.max(0, parseFloat(inputs.investment_amount || inputs.principal || inputs.initialDeposit || 100000));
+        const annualRate = Math.max(0, parseFloat(inputs.return_rate || inputs.annualRate || 12)) / 100;
+        const years = Math.max(1, Math.round(parseFloat(inputs.time_years || inputs.years || 10)));
+
+        let bal = p;
+        for (let y = 1; y <= Math.min(years, 40); y++) {
+          bal = p * Math.pow(1 + annualRate, y);
+          rows.push({
+            period: `Year ${y}`,
+            payment: 0,
+            principal: Math.round(p),
+            interest: Math.max(0, Math.round(bal - p)),
+            balance: Math.round(bal),
+          });
+        }
+
+        res1 = Math.round(bal);
+        res2 = Math.round(p);
+        res3 = Math.max(0, Math.round(bal - p));
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Total Maturity Value';
+        if (heroSubLbl) heroSubLbl.textContent = 'Compounded future wealth on one-time investment';
+        if (s1Lbl) s1Lbl.textContent = 'Initial Lump-Sum Investment';
+        if (s2Lbl) s2Lbl.textContent = 'Estimated Wealth Gain';
+      }
+      // 4. Compound Interest
+      else if (slug.includes('compound-interest')) {
+        const initial = Math.max(0, parseFloat(inputs.initial_deposit || inputs.principal || 10000));
+        const monthly = Math.max(0, parseFloat(inputs.monthly_contribution || 200));
+        const rate = Math.max(0, parseFloat(inputs.annual_rate || inputs.annualRate || inputs.interestRate || 8.0)) / 100;
+        const years = Math.max(1, Math.round(parseFloat(inputs.investment_years || inputs.years || 10)));
+        const freqVal = String(inputs.compounding_frequency || '12');
+        const n = freqVal === 'continuous' ? 0 : Math.max(1, parseFloat(freqVal) || 12);
+
+        let currentBalance = initial;
+        let totalContributed = initial;
+
+        for (let y = 1; y <= Math.min(years, 40); y++) {
+          let yearContribution = 0;
+          for (let m = 1; m <= 12; m++) {
+            if (n === 0) {
+              currentBalance = (currentBalance + monthly) * Math.exp(rate / 12);
+            } else {
+              const periodicRate = rate / n;
+              const periodsPerMonth = n / 12;
+              currentBalance = (currentBalance + monthly) * Math.pow(1 + periodicRate, periodsPerMonth);
+            }
+            totalContributed += monthly;
+            yearContribution += monthly;
+          }
+          rows.push({
+            period: `Year ${y}`,
+            payment: Math.round(yearContribution),
+            principal: Math.round(totalContributed),
+            interest: Math.max(0, Math.round(currentBalance - totalContributed)),
+            balance: Math.round(currentBalance),
+          });
+        }
+
+        res1 = Math.round(currentBalance);
+        res2 = Math.round(totalContributed);
+        res3 = Math.max(0, Math.round(currentBalance - totalContributed));
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Future Compound Balance';
+        if (heroSubLbl) heroSubLbl.textContent = 'Total accumulated value with periodic interest';
+        if (s1Lbl) s1Lbl.textContent = 'Total Principal Deposited';
+        if (s2Lbl) s2Lbl.textContent = 'Total Interest Earned';
+      }
+      // 5. Term Life Insurance
+      else if (slug.includes('term-life')) {
+        const income = Math.max(0, parseFloat(inputs.annual_income || inputs.income || 80000));
+        const years = Math.max(1, parseFloat(inputs.replacement_years || inputs.years || 10));
+        const debts = Math.max(0, parseFloat(inputs.total_debts || inputs.debts || 280000));
+        const savings = Math.max(0, parseFloat(inputs.existing_savings || inputs.savings || 80000));
+        const grossObligation = (income * years) + debts;
+        const coverage = Math.max(50000, grossObligation - savings);
+
+        res1 = Math.round(coverage);
+        res2 = Math.round(grossObligation);
+        res3 = Math.round(savings);
+
+        for (let y = 1; y <= Math.min(years, 30); y++) {
+          const remainingNeed = Math.max(0, (income * (years - y + 1)) + Math.max(0, debts * ((years - y + 1) / years)) - savings);
+          rows.push({
+            period: `Year ${y}`,
+            payment: Math.round(income),
+            principal: Math.round(income * y),
+            interest: Math.round(remainingNeed),
+            balance: Math.round(remainingNeed),
+          });
+        }
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Recommended Term Life Coverage';
+        if (heroSubLbl) heroSubLbl.textContent = 'Target death benefit to secure family obligations & income';
+        if (s1Lbl) s1Lbl.textContent = 'Total Family Obligations';
+        if (s2Lbl) s2Lbl.textContent = 'Existing Liquid Assets Offset';
+      }
+      // 6. Whole Life Insurance
+      else if (slug.includes('whole-life')) {
+        const prem = Math.max(500, parseFloat(inputs.annual_premium || 3600));
+        const death = Math.max(25000, parseFloat(inputs.initial_death_benefit || 250000));
+        const years = Math.max(5, parseFloat(inputs.policy_years || inputs.years || 20));
+        const rate = Math.max(1, parseFloat(inputs.dividend_rate || 4.25)) / 100;
+        
+        let cashValue = 0;
+        for (let y = 1; y <= Math.min(years, 40); y++) {
+          const savingsFactor = y <= 2 ? 0.35 : (y <= 5 ? 0.70 : 0.88);
+          cashValue = (cashValue + (prem * savingsFactor)) * (1 + rate);
+          const totalPaidToDate = prem * y;
+          rows.push({
+            period: `Year ${y}`,
+            payment: Math.round(prem),
+            principal: Math.round(totalPaidToDate),
+            interest: Math.max(0, Math.round(cashValue - totalPaidToDate)),
+            balance: Math.round(cashValue),
+          });
+        }
+
+        res1 = Math.round(cashValue);
+        res2 = Math.round(prem * years);
+        res3 = Math.max(0, Math.round(cashValue - (prem * years)));
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Projected Cash Surrender Value';
+        if (heroSubLbl) heroSubLbl.textContent = 'Guaranteed accumulation plus projected dividends';
+        if (s1Lbl) s1Lbl.textContent = 'Total Premiums Paid';
+        if (s2Lbl) s2Lbl.textContent = 'Net Cash Value Gain';
+      }
+      // 7. Annuity Payout
+      else if (slug.includes('annuity')) {
+        const P = Math.max(1000, parseFloat(inputs.annuity_principal || inputs.principal || 250000));
+        const rate = Math.max(0.01, parseFloat(inputs.interest_rate || inputs.annualRate || 5.5));
+        const years = Math.max(1, parseFloat(inputs.payout_years || inputs.years || 20));
+        const r = rate / 100 / 12;
+        const n = years * 12;
+        const pmt = P * (r / (1 - Math.pow(1 + r, -n)));
+        const total = pmt * n;
+
+        res1 = Math.round(pmt);
+        res2 = Math.round(P);
+        res3 = Math.max(0, Math.round(total - P));
+
+        let bal = P;
+        for (let y = 1; y <= Math.min(years, 30); y++) {
+          let yrInterest = 0;
+          let yrPrincipal = 0;
+          for (let m = 1; m <= 12; m++) {
+            const intEarned = bal * r;
+            const prinWithdrawn = Math.min(bal, pmt - intEarned);
+            yrInterest += intEarned;
+            yrPrincipal += prinWithdrawn;
+            bal = Math.max(0, bal - prinWithdrawn);
+          }
+          rows.push({
+            period: `Year ${y}`,
+            payment: Math.round(pmt * 12),
             principal: Math.round(yrPrincipal),
             interest: Math.round(yrInterest),
             balance: Math.round(bal),
           });
         }
-      } 
-      // 2. Compound Interest & Lumpsum & Step-Up SIP & Investments
-      else if (slug.includes('compound') || slug.includes('lumpsum') || slug.includes('investment') || slug.includes('step-up') || slug.includes('interest')) {
-        const principal = parseFloat(inputs.principal || inputs.investmentAmount || inputs.initialDeposit || 100000) || 0;
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Guaranteed Monthly Annuity Payout';
+        if (heroSubLbl) heroSubLbl.textContent = 'Predictable level cash flow throughout payout term';
+        if (s1Lbl) s1Lbl.textContent = 'Initial Lump Sum Premium';
+        if (s2Lbl) s2Lbl.textContent = 'Total Guaranteed Interest';
+      }
+      // 8. Health Insurance / Health Plan
+      else if (slug.includes('health-insurance') || slug.includes('health-plan')) {
+        const monthlyPrem = Math.max(0, parseFloat(inputs.monthly_premium || 400));
+        const deductible = Math.max(0, parseFloat(inputs.annual_deductible || 1500));
+        const coinsurance = Math.max(0, parseFloat(inputs.coinsurance_rate || 20)) / 100;
+        const claims = Math.max(0, parseFloat(inputs.expected_claims || 6000));
+        const oopMax = Math.max(0, parseFloat(inputs.oop_max || 6000));
+
+        const annualPremium = monthlyPrem * 12;
+        let memberClaims = 0;
+        if (claims <= deductible) {
+          memberClaims = claims;
+        } else {
+          memberClaims = deductible + ((claims - deductible) * coinsurance);
+        }
+        memberClaims = Math.min(memberClaims, oopMax);
+        const totalCost = annualPremium + memberClaims;
+
+        res1 = Math.round(totalCost);
+        res2 = Math.round(annualPremium);
+        res3 = Math.round(memberClaims);
+
+        const tiers = [
+          { label: 'Baseline Premium', claim: 0, oop: 0 },
+          { label: 'Deductible Met', claim: deductible, oop: deductible },
+          { label: 'Expected Claims', claim: claims, oop: memberClaims },
+          { label: 'Worst-Case (OOP Max)', claim: oopMax * 2, oop: oopMax },
+        ];
+        tiers.forEach((t) => {
+          rows.push({
+            period: t.label,
+            payment: Math.round(annualPremium + t.oop),
+            principal: Math.round(annualPremium),
+            interest: Math.round(t.oop),
+            balance: Math.round(Math.max(0, oopMax - t.oop)),
+          });
+        });
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Total Estimated Annual Healthcare Cost';
+        if (heroSubLbl) heroSubLbl.textContent = 'Total expected expenditure: fixed premiums + out-of-pocket share';
+        if (s1Lbl) s1Lbl.textContent = 'Annual Fixed Premiums';
+        if (s2Lbl) s2Lbl.textContent = 'Member Out-of-Pocket Share';
+      }
+      // 9. Disability Insurance
+      else if (slug.includes('disability')) {
+        const gross = Math.max(1000, parseFloat(inputs.monthly_gross || 8000));
+        const exp = Math.max(500, parseFloat(inputs.monthly_expenses || 4500));
+        const passive = Math.max(0, parseFloat(inputs.passive_income || 0));
+        const cap = gross * 0.60;
+        const need = Math.max(0, exp - passive);
+        const benefit = Math.min(cap, need);
+
+        res1 = Math.round(benefit);
+        res2 = Math.round(cap);
+        res3 = Math.round(need);
+
+        for (let m = 1; m <= 12; m++) {
+          rows.push({
+            period: `Month ${m}`,
+            payment: Math.round(benefit),
+            principal: Math.round(cap),
+            interest: Math.round(need),
+            balance: Math.round(benefit * m),
+          });
+        }
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Recommended Monthly Benefit';
+        if (heroSubLbl) heroSubLbl.textContent = 'Income protection replacement (within 60% gross cap)';
+        if (s1Lbl) s1Lbl.textContent = 'Insurable Cap (60% Gross)';
+        if (s2Lbl) s2Lbl.textContent = 'Essential Monthly Need';
+      }
+      // 10. Salary-Take-Home / Wage Converter
+      else if (slug.includes('salary')) {
+        const rawWage = parseFloat(inputs.wage || inputs.salary || inputs.annual_salary || 35);
+        const hrs = parseFloat(inputs.hours_per_week || inputs.hoursPerWeek || 40);
+        const freq = String(inputs.frequency || 'hourly').toLowerCase();
+        
+        let annualSalary = 0;
+        if (freq === 'annual') {
+          annualSalary = rawWage;
+        } else if (freq === 'monthly') {
+          annualSalary = rawWage * 12;
+        } else if (freq === 'weekly') {
+          annualSalary = rawWage * 52;
+        } else if (freq === 'biweekly' || freq === 'bi-weekly') {
+          annualSalary = rawWage * 26;
+        } else {
+          // hourly default
+          annualSalary = rawWage * hrs * 52;
+        }
+
+        const monthlySalary = annualSalary / 12;
+        const biweeklySalary = annualSalary / 26;
+        const weeklySalary = annualSalary / 52;
+        const hourlyRate = (hrs * 52 > 0) ? annualSalary / (hrs * 52) : 0;
+
+        // Estimated take-home (0% personal tax in UAE, approx 22% standard US/global baseline)
+        const estimatedTax = (currentCurrencyCode === 'AED') ? 0 : annualSalary * 0.22;
+        const netTakeHomeAnnual = Math.max(0, annualSalary - estimatedTax);
+        const netTakeHomeMonthly = netTakeHomeAnnual / 12;
+
+        res1 = Math.round(annualSalary);
+        res2 = Math.round(netTakeHomeAnnual);
+        res3 = Math.round(estimatedTax);
+
+        rows = [
+          { period: 'Annual (52 wks)', payment: Math.round(annualSalary), principal: Math.round(netTakeHomeAnnual), interest: Math.round(estimatedTax), balance: Math.round(annualSalary) },
+          { period: 'Monthly (12/yr)', payment: Math.round(monthlySalary), principal: Math.round(netTakeHomeMonthly), interest: Math.round(estimatedTax / 12), balance: Math.round(monthlySalary) },
+          { period: 'Semi-Monthly (24/yr)', payment: Math.round(annualSalary / 24), principal: Math.round(netTakeHomeAnnual / 24), interest: Math.round(estimatedTax / 24), balance: Math.round(annualSalary / 24) },
+          { period: 'Bi-Weekly (26/yr)', payment: Math.round(biweeklySalary), principal: Math.round(netTakeHomeAnnual / 26), interest: Math.round(estimatedTax / 26), balance: Math.round(biweeklySalary) },
+          { period: 'Weekly (52/yr)', payment: Math.round(weeklySalary), principal: Math.round(netTakeHomeAnnual / 52), interest: Math.round(estimatedTax / 52), balance: Math.round(weeklySalary) },
+          { period: 'Daily (8 hrs)', payment: Math.round(hourlyRate * 8), principal: Math.round(netTakeHomeAnnual / 260), interest: Math.round(estimatedTax / 260), balance: Math.round(hourlyRate * 8) },
+          { period: 'Hourly Wage', payment: Math.round(hourlyRate * 100) / 100, principal: Math.round((netTakeHomeAnnual / (hrs * 52)) * 100) / 100, interest: Math.round((estimatedTax / (hrs * 52)) * 100) / 100, balance: Math.round(hourlyRate * 100) / 100 },
+        ];
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Equivalent Gross Annual Salary';
+        if (heroSubLbl) heroSubLbl.textContent = `Monthly: ${currentCurrencySymbol} ${formatVal(monthlySalary, 0)} • Bi-Weekly: ${currentCurrencySymbol} ${formatVal(biweeklySalary, 0)}`;
+        if (s1Lbl) s1Lbl.textContent = 'Estimated Net Take-Home';
+        if (s2Lbl) s2Lbl.textContent = 'Estimated Taxes & Withholdings';
+      }
+      // 11. Income Tax Engine
+      else if (slug.includes('income-tax') || slug.includes('tax-calculator')) {
+        const gross = Math.max(0, parseFloat(inputs.gross_income || inputs.income || inputs.annual_income || 75000) || 0);
+        let ded = Math.max(0, parseFloat(inputs.deductions || inputs.allowances || 15000) || 0);
+        const system = String(inputs.tax_system || 'us_single');
+        const customRate = Math.max(0, Math.min(100, parseFloat(inputs.custom_rate || '20') || 20)) / 100;
+
+        function progressive(taxable, brackets) {
+          let t = 0;
+          for (let i = 0; i < brackets.length; i++) {
+            const b = brackets[i];
+            if (taxable > b.min) {
+              const span = b.max !== null ? Math.min(taxable, b.max) - b.min : taxable - b.min;
+              if (span > 0) t += span * b.rate;
+            }
+          }
+          return t;
+        }
+
+        let tax = 0;
+        let bracketsUsed = [];
+        if (system === 'us_single') {
+          ded = Math.max(ded, 15000);
+          const taxable = Math.max(0, gross - ded);
+          bracketsUsed = [
+            { min: 0, max: 11925, rate: 0.10, label: '10% Tier ($0–$11.9k)' },
+            { min: 11925, max: 48475, rate: 0.12, label: '12% Tier ($11.9k–$48.5k)' },
+            { min: 48475, max: 103350, rate: 0.22, label: '22% Tier ($48.5k–$103.3k)' },
+            { min: 103350, max: 197300, rate: 0.24, label: '24% Tier ($103.3k–$197.3k)' },
+            { min: 197300, max: 250525, rate: 0.32, label: '32% Tier ($197.3k–$250.5k)' },
+            { min: 250525, max: 626350, rate: 0.35, label: '35% Tier ($250.5k–$626.3k)' },
+            { min: 626350, max: null, rate: 0.37, label: '37% Top Tier ($626.3k+)' },
+          ];
+          tax = progressive(taxable, bracketsUsed);
+        } else if (system === 'us_joint') {
+          ded = Math.max(ded, 30000);
+          const taxable = Math.max(0, gross - ded);
+          bracketsUsed = [
+            { min: 0, max: 23850, rate: 0.10, label: '10% Tier ($0–$23.8k)' },
+            { min: 23850, max: 96950, rate: 0.12, label: '12% Tier ($23.8k–$96.9k)' },
+            { min: 96950, max: 206700, rate: 0.22, label: '22% Tier ($96.9k–$206.7k)' },
+            { min: 206700, max: 394600, rate: 0.24, label: '24% Tier ($206.7k–$394.6k)' },
+            { min: 394600, max: 501050, rate: 0.32, label: '32% Tier ($394.6k–$501k)' },
+            { min: 501050, max: 751600, rate: 0.35, label: '35% Tier ($501k–$751.6k)' },
+            { min: 751600, max: null, rate: 0.37, label: '37% Top Tier ($751.6k+)' },
+          ];
+          tax = progressive(taxable, bracketsUsed);
+        } else if (system === 'in_new') {
+          ded = Math.max(ded, 75000);
+          const taxable = Math.max(0, gross - ded);
+          bracketsUsed = [
+            { min: 0, max: 300000, rate: 0.0, label: '0% Slab (₹0–₹3L)' },
+            { min: 300000, max: 700000, rate: 0.05, label: '5% Slab (₹3L–₹7L)' },
+            { min: 700000, max: 1000000, rate: 0.10, label: '10% Slab (₹7L–₹10L)' },
+            { min: 1000000, max: 1200000, rate: 0.15, label: '15% Slab (₹10L–₹12L)' },
+            { min: 1200000, max: 1500000, rate: 0.20, label: '20% Slab (₹12L–₹15L)' },
+            { min: 1500000, max: null, rate: 0.30, label: '30% Slab (₹15L+)' },
+          ];
+          let baseTax = progressive(taxable, bracketsUsed);
+          if (taxable <= 700000) baseTax = 0;
+          tax = baseTax * 1.04;
+        } else if (system === 'in_old') {
+          ded = Math.max(ded, 50000);
+          const taxable = Math.max(0, gross - ded);
+          bracketsUsed = [
+            { min: 0, max: 250000, rate: 0.0, label: '0% Slab (₹0–₹2.5L)' },
+            { min: 250000, max: 500000, rate: 0.05, label: '5% Slab (₹2.5L–₹5L)' },
+            { min: 500000, max: 1000000, rate: 0.20, label: '20% Slab (₹5L–₹10L)' },
+            { min: 1000000, max: null, rate: 0.30, label: '30% Slab (₹10L+)' },
+          ];
+          let baseTax = progressive(taxable, bracketsUsed);
+          if (taxable <= 500000) baseTax = 0;
+        } else if (system === 'ca_federal' || (currentCurrencyCode === 'CAD' && system === 'us_single')) {
+          ded = Math.max(ded, 15705);
+          const taxable = Math.max(0, gross - ded);
+          bracketsUsed = [
+            { min: 0, max: 57375, rate: 0.15, label: '15% Tier (C$0–C$57.4k)' },
+            { min: 57375, max: 114750, rate: 0.205, label: '20.5% Tier (C$57.4k–C$114.8k)' },
+            { min: 114750, max: 177882, rate: 0.26, label: '26% Tier (C$114.8k–C$177.9k)' },
+            { min: 177882, max: 253414, rate: 0.29, label: '29% Tier (C$177.9k–C$253.4k)' },
+            { min: 253414, max: null, rate: 0.33, label: '33% Top Tier (C$253.4k+)' },
+          ];
+          tax = progressive(taxable, bracketsUsed);
+        } else if (system === 'gb_ewni' || (currentCurrencyCode === 'GBP' && system === 'us_single')) {
+          let pa = 12570;
+          if (gross > 100000) pa = Math.max(0, 12570 - (gross - 100000) * 0.5);
+          ded = Math.max(ded, pa);
+          const taxable = Math.max(0, gross - ded);
+          bracketsUsed = [
+            { min: 0, max: 37700, rate: 0.20, label: '20% Basic (£0–£37.7k)' },
+            { min: 37700, max: 112570, rate: 0.40, label: '40% Higher (£37.7k–£112.6k)' },
+            { min: 112570, max: null, rate: 0.45, label: '45% Additional (£112.6k+)' },
+          ];
+          tax = progressive(taxable, bracketsUsed);
+        } else if (system === 'au_resident' || (currentCurrencyCode === 'AUD' && system === 'us_single')) {
+          const taxable = Math.max(0, gross - ded);
+          bracketsUsed = [
+            { min: 0, max: 18200, rate: 0.0, label: '0% Tax-Free (A$0–A$18.2k)' },
+            { min: 18200, max: 45000, rate: 0.16, label: '16% Tier (A$18.2k–A$45k)' },
+            { min: 45000, max: 135000, rate: 0.30, label: '30% Tier (A$45k–A$135k)' },
+            { min: 135000, max: 190000, rate: 0.37, label: '37% Tier (A$135k–A$190k)' },
+            { min: 190000, max: null, rate: 0.45, label: '45% Top Tier (A$190k+)' },
+          ];
+          const base = progressive(taxable, bracketsUsed);
+          const medicare = taxable > 26000 ? taxable * 0.02 : 0;
+          tax = base + medicare;
+        } else if (system === 'ae_zero' || (currentCurrencyCode === 'AED' && system === 'us_single')) {
+          ded = 0;
+          bracketsUsed = [
+            { min: 0, max: null, rate: 0.0, label: '0% Personal Tax (UAE Federal Decree Law)' },
+          ];
+          tax = 0;
+        } else {
+          const taxable = Math.max(0, gross - ded);
+          tax = taxable * customRate;
+        }
+
+        const netTakeHome = Math.max(0, gross - tax);
+        const effRate = gross > 0 ? (tax / gross) * 100 : 0;
+
+        res1 = Math.round(tax);
+        res2 = Math.round(netTakeHome);
+        res3 = Math.round(ded);
+
+        const taxable = Math.max(0, gross - ded);
+        let cumTax = 0;
+        if (bracketsUsed.length > 0) {
+          bracketsUsed.forEach((b) => {
+            if (taxable > b.min) {
+              const span = b.max !== null ? Math.min(taxable, b.max) - b.min : taxable - b.min;
+              const bTax = span * b.rate;
+              cumTax += bTax;
+              rows.push({
+                period: b.label,
+                payment: Math.round(span),
+                principal: Math.round(cumTax),
+                interest: Math.round(bTax),
+                balance: Math.round(Math.max(0, taxable - span)),
+              });
+            }
+          });
+        }
+        if (rows.length === 0) {
+          rows.push({
+            period: 'Tax Liability',
+            payment: Math.round(tax),
+            principal: Math.round(netTakeHome),
+            interest: Math.round(tax),
+            balance: Math.round(netTakeHome / 12),
+          });
+        }
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Estimated Income Tax Liability';
+        if (heroSubLbl) heroSubLbl.textContent = `Effective Tax Rate: ${effRate.toFixed(2)}% • Monthly Take-Home: ${currentCurrencySymbol} ${formatVal(netTakeHome / 12, 0)}`;
+        if (s1Lbl) s1Lbl.textContent = 'Annual Net Take-Home';
+        if (s2Lbl) s2Lbl.textContent = 'Total Deductions & Allowances';
+      }
+      // 12. 401(k) Retirement Savings Engine
+      else if (slug.includes('401k')) {
+        const age = Math.max(18, parseFloat(inputs.current_age || inputs.age || 30));
+        const retire = Math.max(age + 1, parseFloat(inputs.retirement_age || inputs.retirementAge || 65));
+        const years = retire - age;
+        let salary = Math.max(0, parseFloat(inputs.current_salary || inputs.salary || 80000));
+        let balance = Math.max(0, parseFloat(inputs.current_balance || inputs.startingBalance || 25000));
+
+        const empPct = Math.max(0, parseFloat(inputs.employee_contrib_pct || inputs.contributionPercent || 6)) / 100;
+        const matchRatio = Math.max(0, parseFloat(inputs.employer_match_pct || inputs.matchPercent || 50)) / 100;
+        const matchCap = Math.max(0, parseFloat(inputs.employer_match_cap || inputs.matchCap || 6)) / 100;
+        const returnRate = (parseFloat(inputs.annual_return || inputs.returnRate || 7.0) / 100) / 12;
+        const salaryIncrease = 0.03;
+
+        let totalEmp = 0;
+        let totalEmpr = 0;
+
+        for (let y = 1; y <= Math.min(years, 45); y++) {
+          const monthlySalary = salary / 12;
+          const monthlyEmp = monthlySalary * empPct;
+          const matchedPortion = Math.min(monthlyEmp, monthlySalary * matchCap);
+          const monthlyEmpr = matchedPortion * matchRatio;
+
+          let yrEmp = 0;
+          let yrEmpr = 0;
+          for (let m = 1; m <= 12; m++) {
+            balance = (balance + monthlyEmp + monthlyEmpr) * (1 + returnRate);
+            totalEmp += monthlyEmp;
+            totalEmpr += monthlyEmpr;
+            yrEmp += monthlyEmp;
+            yrEmpr += monthlyEmpr;
+          }
+
+          rows.push({
+            period: `Age ${age + y}`,
+            payment: Math.round(yrEmp + yrEmpr),
+            principal: Math.round(totalEmp + totalEmpr),
+            interest: Math.max(0, Math.round(balance - (totalEmp + totalEmpr))),
+            balance: Math.round(balance),
+          });
+
+          salary = salary * (1 + salaryIncrease);
+        }
+
+        const finalVal = Math.round(balance);
+        const totalContrib = Math.round(totalEmp + totalEmpr);
+        const totalGrowth = Math.max(0, Math.round(finalVal - totalContrib));
+
+        res1 = finalVal;
+        res2 = totalContrib;
+        res3 = totalGrowth;
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Estimated 401(k) Nest Egg';
+        if (heroSubLbl) heroSubLbl.textContent = `Employer Match Earned: ${currentCurrencySymbol} ${formatVal(totalEmpr, 0)} • Compound Growth: ${currentCurrencySymbol} ${formatVal(totalGrowth, 0)}`;
+        if (s1Lbl) s1Lbl.textContent = 'Total Lifetime Contributions';
+        if (s2Lbl) s2Lbl.textContent = 'Total Compound Interest';
+      }
+      // 13. Roth IRA Tax-Free Retirement Engine
+      else if (slug.includes('roth-ira') || slug.includes('roth')) {
+        let balance = Math.max(0, parseFloat(inputs.current_balance || inputs.startingBalance || 10000));
+        const annual = Math.max(0, parseFloat(inputs.annual_contribution || inputs.annualDeposit || 7000));
+        const years = Math.max(1, Math.round(parseFloat(inputs.investment_years || inputs.years || 30)));
+        const rate = Math.max(0, parseFloat(inputs.expected_return || inputs.returnRate || 8.0)) / 100;
+
+        let totalContrib = balance;
+        for (let y = 1; y <= Math.min(years, 50); y++) {
+          balance = (balance + annual) * (1 + rate);
+          totalContrib += annual;
+          rows.push({
+            period: `Year ${y}`,
+            payment: Math.round(annual),
+            principal: Math.round(totalContrib),
+            interest: Math.max(0, Math.round(balance - totalContrib)),
+            balance: Math.round(balance),
+          });
+        }
+
+        const finalVal = Math.round(balance);
+        const earnings = Math.max(0, Math.round(finalVal - totalContrib));
+
+        res1 = finalVal;
+        res2 = Math.round(totalContrib);
+        res3 = earnings;
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Estimated Tax-Free Roth Corpus';
+        if (heroSubLbl) heroSubLbl.textContent = '100% tax-free withdrawals in retirement after age 59½';
+        if (s1Lbl) s1Lbl.textContent = 'Principal Invested';
+        if (s2Lbl) s2Lbl.textContent = 'Tax-Free Investment Growth';
+      }
+      // 5. Default General Investment / Finance Fallback
+      else {
+        const p = parseFloat(inputs.principal || inputs.investmentAmount || inputs.initialDeposit || 100000) || 0;
         const monthlyP = parseFloat(inputs.monthlyContribution || inputs.monthlyDeposit || inputs.monthlyInvestment || 0) || 0;
         const rate = parseFloat(inputs.annualRate || inputs.expectedReturnRate || inputs.interestRate || 10) || 0;
         const years = parseFloat(inputs.years || inputs.timeHorizonYears || inputs.timePeriodYears || 10) || 1;
         const r = (rate / 100) / 12;
-        const totalMonths = Math.round(years * 12);
 
-        let bal = principal;
-        let totalDeposited = principal;
+        let bal = p;
+        let totalDeposited = p;
 
         for (let y = 1; y <= Math.min(years, 40); y++) {
-          let yrGrowth = 0;
           let yrDeposits = 0;
           for (let m = 1; m <= 12; m++) {
             bal = (bal + monthlyP) * (1 + r);
             totalDeposited += monthlyP;
             yrDeposits += monthlyP;
           }
-          const yrEndGrowth = Math.max(0, bal - totalDeposited);
           rows.push({
             period: `Year ${y}`,
             payment: Math.round(yrDeposits),
@@ -777,78 +1357,21 @@ const isTax = calc.slug.includes('tax');
         res2 = Math.round(totalDeposited);
         res3 = Math.max(0, Math.round(bal - totalDeposited));
       }
-      // 3. Retirement & 401(k) & Roth IRA & SWP
-      else if (slug.includes('retirement') || slug.includes('401k') || slug.includes('roth') || slug.includes('swp') || slug.includes('ppf') || slug.includes('epf')) {
-        const currentAge = parseFloat(inputs.currentAge || 30) || 30;
-        const retireAge = parseFloat(inputs.retirementAge || 60) || 60;
-        const years = Math.max(1, retireAge - currentAge);
-        const monthlySave = parseFloat(inputs.monthlySavings || inputs.monthlyContribution || inputs.monthlyDeposit || 10000) || 0;
-        const currentBal = parseFloat(inputs.currentBalance || inputs.initialDeposit || 100000) || 0;
-        const rate = parseFloat(inputs.returnRate || inputs.annualRate || 9) || 0;
-        const r = (rate / 100) / 12;
-
-        let bal = currentBal;
-        let totalInv = currentBal;
-
-        for (let y = 1; y <= Math.min(years, 40); y++) {
-          let yrDeposits = 0;
-          for (let m = 1; m <= 12; m++) {
-            bal = (bal + monthlySave) * (1 + r);
-            totalInv += monthlySave;
-            yrDeposits += monthlySave;
-          }
-          rows.push({
-            period: `Age ${currentAge + y}`,
-            payment: Math.round(yrDeposits),
-            principal: Math.round(totalInv),
-            interest: Math.round(bal - totalInv),
-            balance: Math.round(bal),
-          });
-        }
-
-        res1 = Math.round(bal);
-        res2 = Math.round(totalInv);
-        res3 = Math.max(0, Math.round(bal - totalInv));
-      }
-      // 4. Default Business / Profit Margin / Generic Finance
-      else {
-        const p = parseFloat(inputs.principal || inputs.cost || inputs.revenue || 50000) || 0;
-        const r = parseFloat(inputs.rate || inputs.margin || 15) || 0;
-        const years = parseFloat(inputs.years || 5) || 1;
-
-        res1 = Math.round(p * (1 + (r / 100) * years));
-        res2 = Math.round(p);
-        res3 = Math.round(res1 - res2);
-
-        for (let y = 1; y <= Math.min(years, 10); y++) {
-          const val = Math.round(p * (1 + (r / 100) * y));
-          rows.push({
-            period: `Period ${y}`,
-            payment: Math.round(p / years),
-            principal: Math.round(p),
-            interest: Math.round(val - p),
-            balance: val,
-          });
-        }
-      }
 
       currentReportState = { val1: res1, val2: res2, val3: res3, schedule: rows };
 
-      // Animate Result Cards using facAnimateNumber
-      if (typeof window.facAnimateNumber === 'function') {
-        window.facAnimateNumber('finance-res-1', res1, { isIndian: isIndianFormat, decimals: 0 });
-        window.facAnimateNumber('finance-res-2', res2, { isIndian: isIndianFormat, decimals: 0 });
-        window.facAnimateNumber('finance-res-3', res3, { isIndian: isIndianFormat, decimals: 0 });
-      } else {
-        const el1 = document.getElementById('finance-res-1');
-        const el2 = document.getElementById('finance-res-2');
-        const el3 = document.getElementById('finance-res-3');
-        if (el1) el1.textContent = formatVal(res1, 0);
-        if (el2) el2.textContent = formatVal(res2, 0);
-        if (el3) el3.textContent = formatVal(res3, 0);
-      }
+      // Update Result Elements
+      const heroVal = document.getElementById('hero-result-val');
+      const sec1Val = document.getElementById('sec-card-1-val');
+      const sec2Val = document.getElementById('sec-card-2-val');
+      const mobileVal = document.getElementById('mobile-hud-val');
 
-      // Spectrum Bar update
+      if (heroVal) heroVal.textContent = formatVal(res1, 0);
+      if (sec1Val) sec1Val.textContent = formatVal(res2, 0);
+      if (sec2Val) sec2Val.textContent = formatVal(res3, 0);
+      if (mobileVal) mobileVal.textContent = `${currentCurrencySymbol} ${formatVal(res1, 0)}`;
+
+      // Spectrum Bar & Ratios
       const totalBase = (res2 + res3) || 1;
       const principalPct = Math.min(100, Math.max(0, (res2 / totalBase) * 100));
       const gainPct = Math.max(0, 100 - principalPct);
@@ -863,156 +1386,107 @@ const isTax = calc.slug.includes('tax');
       if (labelP) labelP.textContent = `${currentCurrencySymbol} ${formatVal(res2, 0)} (${principalPct.toFixed(1)}%)`;
       if (labelG) labelG.textContent = `${currentCurrencySymbol} ${formatVal(res3, 0)} (${gainPct.toFixed(1)}%)`;
 
-      // Milestone & Inflation Insight
-      const milestoneEl = document.getElementById('finance-milestone-insight');
-      const inflationEl = document.getElementById('finance-inflation-adjusted');
-      if (milestoneEl) {
-        if (slug.includes('loan') || slug.includes('mortgage') || slug.includes('emi')) {
-          milestoneEl.innerHTML = `<strong>Loan Payoff:</strong> Interest constitutes <span class="text-cyan font-bold">${gainPct.toFixed(1)}%</span> of total lifetime obligations.`;
-        } else {
-          milestoneEl.innerHTML = `<strong>Compounding Power:</strong> Earnings represent <span class="text-cyan font-bold">${gainPct.toFixed(1)}%</span> of your total accumulated corpus!`;
-        }
+      // SVG Donut Rings
+      const circ = 339.29;
+      const ring1Offset = circ * (1 - (principalPct / 100));
+      const ring2Offset = circ * (1 - (gainPct / 100));
+
+      const ring1 = document.getElementById('donut-ring-1');
+      const ring2 = document.getElementById('donut-ring-2');
+      const centerPct = document.getElementById('donut-center-pct');
+
+      if (ring1) ring1.style.strokeDashoffset = String(ring1Offset);
+      if (ring2) ring2.style.strokeDashoffset = String(ring2Offset);
+      if (centerPct) centerPct.textContent = `${gainPct.toFixed(1)}%`;
+
+      const leg1 = document.getElementById('legend-ring-1-pct');
+      const leg2 = document.getElementById('legend-ring-2-pct');
+      const legTot = document.getElementById('legend-total-val');
+
+      if (leg1) leg1.textContent = `${principalPct.toFixed(1)}%`;
+      if (leg2) leg2.textContent = `${gainPct.toFixed(1)}%`;
+      if (legTot) legTot.textContent = `${currentCurrencySymbol} ${formatVal(res2 + res3, 0)}`;
+
+      // Badges
+      const multBadge = document.getElementById('finance-multiplier-badge');
+      if (multBadge) {
+        const mult = res2 > 0 ? ((res2 + res3) / res2).toFixed(2) : '1.00';
+        multBadge.textContent = `${mult}x Ratio`;
       }
+
+      // Matrix Cards
+      const inflationEl = document.getElementById('matrix-inflation-val');
+      const totalObligationEl = document.getElementById('matrix-total-val');
       if (inflationEl) {
         const yrs = rows.length || 10;
         const real = res1 / Math.pow(1.06, yrs);
         inflationEl.textContent = `${currentCurrencySymbol} ${formatVal(Math.round(real), 0)}`;
       }
+      if (totalObligationEl) {
+        totalObligationEl.textContent = `${currentCurrencySymbol} ${formatVal(res2 + res3, 0)}`;
+      }
 
-      // Render Schedule Tables
       renderSchedule(rows);
       updatePrintReport(res1, res2, res3, rows, inputs);
     }
 
     function renderSchedule(rows) {
-      let screenHtml = '';
-      let printHtml = '';
-
+      if (!scheduleBody) return;
+      let html = '';
       rows.slice(0, 50).forEach((r) => {
-        screenHtml += `
+        html += `
           <tr class="hover:bg-canvas-subtle/50 transition-colors">
-            <td class="py-2.5 px-3 font-semibold text-link whitespace-nowrap">${r.period}</td>
-            <td class="py-2.5 px-3 text-right tabular-nums font-mono whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.payment, 0)}</td>
-            <td class="py-2.5 px-3 text-right tabular-nums font-mono text-mute whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.principal, 0)}</td>
-            <td class="py-2.5 px-3 text-right tabular-nums font-mono text-violet font-semibold whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.interest, 0)}</td>
-            <td class="py-2.5 px-3 text-right tabular-nums font-mono font-bold text-cyan whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.balance, 0)}</td>
-          </tr>
-        `;
-        printHtml += `
-          <tr class="border-b border-slate-200">
-            <td class="py-1.5 px-2.5 font-bold text-blue-700">${r.period}</td>
-            <td class="py-1.5 px-2.5 text-right font-mono">${currentCurrencySymbol} ${formatVal(r.payment, 0)}</td>
-            <td class="py-1.5 px-2.5 text-right font-mono text-slate-700">${currentCurrencySymbol} ${formatVal(r.principal, 0)}</td>
-            <td class="py-1.5 px-2.5 text-right font-mono text-violet-700 font-semibold">${currentCurrencySymbol} ${formatVal(r.interest, 0)}</td>
-            <td class="py-1.5 px-2.5 text-right font-mono font-bold text-slate-900">${currentCurrencySymbol} ${formatVal(r.balance, 0)}</td>
+            <td class="py-2.5 px-3.5 font-semibold text-link whitespace-nowrap">${r.period}</td>
+            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.payment, 0)}</td>
+            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono text-mute whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.principal, 0)}</td>
+            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono text-violet font-semibold whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.interest, 0)}</td>
+            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono font-bold text-cyan whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.balance, 0)}</td>
           </tr>
         `;
       });
-
-      if (scheduleBody) scheduleBody.innerHTML = screenHtml;
-      if (printScheduleBody) printScheduleBody.innerHTML = printHtml;
+      scheduleBody.innerHTML = html;
     }
 
     function updatePrintReport(r1, r2, r3, rows, inputs) {
       const pDate = document.getElementById('print-report-date');
       const pCurr = document.getElementById('print-currency-code');
       const pGrid = document.getElementById('print-parameters-grid');
-      const pv1 = document.getElementById('print-metric-value-1');
-      const pv2 = document.getElementById('print-metric-value-2');
-      const pv3 = document.getElementById('print-metric-value-3');
+      const m1 = document.getElementById('print-metric-value-1');
+      const m2 = document.getElementById('print-metric-value-2');
+      const m3 = document.getElementById('print-metric-value-3');
 
-      if (pDate) pDate.textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      if (pDate) pDate.textContent = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
       if (pCurr) pCurr.textContent = `${currentCurrencyCode} (${currentCurrencySymbol})`;
-      if (pv1) pv1.textContent = `${currentCurrencySymbol} ${formatVal(r1, 0)}`;
-      if (pv2) pv2.textContent = `${currentCurrencySymbol} ${formatVal(r2, 0)}`;
-      if (pv3) pv3.textContent = `${currentCurrencySymbol} ${formatVal(r3, 0)}`;
+      if (m1) m1.textContent = `${currentCurrencySymbol} ${formatVal(r1, 0)}`;
+      if (m2) m2.textContent = `${currentCurrencySymbol} ${formatVal(r2, 0)}`;
+      if (m3) m3.textContent = `${currentCurrencySymbol} ${formatVal(r3, 0)}`;
 
       if (pGrid) {
-        let gridHtml = '';
-        Object.keys(inputs).forEach((k) => {
-          gridHtml += `
-            <div>
-              <span class="text-slate-500 block text-[10px] uppercase">${k}</span>
-              <span class="text-sm font-bold text-slate-900">${typeof inputs[k] === 'number' ? formatVal(inputs[k], 0) : inputs[k]}</span>
-            </div>
+        let phtml = '';
+        for (const [k, v] of Object.entries(inputs)) {
+          phtml += `<div><span class="text-slate-500 uppercase block text-[10px]">${k}:</span><strong>${typeof v === 'number' ? formatVal(v, 0) : v}</strong></div>`;
+        }
+        pGrid.innerHTML = phtml;
+      }
+
+      if (printScheduleBody) {
+        let pRows = '';
+        rows.slice(0, 30).forEach((r) => {
+          pRows += `
+            <tr>
+              <td class="py-1 px-2 font-bold">${r.period}</td>
+              <td class="py-1 px-2 text-right">${currentCurrencySymbol} ${formatVal(r.payment, 0)}</td>
+              <td class="py-1 px-2 text-right">${currentCurrencySymbol} ${formatVal(r.principal, 0)}</td>
+              <td class="py-1 px-2 text-right">${currentCurrencySymbol} ${formatVal(r.interest, 0)}</td>
+              <td class="py-1 px-2 text-right font-bold">${currentCurrencySymbol} ${formatVal(r.balance, 0)}</td>
+            </tr>
           `;
         });
-        pGrid.innerHTML = gridHtml;
+        printScheduleBody.innerHTML = pRows;
       }
     }
 
-    // PDF Download via high-fidelity letterhead print dialog
-    function downloadPDF() {
-      recalculate();
-      window.print();
-    }
-
-    // Excel (.csv) Export — Verified UTF-8 with BOM
-    function downloadExcel() {
-      recalculate();
-      const dateStr = new Date().toISOString().slice(0, 10);
-      const csvRows = [
-        ['Free Accurate Calculator — freeaccuratecalculator.com'],
-        [`${calcName} Statement & Breakdown Schedule`],
-        ['Date', dateStr],
-        ['Currency', `${currentCurrencyCode} (${currentCurrencySymbol})`],
-        [],
-        ['SUMMARY RESULTS'],
-        ['Primary Metric', `${currentCurrencySymbol} ${formatVal(currentReportState.val1, 0)}`],
-        ['Base Capital / Principal', `${currentCurrencySymbol} ${formatVal(currentReportState.val2, 0)}`],
-        ['Total Interest / Growth', `${currentCurrencySymbol} ${formatVal(currentReportState.val3, 0)}`],
-        [],
-        ['BREAKDOWN SCHEDULE'],
-        ['Period', 'Payment / Contribution', 'Principal / Invested', 'Interest / Return', 'Ending Balance'],
-      ];
-
-      currentReportState.schedule.forEach((row) => {
-        csvRows.push([
-          row.period,
-          `${currentCurrencySymbol} ${formatVal(row.payment, 0)}`,
-          `${currentCurrencySymbol} ${formatVal(row.principal, 0)}`,
-          `${currentCurrencySymbol} ${formatVal(row.interest, 0)}`,
-          `${currentCurrencySymbol} ${formatVal(row.balance, 0)}`,
-        ]);
-      });
-
-      csvRows.push([]);
-      csvRows.push(['Verified Client-Side Computation', '100% Private']);
-      csvRows.push(['Website', window.location.href]);
-
-      const escapeCsv = (val) => `"${String(val ?? '').replace(/"/g, '""')}"`;
-      const csvContent = '\uFEFF' + csvRows.map((r) => r.map(escapeCsv).join(',')).join('\r\n');
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${slug}_Statement_${currentCurrencyCode}_${dateStr}.csv`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      showToast('Excel spreadsheet downloaded!');
-    }
-
-    function copySummary() {
-      recalculate();
-      const text = [
-        `📊 ${calcName} Summary — Free Accurate Calculator`,
-        `--------------------------------------------`,
-        `• Primary Metric: ${currentCurrencySymbol} ${formatVal(currentReportState.val1, 0)}`,
-        `• Principal / Capital: ${currentCurrencySymbol} ${formatVal(currentReportState.val2, 0)}`,
-        `• Interest / Growth: ${currentCurrencySymbol} ${formatVal(currentReportState.val3, 0)}`,
-        `--------------------------------------------`,
-        `Calculate: ${window.location.href}`,
-      ].join('\n');
-      navigator.clipboard.writeText(text).then(() => showToast('Summary copied!')).catch(() => showToast('Could not copy'));
-    }
-
-    function shareLink() {
-      navigator.clipboard.writeText(window.location.href).then(() => showToast('Link copied!')).catch(() => showToast('Could not copy link'));
-    }
-
-    // Two-Way Binding: Sliders & Number Inputs
+    // Input Bindings
     document.querySelectorAll('.finance-input').forEach((inp) => {
       const slider = document.getElementById(`slider-${inp.name}`);
       inp.addEventListener('input', () => {
@@ -1027,61 +1501,152 @@ const isTax = calc.slug.includes('tax');
       }
     });
 
-    // Action buttons click listeners
-    document.getElementById('action-download-pdf-btn')?.addEventListener('click', downloadPDF);
-    document.getElementById('finance-bottom-pdf-btn')?.addEventListener('click', downloadPDF);
-    document.getElementById('action-download-excel-btn')?.addEventListener('click', downloadExcel);
-    document.getElementById('finance-bottom-excel-btn')?.addEventListener('click', downloadExcel);
+    // Stepper buttons
+    document.querySelectorAll('.finance-stepper-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const inpId = btn.dataset.input;
+        const dir = btn.dataset.dir;
+        const inp = document.getElementById(inpId);
+        if (inp) {
+          const step = parseFloat(inp.step) || 1;
+          const cur = parseFloat(inp.value) || 0;
+          inp.value = dir === 'plus' ? String(cur + step) : String(Math.max(parseFloat(inp.min) || 0, cur - step));
+          const slider = document.getElementById(`slider-${inp.name}`);
+          if (slider) slider.value = inp.value;
+          recalculate();
+        }
+      });
+    });
+
+    // Export Handlers
+    function downloadExcel() {
+      const rows = currentReportState.schedule;
+      if (!rows || rows.length === 0) return;
+      const headers = ['Period', 'Payment', 'Principal', 'Interest', 'Balance'];
+      let csv = '\uFEFF';
+      csv += `${calcName} Statement\n`;
+      csv += `Generated,${new Date().toISOString()}\n\n`;
+      csv += headers.join(',') + '\n';
+      rows.forEach((r) => {
+        csv += `"${r.period}",${r.payment},${r.principal},${r.interest},${r.balance}\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${slug}_schedule_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Excel (.csv) downloaded!');
+    }
+
+    function downloadPDF() {
+      recalculate();
+      window.print();
+    }
+
+    function copySummary() {
+      const text = [
+        `📊 ${calcName} Summary — Free Accurate Calculator`,
+        `----------------------------------------------------`,
+        `• Primary Result: ${currentCurrencySymbol} ${formatVal(currentReportState.val1, 0)}`,
+        `• Base Amount: ${currentCurrencySymbol} ${formatVal(currentReportState.val2, 0)}`,
+        `• Growth/Cost: ${currentCurrencySymbol} ${formatVal(currentReportState.val3, 0)}`,
+        `----------------------------------------------------`,
+        `Calculate online: ${window.location.href}`,
+      ].join('\n');
+
+      navigator.clipboard.writeText(text).then(() => {
+        showToast('Summary copied to clipboard!');
+      }).catch(() => {
+        showToast('Unable to copy summary');
+      });
+    }
+
+    function shareLink() {
+      const params = new URLSearchParams();
+      document.querySelectorAll('.finance-input').forEach((inp) => {
+        params.set(inp.name, inp.value);
+      });
+      window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        showToast('Link copied to clipboard!');
+      }).catch(() => {
+        showToast('Unable to copy link');
+      });
+    }
+
+    // Button Bindings
     document.getElementById('action-copy-summary-btn')?.addEventListener('click', copySummary);
     document.getElementById('action-share-link-btn')?.addEventListener('click', shareLink);
-
-    // Currency Switcher local dropdown
-    currencySelect?.addEventListener('change', () => {
-      const newCurr = currencySelect.value;
-      if (typeof window.facSetActiveCurrency === 'function') {
-        window.facSetActiveCurrency(newCurr);
-      } else {
-        handleCurrencySwitch(newCurr, currentCurrencyCode);
-      }
+    document.getElementById('action-download-excel-btn')?.addEventListener('click', downloadExcel);
+    document.getElementById('action-download-pdf-btn')?.addEventListener('click', downloadPDF);
+    document.getElementById('mobile-hud-scroll-btn')?.addEventListener('click', () => {
+      document.getElementById('schedule-section-card')?.scrollIntoView({ behavior: 'smooth' });
     });
 
-    // Global Currency Change Listener
+    // Currency Switcher Event
     window.addEventListener('currencychange', (e) => {
       const newCurr = e.detail?.currency;
-      const prevCurr = e.detail?.prevCurrency || currentCurrencyCode;
       if (newCurr) {
-        handleCurrencySwitch(newCurr, prevCurr);
+        currentCurrencyCode = newCurr;
+        currentCurrencySymbol = e.detail.symbol || '$';
+        isIndianFormat = e.detail.isIndian ?? (newCurr === 'INR');
+        updateCurrencyUI();
+        recalculate();
       }
     });
 
-    // Initial setup
     updateCurrencyUI();
     recalculate();
   })();
 </script>
 
 <style is:global>
+  .custom-range-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #0070f3;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .custom-range-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
   @media print {
+    *, *::before, *::after {
+      box-sizing: border-box !important;
+    }
     html, body {
       background: #ffffff !important;
       color: #0f172a !important;
       margin: 0 !important;
       padding: 0 !important;
-      font-size: 12px !important;
+      width: 100% !important;
+      font-size: 11px !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
     }
     header, footer, nav, aside,
     .breadcrumbs-container, #smart-email-modal, #country-modal,
-    .ad-slot-container, .fac-copy-result-btn, #history-drawer, #history-drawer-backdrop {
+    .ad-slot-container, .fac-copy-result-btn, #history-drawer, #history-drawer-backdrop,
+    #mobile-sticky-hud, #finance-social-proof, #finance-toast, #finance-bottom-content-area,
+    .print\:hidden {
       display: none !important;
-    }
-    #finance-social-proof, #finance-bottom-content-area, .print\:hidden {
-      display: none !important;
-    }
-    .calculator-main-box {
-      border: none !important;
-      background: transparent !important;
-      box-shadow: none !important;
-      padding: 0 !important;
     }
     body * { visibility: hidden !important; }
     #finance-print-report, #finance-print-report * { visibility: visible !important; }

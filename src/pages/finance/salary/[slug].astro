@@ -76,9 +76,13 @@ const workedSteps = [
   calculatorName={page.h1}
   faqs={page.faqs}
 >
-  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+  <div class="calculator-main-box relative rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6 overflow-hidden transition-all pb-24 sm:pb-8">
+    <!-- Subtle Ambient Gradient Glow -->
+    <div class="pointer-events-none absolute -top-32 -right-32 w-80 h-80 rounded-full bg-link/10 blur-3xl print:hidden"></div>
+    <div class="pointer-events-none absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-cyan/10 blur-3xl print:hidden"></div>
+
     <!-- Highlight Callout -->
-    <div class="rounded-[8px] border border-link/20 bg-link/5 p-3.5 sm:p-4 text-xs space-y-1">
+    <div class="relative z-10 rounded-[8px] border border-link/20 bg-link/5 p-3.5 sm:p-4 text-xs space-y-1">
       <div class="font-semibold text-link flex items-center gap-2">
         <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />

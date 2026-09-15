@@ -44,14 +44,22 @@ const relatedCalculators = [
   relatedCalculators={relatedCalculators}
   lang="es"
 >
-  <!-- Calculator Card -->
-  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-6 sm:p-8 shadow-whisper space-y-6">
+  <!-- Calculator Main Box (SIP Design Standard) -->
+  <div id="percentage-calculator-card" class="calculator-main-box relative rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6 overflow-hidden transition-all pb-24 sm:pb-8">
+    <!-- Subtle Ambient Gradient Glow -->
+    <div class="pointer-events-none absolute -top-32 -right-32 w-80 h-80 rounded-full bg-link/10 blur-3xl print:hidden"></div>
+    <div class="pointer-events-none absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-cyan/10 blur-3xl print:hidden"></div>
+
     <!-- Mode Selector Tabs -->
-    <div class="flex flex-wrap gap-2 border-b border-hairline pb-4">
+    <div class="relative z-10 flex flex-wrap gap-2 border-b border-hairline pb-4" role="tablist" aria-label="Modos de cálculo de porcentaje">
       <button
         id="mode-btn-1"
         type="button"
-        class="pct-mode-tab active rounded-[6px] bg-primary px-3.5 py-1.5 text-xs font-medium text-on-primary cursor-pointer transition-all"
+        role="tab"
+        aria-selected="true"
+        aria-controls="mode-1-container"
+        aria-label="Calcular cuánto es el X por ciento de Y"
+        class="pct-mode-tab active inline-flex items-center justify-center min-h-[44px] sm:min-h-[34px] rounded-[6px] bg-primary px-3.5 py-2 sm:py-1.5 text-xs font-medium text-on-primary cursor-pointer transition-all"
         data-mode="1"
       >
         ¿Cuánto es el X% de Y?
@@ -59,7 +67,11 @@ const relatedCalculators = [
       <button
         id="mode-btn-2"
         type="button"
-        class="pct-mode-tab rounded-[6px] border border-hairline bg-canvas px-3.5 py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft cursor-pointer transition-all"
+        role="tab"
+        aria-selected="false"
+        aria-controls="mode-2-container"
+        aria-label="Calcular qué porcentaje es X de Y"
+        class="pct-mode-tab inline-flex items-center justify-center min-h-[44px] sm:min-h-[34px] rounded-[6px] border border-hairline bg-canvas px-3.5 py-2 sm:py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft cursor-pointer transition-all"
         data-mode="2"
       >
         ¿Qué % es X de Y?
@@ -67,7 +79,11 @@ const relatedCalculators = [
       <button
         id="mode-btn-3"
         type="button"
-        class="pct-mode-tab rounded-[6px] border border-hairline bg-canvas px-3.5 py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft cursor-pointer transition-all"
+        role="tab"
+        aria-selected="false"
+        aria-controls="mode-3-container"
+        aria-label="Calcular porcentaje de aumento o disminución"
+        class="pct-mode-tab inline-flex items-center justify-center min-h-[44px] sm:min-h-[34px] rounded-[6px] border border-hairline bg-canvas px-3.5 py-2 sm:py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft cursor-pointer transition-all"
         data-mode="3"
       >
         % Aumento / Disminución

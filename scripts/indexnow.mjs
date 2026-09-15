@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-const INDEXNOW_KEY = 'fac948a31e804f90918ef86520b22a07';
+const INDEXNOW_KEY = process.env.INDEXNOW_KEY || 'fb0c52eb093a417fa396b0532ec058a1';
 const HOST = 'freeaccuratecalculator.com';
 const SITEMAP_PATH = path.resolve('dist/client/sitemap.xml');
 const FALLBACK_SITEMAP = path.resolve('public/sitemap.xml');

@@ -176,7 +176,7 @@ const combinedJsonLd = [webAppSchema, faqSchema];
       <p class="text-base text-body max-w-3xl leading-relaxed">{calc.metaDescription}</p>
     </header>
 
-    {calc.category === 'finance' ? (
+    {calc.category === 'finance' || calc.category === 'insurance' ? (
       <FinanceCalculatorView calc={calc} relatedCalculators={relatedCalculators} />
     ) : (
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">

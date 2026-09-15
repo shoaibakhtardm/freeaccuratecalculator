@@ -50,24 +50,44 @@ const relatedCalculators = [
   relatedCalculators={relatedCalculators}
   lang="hi"
 >
-  <!-- Calculator Main Box -->
-  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+  <!-- Calculator Main Box (SIP Design Standard) -->
+  <div id="emi-calculator-card" class="calculator-main-box emi-main-box relative rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6 overflow-hidden transition-all pb-24 sm:pb-8">
+    <!-- Subtle Ambient Gradient Glow -->
+    <div class="pointer-events-none absolute -top-32 -right-32 w-80 h-80 rounded-full bg-link/10 blur-3xl print:hidden"></div>
+    <div class="pointer-events-none absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-cyan/10 blur-3xl print:hidden"></div>
+
+    <!-- Dedicated High-Fidelity Print/PDF Report (Visible ONLY in print) -->
+    <div id="emi-print-report" class="hidden print:block font-mono text-slate-900">
+      <!-- Official Header Letterhead -->
+      <div class="border-b-2 border-slate-900 pb-4 mb-5 flex justify-between items-start">
+        <div>
+          <div class="text-2xl font-black uppercase tracking-tight">Free Accurate Calculator</div>
+          <div class="text-sm font-bold text-blue-700 mt-0.5">ऋण ईएमआई एवं परिशोधन विवरण (Loan EMI Statement)</div>
+          <div class="text-xs text-slate-500 mt-1">freeaccuratecalculator.com • सत्यापित वित्तीय गणना रिपोर्ट</div>
+        </div>
+        <div class="text-right text-xs text-slate-600 space-y-0.5">
+          <div><span class="text-slate-400 uppercase">दिनांक:</span> <strong id="emi-print-date" class="text-slate-900"></strong></div>
+          <div><span class="text-slate-400 uppercase">विधि:</span> <strong class="text-slate-900">घटता शेष (Reducing Balance)</strong></div>
+        </div>
+      </div>
+    </div>
+
     <!-- Country/Format Controls Bar -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4 text-xs">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4 text-xs print:hidden">
       <div class="flex flex-wrap items-center gap-3">
         <div class="flex items-center gap-2">
-          <span class="mono-eyebrow text-mute">मुद्रा (Currency):</span>
+          <span class="mono-eyebrow text-mute">मुद्रा:</span>
           <CurrencySwitcher selectId="emi-currency-select" className="w-auto" showFullName={true} />
         </div>
         <div class="flex items-center gap-2">
-          <span class="mono-eyebrow text-mute">प्रारूप (Notation):</span>
-          <div class="inline-flex rounded-[6px] border border-hairline bg-canvas p-0.5">
+          <span class="mono-eyebrow text-mute">प्रारूप:</span>
+          <div class="inline-flex rounded-[8px] border border-hairline bg-canvas p-0.5 text-xs font-mono">
             <button
               id="format-standard-btn"
               type="button"
               aria-label="मानक मिलियन प्रारूप चुनें (Use Standard Million notation)"
               aria-pressed="false"
-              class="rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors"
+              class="rounded px-2.5 py-1 min-h-[32px] sm:min-h-[26px] text-xs font-medium text-mute hover:text-ink cursor-pointer transition-colors"
             >
               मानक (Million)
             </button>
@@ -76,7 +96,7 @@ const relatedCalculators = [
               type="button"
               aria-label="भारतीय लाख/करोड़ प्रारूप चुनें (Use Indian Lakh/Crore notation)"
               aria-pressed="true"
-              class="rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors"
+              class="rounded bg-link/15 text-link font-bold px-2.5 py-1 min-h-[32px] sm:min-h-[26px] text-xs cursor-pointer transition-colors"
             >
               भारतीय (Lakh/Crore)
             </button>
@@ -549,15 +569,15 @@ const relatedCalculators = [
     // Format Toggle
     formatStdBtn?.addEventListener('click', () => {
       isIndianFormat = false;
-      formatStdBtn.className = 'rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors';
-      formatIndBtn.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors';
+      formatStdBtn.className = 'rounded bg-link/15 text-link font-bold px-2.5 py-1 min-h-[32px] sm:min-h-[26px] text-xs cursor-pointer transition-colors';
+      formatIndBtn.className = 'rounded px-2.5 py-1 min-h-[32px] sm:min-h-[26px] text-xs font-medium text-mute hover:text-ink cursor-pointer transition-colors';
       calculate();
     });
 
     formatIndBtn?.addEventListener('click', () => {
       isIndianFormat = true;
-      formatIndBtn.className = 'rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors';
-      formatStdBtn.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors';
+      formatIndBtn.className = 'rounded bg-link/15 text-link font-bold px-2.5 py-1 min-h-[32px] sm:min-h-[26px] text-xs cursor-pointer transition-colors';
+      formatStdBtn.className = 'rounded px-2.5 py-1 min-h-[32px] sm:min-h-[26px] text-xs font-medium text-mute hover:text-ink cursor-pointer transition-colors';
       calculate();
     });
 
@@ -590,11 +610,11 @@ const relatedCalculators = [
       });
 
       if (isIndianFormat) {
-        if (formatIndBtn) formatIndBtn.className = 'rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors';
-        if (formatStdBtn) formatStdBtn.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors';
+        if (formatIndBtn) formatIndBtn.className = 'rounded bg-link/15 text-link font-bold px-2.5 py-1 min-h-[32px] sm:min-h-[26px] text-xs cursor-pointer transition-colors';
+        if (formatStdBtn) formatStdBtn.className = 'rounded px-2.5 py-1 min-h-[32px] sm:min-h-[26px] text-xs font-medium text-mute hover:text-ink cursor-pointer transition-colors';
       } else {
-        if (formatStdBtn) formatStdBtn.className = 'rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors';
-        if (formatIndBtn) formatIndBtn.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink hover:text-ink cursor-pointer transition-colors';
+        if (formatStdBtn) formatStdBtn.className = 'rounded bg-link/15 text-link font-bold px-2.5 py-1 min-h-[32px] sm:min-h-[26px] text-xs cursor-pointer transition-colors';
+        if (formatIndBtn) formatIndBtn.className = 'rounded px-2.5 py-1 min-h-[32px] sm:min-h-[26px] text-xs font-medium text-mute hover:text-ink cursor-pointer transition-colors';
       }
     }
 

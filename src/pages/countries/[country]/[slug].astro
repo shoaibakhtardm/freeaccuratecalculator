@@ -41,6 +41,7 @@ export async function getStaticPaths() {
     // 2. Prerender country category directory pages
     const countryCategories = getCountryCategories(country);
     for (const category of countryCategories) {
+      if (country.slug === 'france' && category.id === 'finance') continue;
       paths.push({
         params: {
           country: country.slug,

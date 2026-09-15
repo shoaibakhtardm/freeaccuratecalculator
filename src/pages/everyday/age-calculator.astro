@@ -80,10 +80,14 @@ const currentYear = now.getFullYear();
   <!-- Real-time Social Proof Widget -->
   <SocialProof calculatorName="Age Calculator" />
 
-  <!-- Calculator Main Box -->
-  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+  <!-- Calculator Main Box (SIP Design Standard) -->
+  <div id="age-calculator-card" class="calculator-main-box relative rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6 overflow-hidden transition-all pb-24 sm:pb-8">
+    <!-- Subtle Ambient Gradient Glow -->
+    <div class="pointer-events-none absolute -top-32 -right-32 w-80 h-80 rounded-full bg-link/10 blur-3xl print:hidden"></div>
+    <div class="pointer-events-none absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-cyan/10 blur-3xl print:hidden"></div>
+
     <!-- Top Controls: Mode & Live Toggle -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4 text-xs">
+    <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4 text-xs">
       <div class="flex items-center gap-2">
         <span class="mono-eyebrow text-mute">Input Mode:</span>
         <div class="inline-flex rounded-[6px] border border-hairline bg-canvas p-0.5" role="tablist">
@@ -416,6 +420,44 @@ const currentYear = now.getFullYear();
           <span class="text-[10px] text-faint">Exact 6-month opposite milestone</span>
         </div>
       </div>
+    </div>
+
+    <!-- Action Toolbar: Copy, Share, Download PDF -->
+    <div class="pt-3 border-t border-hairline flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono print:hidden">
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <button
+          type="button"
+          id="age-copy-btn"
+          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-hairline bg-canvas hover:bg-hairline text-ink transition-colors cursor-pointer min-h-[40px]"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          <span>Copy Result</span>
+        </button>
+        <button
+          type="button"
+          id="age-share-btn"
+          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-hairline bg-canvas hover:bg-hairline text-ink transition-colors cursor-pointer min-h-[40px]"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+          </svg>
+          <span>Share</span>
+        </button>
+      </div>
+
+      <button
+        type="button"
+        id="age-download-pdf-btn"
+        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-link hover:bg-link-hover active:scale-95 text-white font-semibold shadow-xs transition-all cursor-pointer min-h-[40px]"
+        title="Download Verified Age & Chronometric Report"
+      >
+        <svg class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span>Download PDF</span>
+      </button>
     </div>
   </div>
 
@@ -941,6 +983,32 @@ const currentYear = now.getFullYear();
           birthTimeContainer.classList.add('grid');
         }
       }
+    }
+
+    // Action Toolbar Listeners
+    const ageCopyBtn = document.getElementById('age-copy-btn');
+    const ageShareBtn = document.getElementById('age-share-btn');
+    const agePdfBtn = document.getElementById('age-download-pdf-btn');
+
+    if (ageCopyBtn) {
+      ageCopyBtn.addEventListener('click', () => {
+        copyAgeBtn?.click();
+      });
+    }
+
+    if (ageShareBtn) {
+      ageShareBtn.addEventListener('click', () => {
+        syncUrlParams();
+        navigator.clipboard.writeText(window.location.href).then(() => {
+          if (typeof window.showToast === 'function') window.showToast('Link copied to clipboard!');
+        });
+      });
+    }
+
+    if (agePdfBtn) {
+      agePdfBtn.addEventListener('click', () => {
+        window.print();
+      });
     }
 
     restoreParams();

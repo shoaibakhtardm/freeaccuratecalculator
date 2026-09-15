@@ -47,10 +47,14 @@ const relatedCalculators = [
   calculatorName="Percentage Calculator"
   relatedCalculators={relatedCalculators}
 >
-  <!-- Calculator Card -->
-  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
+  <!-- Calculator Main Box (SIP Design Standard) -->
+  <div id="percentage-calculator-card" class="calculator-main-box relative rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6 overflow-hidden transition-all pb-24 sm:pb-8">
+    <!-- Subtle Ambient Gradient Glow -->
+    <div class="pointer-events-none absolute -top-32 -right-32 w-80 h-80 rounded-full bg-link/10 blur-3xl print:hidden"></div>
+    <div class="pointer-events-none absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-cyan/10 blur-3xl print:hidden"></div>
+
     <!-- Mode Selector Tabs -->
-    <div class="flex flex-wrap gap-2 border-b border-hairline pb-4" role="tablist" aria-label="Percentage calculation modes">
+    <div class="relative z-10 flex flex-wrap gap-2 border-b border-hairline pb-4" role="tablist" aria-label="Percentage calculation modes">
       <button
         id="mode-btn-1"
         type="button"
@@ -198,6 +202,44 @@ const relatedCalculators = [
     <!-- Dynamic Formula Breakdown Box -->
     <div id="live-step-breakdown" class="rounded-[8px] border border-hairline-soft bg-canvas p-4 text-xs font-mono text-body">
       Step: (15 ÷ 100) × 250 = 0.15 × 250 = 37.50
+    </div>
+
+    <!-- Action Toolbar: Copy, Share, Download PDF -->
+    <div class="pt-2 border-t border-hairline flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono print:hidden">
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <button
+          type="button"
+          id="pct-copy-btn"
+          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-hairline bg-canvas hover:bg-hairline text-ink transition-colors cursor-pointer min-h-[40px]"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          </svg>
+          <span>Copy Result</span>
+        </button>
+        <button
+          type="button"
+          id="pct-share-btn"
+          class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-hairline bg-canvas hover:bg-hairline text-ink transition-colors cursor-pointer min-h-[40px]"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+          </svg>
+          <span>Share</span>
+        </button>
+      </div>
+
+      <button
+        type="button"
+        id="pct-download-pdf-btn"
+        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-link hover:bg-link-hover active:scale-95 text-white font-semibold shadow-xs transition-all cursor-pointer min-h-[40px]"
+        title="Download Verified PDF Report"
+      >
+        <svg class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <span>Download PDF</span>
+      </button>
     </div>
 
     <!-- LocalStorage History Drawer -->
@@ -435,6 +477,27 @@ const relatedCalculators = [
       }
       calculate();
     };
+
+    // Action Toolbar Listeners
+    document.getElementById('pct-copy-btn')?.addEventListener('click', () => {
+      const resVal = document.getElementById('pct-result')?.getAttribute('data-value') || '';
+      if (resVal) {
+        navigator.clipboard.writeText(resVal).then(() => {
+          if (typeof window.showToast === 'function') window.showToast('Result copied to clipboard!');
+        });
+      }
+    });
+
+    document.getElementById('pct-share-btn')?.addEventListener('click', () => {
+      if (typeof window.facSyncUrlState === 'function') window.facSyncUrlState();
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        if (typeof window.showToast === 'function') window.showToast('Link copied to clipboard!');
+      });
+    });
+
+    document.getElementById('pct-download-pdf-btn')?.addEventListener('click', () => {
+      window.print();
+    });
 
     // Initial calculation
     calculate();

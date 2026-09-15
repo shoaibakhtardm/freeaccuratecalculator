@@ -1099,6 +1099,7 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
           { label: 'United Kingdom (Scotland 6-Band Tax 2025–26 / 2026–27)', value: 'gb_scotland' },
           { label: 'Australia (Resident Individual FY 2025–26)', value: 'au_resident' },
           { label: 'Canada (Federal Individual 2025/2026)', value: 'ca_federal' },
+          { label: 'United Arab Emirates (0% Personal Tax)', value: 'ae_zero' },
           { label: 'Custom Tax Rate (% Override)', value: 'custom_flat' },
           { label: 'Custom Progressive Tax Slabs', value: 'custom_slabs' },
         ],
@@ -1240,6 +1241,9 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
           { min: 177882, max: 253414, rate: 0.29 },
           { min: 253414, max: null, rate: 0.33 },
         ]);
+      } else if (system === 'ae_zero') {
+        labelSystem = 'UAE 0% Personal Tax';
+        tax = 0;
       } else if (system === 'custom_flat') {
         labelSystem = 'Custom Flat ' + (customRate * 100).toFixed(1) + '%';
         const taxable = Math.max(0, gross - ded);
