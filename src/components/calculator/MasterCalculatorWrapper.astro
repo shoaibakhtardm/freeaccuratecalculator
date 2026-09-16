@@ -15,6 +15,7 @@ interface Props {
   defaultIsIndian?: boolean;
   countryFlagUrl?: string;
   countryName?: string;
+  isFrench?: boolean;
 }
 
 const {
@@ -25,11 +26,38 @@ const {
   defaultIsIndian = false,
   countryFlagUrl,
   countryName,
+  isFrench: propIsFrench,
 } = Astro.props;
 
+const isFrench = propIsFrench ?? (Astro.url.pathname.includes('/countries/france/') || Astro.url.pathname.startsWith('/fr/'));
+
 // Format formula variables
+const frSymbolMap: Record<string, string> = {
+  years: 'n',
+  time_period: 'n',
+  time_horizon: 'n',
+  loan_term_months: 'n',
+  loan_term_years: 'n',
+  interest_rate: 't',
+  annual_rate: 't',
+  return_rate: 'r',
+  tax_rate: 't',
+  inflation_rate: 'i',
+  loan_amount: 'C',
+  principal: 'C',
+  initial_investment: 'C',
+  monthly_investment: 'V',
+  monthly_withdrawal: 'R',
+  current_amount: 'C',
+  price: 'HT',
+  gross_income: 'R',
+  annual_salary: 'S',
+  property_price: 'P',
+  down_payment: 'A',
+};
+
 const formulaVariables = calc.mathInputs.map((inp) => ({
-  symbol: inp.id,
+  symbol: (isFrench && frSymbolMap[inp.id]) ? frSymbolMap[inp.id] : inp.id,
   meaning: inp.label + (inp.unit ? ` (${inp.unit})` : ''),
 }));
 
@@ -60,13 +88,17 @@ const isCurrencyCalculator =
       <div class="border-b-2 border-slate-900 pb-4 mb-5 flex justify-between items-start">
         <div>
           <div class="text-2xl font-black uppercase tracking-tight">Free Accurate Calculator</div>
-          <div class="text-sm font-bold text-blue-700 mt-0.5">{calc.name} Statement & Verification Report</div>
-          <div class="text-xs text-slate-500 mt-1">freeaccuratecalculator.com • Verified Algorithmic Computation Statement</div>
+          <div class="text-sm font-bold text-blue-700 mt-0.5">
+            {calc.name} {isFrench ? "Bilan & Rapport de Vérification" : "Statement & Verification Report"}
+          </div>
+          <div class="text-xs text-slate-500 mt-1">
+            {isFrench ? "freeaccuratecalculator.com • Calcul Algorithmique Certifié" : "freeaccuratecalculator.com • Verified Algorithmic Computation Statement"}
+          </div>
         </div>
         <div class="text-right text-xs text-slate-600 space-y-0.5">
-          <div><span class="text-slate-400 uppercase">Generated:</span> <strong id="print-report-date"></strong></div>
-          <div><span class="text-slate-400 uppercase">Currency:</span> <strong id="print-currency-code"></strong></div>
-          <div><span class="text-slate-400 uppercase">Tool:</span> <strong>{calc.name}</strong></div>
+          <div><span class="text-slate-400 uppercase">{isFrench ? "Généré le :" : "Generated:"}</span> <strong id="print-report-date"></strong></div>
+          <div><span class="text-slate-400 uppercase">{isFrench ? "Devise :" : "Currency:"}</span> <strong id="print-currency-code"></strong></div>
+          <div><span class="text-slate-400 uppercase">{isFrench ? "Outil :" : "Tool:"}</span> <strong>{calc.name}</strong></div>
         </div>
       </div>
 
@@ -77,26 +109,32 @@ const isCurrencyCalculator =
           <div class="text-lg font-bold text-slate-900" id="print-hero-val">-</div>
         </div>
         <div>
-          <div class="text-[10px] uppercase tracking-wider text-slate-500" id="print-sec-1-lbl">Primary Baseline</div>
+          <div class="text-[10px] uppercase tracking-wider text-slate-500" id="print-sec-1-lbl">
+            {isFrench ? "Montant Initial" : "Primary Baseline"}
+          </div>
           <div class="text-lg font-bold text-slate-900" id="print-sec-1-val">-</div>
         </div>
         <div>
-          <div class="text-[10px] uppercase tracking-wider text-slate-500" id="print-sec-2-lbl">Net Delta / Growth</div>
+          <div class="text-[10px] uppercase tracking-wider text-slate-500" id="print-sec-2-lbl">
+            {isFrench ? "Croissance / Intérêts" : "Net Delta / Growth"}
+          </div>
           <div class="text-lg font-bold text-emerald-700" id="print-sec-2-val">-</div>
         </div>
       </div>
 
       <!-- Print Amortization Schedule Table -->
       <div class="border-t border-slate-300 pt-4">
-        <div class="text-xs font-bold uppercase mb-2">Detailed Computational Progression Schedule</div>
+        <div class="text-xs font-bold uppercase mb-2">
+          {isFrench ? "Échéancier Détaillé de Progression Algorithmique" : "Detailed Computational Progression Schedule"}
+        </div>
         <table id="print-schedule-table" class="w-full text-xs text-left border border-slate-300">
           <thead>
             <tr class="bg-slate-100 text-slate-700 font-bold border-b border-slate-300">
-              <th class="p-2 border-r border-slate-300">Period</th>
-              <th class="p-2 border-r border-slate-300">Incremental Flow</th>
-              <th class="p-2 border-r border-slate-300">Cumulative Base</th>
-              <th class="p-2 border-r border-slate-300">Cumulative Delta</th>
-              <th class="p-2">Ending Value</th>
+              <th class="p-2 border-r border-slate-300">{isFrench ? "Période" : "Period"}</th>
+              <th class="p-2 border-r border-slate-300">{isFrench ? "Flux Périodique" : "Incremental Flow"}</th>
+              <th class="p-2 border-r border-slate-300">{isFrench ? "Base Cumulée" : "Cumulative Base"}</th>
+              <th class="p-2 border-r border-slate-300">{isFrench ? "Gains Cumulés" : "Cumulative Delta"}</th>
+              <th class="p-2">{isFrench ? "Solde Final" : "Ending Value"}</th>
             </tr>
           </thead>
           <tbody id="print-schedule-body">
@@ -106,8 +144,8 @@ const isCurrencyCalculator =
       </div>
 
       <div class="mt-8 pt-4 border-t border-slate-200 text-[10px] text-slate-500 flex justify-between">
-        <div>Client-Side Certified • Mathematically Precise • 100% Private</div>
-        <div>Verified by Free Accurate Calculator</div>
+        <div>{isFrench ? "Certifié Côté Client • Précision Mathématique • 100% Confidentiel" : "Client-Side Certified • Mathematically Precise • 100% Private"}</div>
+        <div>{isFrench ? "Vérifié par Free Accurate Calculator" : "Verified by Free Accurate Calculator"}</div>
       </div>
     </div>
 
@@ -140,7 +178,7 @@ const isCurrencyCalculator =
             <h2 class="text-base sm:text-lg font-bold font-mono text-ink tracking-tight">{calc.name}</h2>
             <div class="flex items-center gap-2 text-[11px] font-mono text-mute">
               <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>100% Client-Side Private</span>
+              <span>{isFrench ? "100% Côté Client & Confidentiel" : "100% Client-Side Private"}</span>
               {isCurrencyCalculator && (
                 <>
                   <span>•</span>
@@ -152,17 +190,17 @@ const isCurrencyCalculator =
         </div>
 
         <div class="flex items-center gap-2 self-end sm:self-auto">
-          <!-- Reset Inputs -->
+          <!-- Action Buttons -->
           <button
             type="button"
             id="master-reset-btn"
             class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-hairline bg-canvas hover:bg-canvas-subtle active:scale-95 text-xs font-mono text-mute hover:text-ink transition-all cursor-pointer min-h-[36px]"
-            title="Reset to default baseline parameters"
+            title={isFrench ? "Réinitialiser aux valeurs par défaut" : "Reset to default baseline parameters"}
           >
             <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
-            <span>Reset</span>
+            <span>{isFrench ? "Réinitialiser" : "Reset"}</span>
           </button>
         </div>
       </div>
@@ -272,7 +310,7 @@ const isCurrencyCalculator =
                   {calc.resultLabel}
                 </span>
                 <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
-                  Instant Verified
+                  {isFrench ? "Vérifié Instantanément" : "Instant Verified"}
                 </span>
               </div>
               <div class="flex items-baseline gap-1 text-3xl sm:text-4xl lg:text-5xl font-black font-mono tracking-tight text-ink">
@@ -281,7 +319,7 @@ const isCurrencyCalculator =
                 {calc.resultUnit && <span class="text-sm font-normal text-mute ml-1">{calc.resultUnit}</span>}
               </div>
               <p class="text-xs font-mono text-mute mt-1 leading-relaxed" id="hero-result-sub">
-                Verified mathematical calculation based on active inputs
+                {isFrench ? "Calcul mathématique vérifié et conforme aux normes en vigueur" : "Verified mathematical calculation based on active inputs"}
               </p>
             </div>
 
@@ -319,7 +357,9 @@ const isCurrencyCalculator =
                   />
                 </svg>
                 <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-2">
-                  <span class="text-[10px] font-mono text-mute uppercase tracking-wider" id="donut-center-label">Distribution</span>
+                  <span class="text-[10px] font-mono text-mute uppercase tracking-wider" id="donut-center-label">
+                    {isFrench ? "Répartition" : "Distribution"}
+                  </span>
                   <span class="text-base sm:text-lg font-black font-mono text-ink" id="donut-center-ratio">50/50</span>
                 </div>
               </div>
@@ -329,14 +369,18 @@ const isCurrencyCalculator =
                 <div class="flex items-center gap-2 p-2 rounded-lg bg-canvas-elevated border border-hairline">
                   <span class="w-3 h-3 rounded-full bg-link shrink-0"></span>
                   <div class="truncate">
-                    <div class="text-[10px] text-mute uppercase" id="legend-1-label">Base Principal</div>
+                    <div class="text-[10px] text-mute uppercase" id="legend-1-label">
+                      {isFrench ? "Montant Initial" : "Base Principal"}
+                    </div>
                     <div class="font-bold text-ink truncate" id="legend-1-val">-</div>
                   </div>
                 </div>
                 <div class="flex items-center gap-2 p-2 rounded-lg bg-canvas-elevated border border-hairline">
                   <span class="w-3 h-3 rounded-full bg-cyan shrink-0"></span>
                   <div class="truncate">
-                    <div class="text-[10px] text-mute uppercase" id="legend-2-label">Net Gain / Interest</div>
+                    <div class="text-[10px] text-mute uppercase" id="legend-2-label">
+                      {isFrench ? "Gain Net / Intérêts" : "Net Gain / Interest"}
+                    </div>
                     <div class="font-bold text-ink truncate" id="legend-2-val">-</div>
                   </div>
                 </div>
@@ -346,14 +390,18 @@ const isCurrencyCalculator =
             <!-- Secondary Metrics Dual Grid -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
               <div class="metric-box rounded-xl border border-hairline bg-canvas-elevated p-3 sm:p-4 space-y-1">
-                <span class="text-[11px] font-mono text-mute block" id="sec-card-1-label">Total Capital Base</span>
+                <span class="text-[11px] font-mono text-mute block" id="sec-card-1-label">
+                  {isFrench ? "Capital Total Mobilisé" : "Total Capital Base"}
+                </span>
                 <div class="text-lg sm:text-xl font-bold font-mono text-ink flex items-baseline gap-1">
                   {isCurrencyCalculator && <span id="sec-card-1-sym">{defaultSymbol}</span>}
                   <span id="sec-card-1-val">0</span>
                 </div>
               </div>
               <div class="metric-box rounded-xl border border-hairline bg-canvas-elevated p-3 sm:p-4 space-y-1">
-                <span class="text-[11px] font-mono text-mute block" id="sec-card-2-label">Total Wealth Return</span>
+                <span class="text-[11px] font-mono text-mute block" id="sec-card-2-label">
+                  {isFrench ? "Total Final Réalisé" : "Total Wealth Return"}
+                </span>
                 <div class="text-lg sm:text-xl font-bold font-mono text-emerald-600 flex items-baseline gap-1">
                   {isCurrencyCalculator && <span id="sec-card-2-sym">{defaultSymbol}</span>}
                   <span id="sec-card-2-val">0</span>
@@ -372,7 +420,7 @@ const isCurrencyCalculator =
                   <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
-                  <span>Copy Result</span>
+                  <span>{isFrench ? "Copier le Résultat" : "Copy Result"}</span>
                 </button>
 
                 <button
@@ -383,7 +431,7 @@ const isCurrencyCalculator =
                   <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
                   </svg>
-                  <span>Share</span>
+                  <span>{isFrench ? "Partager" : "Share"}</span>
                 </button>
               </div>
 
@@ -392,24 +440,24 @@ const isCurrencyCalculator =
                   type="button"
                   id="action-download-pdf-btn"
                   class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-link hover:bg-link-hover active:scale-95 text-white text-xs sm:text-sm font-semibold font-mono shadow-xs transition-all cursor-pointer min-h-[44px]"
-                  title="Download Verified PDF Report"
+                  title={isFrench ? "Télécharger le bilan PDF certifié" : "Download Verified PDF Report"}
                 >
                   <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  <span>Download PDF Statement</span>
+                  <span>{isFrench ? "Télécharger le Bilan PDF" : "Download PDF Statement"}</span>
                 </button>
 
                 <button
                   type="button"
                   id="action-download-excel-btn"
                   class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs sm:text-sm font-semibold font-mono shadow-xs transition-all cursor-pointer min-h-[44px]"
-                  title="Download Schedule in Excel/CSV format"
+                  title={isFrench ? "Télécharger l'échéancier en format Excel/CSV" : "Download Schedule in Excel/CSV format"}
                 >
                   <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>
-                  <span>Export CSV (.csv)</span>
+                  <span>{isFrench ? "Exporter CSV (.csv)" : "Export CSV (.csv)"}</span>
                 </button>
               </div>
             </div>
@@ -423,21 +471,27 @@ const isCurrencyCalculator =
       <div id="master-schedule-container" class="rounded-xl border border-hairline bg-canvas p-4 sm:p-6 space-y-4">
         <div class="flex items-center justify-between border-b border-hairline pb-3">
           <div>
-            <h3 class="text-sm font-bold font-mono text-ink uppercase tracking-wider">Detailed Progression Schedule</h3>
-            <p class="text-xs font-mono text-mute mt-0.5">Year-by-year and period progression analysis</p>
+            <h3 class="text-sm font-bold font-mono text-ink uppercase tracking-wider">
+              {isFrench ? "Échéancier Détaillé d'Amortissement" : "Detailed Progression Schedule"}
+            </h3>
+            <p class="text-xs font-mono text-mute mt-0.5">
+              {isFrench ? "Analyse chronologique période par période" : "Year-by-year and period progression analysis"}
+            </p>
           </div>
-          <span class="text-xs font-mono text-link font-semibold">Table View</span>
+          <span class="text-xs font-mono text-link font-semibold">
+            {isFrench ? "Vue Tableau" : "Table View"}
+          </span>
         </div>
 
         <div class="overflow-x-auto">
           <table class="w-full text-xs font-mono text-left">
             <thead>
               <tr class="border-b border-hairline text-mute uppercase">
-                <th class="py-2 px-3">Period</th>
-                <th class="py-2 px-3">Periodic Flow</th>
-                <th class="py-2 px-3">Cumulative Base</th>
-                <th class="py-2 px-3">Interest / Return</th>
-                <th class="py-2 px-3 text-right">Balance</th>
+                <th class="py-2 px-3">{isFrench ? "Période" : "Period"}</th>
+                <th class="py-2 px-3">{isFrench ? "Flux Périodique" : "Periodic Flow"}</th>
+                <th class="py-2 px-3">{isFrench ? "Base Cumulée" : "Cumulative Base"}</th>
+                <th class="py-2 px-3">{isFrench ? "Intérêts / Gains" : "Interest / Return"}</th>
+                <th class="py-2 px-3 text-right">{isFrench ? "Solde Restant" : "Balance"}</th>
               </tr>
             </thead>
             <tbody id="master-schedule-body">
@@ -454,7 +508,7 @@ const isCurrencyCalculator =
       <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
       </svg>
-      <span id="master-toast-message">Result copied to clipboard!</span>
+      <span id="master-toast-message">{isFrench ? "Résultat copié dans le presse-papiers !" : "Result copied to clipboard!"}</span>
     </div>
 
   </div>
@@ -467,36 +521,40 @@ const isCurrencyCalculator =
         scenario={calc.example.scenario}
         steps={calc.example.steps}
         conclusion={calc.example.conclusion}
+        isFrench={isFrench}
       />
     )}
 
     <FormulaSection
-      title={`${calc.name} Mathematical Formula`}
+      title={isFrench ? `Formule Mathématique & Méthode — ${calc.name}` : `${calc.name} Mathematical Formula`}
       expression={calc.formula || "Standard Mathematical Model"}
-      explanation={calc.formulaExplanation || "Calculates verified outputs using standardized mathematical logic."}
+      explanation={calc.formulaExplanation || (isFrench ? "Calculs algorithmiques vérifiés selon les normes financières et mathématiques officielles." : "Calculates verified outputs using standardized mathematical logic.")}
       variables={formulaVariables}
+      isFrench={isFrench}
     />
 
-    <FAQSection faqs={calc.faqs} />
+    <FAQSection faqs={calc.faqs} isFrench={isFrench} />
   </div>
 
   <HistoryDrawer />
 </div>
 
 <!-- Client Calculation & Silent Currency Controller -->
-<script is:inline define:vars={{ slug: calc.slug, calcName: calc.name, initCurrCode: defaultCurrency, initCurrSym: defaultSymbol, initIsIndian: defaultIsIndian, isCurrCalc: isCurrencyCalculator }}>
+<script is:inline define:vars={{ slug: calc.slug, calcName: calc.name, initCurrCode: defaultCurrency, initCurrSym: defaultSymbol, initIsIndian: defaultIsIndian, isCurrCalc: isCurrencyCalculator, isFrench }}>
   (function () {
+    const isFrenchMode = isFrench || (typeof window !== 'undefined' && (window.location.pathname.includes('/countries/france/') || window.location.pathname.startsWith('/fr/')));
+
     // Silent Currency Resolution
     let currentCurrencyCode = typeof window.facGetActiveCurrency === 'function'
       ? window.facGetActiveCurrency()
-      : (localStorage.getItem('fac_currency') || initCurrCode || 'USD');
+      : (localStorage.getItem('fac_currency') || (isFrenchMode ? 'EUR' : (initCurrCode || 'USD')));
 
     let currentCurrencyInfo = typeof window.facGetCurrencyInfo === 'function'
       ? window.facGetCurrencyInfo(currentCurrencyCode)
       : null;
 
-    let currentCurrencySymbol = currentCurrencyInfo?.symbol || (currentCurrencyCode === 'INR' ? '₹' : (initCurrSym || '$'));
-    let isIndianFormat = currentCurrencyInfo ? (currentCurrencyInfo.isIndian ?? (currentCurrencyCode === 'INR')) : (initIsIndian ?? (currentCurrencyCode === 'INR'));
+    let currentCurrencySymbol = isFrenchMode ? '€' : (currentCurrencyInfo?.symbol || (currentCurrencyCode === 'INR' ? '₹' : (initCurrSym || '$')));
+    let isIndianFormat = isFrenchMode ? false : (currentCurrencyInfo ? (currentCurrencyInfo.isIndian ?? (currentCurrencyCode === 'INR')) : (initIsIndian ?? (currentCurrencyCode === 'INR')));
 
     const scheduleBody = document.getElementById('master-schedule-body');
     const printScheduleBody = document.getElementById('print-schedule-body');
@@ -518,6 +576,12 @@ const isCurrencyCalculator =
 
     function formatVal(val, decimals = 0) {
       if (isNaN(val) || !isFinite(val)) return '0';
+      if (isFrenchMode) {
+        return new Intl.NumberFormat('fr-FR', {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        }).format(val);
+      }
       if (isIndianFormat) {
         const parts = Math.round(val).toString().split('.');
         let lastThree = parts[0].substring(parts[0].length - 3);
@@ -558,8 +622,8 @@ const isCurrencyCalculator =
           const isRate = inp.name.toLowerCase().includes('rate') || inp.name.toLowerCase().includes('percent') || inp.name.toLowerCase().includes('apr');
           const isYear = inp.name.toLowerCase().includes('year') || inp.name.toLowerCase().includes('term') || inp.name.toLowerCase().includes('age');
           if (isRate) disp.textContent = `${Number(inp.value).toFixed(2)}%`;
-          else if (isYear) disp.textContent = `${inp.value} ${window.__facYearsLabel || 'Years'}`;
-          else if (!isNaN(num)) disp.textContent = isCurrCalc ? `${currentCurrencySymbol} ${formatVal(num, 0)}` : formatVal(num, 2);
+          else if (isYear) disp.textContent = `${inp.value} ${window.__facYearsLabel || (isFrenchMode ? 'Ans' : 'Years')}`;
+          else if (!isNaN(num)) disp.textContent = isCurrCalc ? (isFrenchMode ? `${formatVal(num, 0)} €` : `${currentCurrencySymbol} ${formatVal(num, 0)}`) : formatVal(num, 2);
           else disp.textContent = inp.value;
         }
       });
@@ -607,7 +671,7 @@ const isCurrencyCalculator =
             bal = Math.max(0, bal - prinPart);
           }
           rows.push({
-            period: `Year ${y}`,
+            period: `${window.__facYearPrefix || (isFrenchMode ? 'Année' : 'Year')} ${y}`,
             payment: Math.round(emi * monthsInYear),
             principal: Math.round(yrPrincipal),
             interest: Math.round(yrInterest),
@@ -727,10 +791,10 @@ const isCurrencyCalculator =
         const takeHome = Math.max(0, income - totalTax);
 
         rows.push(
-          { period: 'Base Taxable Income', payment: Math.round(taxable), principal: Math.round(taxable), interest: 0, balance: Math.round(taxable) },
-          { period: 'Standard Income Tax', payment: Math.round(tax), principal: Math.round(tax), interest: 0, balance: Math.round(tax) },
-          { period: 'Health & Education Cess (4%)', payment: Math.round(cess), principal: Math.round(cess), interest: 0, balance: Math.round(cess) },
-          { period: 'Net Take-Home Pay', payment: Math.round(takeHome), principal: Math.round(takeHome), interest: 0, balance: Math.round(takeHome) }
+          { period: isFrenchMode ? 'Revenu Imposable' : 'Base Taxable Income', payment: Math.round(taxable), principal: Math.round(taxable), interest: 0, balance: Math.round(taxable) },
+          { period: isFrenchMode ? 'Impôt Brut Estimé' : 'Standard Income Tax', payment: Math.round(tax), principal: Math.round(tax), interest: 0, balance: Math.round(tax) },
+          { period: isFrenchMode ? 'Contributions Sociales' : 'Health & Education Cess (4%)', payment: Math.round(cess), principal: Math.round(cess), interest: 0, balance: Math.round(cess) },
+          { period: isFrenchMode ? 'Revenu Net Après Impôt' : 'Net Take-Home Pay', payment: Math.round(takeHome), principal: Math.round(takeHome), interest: 0, balance: Math.round(takeHome) }
         );
 
         res1 = totalTax;
@@ -756,7 +820,7 @@ const isCurrencyCalculator =
             yrDeposits += monthlyP;
           }
           rows.push({
-            period: `${window.__facYearPrefix || 'Year'} ${y}`,
+            period: `${window.__facYearPrefix || (isFrenchMode ? 'Année' : 'Year')} ${y}`,
             payment: Math.round(yrDeposits),
             principal: Math.round(totalDeposited),
             interest: Math.max(0, Math.round(bal - totalDeposited)),
@@ -798,17 +862,17 @@ const isCurrencyCalculator =
         if (leg1LabelEl) leg1LabelEl.textContent = 'Contributions';
         if (leg2LabelEl) leg2LabelEl.textContent = 'Compounded Interest';
       } else if (slug.includes('tax')) {
-        if (heroLabelEl) heroLabelEl.textContent = 'Total Income Tax Liability';
-        if (sec1LabelEl) sec1LabelEl.textContent = 'Net Taxable Income';
-        if (sec2LabelEl) sec2LabelEl.textContent = 'Net Annual Take-Home Pay';
-        if (leg1LabelEl) leg1LabelEl.textContent = 'Taxable Income';
-        if (leg2LabelEl) leg2LabelEl.textContent = 'Take-Home Pay';
+        if (heroLabelEl) heroLabelEl.textContent = isFrenchMode ? 'Impôt sur le Revenu Estimé' : 'Total Income Tax Liability';
+        if (sec1LabelEl) sec1LabelEl.textContent = isFrenchMode ? 'Revenu Net Imposable' : 'Net Taxable Income';
+        if (sec2LabelEl) sec2LabelEl.textContent = isFrenchMode ? 'Revenu Net Après Impôt' : 'Net Annual Take-Home Pay';
+        if (leg1LabelEl) leg1LabelEl.textContent = isFrenchMode ? 'Revenu Imposable' : 'Taxable Income';
+        if (leg2LabelEl) leg2LabelEl.textContent = isFrenchMode ? 'Revenu Net' : 'Take-Home Pay';
       } else if (slug.includes('sip')) {
-        if (heroLabelEl) heroLabelEl.textContent = 'Expected Maturity Wealth';
-        if (sec1LabelEl) sec1LabelEl.textContent = 'Total Capital Invested';
-        if (sec2LabelEl) sec2LabelEl.textContent = 'Estimated Wealth Gain';
-        if (leg1LabelEl) leg1LabelEl.textContent = 'Invested';
-        if (leg2LabelEl) leg2LabelEl.textContent = 'Wealth Gain';
+        if (heroLabelEl) heroLabelEl.textContent = isFrenchMode ? 'Capital Final Estimé' : 'Expected Maturity Wealth';
+        if (sec1LabelEl) sec1LabelEl.textContent = isFrenchMode ? 'Total Investi' : 'Total Capital Invested';
+        if (sec2LabelEl) sec2LabelEl.textContent = isFrenchMode ? 'Gains Nets Estimés' : 'Estimated Wealth Gain';
+        if (leg1LabelEl) leg1LabelEl.textContent = isFrenchMode ? 'Investi' : 'Invested';
+        if (leg2LabelEl) leg2LabelEl.textContent = isFrenchMode ? 'Gains' : 'Wealth Gain';
       }
 
       // Update Result UI Elements
@@ -821,8 +885,8 @@ const isCurrencyCalculator =
       if (resValEl) resValEl.textContent = formatVal(res1, 0);
       if (sec1ValEl) sec1ValEl.textContent = formatVal(res2, 0);
       if (sec2ValEl) sec2ValEl.textContent = formatVal(res3, 0);
-      if (leg1ValEl) leg1ValEl.textContent = `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(res2, 0)}`;
-      if (leg2ValEl) leg2ValEl.textContent = `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(res3, 0)}`;
+      if (leg1ValEl) leg1ValEl.textContent = isFrenchMode ? `${formatVal(res2, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(res2, 0)}`;
+      if (leg2ValEl) leg2ValEl.textContent = isFrenchMode ? `${formatVal(res3, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(res3, 0)}`;
 
       // Update Donut Visualizer
       const totalCombined = (res2 + res3) || 1;
@@ -845,10 +909,10 @@ const isCurrencyCalculator =
         scheduleBody.innerHTML = rows.slice(0, 15).map((r) => `
           <tr class="border-b border-hairline hover:bg-canvas-subtle transition-colors">
             <td class="py-2.5 px-3 font-semibold text-ink">${r.period}</td>
-            <td class="py-2.5 px-3 text-mute">${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(r.payment, 0)}</td>
-            <td class="py-2.5 px-3 text-mute">${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(r.principal, 0)}</td>
-            <td class="py-2.5 px-3 text-emerald-600 font-semibold">${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(r.interest, 0)}</td>
-            <td class="py-2.5 px-3 text-right font-bold text-ink">${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(r.balance, 0)}</td>
+            <td class="py-2.5 px-3 text-mute">${isFrenchMode ? `${formatVal(r.payment, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(r.payment, 0)}`}</td>
+            <td class="py-2.5 px-3 text-mute">${isFrenchMode ? `${formatVal(r.principal, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(r.principal, 0)}`}</td>
+            <td class="py-2.5 px-3 text-emerald-600 font-semibold">${isFrenchMode ? `${formatVal(r.interest, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(r.interest, 0)}`}</td>
+            <td class="py-2.5 px-3 text-right font-bold text-ink">${isFrenchMode ? `${formatVal(r.balance, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(r.balance, 0)}`}</td>
           </tr>
         `).join('');
       }
@@ -857,10 +921,10 @@ const isCurrencyCalculator =
         printScheduleBody.innerHTML = rows.map((r) => `
           <tr class="border-b border-slate-200">
             <td class="p-2 border-r border-slate-300 font-bold">${r.period}</td>
-            <td class="p-2 border-r border-slate-300">${currentCurrencySymbol}${formatVal(r.payment, 0)}</td>
-            <td class="p-2 border-r border-slate-300">${currentCurrencySymbol}${formatVal(r.principal, 0)}</td>
-            <td class="p-2 border-r border-slate-300">${currentCurrencySymbol}${formatVal(r.interest, 0)}</td>
-            <td class="p-2 font-bold">${currentCurrencySymbol}${formatVal(r.balance, 0)}</td>
+            <td class="p-2 border-r border-slate-300">${isFrenchMode ? `${formatVal(r.payment, 0)} €` : `${currentCurrencySymbol}${formatVal(r.payment, 0)}`}</td>
+            <td class="p-2 border-r border-slate-300">${isFrenchMode ? `${formatVal(r.principal, 0)} €` : `${currentCurrencySymbol}${formatVal(r.principal, 0)}`}</td>
+            <td class="p-2 border-r border-slate-300">${isFrenchMode ? `${formatVal(r.interest, 0)} €` : `${currentCurrencySymbol}${formatVal(r.interest, 0)}`}</td>
+            <td class="p-2 font-bold">${isFrenchMode ? `${formatVal(r.balance, 0)} €` : `${currentCurrencySymbol}${formatVal(r.balance, 0)}`}</td>
           </tr>
         `).join('');
       }
@@ -900,7 +964,7 @@ const isCurrencyCalculator =
           if (input) range.value = input.value;
         });
         recalculate();
-        showToast(window.__facToastResetMsg || 'Reset parameters to initial defaults');
+        showToast(window.__facToastResetMsg || (isFrenchMode ? 'Paramètres réinitialisés aux valeurs par défaut' : 'Reset parameters to initial defaults'));
       });
     }
 
@@ -908,8 +972,8 @@ const isCurrencyCalculator =
     const copyBtn = document.getElementById('master-copy-btn');
     if (copyBtn) {
       copyBtn.addEventListener('click', () => {
-        const txt = `${calcName}: ${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val1, 0)}`;
-        navigator.clipboard.writeText(txt).then(() => showToast(window.__facToastCopyMsg || 'Result copied to clipboard!'));
+        const txt = `${calcName}: ${isFrenchMode ? `${formatVal(currentReportState.val1, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val1, 0)}`}`;
+        navigator.clipboard.writeText(txt).then(() => showToast(window.__facToastCopyMsg || (isFrenchMode ? 'Résultat copié dans le presse-papiers !' : 'Result copied to clipboard!')));
       });
     }
 
@@ -922,11 +986,11 @@ const isCurrencyCalculator =
         const h = document.getElementById('print-hero-val');
         const s1 = document.getElementById('print-sec-1-val');
         const s2 = document.getElementById('print-sec-2-val');
-        if (d) d.textContent = new Date().toLocaleDateString();
+        if (d) d.textContent = isFrenchMode ? new Date().toLocaleDateString('fr-FR') : new Date().toLocaleDateString();
         if (c) c.textContent = currentCurrencyCode;
-        if (h) h.textContent = `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val1, 0)}`;
-        if (s1) s1.textContent = `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val2, 0)}`;
-        if (s2) s2.textContent = `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val3, 0)}`;
+        if (h) h.textContent = isFrenchMode ? `${formatVal(currentReportState.val1, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val1, 0)}`;
+        if (s1) s1.textContent = isFrenchMode ? `${formatVal(currentReportState.val2, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val2, 0)}`;
+        if (s2) s2.textContent = isFrenchMode ? `${formatVal(currentReportState.val3, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val3, 0)}`;
         window.print();
       });
     }
@@ -935,7 +999,7 @@ const isCurrencyCalculator =
     const excelBtn = document.getElementById('action-download-excel-btn');
     if (excelBtn) {
       excelBtn.addEventListener('click', () => {
-        let csv = 'Period,Payment,Principal,Interest,Ending Balance\r\n';
+        let csv = isFrenchMode ? 'Période,Paiement,Principal,Intérêts,Solde Restant\r\n' : 'Period,Payment,Principal,Interest,Ending Balance\r\n';
         currentReportState.schedule.forEach((row) => {
           csv += `"${row.period}",${row.payment},${row.principal},${row.interest},${row.balance}\r\n`;
         });
@@ -946,7 +1010,7 @@ const isCurrencyCalculator =
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        showToast(window.__facToastExportMsg || 'Schedule exported to CSV!');
+        showToast(window.__facToastExportMsg || (isFrenchMode ? 'Échéancier exporté en CSV !' : 'Schedule exported to CSV!'));
       });
     }
 

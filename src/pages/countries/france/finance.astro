@@ -1773,7 +1773,24 @@ const FAQS_DATA = [
         else clearBtn.classList.add('hidden');
       }
 
-      // 1. Filter local on-page cards
+      // If search query is empty: ensure all tools are unconditionally visible, hide all no-results elements, and close suggestions
+      if (!q) {
+        cards.forEach((card) => {
+          card.classList.remove('hidden');
+          card.style.display = 'flex';
+        });
+        if (noResultsDiv) {
+          noResultsDiv.classList.add('hidden');
+          noResultsDiv.style.display = 'none';
+        }
+        if (dirNoResultsPanel) {
+          dirNoResultsPanel.classList.add('hidden');
+        }
+        closeDropdown();
+        return;
+      }
+
+      // 1. Filter local on-page cards (active search query)
       let matchCount = 0;
       cards.forEach((card) => {
         const title = card.getAttribute('data-title') || '';
@@ -1787,7 +1804,7 @@ const FAQS_DATA = [
         const fullHaystack = `${title} ${titleEn} ${shortTitle} ${desc} ${cat} ${badge} ${keywords}`.toLowerCase();
         const cleanHaystack = removeAccents(fullHaystack);
 
-        const isMatch = !q || fullHaystack.includes(q) || cleanHaystack.includes(cleanQ);
+        const isMatch = fullHaystack.includes(q) || cleanHaystack.includes(cleanQ);
 
         if (isMatch) {
           card.classList.remove('hidden');
@@ -1800,19 +1817,13 @@ const FAQS_DATA = [
       });
 
       if (noResultsDiv) {
-        if (matchCount === 0 && q.length > 0) {
+        if (matchCount === 0) {
           noResultsDiv.classList.remove('hidden');
           noResultsDiv.style.display = 'block';
         } else {
           noResultsDiv.classList.add('hidden');
           noResultsDiv.style.display = 'none';
         }
-      }
-
-      // 2. Compute live suggestions
-      if (!q) {
-        closeDropdown();
-        return;
       }
 
       const scored = [];
@@ -2272,6 +2283,7 @@ const FAQS_DATA = [
     }
 
     initFranceTypewriter();
+    filterTools('');
 
     // Synchronize initial state
     if (currentLang === 'en') {

@@ -739,5 +739,8 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
         closeDropdown();
       }
     });
+
+    // Initialize full tool list on load
+    filterTools('');
   })();
 </script>

@@ -2,22 +2,24 @@
 // src/components/calculator/EmbedButton.astro
 interface Props {
   className?: string;
+  isFrench?: boolean;
 }
 
-const { className = '' } = Astro.props;
+const { className = '', isFrench: propIsFrench } = Astro.props;
+const isFrench = propIsFrench ?? (Astro.url.pathname.includes('/countries/france/') || Astro.url.pathname.startsWith('/fr/'));
 ---
 
 <button
   id="fac-embed-btn"
   type="button"
-  aria-label="Embed this calculator on your website"
+  aria-label={isFrench ? "Intégrer cette calculatrice sur votre site" : "Embed this calculator on your website"}
   class={`inline-flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[38px] rounded-[6px] border border-hairline bg-canvas-elevated px-3 py-2 sm:py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft transition-colors cursor-pointer shadow-whisper ${className}`}
-  title="Get embed code for your blog or website"
+  title={isFrench ? "Obtenir le code d'intégration pour votre site web ou blog" : "Get embed code for your blog or website"}
 >
   <svg class="h-3.5 w-3.5 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
   </svg>
-  <span>Embed</span>
+  <span>{isFrench ? "Intégrer" : "Embed"}</span>
 </button>
 
 <!-- Embed Code Modal Dialog -->
@@ -33,12 +35,12 @@ const { className = '' } = Astro.props;
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
           </svg>
         </span>
-        <h3 class="text-sm font-semibold">Embed This Calculator Widget</h3>
+        <h3 class="text-sm font-semibold">{isFrench ? "Intégrer ce widget de calculatrice" : "Embed This Calculator Widget"}</h3>
       </div>
       <button
         id="fac-embed-close-btn"
         type="button"
-        aria-label="Close embed modal"
+        aria-label={isFrench ? "Fermer la fenêtre" : "Close embed modal"}
         class="text-mute hover:text-ink text-sm p-1 rounded transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
       >
         ✕
@@ -46,7 +48,9 @@ const { className = '' } = Astro.props;
     </div>
 
     <p class="text-xs text-mute">
-      Add this fast, zero-tracking calculator widget directly into your blog or website. Free to use with permanent attribution link:
+      {isFrench
+        ? "Ajoutez cet outil de calcul rapide et sans aucun traçage directement sur votre blog ou site web. Gratuit avec lien d'attribution :"
+        : "Add this fast, zero-tracking calculator widget directly into your blog or website. Free to use with permanent attribution link:"}
     </p>
 
     <!-- Code Snippet Area -->
@@ -60,14 +64,16 @@ const { className = '' } = Astro.props;
     </div>
 
     <div class="flex items-center justify-between gap-3 pt-2">
-      <span id="fac-embed-feedback" class="text-xs text-cyan font-medium hidden">✓ Embed code copied!</span>
+      <span id="fac-embed-feedback" class="text-xs text-cyan font-medium hidden">
+        {isFrench ? "✓ Code d'intégration copié !" : "✓ Embed code copied!"}
+      </span>
       <div class="flex items-center gap-2 ml-auto">
         <button
           id="fac-embed-copy-btn"
           type="button"
           class="inline-flex items-center justify-center min-h-[44px] sm:min-h-[38px] rounded-[6px] bg-cyan px-4 py-2 text-xs font-semibold text-white hover:bg-cyan-hover transition-colors shadow-whisper cursor-pointer"
         >
-          Copy Embed Code
+          {isFrench ? "Copier le Code d'Intégration" : "Copy Embed Code"}
         </button>
       </div>
     </div>

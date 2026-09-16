@@ -2,9 +2,11 @@
 // src/components/calculator/HistoryDrawer.astro
 interface Props {
   calculatorId: string;
+  isFrench?: boolean;
 }
 
-const { calculatorId } = Astro.props;
+const { calculatorId, isFrench: propIsFrench } = Astro.props;
+const isFrench = propIsFrench ?? (Astro.url.pathname.includes('/countries/france/') || Astro.url.pathname.startsWith('/fr/'));
 ---
 
 <div class="mt-6">
@@ -14,7 +16,7 @@ const { calculatorId } = Astro.props;
         <svg class="h-3.5 w-3.5 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span>Recent Calculation History (Private / Local)</span>
+        <span>{isFrench ? "Historique Récent des Calculs (Privé / Local)" : "Recent Calculation History (Private / Local)"}</span>
         <span id="history-count-badge" class="rounded-full bg-hairline-soft px-2 py-0.5 text-[10px] font-mono text-mute">0</span>
       </div>
       <span class="text-xs text-mute group-open:rotate-180 transition-transform">▼</span>
@@ -22,25 +24,30 @@ const { calculatorId } = Astro.props;
 
     <div class="p-3.5 pt-0 border-t border-hairline-soft space-y-3">
       <div id="history-list" class="space-y-2 max-h-56 overflow-y-auto pt-2 text-xs">
-        <p id="history-empty" class="text-mute text-center py-2">No previous calculations recorded yet.</p>
+        <p id="history-empty" class="text-mute text-center py-2">
+          {isFrench ? "Aucun calcul enregistré pour le moment." : "No previous calculations recorded yet."}
+        </p>
       </div>
 
       <div class="flex items-center justify-between pt-2 border-t border-hairline-soft">
-        <span class="text-[10px] text-faint">Stored in your browser only</span>
+        <span class="text-[10px] text-faint">
+          {isFrench ? "Stocké uniquement dans votre navigateur" : "Stored in your browser only"}
+        </span>
         <button
           id="history-clear-btn"
           type="button"
-          aria-label="Clear calculation history"
+          aria-label={isFrench ? "Effacer l'historique des calculs" : "Clear calculation history"}
           class="inline-flex items-center min-h-[44px] sm:min-h-[32px] text-xs sm:text-[11px] font-medium text-mute hover:text-error transition-colors cursor-pointer py-1.5 px-3 rounded hover:bg-hairline-soft"
+          data-is-french={isFrench ? "true" : "false"}
         >
-          Clear History
+          {isFrench ? "Effacer l'Historique" : "Clear History"}
         </button>
       </div>
     </div>
   </details>
 </div>
 
-<script is:inline define:vars={{ calculatorId }}>
+<script is:inline define:vars={{ calculatorId, isFrench }}>
   (function () {
     const storageKey = `fac_history_${calculatorId}`;
     const listEl = document.getElementById('history-list');
@@ -113,7 +120,7 @@ const { calculatorId } = Astro.props;
         localStorage.removeItem(storageKey);
         renderHistory();
         if (typeof window.facShowToast === 'function') {
-          window.facShowToast('Calculation history cleared', 'info');
+          window.facShowToast(isFrench ? 'Historique des calculs effacé' : 'Calculation history cleared', 'info');
         }
       });
     }

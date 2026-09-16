@@ -17,6 +17,7 @@ export interface Props {
   steps?: WorkedStep[];
   conclusion?: string;
   formula?: string;
+  isFrench?: boolean;
 }
 
 const {
@@ -26,9 +27,12 @@ const {
   steps: userSteps,
   conclusion: userConclusion,
   formula,
+  isFrench: propIsFrench,
 } = Astro.props;
 
-let resolvedTitle = userTitle || 'Step-by-Step Worked Example';
+const isFrench = propIsFrench ?? (Astro.url.pathname.includes('/countries/france/') || Astro.url.pathname.startsWith('/fr/'));
+
+let resolvedTitle = userTitle || (isFrench ? 'Exemple de Calcul Pas-à-Pas' : 'Step-by-Step Worked Example');
 let resolvedScenario = userScenario || '';
 let resolvedSteps: WorkedStep[] = userSteps || [];
 let resolvedConclusion = userConclusion || '';
@@ -85,11 +89,13 @@ if (calculatorId && (!resolvedScenario || resolvedSteps.length === 0)) {
   <div class="flex items-center justify-between gap-3 border-b border-hairline pb-3">
     <div class="flex items-center gap-2">
       <span class="inline-block w-2 h-2 rounded-full bg-cyan"></span>
-      <span class="mono-eyebrow text-cyan">Educational Calculation & Verification</span>
+      <span class="mono-eyebrow text-cyan">
+        {isFrench ? "Démonstration Pédagogique & Vérification" : "Educational Calculation & Verification"}
+      </span>
     </div>
     {resolvedFormula && (
       <span class="hidden sm:inline-block rounded-[4px] border border-hairline-soft bg-canvas px-2.5 py-1 text-xs font-mono text-mute">
-        Formula: {resolvedFormula}
+        {isFrench ? "Formule :" : "Formula:"} {resolvedFormula}
       </span>
     )}
   </div>
@@ -100,7 +106,9 @@ if (calculatorId && (!resolvedScenario || resolvedSteps.length === 0)) {
 
   {resolvedScenario && (
     <div class="rounded-[8px] border border-hairline-soft bg-canvas p-4 text-xs sm:text-sm text-body leading-relaxed">
-      <strong class="font-semibold text-ink">Practical Scenario:</strong> 
+      <strong class="font-semibold text-ink">
+        {isFrench ? "Scénario Concret :" : "Practical Scenario:"}
+      </strong> 
       <span itemprop="description">{resolvedScenario}</span>
     </div>
   )}
@@ -142,7 +150,9 @@ if (calculatorId && (!resolvedScenario || resolvedSteps.length === 0)) {
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
       <div>
-        <strong class="font-semibold text-cyan">Final Verified Result:</strong> {resolvedConclusion}
+        <strong class="font-semibold text-cyan">
+          {isFrench ? "Résultat Final Vérifié :" : "Final Verified Result:"}
+        </strong> {resolvedConclusion}
       </div>
     </div>
   )}

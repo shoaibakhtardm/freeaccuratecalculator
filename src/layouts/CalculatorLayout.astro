@@ -93,6 +93,8 @@ if (faqSchema) {
 }
 
 const combinedSchemas = [softwareAppSchema, ...extraSchemas];
+
+const isFrench = lang?.startsWith('fr') || Astro.url.pathname.includes('/countries/france/') || Astro.url.pathname.startsWith('/fr/');
 ---
 
 <Layout
@@ -106,6 +108,7 @@ const combinedSchemas = [softwareAppSchema, ...extraSchemas];
   <div class="max-w-7xl mx-auto">
     <!-- Breadcrumbs -->
     <Breadcrumbs
+      isFrench={isFrench}
       items={[
         { label: category.label, href: category.href },
         { label: calculatorName },
@@ -118,15 +121,17 @@ const combinedSchemas = [softwareAppSchema, ...extraSchemas];
         <div class="flex items-center gap-2">
           <span class="mono-eyebrow text-link">{category.label}</span>
           <span class="h-1 w-1 rounded-full bg-faint"></span>
-          <span class="text-[11px] font-mono text-mute">Instant Client-Side Engine</span>
+          <span class="text-[11px] font-mono text-mute">
+            {isFrench ? "Moteur 100% Côté Client & Privé" : "Instant Client-Side Engine"}
+          </span>
         </div>
         <h1 class="display-hero text-ink">{h1}</h1>
         <p class="text-sm text-body max-w-2xl">{subtitle}</p>
       </div>
 
       <div class="flex items-center gap-2 shrink-0">
-        <EmbedButton />
-        <ShareButton />
+        <EmbedButton isFrench={isFrench} />
+        <ShareButton isFrench={isFrench} />
       </div>
     </div>
 
@@ -138,7 +143,7 @@ const combinedSchemas = [softwareAppSchema, ...extraSchemas];
         <slot />
 
         <!-- Calculator Result Sharing Component -->
-        <ShareResult calculatorTitle={calculatorName} />
+        <ShareResult calculatorTitle={calculatorName} isFrench={isFrench} />
 
         <!-- Native in-content ad slot between calculator and educational content -->
         <AdSlot slotType="in-content" slotId="CALC-INCONTENT-01" />
@@ -148,7 +153,9 @@ const combinedSchemas = [softwareAppSchema, ...extraSchemas];
 
         <!-- Embed Mode Attribution Watermark (Visible only when in fac-embed-view) -->
         <div class="hidden fac-embed-watermark text-center text-xs text-mute py-3 border-t border-hairline font-mono">
-          ⚡ Interactive tool provided by <a href={canonicalUrl} target="_blank" rel="noopener" class="text-link font-semibold hover:underline">Free Accurate Calculator</a> • 100% Free &amp; Private
+          {isFrench ? "⚡ Outil interactif fourni par" : "⚡ Interactive tool provided by"}{' '}
+          <a href={canonicalUrl} target="_blank" rel="noopener" class="text-link font-semibold hover:underline">Free Accurate Calculator</a>
+          {' '}• {isFrench ? "100% Gratuit & Confidentiel" : "100% Free & Private"}
         </div>
       </div>
 
@@ -160,7 +167,7 @@ const combinedSchemas = [softwareAppSchema, ...extraSchemas];
 
           {relatedCalculators.length > 0 && (
             <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-5 shadow-whisper space-y-3">
-              <h3 class="mono-eyebrow text-ink">Related Calculators</h3>
+              <h3 class="mono-eyebrow text-ink">{isFrench ? "Calculatrices Similaires" : "Related Calculators"}</h3>
               <ul class="space-y-2">
                 {relatedCalculators.map((rel) => (
                   <li>
@@ -187,10 +194,12 @@ const combinedSchemas = [softwareAppSchema, ...extraSchemas];
               <svg class="h-3.5 w-3.5 text-link" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
               </svg>
-              <span>Mathematically Verified</span>
+              <span>{isFrench ? "Vérifié Mathématiquement" : "Mathematically Verified"}</span>
             </div>
             <p class="text-[11px] leading-relaxed">
-              Formulas checked against standard reference models. Results compute instantly in your browser with zero latency.
+              {isFrench
+                ? "Formules rigoureusement conformes aux normes et modèles de référence. Calculs instantanés dans votre navigateur sans latence et en toute confidentialité."
+                : "Formulas checked against standard reference models. Results compute instantly in your browser with zero latency."}
             </p>
           </div>
         </div>
@@ -199,5 +208,5 @@ const combinedSchemas = [softwareAppSchema, ...extraSchemas];
   </div>
 
   <!-- Smart Email Capture Modal (Triggers non-intrusively after 2 calculations) -->
-  <SmartEmailModal />
+  <SmartEmailModal isFrench={isFrench} />
 </Layout>

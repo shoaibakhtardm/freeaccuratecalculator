@@ -9,15 +9,21 @@ interface Props {
   categoryFilter?: string;
   className?: string;
   country?: CountryConfig;
+  isFrench?: boolean;
 }
 
 const {
   id = 'autocomplete-search',
-  placeholder = "Search 📈 SIP Calculator...",
+  placeholder,
   categoryFilter,
   className = '',
   country,
+  isFrench: propIsFrench,
 } = Astro.props;
+
+const isFrench = propIsFrench ?? (country?.slug === 'france' || Astro.url.pathname.includes('/countries/france/') || Astro.url.pathname.startsWith('/fr/'));
+const defaultPlaceholder = isFrench ? "Rechercher 💶 Calculateur de TVA..." : "Search 📈 SIP Calculator...";
+const effectivePlaceholder = placeholder ?? defaultPlaceholder;
 
 // Prepare localized dataset if country is provided
 const dataset: SearchCalculatorItem[] = country
@@ -37,6 +43,7 @@ const searchDataJson = JSON.stringify(dataset);
   class={`fac-autocomplete-container relative max-w-xl mx-auto w-full ${className}`}
   data-filter={categoryFilter || ''}
   data-search-id={id}
+  data-is-french={isFrench ? "true" : "false"}
 >
   <div class="fac-search-wrapper relative flex items-center group rounded-2xl sm:rounded-full transition-shadow duration-300">
     <!-- Authentic Corner-Revolving Neon Border Beam ("corner pe ghumna") -->
@@ -80,7 +87,7 @@ const searchDataJson = JSON.stringify(dataset);
       spellcheck="false"
       placeholder=""
       class="fac-search-input relative z-20 w-full rounded-2xl sm:rounded-full bg-transparent py-3 sm:py-3.5 pl-11 sm:pl-12 pr-24 text-xs sm:text-sm md:text-base font-bold text-slate-900 dark:text-white placeholder:font-medium placeholder-slate-400 dark:placeholder-slate-400 shadow-sm outline-none border-none ring-0 transition-all tracking-tight sm:tracking-normal"
-      aria-label="Search all calculators"
+      aria-label={isFrench ? "Rechercher une calculatrice" : "Search all calculators"}
       aria-autocomplete="list"
       aria-controls={`${id}-dropdown`}
       aria-expanded="false"
@@ -91,8 +98,8 @@ const searchDataJson = JSON.stringify(dataset);
       <button
         type="button"
         class="fac-clear-btn hidden p-1.5 rounded-full text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 hover:bg-cyan-500/10 dark:hover:bg-cyan-500/20 transition-all cursor-pointer focus:outline-none"
-        aria-label="Clear search"
-        title="Clear search"
+        aria-label={isFrench ? "Effacer la recherche" : "Clear search"}
+        title={isFrench ? "Effacer la recherche" : "Clear search"}
       >
         <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
@@ -112,8 +119,8 @@ const searchDataJson = JSON.stringify(dataset);
   >
     <!-- Dynamic Results Header -->
     <div class="fac-results-header px-4 py-2.5 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-      <span class="fac-results-count">Suggested Calculators</span>
-      <span class="text-[10px] lowercase font-normal hidden sm:inline">press enter ↵ to open</span>
+      <span class="fac-results-count">{isFrench ? "Calculatrices Suggérées" : "Suggested Calculators"}</span>
+      <span class="text-[10px] lowercase font-normal hidden sm:inline">{isFrench ? "appuyez sur entrée ↵ pour ouvrir" : "press enter ↵ to open"}</span>
     </div>
 
     <!-- Scrollable Results Container -->
@@ -125,21 +132,21 @@ const searchDataJson = JSON.stringify(dataset);
     <div class="fac-no-results hidden p-6 text-center space-y-1.5">
       <div class="text-2xl">🔍</div>
       <p class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200">
-        No calculators found
+        {isFrench ? "Aucune calculatrice trouvée" : "No calculators found"}
       </p>
       <p class="text-[11px] text-slate-400 dark:text-slate-500">
-        Try searching for "sip", "emi", "tax", "percentage", or "mortgage"
+        {isFrench ? 'Essayez "prêt", "salaire", "tva", "impôt" ou "placement"' : 'Try searching for "sip", "emi", "tax", "percentage", or "mortgage"'}
       </p>
     </div>
 
     <!-- Footer Quick Help -->
     <div class="px-4 py-2 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/50 flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500">
       <span class="flex items-center gap-1">
-        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Verified Calculator Links
+        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> {isFrench ? "Liens Calculatrices Vérifiés" : "Verified Calculator Links"}
       </span>
       <div class="flex items-center gap-2">
-        <span class="hidden sm:inline"><kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800">↑</kbd> <kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800">↓</kbd> navigate</span>
-        <span><kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800">esc</kbd> close</span>
+        <span class="hidden sm:inline"><kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800">↑</kbd> <kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800">↓</kbd> {isFrench ? "naviguer" : "navigate"}</span>
+        <span><kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800">esc</kbd> {isFrench ? "fermer" : "close"}</span>
       </div>
     </div>
   </div>
@@ -273,7 +280,7 @@ const searchDataJson = JSON.stringify(dataset);
 
         if (currentMatches.length === 0) {
           resultsList.innerHTML = '';
-          if (resultsCount) resultsCount.textContent = 'No suggestions';
+          if (resultsCount) resultsCount.textContent = isFr ? 'Aucune suggestion' : 'No suggestions';
           if (noResults) noResults.classList.remove('hidden');
           openPanel();
           return;
@@ -281,7 +288,7 @@ const searchDataJson = JSON.stringify(dataset);
 
         if (noResults) noResults.classList.add('hidden');
         if (resultsCount) {
-          resultsCount.textContent = 'Suggested Calculators';
+          resultsCount.textContent = isFr ? 'Calculatrices Suggérées' : 'Suggested Calculators';
         }
 
         // Render HTML for suggestions
@@ -294,7 +301,7 @@ const searchDataJson = JSON.stringify(dataset);
               class="fac-suggestion-link group flex items-center justify-between w-full p-2.5 sm:p-3 rounded-xl hover:bg-indigo-50/80 dark:hover:bg-indigo-950/50 border border-transparent hover:border-indigo-500/20 transition-all text-left cursor-pointer"
               data-index="${idx}"
               role="option"
-              title="Open ${escapeHtml(calc.name)}"
+              title="${isFr ? 'Ouvrir' : 'Open'} ${escapeHtml(calc.name)}"
             >
               <div class="flex items-center gap-2.5 sm:gap-3 min-w-0">
                 <span class="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-sm shadow-2xs group-hover:scale-110 transition-transform">
@@ -312,7 +319,7 @@ const searchDataJson = JSON.stringify(dataset);
 
               <div class="flex items-center gap-1 shrink-0 ml-2">
                 <span class="hidden sm:inline-flex text-[10.5px] font-semibold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-0.5 transition-transform">
-                  Open →
+                  ${isFr ? 'Ouvrir →' : 'Open →'}
                 </span>
                 <svg class="h-3.5 w-3.5 text-slate-400 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 sm:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
@@ -382,7 +389,22 @@ const searchDataJson = JSON.stringify(dataset);
       }
 
       // Masterpiece Typewriter Animation Engine (Always Random & Natural Cadence)
-      const DIVERSE_PROMPTS = [
+      const DIVERSE_PROMPTS = isFr ? [
+        'Rechercher 💶 Calculateur de TVA...',
+        'Rechercher 💼 Salaire Brut / Net...',
+        'Rechercher 🏢 Prêt Immobilier & HCSF...',
+        'Rechercher 🏛️ Impôt sur le Revenu...',
+        'Rechercher 🏡 Simulateur APL...',
+        'Rechercher ⚖️ Indemnité Licenciement...',
+        'Rechercher 🚗 Frais Kilométriques...',
+        'Rechercher 📊 Frais Réels vs 10%...',
+        'Rechercher 📈 Intérêts Composés...',
+        'Rechercher 🏖️ Calculateur Retraite...',
+        'Rechercher 💰 Rendement Locatif...',
+        'Rechercher 📉 Calculateur d\'Inflation...',
+        'Rechercher 🔄 Convertisseur d\'Unités...',
+        'Rechercher 📐 Théorème de Pythagore...'
+      ] : [
         'Search 📈 SIP Calculator...',
         'Search 🎂 Age Calculator...',
         'Search 🏦 EMI Calculator...',
@@ -477,7 +499,9 @@ const searchDataJson = JSON.stringify(dataset);
         if (typewriterTimer) clearTimeout(typewriterTimer);
         if (typeContainer) typeContainer.classList.add('opacity-0');
         if (!input.value.trim()) {
-          input.placeholder = 'Search any calculator (e.g. sip, emi, age)...';
+          input.placeholder = isFr
+            ? 'Rechercher une calculatrice (ex: prêt, salaire, tva)...'
+            : 'Search any calculator (e.g. sip, emi, age)...';
         }
       });
 
