@@ -617,7 +617,9 @@ export function getCountryCategoryPageConfig(
         id,
         name: frTool?.name || meta?.name || regCalc?.name || id,
         shortName: frTool?.shortName || meta?.shortName || id.replace(/-calculator$/, ''),
-        href: `/countries/${country.slug}/${categoryId}/${id}/`,
+        href: (isFr && id === 'percentage-calculator')
+          ? '/fr/math/percentage-calculator/'
+          : `/countries/${country.slug}/${categoryId}/${id}/`,
         description:
           frTool?.desc ||
           meta?.description ||
