@@ -390,30 +390,39 @@ body {
   html, body, .dark, .dark body {
     color-scheme: light !important;
     background-color: #ffffff !important;
-    color: #000000 !important;
+    color: #0f172a !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
 
-  /* Remove dark mode shadows, borders, and backgrounds */
-  *, .dark * {
-    box-shadow: none !important;
-    text-shadow: none !important;
-    border-color: #000000 !important;
+  .dark {
+    --color-canvas: #ffffff !important;
+    --color-canvas-elevated: #ffffff !important;
+    --color-ink: #0f172a !important;
+    --color-body: #334155 !important;
+    --color-mute: #64748b !important;
+    --color-faint: #94a3b8 !important;
+    --color-hairline: #e2e8f0 !important;
+    --color-hairline-soft: #f1f5f9 !important;
+    --color-primary: #0f172a !important;
+    --color-on-primary: #ffffff !important;
+    --color-link: #0070f3 !important;
+    --color-violet: #7928ca !important;
+    --color-cyan: #0f766e !important;
   }
 
-  /* Force all text to black and backgrounds to white */
-  h1, h2, h3, h4, h5, h6, p, span, div, table, th, td,
-  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
-  .dark p, .dark span, .dark div, .dark table, .dark th, .dark td {
-    color: #000000 !important;
-    background-color: transparent !important;
+  /* Clean print shadows */
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
   }
-  
-  /* Hide UI elements that shouldn't be in the PDF */
+
+  /* Hide UI elements that shouldn't be in the PDF / Print statement */
   .no-print, nav, header, footer, button, .dark-mode-toggle, aside,
   #main-header, #smart-email-modal, #country-modal, .fac-copy-result-btn,
-  .ad-slot-container, .breadcrumbs-container, .print\:hidden {
+  .ad-slot-container, .breadcrumbs-container, .print\:hidden,
+  .fac-theme-toggle-btn, .fac-clear-btn, .fac-kbd-shortcut,
+  #master-social-proof, .history-drawer-container {
     display: none !important;
   }
 }

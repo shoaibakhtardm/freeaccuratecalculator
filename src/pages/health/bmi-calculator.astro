@@ -765,8 +765,19 @@ const relatedCalculators = [
       });
     });
 
-    document.getElementById('bmi-download-pdf-btn')?.addEventListener('click', () => {
-      window.print();
+    document.getElementById('bmi-download-pdf-btn')?.addEventListener('click', (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof (e as any).stopImmediatePropagation === 'function') {
+          (e as any).stopImmediatePropagation();
+        }
+      }
+      if (typeof (window as any).generateAndDownloadPDF === 'function') {
+        (window as any).generateAndDownloadPDF();
+      } else {
+        window.print();
+      }
     });
 
     // Initial calculation

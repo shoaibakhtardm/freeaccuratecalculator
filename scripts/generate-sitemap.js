@@ -113,7 +113,8 @@ allUrls = allUrls.filter((route) => {
     route === '/blog' ||
     route === '/terms' ||
     route === '/privacy' ||
-    /\/(404|500)(\/|$)/.test(route) ||
+    /\/(404|500)(\.html|\/|$)/.test(route) ||
+    route.endsWith('.html') ||
     route.endsWith('.xml')
   ) {
     return false;
@@ -130,7 +131,7 @@ console.log(`🔍 Total verified 200 OK URLs to partition: ${allUrls.length}`);
 const I18N_LOCALES = new Set(['es', 'fr', 'de', 'ar', 'nl', 'pt', 'it', 'ru', 'ja', 'hi', 'zh']);
 const BUSINESS_CATS = new Set(['business', 'insurance', 'legal', 'real-estate', 'marketing']);
 const SCIENCE_CATS = new Set(['physics', 'chemistry', 'biology', 'ecology', 'technology', 'automotive', 'converter', 'construction', 'statistics']);
-const EVERYDAY_CATS = new Set(['everyday', 'food', 'sports', 'profession']);
+const EVERYDAY_CATS = new Set(['everyday', 'food', 'sports']);
 
 function categorizeRoute(pathname) {
   const segments = pathname.split('/').filter(Boolean);

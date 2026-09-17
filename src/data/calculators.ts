@@ -129,17 +129,6 @@ export const ALL_FRONTEND_CALCULATORS: CalculatorCatalogItem[] = [
   { name: 'Weight Converter', slug: 'weight-converter', category: 'converter', href: '/converter/weight-converter/' },
   { name: 'Temperature Converter', slug: 'temperature-converter', category: 'converter', href: '/converter/temperature-converter/' },
 
-  // Professions
-  { name: 'Doctor Pediatric Dosage Calculator', slug: 'doctor-pediatric-dosage-calculator', category: 'profession', href: '/profession/doctor-pediatric-dosage-calculator/' },
-  { name: 'Engineer Project Cost Calculator', slug: 'engineer-project-cost-calculator', category: 'profession', href: '/profession/engineer-project-cost-calculator/' },
-  { name: 'Lawyer Billable Hours Calculator', slug: 'lawyer-billable-hours-calculator', category: 'profession', href: '/profession/lawyer-billable-hours-calculator/' },
-  { name: 'Nurse IV Drip Calculator', slug: 'nurse-iv-drip-calculator', category: 'profession', href: '/profession/nurse-iv-drip-calculator/' },
-  { name: 'Architect FAR Calculator', slug: 'architect-far-calculator', category: 'profession', href: '/profession/architect-far-calculator/' },
-  { name: 'Accountant Tax Calculator', slug: 'accountant-tax-calculator', category: 'profession', href: '/profession/accountant-tax-calculator/' },
-  { name: 'Realtor Commission Calculator', slug: 'realtor-commission-calculator', category: 'profession', href: '/profession/realtor-commission-calculator/' },
-  { name: 'Developer Sprint Velocity Calculator', slug: 'developer-sprint-velocity-calculator', category: 'profession', href: '/profession/developer-sprint-velocity-calculator/' },
-  { name: 'Teacher Grade Curve Calculator', slug: 'teacher-grade-curve-calculator', category: 'profession', href: '/profession/teacher-grade-curve-calculator/' },
-  { name: 'Pilot Fuel Burn Calculator', slug: 'pilot-fuel-burn-calculator', category: 'profession', href: '/profession/pilot-fuel-burn-calculator/' },
   { name: 'AI Prompt & Token Cost Calculator', slug: 'ai-token-cost-calculator', category: 'technology', href: '/technology/ai-token-cost-calculator/' },
 ];
 

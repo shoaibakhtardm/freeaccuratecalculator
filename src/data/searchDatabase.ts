@@ -28,15 +28,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     ]
   },
   {
-    "name": "Accountant Tax Calculator",
-    "slug": "accountant-tax-calculator",
-    "category": "profession",
-    "categoryName": "Profession",
-    "icon": "🎯",
-    "href": "/profession/accountant-tax-calculator/",
-    "keywords": []
-  },
-  {
     "name": "Age Calculator",
     "slug": "age-calculator",
     "category": "everyday",
@@ -68,15 +59,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "categoryName": "Insurance",
     "icon": "🛡️",
     "href": "/insurance/annuity-payout-calculator/",
-    "keywords": []
-  },
-  {
-    "name": "Architect FAR Calculator",
-    "slug": "architect-far-calculator",
-    "category": "profession",
-    "categoryName": "Profession",
-    "icon": "🎯",
-    "href": "/profession/architect-far-calculator/",
     "keywords": []
   },
   {
@@ -336,22 +318,19 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "keywords": []
   },
   {
-    "name": "Developer Sprint Velocity Calculator",
-    "slug": "developer-sprint-velocity-calculator",
-    "category": "profession",
-    "categoryName": "Profession",
-    "icon": "🎯",
-    "href": "/profession/developer-sprint-velocity-calculator/",
-    "keywords": []
-  },
-  {
-    "name": "Doctor Pediatric Dosage Calculator",
-    "slug": "doctor-pediatric-dosage-calculator",
-    "category": "profession",
-    "categoryName": "Profession",
-    "icon": "🎯",
-    "href": "/profession/doctor-pediatric-dosage-calculator/",
-    "keywords": []
+    "name": "Disability Insurance Calculator",
+    "slug": "disability-insurance-calculator",
+    "category": "insurance",
+    "categoryName": "Insurance",
+    "icon": "🛡️",
+    "href": "/insurance/disability-insurance-calculator/",
+    "keywords": [
+      "disability",
+      "income",
+      "protection",
+      "salary",
+      "insurance"
+    ]
   },
   {
     "name": "Due Date Calculator",
@@ -386,15 +365,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
       "loan emi",
       "bank emi"
     ]
-  },
-  {
-    "name": "Engineer Project Cost Calculator",
-    "slug": "engineer-project-cost-calculator",
-    "category": "profession",
-    "categoryName": "Profession",
-    "icon": "🎯",
-    "href": "/profession/engineer-project-cost-calculator/",
-    "keywords": []
   },
   {
     "name": "EPF Calculator",
@@ -493,7 +463,13 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "categoryName": "Insurance",
     "icon": "🛡️",
     "href": "/insurance/health-insurance-calculator/",
-    "keywords": ["health", "insurance", "medical", "premium", "deductible"]
+    "keywords": [
+      "health",
+      "insurance",
+      "medical",
+      "premium",
+      "deductible"
+    ]
   },
   {
     "name": "Homeowners Insurance Calculator",
@@ -502,43 +478,14 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "categoryName": "Insurance",
     "icon": "🛡️",
     "href": "/insurance/homeowners-insurance-calculator/",
-    "keywords": ["home", "homeowners", "house", "property", "dwelling", "insurance"]
-  },
-  {
-    "name": "Renters Insurance Calculator",
-    "slug": "renters-insurance-calculator",
-    "category": "insurance",
-    "categoryName": "Insurance",
-    "icon": "🛡️",
-    "href": "/insurance/renters-insurance-calculator/",
-    "keywords": ["renters", "tenant", "apartment", "contents", "insurance"]
-  },
-  {
-    "name": "Disability Insurance Calculator",
-    "slug": "disability-insurance-calculator",
-    "category": "insurance",
-    "categoryName": "Insurance",
-    "icon": "🛡️",
-    "href": "/insurance/disability-insurance-calculator/",
-    "keywords": ["disability", "income", "protection", "salary", "insurance"]
-  },
-  {
-    "name": "Umbrella Insurance Calculator",
-    "slug": "umbrella-insurance-calculator",
-    "category": "insurance",
-    "categoryName": "Insurance",
-    "icon": "🛡️",
-    "href": "/insurance/umbrella-insurance-calculator/",
-    "keywords": ["umbrella", "liability", "net worth", "excess", "insurance"]
-  },
-  {
-    "name": "Whole Life Insurance Calculator",
-    "slug": "whole-life-insurance-calculator",
-    "category": "insurance",
-    "categoryName": "Insurance",
-    "icon": "🛡️",
-    "href": "/insurance/whole-life-insurance-calculator/",
-    "keywords": ["whole life", "life insurance", "cash value", "dividend", "insurance"]
+    "keywords": [
+      "home",
+      "homeowners",
+      "house",
+      "property",
+      "dwelling",
+      "insurance"
+    ]
   },
   {
     "name": "Hours Calculator",
@@ -620,15 +567,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "categoryName": "Physics",
     "icon": "⚛️",
     "href": "/physics/kinetic-energy-calculator/",
-    "keywords": []
-  },
-  {
-    "name": "Lawyer Billable Hours Calculator",
-    "slug": "lawyer-billable-hours-calculator",
-    "category": "profession",
-    "categoryName": "Profession",
-    "icon": "🎯",
-    "href": "/profession/lawyer-billable-hours-calculator/",
     "keywords": []
   },
   {
@@ -719,15 +657,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     ]
   },
   {
-    "name": "Nurse IV Drip Calculator",
-    "slug": "nurse-iv-drip-calculator",
-    "category": "profession",
-    "categoryName": "Profession",
-    "icon": "🎯",
-    "href": "/profession/nurse-iv-drip-calculator/",
-    "keywords": []
-  },
-  {
     "name": "Ohms Law Calculator",
     "slug": "ohms-law-calculator",
     "category": "physics",
@@ -795,15 +724,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "categoryName": "Chemistry",
     "icon": "🧪",
     "href": "/chemistry/ph-calculator/",
-    "keywords": []
-  },
-  {
-    "name": "Pilot Fuel Burn Calculator",
-    "slug": "pilot-fuel-burn-calculator",
-    "category": "profession",
-    "categoryName": "Profession",
-    "icon": "🎯",
-    "href": "/profession/pilot-fuel-burn-calculator/",
     "keywords": []
   },
   {
@@ -894,15 +814,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "keywords": []
   },
   {
-    "name": "Realtor Commission Calculator",
-    "slug": "realtor-commission-calculator",
-    "category": "profession",
-    "categoryName": "Profession",
-    "icon": "🎯",
-    "href": "/profession/realtor-commission-calculator/",
-    "keywords": []
-  },
-  {
     "name": "Recipe Scaler Calculator",
     "slug": "recipe-scaler-calculator",
     "category": "food",
@@ -919,6 +830,21 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "icon": "🏢",
     "href": "/real-estate/rental-yield-calculator/",
     "keywords": []
+  },
+  {
+    "name": "Renters Insurance Calculator",
+    "slug": "renters-insurance-calculator",
+    "category": "insurance",
+    "categoryName": "Insurance",
+    "icon": "🛡️",
+    "href": "/insurance/renters-insurance-calculator/",
+    "keywords": [
+      "renters",
+      "tenant",
+      "apartment",
+      "contents",
+      "insurance"
+    ]
   },
   {
     "name": "Retirement Calculator",
@@ -1138,15 +1064,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "keywords": []
   },
   {
-    "name": "Teacher Grade Curve Calculator",
-    "slug": "teacher-grade-curve-calculator",
-    "category": "profession",
-    "categoryName": "Profession",
-    "icon": "🎯",
-    "href": "/profession/teacher-grade-curve-calculator/",
-    "keywords": []
-  },
-  {
     "name": "Temperature Converter",
     "slug": "temperature-converter",
     "category": "converter",
@@ -1181,6 +1098,21 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "icon": "📐",
     "href": "/math/triangle-calculator/",
     "keywords": []
+  },
+  {
+    "name": "Umbrella Insurance Calculator",
+    "slug": "umbrella-insurance-calculator",
+    "category": "insurance",
+    "categoryName": "Insurance",
+    "icon": "🛡️",
+    "href": "/insurance/umbrella-insurance-calculator/",
+    "keywords": [
+      "umbrella",
+      "liability",
+      "net worth",
+      "excess",
+      "insurance"
+    ]
   },
   {
     "name": "Universal Conversion Calculator",
@@ -1223,5 +1155,20 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "icon": "🔄",
     "href": "/converter/weight-converter/",
     "keywords": []
+  },
+  {
+    "name": "Whole Life Insurance Calculator",
+    "slug": "whole-life-insurance-calculator",
+    "category": "insurance",
+    "categoryName": "Insurance",
+    "icon": "🛡️",
+    "href": "/insurance/whole-life-insurance-calculator/",
+    "keywords": [
+      "whole life",
+      "life insurance",
+      "cash value",
+      "dividend",
+      "insurance"
+    ]
   }
 ];

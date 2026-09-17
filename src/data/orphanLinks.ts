@@ -143,10 +143,10 @@ export const REGIONAL_CALCULATOR_NETWORK: RegionalCalculatorLink[] = [
   },
   {
     anchorText: 'Macro Nutrient Split & Meal Ratio Calculator',
-    href: '/health/macronutrient-calculator/',
+    href: '/food/macronutrient-calculator/',
     flagEmoji: '🥗',
     countryName: 'Global',
-    category: 'health',
+    category: 'food',
     badgeText: 'Dietary Macro',
     description: 'Calculates optimal grams of protein, carbs, and fats based on fitness targets.',
   },

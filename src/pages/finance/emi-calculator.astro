@@ -1449,12 +1449,26 @@ const formulaVariables = [
       }
     }
 
-    // Direct High-Fidelity PDF Statement Download
-    function downloadPDF() {
+    // Direct High-Fidelity PDF Statement Download (Single-Flight Protected)
+    function downloadPDF(e?: Event) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof (e as any).stopImmediatePropagation === 'function') {
+          (e as any).stopImmediatePropagation();
+        }
+      }
       calculate();
       populatePrintReport();
-      window.print();
+      if (typeof (window as any).generateAndDownloadPDF === 'function') {
+        (window as any).generateAndDownloadPDF();
+      } else {
+        window.print();
+      }
     }
+
+    window.addEventListener('fac:before-pdf-print', () => { calculate(); populatePrintReport(); });
+    window.addEventListener('beforeprint', () => { calculate(); populatePrintReport(); });
 
     // Copy Summary
     function copySummary() {

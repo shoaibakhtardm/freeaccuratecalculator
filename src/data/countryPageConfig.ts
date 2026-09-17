@@ -327,9 +327,16 @@ export function getCountryTools(country: CountryConfig): DirectoryToolItem[] {
       const regCalc = CALCULATORS.find((c) => c.id === id);
       const isCountryPrerendered = REGISTERED_CALC_IDS.has(id);
       const category = meta?.category || regCalc?.category || 'finance';
-      const href = isCountryPrerendered
+      let href = isCountryPrerendered
         ? `/countries/${country.slug}/${id}/`
         : `/${category}/${id}/`;
+      if (id === 'percentage-calculator') {
+        href = country.slug === 'france' ? '/fr/math/percentage-calculator/' : '/math/percentage-calculator/';
+      } else if (id === 'bmi-calculator') {
+        href = '/health/bmi-calculator/';
+      } else if (id === 'age-calculator') {
+        href = '/everyday/age-calculator/';
+      }
 
       const frenchNameMap: Record<string, { name: string; shortName: string; badge: string }> = {
         'age-calculator': { name: "Calculateur d'Âge", shortName: 'Âge', badge: 'Précision Calendrier' },
@@ -613,13 +620,20 @@ export function getCountryCategoryPageConfig(
     if (toolCat === categoryId && !seenIds.has(id)) {
       seenIds.add(id);
       const frTool = isFr ? frToolNames[id] : null;
+      let toolHref = `/countries/${country.slug}/${categoryId}/${id}/`;
+      if (id === 'percentage-calculator') {
+        toolHref = isFr ? '/fr/math/percentage-calculator/' : '/math/percentage-calculator/';
+      } else if (id === 'bmi-calculator') {
+        toolHref = '/health/bmi-calculator/';
+      } else if (id === 'age-calculator') {
+        toolHref = '/everyday/age-calculator/';
+      }
+
       tools.push({
         id,
         name: frTool?.name || meta?.name || regCalc?.name || id,
         shortName: frTool?.shortName || meta?.shortName || id.replace(/-calculator$/, ''),
-        href: (isFr && id === 'percentage-calculator')
-          ? '/fr/math/percentage-calculator/'
-          : `/countries/${country.slug}/${categoryId}/${id}/`,
+        href: toolHref,
         description:
           frTool?.desc ||
           meta?.description ||

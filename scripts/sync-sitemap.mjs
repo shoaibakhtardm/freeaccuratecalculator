@@ -43,6 +43,27 @@ function getAllHtmlRoutes(dir, baseDir = dir) {
 // 2. Discover all legitimate static HTML routes in dist/client
 const validHtmlRoutes = new Set(getAllHtmlRoutes(distClientDir));
 
+// Parse public/_redirects to get all redirect source paths to avoid including any 301/302 redirects
+const redirectedSources = new Set();
+const redirectsFilePath = path.join(publicDir, '_redirects');
+if (fs.existsSync(redirectsFilePath)) {
+  const lines = fs.readFileSync(redirectsFilePath, 'utf-8').split('\n');
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const parts = trimmed.split(/\s+/);
+    if (parts.length >= 2) {
+      let src = parts[0].trim();
+      redirectedSources.add(src);
+      if (src.endsWith('/')) {
+        redirectedSources.add(src.slice(0, -1));
+      } else {
+        redirectedSources.add(src + '/');
+      }
+    }
+  }
+}
+
 // Clean up any extra sitemap files from public
 const publicExtras = ['sitemap-0.xml', 'sitemap-index.xml', 'sitemap_index.xml', 'sitemap.xsl'];
 for (const extra of publicExtras) {
@@ -97,7 +118,9 @@ if (rawXmlContent) {
       pathname.startsWith('/blog/') ||
       pathname === '/blog' ||
       pathname === '/terms' ||
-      pathname === '/privacy'
+      pathname === '/privacy' ||
+      redirectedSources.has(pathname) ||
+      redirectedSources.has(pathname.endsWith('/') ? pathname.slice(0, -1) : pathname + '/')
     ) {
       purgedLegacyCount++;
       continue;
@@ -109,7 +132,8 @@ if (rawXmlContent) {
       pathname.includes('/api/') ||
       pathname.includes('/admin/') ||
       pathname.includes('/draft/') ||
-      /\/(404|500)(\/|$)/.test(pathname)
+      /\/(404|500)(\.html|\/|$)/.test(pathname) ||
+      pathname.endsWith('.html')
     ) {
       continue;
     }
@@ -149,7 +173,10 @@ if (rawXmlContent) {
       route.includes('/draft/') ||
       route.startsWith('/blog/') ||
       route === '/blog' ||
-      /\/(404|500)(\/|$)/.test(route)
+      /\/(404|500)(\.html|\/|$)/.test(route) ||
+      route.endsWith('.html') ||
+      redirectedSources.has(route) ||
+      redirectedSources.has(route.endsWith('/') ? route.slice(0, -1) : route + '/')
     ) {
       continue;
     }

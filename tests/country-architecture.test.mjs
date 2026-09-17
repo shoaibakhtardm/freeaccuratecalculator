@@ -81,6 +81,15 @@ describe('Country Configuration & Architecture Registry', () => {
     // US grouping: 1,234,567.89
     assert.equal(formattedUS, '1,234,567.89');
   });
+
+  it('France profile has metric units, EUR currency, and standard European number grouping', () => {
+    const frProfile = getCountryBySlug('france');
+    assert.ok(frProfile);
+    assert.equal(frProfile.code, 'FR');
+    assert.equal(frProfile.currency, 'EUR');
+    assert.equal(frProfile.currencySymbol, '€');
+    assert.equal(frProfile.unitSystem, 'metric');
+  });
 });
 
 describe('Investment Engine Mathematical Accuracy', () => {

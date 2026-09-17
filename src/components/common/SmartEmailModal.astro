@@ -119,7 +119,26 @@ const isFrench = propIsFrench ?? (Astro.url.pathname.includes('/countries/france
       localStorage.setItem('fac_modal_dismissed', 'true');
     }
 
-    closeBtn?.addEventListener('click', hideModal);
+    closeBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      hideModal();
+    });
+    closeBtn?.addEventListener('pointerdown', (e) => {
+      e.stopPropagation();
+      hideModal();
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        hideModal();
+      }
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+        hideModal();
+      }
+    });
 
     form?.addEventListener('submit', async (e) => {
       e.preventDefault();

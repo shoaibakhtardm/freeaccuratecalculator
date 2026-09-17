@@ -616,6 +616,26 @@ const formulaVariables = [
       updateElementText('row-net-tax', `$ ${res.totalTax.toLocaleString()}`);
       updateElementText('row-eff-rate', `${res.effectiveTaxRate}%`);
     }
+
+    syncPrintReport();
+  }
+
+  function syncPrintReport() {
+    const d = getReportData();
+    const dp = document.getElementById('tax-print-date');
+    const pg = document.getElementById('tax-print-gross');
+    const pr = document.getElementById('tax-print-regime');
+    const pt = document.getElementById('tax-print-taxable');
+    const pn = document.getElementById('tax-print-nettax');
+    const ph = document.getElementById('tax-print-takehome');
+    const pe = document.getElementById('tax-print-effrate');
+    if (dp) dp.textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    if (pg) pg.textContent = d.gross;
+    if (pr) pr.textContent = d.regime;
+    if (pt) pt.textContent = d.taxable;
+    if (pn) pn.textContent = d.netTax;
+    if (ph) ph.textContent = d.takehome;
+    if (pe) pe.textContent = d.effRate;
   }
 
   function updateElementText(id: string, text: string) {
@@ -662,7 +682,7 @@ const formulaVariables = [
     };
   }
 
-  function downloadPDF() {
+  function syncTaxPrintData() {
     recalculate();
     const d = getReportData();
     const dp = document.getElementById('tax-print-date');
@@ -679,8 +699,26 @@ const formulaVariables = [
     if (pn) pn.textContent = d.netTax;
     if (ph) ph.textContent = d.takehome;
     if (pe) pe.textContent = d.effRate;
-    window.print();
   }
+
+  function downloadPDF(e?: Event) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof (e as any).stopImmediatePropagation === 'function') {
+        (e as any).stopImmediatePropagation();
+      }
+    }
+    syncTaxPrintData();
+    if (typeof (window as any).generateAndDownloadPDF === 'function') {
+      (window as any).generateAndDownloadPDF();
+    } else {
+      window.print();
+    }
+  }
+
+  window.addEventListener('fac:before-pdf-print', syncTaxPrintData);
+  window.addEventListener('beforeprint', syncTaxPrintData);
 
   function downloadExcel() {
     const d = getReportData();

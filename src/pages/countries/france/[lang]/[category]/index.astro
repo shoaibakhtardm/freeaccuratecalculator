@@ -1,0 +1,208 @@
+---
+// src/pages/countries/france/[lang]/[category]/index.astro
+import Layout from '../../../../../layouts/Layout.astro';
+import ThemeToggle from '../../../../../components/ThemeToggle.astro';
+import { getCountryBySlug } from '../../../../../data/countries';
+import { CATEGORY_ITEMS, getCountryCategories } from '../../../../../data/categories';
+import { CALCULATORS } from '../../../../../data/calculatorRegistry';
+import { FRANCE_CALCULATORS_DATA } from '../../../../../data/franceCalculatorsData';
+import { frCategories, enCategories, frToolNames } from '../../../../../data/i18n';
+
+export function getStaticPaths() {
+  const languages = ['fr', 'en'];
+  const paths: Array<{ params: { lang: string; category: string } }> = [];
+
+  for (const lang of languages) {
+    for (const cat of CATEGORY_ITEMS) {
+      paths.push({
+        params: { lang, category: cat.id },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const { lang, category } = Astro.params;
+const isFr = lang === 'fr';
+const currentLocale = isFr ? 'fr' : 'en';
+
+const country = getCountryBySlug('france')!;
+const catItem = CATEGORY_ITEMS.find((c) => c.id === category) || {
+  id: category,
+  name: category,
+  icon: '📊',
+  description: 'Calculators',
+};
+
+const categoryName = isFr ? (frCategories[category] || catItem.name) : (enCategories[category] || catItem.name);
+
+// Canonical & Hreflang URLs
+const pageCanonical = `https://freeaccuratecalculator.com/countries/france/${currentLocale}/${category}/`;
+const frUrl = `https://freeaccuratecalculator.com/countries/france/fr/${category}/`;
+const enUrl = `https://freeaccuratecalculator.com/countries/france/en/${category}/`;
+
+const pageTitle = isFr
+  ? `Calculatrices ${categoryName} France 2026 | Simulateurs Gratuits & Précis`
+  : `France ${categoryName} Calculators 2026 | Free Precision Simulators`;
+
+const pageDescription = isFr
+  ? `Accédez à toutes les calculatrices de ${categoryName.toLowerCase()} adaptées à la France. Outils gratuits, conformes aux barèmes 2026, calcul instantané en Euros (€).`
+  : `Explore all ${categoryName.toLowerCase()} calculators tailored to France. Free, 100% private tools adhering to 2026 statutory standards in Euros (€).`;
+
+// Filter calculators belonging to this category for France
+const categoryCalculators = CALCULATORS.filter((c) => c.category === category).map((calc) => {
+  const frData = FRANCE_CALCULATORS_DATA[calc.id] || null;
+  const frTool = frToolNames[calc.id] || null;
+
+  const name = isFr
+    ? (frData?.nameFr || frTool?.name || calc.name)
+    : (frData?.nameEn || calc.name);
+
+  const desc = isFr
+    ? (frData?.descFr || frTool?.desc || `Calculateur de précision pour la France en Euro (€). Calcul instantané côté client.`)
+    : (frData?.descEn || `Accurate France ${calc.name} with EUR (€) precision. Free instant calculation.`);
+
+  return {
+    id: calc.id,
+    name,
+    desc,
+    icon: catItem.icon || '⚡',
+    badge: 'EUR (€)',
+    href: `/countries/france/${currentLocale}/${category}/${calc.id}/`,
+  };
+});
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    '@id': `${pageCanonical}#collection`,
+    name: pageTitle,
+    description: pageDescription,
+    url: pageCanonical,
+    inLanguage: isFr ? 'fr-FR' : 'en',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: isFr ? 'Accueil' : 'Home',
+        item: isFr ? 'https://freeaccuratecalculator.com/fr/' : 'https://freeaccuratecalculator.com/',
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: isFr ? 'Pays' : 'Countries',
+        item: 'https://freeaccuratecalculator.com/countries/',
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: 'France',
+        item: `https://freeaccuratecalculator.com/countries/france/${currentLocale}/`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 4,
+        name: categoryName,
+        item: pageCanonical,
+      },
+    ],
+  },
+];
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonical={pageCanonical}
+  hreflangFr={frUrl}
+  hreflangEn={enUrl}
+  ogLocale={isFr ? 'fr_FR' : 'en_US'}
+  lang={currentLocale}
+  jsonLd={jsonLd}
+>
+  <main class="min-h-screen bg-slate-950 text-slate-100 antialiased selection:bg-indigo-500 selection:text-white">
+    <!-- HEADER -->
+    <header class="border-b border-slate-800/80 bg-slate-900/50 px-4 py-8 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs font-medium text-slate-400 mb-6">
+          <a href={isFr ? '/fr/' : '/'} class="hover:text-indigo-400 transition-colors">{isFr ? 'Accueil' : 'Home'}</a>
+          <span class="text-slate-600">/</span>
+          <a href="/countries/" class="hover:text-indigo-400 transition-colors">{isFr ? 'Pays' : 'Countries'}</a>
+          <span class="text-slate-600">/</span>
+          <a href={`/countries/france/${currentLocale}/`} class="hover:text-indigo-400 transition-colors">France</a>
+          <span class="text-slate-600">/</span>
+          <span class="text-indigo-400 font-semibold">{categoryName}</span>
+        </nav>
+
+        <div class="mt-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-xs font-semibold text-indigo-400 mb-4">
+            <span>{catItem.icon}</span>
+            <span>France 2026 • {categoryName}</span>
+          </div>
+
+          <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
+            {isFr ? `Calculatrices ${categoryName} France` : `France ${categoryName} Calculators`}
+          </h1>
+
+          <p class="mt-2 text-sm sm:text-base text-slate-300 max-w-3xl leading-relaxed">
+            {pageDescription}
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <!-- CALCULATORS LIST -->
+    <section class="py-12 px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl">
+        {categoryCalculators.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categoryCalculators.map((calc) => (
+              <a
+                href={calc.href}
+                class="group relative flex flex-col justify-between rounded-2xl border border-slate-800 bg-slate-900/60 p-6 transition-all duration-200 hover:-translate-y-1 hover:border-indigo-500/50 hover:bg-slate-900 hover:shadow-xl hover:shadow-indigo-500/10"
+              >
+                <div>
+                  <div class="flex items-center gap-3 mb-3">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-800 text-xl group-hover:scale-110 transition-transform">
+                      {calc.icon}
+                    </span>
+                    <h2 class="text-base font-bold text-white group-hover:text-indigo-400 transition-colors">
+                      {calc.name}
+                    </h2>
+                  </div>
+                  <p class="text-xs sm:text-sm text-slate-400 line-clamp-2 leading-relaxed">
+                    {calc.desc}
+                  </p>
+                </div>
+
+                <div class="mt-6 flex items-center justify-between border-t border-slate-800/60 pt-4 text-xs font-semibold">
+                  <span class="inline-flex items-center rounded-md bg-indigo-500/10 px-2 py-0.5 text-indigo-400 border border-indigo-500/20">
+                    {calc.badge}
+                  </span>
+                  <span class="text-slate-400 group-hover:text-white flex items-center gap-1 transition-colors">
+                    {isFr ? 'Calculer' : 'Calculate'} →
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div class="rounded-2xl border border-slate-800 bg-slate-900/30 p-12 text-center max-w-lg mx-auto">
+            <span class="text-4xl mb-4 block">🔍</span>
+            <p class="text-sm text-slate-400">
+              {isFr
+                ? 'Les calculateurs spécialisés pour cette catégorie sont en cours d’intégration.'
+                : 'Specialized calculators for this category are being updated for France 2026.'}
+            </p>
+          </div>
+        )}
+      </div>
+    </section>
+  </main>
+</Layout>

@@ -11,6 +11,7 @@ interface Props {
 const { className = '' } = Astro.props;
 const pathname = Astro.url.pathname;
 const isFranceRoute = pathname.includes('/countries/france');
+const isFranceEnglish = isFranceRoute && pathname.includes('/countries/france/en/');
 ---
 
 <header
@@ -30,10 +31,14 @@ const isFranceRoute = pathname.includes('/countries/france');
     <div class="flex items-center gap-2.5 shrink-0">
       <Logo />
       {isFranceRoute && (
-        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border border-slate-200/90 dark:border-slate-800/90 bg-slate-50 dark:bg-slate-900/80 text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 shadow-2xs select-none">
+        <a
+          href={isFranceEnglish ? "/countries/france/en/" : "/countries/france/fr/"}
+          class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg border border-slate-200/90 dark:border-slate-800/90 bg-slate-50 dark:bg-slate-900/80 text-[11px] sm:text-xs font-bold text-slate-800 dark:text-slate-200 shadow-2xs select-none hover:border-indigo-500/40 transition-colors"
+          title={isFranceEnglish ? "France Hub" : "Portail France"}
+        >
           <span>🇫🇷</span>
           <span>France</span>
-        </span>
+        </a>
       )}
     </div>
 
@@ -44,11 +49,13 @@ const isFranceRoute = pathname.includes('/countries/france');
           type="button"
           id="fac-france-lang-toggle"
           class="group relative flex items-center justify-between gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-white/85 dark:bg-slate-900/85 hover:bg-slate-50 dark:hover:bg-slate-800/90 hover:border-indigo-500/40 dark:hover:border-indigo-400/40 shadow-xs hover:shadow-md hover:shadow-indigo-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:focus-visible:ring-indigo-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-950 min-h-[44px] sm:min-h-[38px] h-11 sm:h-9 cursor-pointer transition-all duration-300 select-none text-xs font-semibold"
-          aria-label="Changer de langue (FR / EN)"
+          aria-label={isFranceEnglish ? "Passer en Français" : "Switch to English"}
         >
           <span
             id="header-lang-fr"
-            class="inline-flex items-center gap-1 font-bold text-indigo-600 dark:text-indigo-400 transition-colors"
+            class={!isFranceEnglish
+              ? "inline-flex items-center gap-1 font-bold text-indigo-600 dark:text-indigo-400 transition-colors"
+              : "inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"}
           >
             <span class="text-sm">🇫🇷</span>
             <span>FR</span>
@@ -56,7 +63,9 @@ const isFranceRoute = pathname.includes('/countries/france');
           <span class="text-slate-300 dark:text-slate-600 select-none">|</span>
           <span
             id="header-lang-en"
-            class="inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"
+            class={isFranceEnglish
+              ? "inline-flex items-center gap-1 font-bold text-indigo-600 dark:text-indigo-400 transition-colors"
+              : "inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"}
           >
             <span class="text-sm">🇬🇧</span>
             <span>EN</span>
@@ -75,43 +84,29 @@ const isFranceRoute = pathname.includes('/countries/france');
   </div>
 </header>
 
-<!-- Scroll & Language Toggle Script -->
+<!-- Scroll & URL-Level Language Toggle Script -->
 <script is:inline>
   (function () {
     const header = document.getElementById('main-header');
     const toggleBtn = document.getElementById('fac-france-lang-toggle');
-    const frSpan = document.getElementById('header-lang-fr');
-    const enSpan = document.getElementById('header-lang-en');
 
-    if (toggleBtn && frSpan && enSpan) {
-      const urlParams = new URLSearchParams(window.location.search);
-      let current = urlParams.get('lang') || localStorage.getItem('fac_france_lang') || 'fr';
-
-      function syncHeaderToggle(lang) {
-        if (lang === 'en') {
-          frSpan.className = 'inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors';
-          enSpan.className = 'inline-flex items-center gap-1 font-bold text-indigo-600 dark:text-indigo-400 transition-colors';
-        } else {
-          frSpan.className = 'inline-flex items-center gap-1 font-bold text-indigo-600 dark:text-indigo-400 transition-colors';
-          enSpan.className = 'inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors';
-        }
-      }
-
-      syncHeaderToggle(current);
-
+    if (toggleBtn) {
       toggleBtn.addEventListener('click', function () {
-        const next = current === 'en' ? 'fr' : 'en';
-        current = next;
-        try {
-          localStorage.setItem('fac_france_lang', next);
-        } catch (_) {}
-        const url = new URL(window.location.href);
-        if (next === 'en') {
-          url.searchParams.set('lang', 'en');
-        } else {
-          url.searchParams.delete('lang');
+        const path = window.location.pathname;
+        let target = '/countries/france/fr/';
+
+        if (path.includes('/countries/france/fr/')) {
+          target = path.replace('/countries/france/fr/', '/countries/france/en/');
+        } else if (path.includes('/countries/france/en/')) {
+          target = path.replace('/countries/france/en/', '/countries/france/fr/');
+        } else if (path === '/countries/france' || path === '/countries/france/') {
+          target = '/countries/france/en/';
+        } else if (path.startsWith('/countries/france/')) {
+          // Legacy child route without language prefix
+          target = path.replace('/countries/france/', '/countries/france/en/');
         }
-        window.location.href = url.pathname + url.search;
+
+        window.location.href = target + window.location.search + window.location.hash;
       });
     }
 

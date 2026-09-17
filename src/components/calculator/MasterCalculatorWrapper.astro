@@ -1179,23 +1179,41 @@ const isCurrencyCalculator =
       });
     }
 
-    // PDF Download Execution
+    function syncMasterPrintData() {
+      const d = document.getElementById('print-report-date');
+      const c = document.getElementById('print-currency-code');
+      const h = document.getElementById('print-hero-val');
+      const s1 = document.getElementById('print-sec-1-val');
+      const s2 = document.getElementById('print-sec-2-val');
+      if (d) d.textContent = isFrenchMode ? new Date().toLocaleDateString('fr-FR') : new Date().toLocaleDateString();
+      if (c) c.textContent = currentCurrencyCode;
+      if (h) h.textContent = isFrenchMode ? `${formatVal(currentReportState.val1, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val1, 0)}`;
+      if (s1) s1.textContent = isFrenchMode ? `${formatVal(currentReportState.val2, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val2, 0)}`;
+      if (s2) s2.textContent = isFrenchMode ? `${formatVal(currentReportState.val3, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val3, 0)}`;
+    }
+
+    // PDF Download Execution (Single-Flight Protected)
     const pdfBtn = document.getElementById('action-download-pdf-btn');
     if (pdfBtn) {
-      pdfBtn.addEventListener('click', () => {
-        const d = document.getElementById('print-report-date');
-        const c = document.getElementById('print-currency-code');
-        const h = document.getElementById('print-hero-val');
-        const s1 = document.getElementById('print-sec-1-val');
-        const s2 = document.getElementById('print-sec-2-val');
-        if (d) d.textContent = isFrenchMode ? new Date().toLocaleDateString('fr-FR') : new Date().toLocaleDateString();
-        if (c) c.textContent = currentCurrencyCode;
-        if (h) h.textContent = isFrenchMode ? `${formatVal(currentReportState.val1, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val1, 0)}`;
-        if (s1) s1.textContent = isFrenchMode ? `${formatVal(currentReportState.val2, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val2, 0)}`;
-        if (s2) s2.textContent = isFrenchMode ? `${formatVal(currentReportState.val3, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(currentReportState.val3, 0)}`;
-        window.print();
+      pdfBtn.addEventListener('click', (e) => {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (typeof (e as any).stopImmediatePropagation === 'function') {
+            (e as any).stopImmediatePropagation();
+          }
+        }
+        syncMasterPrintData();
+        if (typeof (window as any).generateAndDownloadPDF === 'function') {
+          (window as any).generateAndDownloadPDF();
+        } else {
+          window.print();
+        }
       });
     }
+
+    window.addEventListener('fac:before-pdf-print', syncMasterPrintData);
+    window.addEventListener('beforeprint', syncMasterPrintData);
 
     // Export CSV Download
     const excelBtn = document.getElementById('action-download-excel-btn');

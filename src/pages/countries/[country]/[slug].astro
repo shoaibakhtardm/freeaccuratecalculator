@@ -20,7 +20,7 @@ export async function getStaticPaths() {
     };
   }> = [];
 
-  for (const country of COUNTRY_LIST) {
+  for (const country of COUNTRY_LIST.filter((c) => c.slug !== 'france')) {
     // 1. Prerender popular calculators for this country (all non-foreign calculators for France)
     const popularSet = new Set(country.popularCalculators);
     const calcsForCountry = country.slug === 'france'
@@ -34,7 +34,16 @@ export async function getStaticPaths() {
               'gratuity-calculator',
             ].includes(c.id)
         )
-      : CALCULATORS.filter((c) => popularSet.has(c.id));
+      : CALCULATORS.filter((c) => {
+          if (popularSet.has(c.id)) return true;
+          if (popularSet.has('emi-calculator') && c.id === 'loan-calculator') return true;
+          if (popularSet.has('stamp-duty-calculator') && c.id === 'property-tax-calculator') return true;
+          if (country.slug === 'united-kingdom' && c.id === 'property-tax-calculator') return true;
+          if (popularSet.has('vat-calculator') && c.id === 'sales-tax-calculator') return true;
+          if (popularSet.has('income-tax-calculator') && c.id === 'salary-calculator') return true;
+          if (popularSet.has('salary-calculator') && c.id === 'income-tax-calculator') return true;
+          return false;
+        });
 
     for (const calc of calcsForCountry) {
       paths.push({
@@ -49,20 +58,30 @@ export async function getStaticPaths() {
         },
       });
 
-      // Special aliases for France calculators
-      if (country.slug === 'france') {
-        if (calc.id === 'sales-tax-calculator') {
-          paths.push({
-            params: { country: 'france', slug: 'vat-calculator' },
-            props: { type: 'calculator', country, calc },
-          });
-        }
-        if (calc.id === 'loan-calculator') {
-          paths.push({
-            params: { country: 'france', slug: 'emi-calculator' },
-            props: { type: 'calculator', country, calc },
-          });
-        }
+      // Global country aliases
+      if (calc.id === 'loan-calculator') {
+        paths.push({
+          params: { country: country.slug, slug: 'emi-calculator' },
+          props: { type: 'calculator', country, calc },
+        });
+      }
+      if (calc.id === 'salary-calculator') {
+        paths.push({
+          params: { country: country.slug, slug: 'income-tax-calculator' },
+          props: { type: 'calculator', country, calc },
+        });
+      }
+      if (calc.id === 'sales-tax-calculator') {
+        paths.push({
+          params: { country: country.slug, slug: 'vat-calculator' },
+          props: { type: 'calculator', country, calc },
+        });
+      }
+      if (country.slug === 'united-kingdom' && calc.id === 'property-tax-calculator') {
+        paths.push({
+          params: { country: 'united-kingdom', slug: 'stamp-duty-calculator' },
+          props: { type: 'calculator', country, calc },
+        });
       }
     }
 

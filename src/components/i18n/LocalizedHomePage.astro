@@ -21,7 +21,7 @@ const FEATURED_COUNTRIES = POPULAR_COUNTRIES.map((c) => ({
   name: hpStrings.regionsSection.countries[c.slug] || c.name,
   flagUrl: c.flagUrl,
   emoji: c.flag,
-  href: `/countries/${c.slug}/`,
+  href: c.slug === 'france' ? '/countries/france/fr/' : `/countries/${c.slug}/`,
 }));
 
 const websiteOrigin = 'https://freeaccuratecalculator.com';

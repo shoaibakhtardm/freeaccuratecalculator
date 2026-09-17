@@ -1542,10 +1542,24 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
       showToast('Excel (.csv) downloaded!');
     }
 
-    function downloadPDF() {
+    function downloadPDF(e?: Event) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof (e as any).stopImmediatePropagation === 'function') {
+          (e as any).stopImmediatePropagation();
+        }
+      }
       recalculate();
-      window.print();
+      if (typeof (window as any).generateAndDownloadPDF === 'function') {
+        (window as any).generateAndDownloadPDF();
+      } else {
+        window.print();
+      }
     }
+
+    window.addEventListener('fac:before-pdf-print', () => recalculate());
+    window.addEventListener('beforeprint', () => recalculate());
 
     function copySummary() {
       const text = [

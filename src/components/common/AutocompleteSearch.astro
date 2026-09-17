@@ -519,8 +519,17 @@ const searchI18nJson = JSON.stringify(hpStrings.search);
       });
     }
 
-    // Initialize all autocomplete containers on page load
-    document.querySelectorAll('.fac-autocomplete-container').forEach(initAutocomplete);
+    // Initialize all autocomplete containers on page load & Astro client navigation
+    function setupAll() {
+      document.querySelectorAll('.fac-autocomplete-container').forEach(initAutocomplete);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupAll);
+    } else {
+      setupAll();
+    }
+    document.addEventListener('astro:page-load', setupAll);
   })();
 </script>
 

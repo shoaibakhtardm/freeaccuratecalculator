@@ -1,0 +1,67 @@
+---
+// src/pages/countries/france/[lang]/[category]/[slug].astro
+import CountryCalculatorView from '../../../../../components/calculator/CountryCalculatorView.astro';
+import { getCountryBySlug } from '../../../../../data/countries';
+import { CALCULATORS, type CalculatorEntry } from '../../../../../data/calculatorRegistry';
+
+export function getStaticPaths() {
+  const country = getCountryBySlug('france')!;
+  const languages = ['fr', 'en'];
+  const paths: Array<{
+    params: { lang: string; category: string; slug: string };
+    props: { calc: CalculatorEntry };
+  }> = [];
+
+  // Exclude non-France calculators and 301-redirected legacy endpoints
+  const validCalcs = CALCULATORS.filter(
+    (c) =>
+      ![
+        '401k-calculator',
+        'roth-ira-calculator',
+        'ppf-calculator',
+        'epf-calculator',
+        'gratuity-calculator',
+        'age-calculator',
+        'calorie-calculator',
+        'bmi-calculator',
+        'date-calculator',
+        'percentage-calculator',
+      ].includes(c.id)
+  );
+
+  for (const lang of languages) {
+    for (const calc of validCalcs) {
+      paths.push({
+        params: {
+          lang,
+          category: calc.category,
+          slug: calc.id,
+        },
+        props: { calc },
+      });
+    }
+
+    // Explicit pilot math percentage calculator
+    const percentageCalc = CALCULATORS.find((c) => c.id === 'percentage-calculator');
+    if (percentageCalc) {
+      paths.push({
+        params: {
+          lang,
+          category: 'math',
+          slug: 'percentage-calculator',
+        },
+        props: { calc: percentageCalc },
+      });
+    }
+  }
+
+  return paths;
+}
+
+const { lang, category, slug } = Astro.params;
+const { calc } = Astro.props;
+const country = getCountryBySlug('france')!;
+const currentLang = (lang === 'en' ? 'en' : 'fr') as 'fr' | 'en';
+---
+
+<CountryCalculatorView country={country} calc={calc} lang={currentLang} />

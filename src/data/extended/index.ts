@@ -11,7 +11,6 @@ import { marketingCalculators } from './marketing.ts';
 import { automotiveCalculators } from './automotive.ts';
 import { scienceCalculators } from './sciences.ts';
 import { lifestyleCalculators } from './lifestyle.ts';
-import { professionCalculators } from './profession.ts';
 
 export const ALL_EXTENDED_CALCULATORS: CalculatorEntry[] = [
   ...realEstateCalculators,
@@ -25,5 +24,4 @@ export const ALL_EXTENDED_CALCULATORS: CalculatorEntry[] = [
   ...automotiveCalculators,
   ...scienceCalculators,
   ...lifestyleCalculators,
-  ...professionCalculators,
 ];

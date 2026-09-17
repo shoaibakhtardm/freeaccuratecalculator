@@ -71,10 +71,6 @@
   Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
   CDN-Cache-Control: max-age=2592000
 
-/profession/*
-  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  CDN-Cache-Control: max-age=2592000
-
 # Sitemaps and Robots
 /sitemap*.xml
   Cache-Control: public, max-age=3600, stale-while-revalidate=600

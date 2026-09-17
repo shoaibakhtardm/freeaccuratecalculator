@@ -8,8 +8,6 @@ import FAQSection from '../../components/calculator/FAQSection.astro';
 import SocialProof from '../../components/SocialProof.astro';
 
 const relatedCalculators = [
-  { title: 'Developer Sprint Velocity', href: '/profession/developer-sprint-velocity-calculator/', badge: 'Dev' },
-  { title: 'Engineer Project Cost', href: '/profession/engineer-project-cost-calculator/' },
   { title: 'Percentage Calculator', href: '/math/percentage-calculator/' },
   { title: 'Compound Interest', href: '/finance/compound-interest-calculator/' },
 ];
@@ -527,8 +525,19 @@ const workedSteps = [
       });
     });
 
-    document.getElementById('ai-download-pdf-btn')?.addEventListener('click', () => {
-      window.print();
+    document.getElementById('ai-download-pdf-btn')?.addEventListener('click', (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (typeof (e as any).stopImmediatePropagation === 'function') {
+          (e as any).stopImmediatePropagation();
+        }
+      }
+      if (typeof (window as any).generateAndDownloadPDF === 'function') {
+        (window as any).generateAndDownloadPDF();
+      } else {
+        window.print();
+      }
     });
 
     // Initial run

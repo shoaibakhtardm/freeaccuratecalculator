@@ -53,7 +53,7 @@ const schema = {
       <div id="countries-grid" class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
         {COUNTRY_LIST.map((country) => (
           <a
-            href={`/countries/${country.slug}/`}
+            href={country.slug === 'france' ? '/countries/france/fr/' : `/countries/${country.slug}/`}
             title={`Explore ${country.name} Calculators`}
             class="country-tile group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[72px] sm:min-h-[80px] md:min-h-[88px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/50 dark:hover:border-indigo-400/50 p-2 sm:p-2.5 md:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 active:scale-[0.97]"
             data-name={country.name.toLowerCase()}

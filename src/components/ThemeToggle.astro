@@ -114,9 +114,11 @@ const { className = '', id = 'theme-toggle' } = Astro.props;
 
       if (nextIsDark) {
         document.documentElement.classList.add('dark');
+        document.documentElement.style.colorScheme = 'dark';
         localStorage.setItem('theme', 'dark');
       } else {
         document.documentElement.classList.remove('dark');
+        document.documentElement.style.colorScheme = 'light';
         localStorage.setItem('theme', 'light');
       }
 
@@ -143,6 +145,7 @@ const { className = '', id = 'theme-toggle' } = Astro.props;
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', syncAllThemeButtons);
     }
+    document.addEventListener('astro:page-load', syncAllThemeButtons);
 
     // Listen for system theme changes if no manual preference is saved
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
@@ -150,8 +153,10 @@ const { className = '', id = 'theme-toggle' } = Astro.props;
       if (!localStorage.getItem('theme')) {
         if (e.matches) {
           document.documentElement.classList.add('dark');
+          document.documentElement.style.colorScheme = 'dark';
         } else {
           document.documentElement.classList.remove('dark');
+          document.documentElement.style.colorScheme = 'light';
         }
         syncAllThemeButtons();
       }

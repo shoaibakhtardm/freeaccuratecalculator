@@ -36,7 +36,6 @@ export type CategoryId =
   | 'ecology'
   | 'everyday'
   | 'converter'
-  | 'profession'
   | 'love';
 
 export interface CategoryMeta {
@@ -228,13 +227,6 @@ export const CATEGORY_METADATA: Record<CategoryId, CategoryMeta> = {
     eyebrow: 'Standardized International Unit Conversions',
     description: 'Precision metric and imperial conversions for length, mass, temperature, volume, and data units with exact factors.',
     icon: 'refresh-cw',
-  },
-  profession: {
-    id: 'profession',
-    name: 'Profession Calculators',
-    eyebrow: 'Specialized Career & Industry Algorithms',
-    description: 'Calculators engineered for doctors, engineers, lawyers, nurses, architects, accountants, developers, and industry specialists.',
-    icon: 'briefcase',
   },
   love: {
     id: 'love',
@@ -2331,7 +2323,7 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
   },
   {
     id: 'standard-deviation-calculator',
-    category: 'math',
+    category: 'statistics',
     name: 'Standard Deviation Calculator',
     title: 'Standard Deviation Calculator — Sample vs Population Variance',
     description: 'Calculate sample standard deviation (s), population standard deviation (σ), variance, mean, and standard error of dataset.',
@@ -2798,7 +2790,7 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
   },
   {
     id: 'concrete-calculator',
-    category: 'everyday',
+    category: 'construction',
     name: 'Concrete Calculator',
     title: 'Concrete Calculator — Cubic Yards, Slabs, Footings & Bags',
     description: 'Calculate concrete volume in cubic yards and cubic meters, and determine how many 60-lb or 80-lb pre-mixed bags you need.',
@@ -2863,7 +2855,7 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
   },
   {
     id: 'subnet-calculator',
-    category: 'everyday',
+    category: 'technology',
     name: 'Subnet Calculator',
     title: 'IPv4 Subnet Calculator — CIDR Prefix, Netmask & Usable Hosts',
     description: 'Calculate IPv4 subnet masks, network addresses, broadcast addresses, CIDR notation, and usable IP address ranges.',
@@ -2927,7 +2919,7 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
   },
   {
     id: 'password-generator',
-    category: 'everyday',
+    category: 'technology',
     name: 'Password Generator',
     title: 'Password Generator — Secure Cryptographic Random Passwords',
     description: 'Generate high-entropy, cryptographically secure passwords locally inside your browser with customizable symbol sets.',
@@ -2979,7 +2971,7 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
   },
   {
     id: 'conversion-calculator',
-    category: 'everyday',
+    category: 'converter',
     name: 'Conversion Calculator',
     title: 'Unit Conversion Calculator — Length, Weight, Volume & Temp',
     description: 'Convert between metric and imperial units across length, mass, temperature, area, volume, and digital storage.',

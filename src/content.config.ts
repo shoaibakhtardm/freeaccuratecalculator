@@ -84,7 +84,6 @@ const guides = defineCollection({
       'physics',
       'sports',
       'converter',
-      'profession',
     ]),
     tags: z.array(z.string()).default([]),
     lang: z.enum(['en', 'es', 'fr', 'de', 'ar', 'nl', 'pt', 'it', 'ru', 'ja', 'hi', 'zh']).default('en'),

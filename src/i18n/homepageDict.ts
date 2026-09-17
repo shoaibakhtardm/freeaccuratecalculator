@@ -99,8 +99,8 @@ export const HOMEPAGE_TRANSLATIONS: Record<SupportedLocale, HomepageStrings> = {
   // ==========================================
   en: {
     seo: {
-      title: 'Free Accurate Calculator — Fast, Precision Online Calculators',
-      description: 'Free Accurate Calculator delivers industrial-grade, mathematically verified online calculators for Finance, Health, Math, and Everyday calculations with zero cold start and instant local privacy.',
+      title: 'Free Accurate Calculator — 100+ Precision Online Calculators',
+      description: 'Instant, 100% free online calculators for Finance, Math, Health, Tax & Everyday tasks. Verified formulas, instant results, zero sign-up required.',
       websiteName: 'Free Accurate Calculator',
       websiteDesc: 'Fast, mathematically verified online calculators for finance, health, math, and everyday utility.',
     },

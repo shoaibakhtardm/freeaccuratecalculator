@@ -357,8 +357,10 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
           const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
           if (stored === 'dark' || (!stored && prefersDark)) {
             document.documentElement.classList.add('dark');
+            document.documentElement.style.colorScheme = 'dark';
           } else {
             document.documentElement.classList.remove('dark');
+            document.documentElement.style.colorScheme = 'light';
           }
         } catch (_) {}
       })();
@@ -533,6 +535,9 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
           if (pathMatch) {
             savedLocale = pathMatch[1].toLowerCase();
             localStorage.setItem('fac_locale', savedLocale);
+          } else if (window.location.pathname.startsWith('/countries/france')) {
+            const franceLang = (localStorage.getItem('fac_france_lang') || 'fr').toLowerCase();
+            savedLocale = franceLang === 'en' ? 'en' : 'fr';
           }
           if (!savedLocale) savedLocale = 'en';
           window.__facLanguage = savedLocale;
@@ -765,25 +770,33 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
         }
       })();
 
-      // Global Resilient PDF Download & Print Delegator (Guaranteed Light Mode Export)
+      // Global Resilient PDF Download & Print Delegator (Guaranteed Light Mode Export & Single-Flight Execution)
       (function () {
         let isPrinting = false;
+        let isPrintLocked = false;
         let wasDarkMode = false;
+        let restoreTimer = null;
+        let unlockTimer = null;
 
         function forceLightMode() {
+          if (restoreTimer) clearTimeout(restoreTimer);
           const root = document.documentElement;
-          wasDarkMode = root.classList.contains('dark');
+          wasDarkMode = root.classList.contains('dark') || root.getAttribute('data-theme') === 'dark';
           if (wasDarkMode) {
             root.classList.remove('dark');
             root.style.colorScheme = 'light';
             if (document.body) {
               document.body.style.backgroundColor = '#ffffff';
-              document.body.style.color = '#000000';
+              document.body.style.color = '#0f172a';
             }
           }
         }
 
         function restoreDarkMode() {
+          if (restoreTimer) {
+            clearTimeout(restoreTimer);
+            restoreTimer = null;
+          }
           if (wasDarkMode) {
             const root = document.documentElement;
             root.classList.add('dark');
@@ -795,36 +808,57 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
             wasDarkMode = false;
           }
           isPrinting = false;
+          isPrintLocked = false;
         }
 
         // Global async function callable by any calculator or script
         window.generateAndDownloadPDF = async function (elementId, filename) {
-          forceLightMode();
-          try {
-            // Wait 100ms for CSS to apply and layout to repaint in light mode
-            await new Promise((resolve) => setTimeout(resolve, 100));
-            isPrinting = true;
-            window.print();
-            console.log('PDF generated in light mode successfully.');
-          } catch (error) {
-            console.error('PDF generation failed:', error);
-          } finally {
-            // Safe delayed restore if afterprint doesn't trigger immediately
-            setTimeout(restoreDarkMode, 300);
+          if (isPrinting || isPrintLocked) {
+            console.warn('PDF print operation already in flight. Suppressing duplicate invocation.');
+            return;
           }
+          isPrinting = true;
+          isPrintLocked = true;
+          forceLightMode();
+
+          // Dispatch event to allow calculators to synchronize their print DOM immediately
+          try {
+            window.dispatchEvent(new CustomEvent('fac:before-pdf-print'));
+          } catch (_) {}
+
+          try {
+            window.print();
+          } catch (error) {
+            console.error('PDF print invocation error:', error);
+            restoreDarkMode();
+          }
+
+          // Fallback guard in case browser cancels print without firing afterprint
+          restoreTimer = setTimeout(() => {
+            if (isPrinting) restoreDarkMode();
+          }, 15000);
         };
 
         // Browser-level print lifecycle hooks (handles Ctrl+P, browser menus, direct window.print())
         window.addEventListener('beforeprint', () => {
-          isPrinting = true;
           forceLightMode();
+          isPrinting = true;
+          isPrintLocked = true;
         });
 
         window.addEventListener('afterprint', () => {
           restoreDarkMode();
         });
 
+        // Window focus fallback when user closes or cancels print modal
+        window.addEventListener('focus', () => {
+          if (isPrinting) {
+            restoreDarkMode();
+          }
+        });
+
         document.addEventListener('click', (e) => {
+          if (e.defaultPrevented) return;
           const target = e.target;
           const btn = target && target.closest ? target.closest('button, a') : null;
           if (!btn) return;
@@ -853,7 +887,8 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
             text === 'print / save pdf';
 
           if (isPdfAction) {
-            if (!isPrinting) {
+            e.preventDefault();
+            if (!isPrinting && !isPrintLocked) {
               window.generateAndDownloadPDF();
             }
           }

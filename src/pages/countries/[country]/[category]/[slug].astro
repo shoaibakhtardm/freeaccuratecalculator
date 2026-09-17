@@ -13,7 +13,7 @@ export async function getStaticPaths() {
     };
   }> = [];
 
-  for (const country of COUNTRY_LIST) {
+  for (const country of COUNTRY_LIST.filter((c) => c.slug !== 'france')) {
     const popularSet = new Set(country.popularCalculators);
     const calcsForCountry = country.slug === 'france'
       ? CALCULATORS.filter(
@@ -28,9 +28,19 @@ export async function getStaticPaths() {
               'calorie-calculator',
               'bmi-calculator',
               'date-calculator',
+              'percentage-calculator',
             ].includes(c.id)
         )
-      : CALCULATORS.filter((c) => popularSet.has(c.id));
+      : CALCULATORS.filter((c) => {
+          if (popularSet.has(c.id)) return true;
+          if (popularSet.has('emi-calculator') && c.id === 'loan-calculator') return true;
+          if (popularSet.has('stamp-duty-calculator') && c.id === 'property-tax-calculator') return true;
+          if (country.slug === 'united-kingdom' && c.id === 'property-tax-calculator') return true;
+          if (popularSet.has('vat-calculator') && c.id === 'sales-tax-calculator') return true;
+          if (popularSet.has('income-tax-calculator') && c.id === 'salary-calculator') return true;
+          if (popularSet.has('salary-calculator') && c.id === 'income-tax-calculator') return true;
+          return false;
+        });
 
     for (const calc of calcsForCountry) {
       paths.push({
@@ -45,20 +55,30 @@ export async function getStaticPaths() {
         },
       });
 
-      // Special aliases for France calculators
-      if (country.slug === 'france') {
-        if (calc.id === 'sales-tax-calculator') {
-          paths.push({
-            params: { country: 'france', category: 'finance', slug: 'vat-calculator' },
-            props: { country, calc },
-          });
-        }
-        if (calc.id === 'loan-calculator') {
-          paths.push({
-            params: { country: 'france', category: 'finance', slug: 'emi-calculator' },
-            props: { country, calc },
-          });
-        }
+      // Global country aliases
+      if (calc.id === 'loan-calculator') {
+        paths.push({
+          params: { country: country.slug, category: 'finance', slug: 'emi-calculator' },
+          props: { country, calc },
+        });
+      }
+      if (calc.id === 'salary-calculator') {
+        paths.push({
+          params: { country: country.slug, category: 'finance', slug: 'income-tax-calculator' },
+          props: { country, calc },
+        });
+      }
+      if (calc.id === 'sales-tax-calculator') {
+        paths.push({
+          params: { country: country.slug, category: 'finance', slug: 'vat-calculator' },
+          props: { country, calc },
+        });
+      }
+      if (country.slug === 'united-kingdom' && calc.id === 'property-tax-calculator') {
+        paths.push({
+          params: { country: 'united-kingdom', category: 'real-estate', slug: 'stamp-duty-calculator' },
+          props: { country, calc },
+        });
       }
     }
   }

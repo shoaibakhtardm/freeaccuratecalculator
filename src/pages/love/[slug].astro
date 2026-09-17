@@ -21,11 +21,12 @@ export async function getStaticPaths() {
     const aliasMap: Record<string, string[]> = {
       'love-calculator-by-name': ['love-calculator'],
       'marriage-compatibility-calculator': ['kundli-matching'],
-      'zodiac-love-compatibility-calculator': ['zodiac-compatibility'],
+      'zodiac-love-compatibility-calculator': ['zodiac-compatibility', 'love-compatibility-calculator'],
       'ai-love-calculator': ['ai-love-predictor'],
       'true-love-calculator-by-names': ['true-love-calculator'],
       'crush-love-test-calculator': ['crush-love-test'],
       'birth-date-love-compatibility': ['birth-date-compatibility'],
+      'relationship-compatibility-test': ['relationship-counter'],
     };
 
     const aliases = aliasMap[calc.slug];

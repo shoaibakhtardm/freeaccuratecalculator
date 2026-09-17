@@ -1,7 +1,6 @@
 ---
 // src/pages/finance/sip-calculator.astro
 import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
-import ResultDisplay from '../../components/calculator/ResultDisplay.astro';
 import FormulaSection from '../../components/calculator/FormulaSection.astro';
 import WorkedExample from '../../components/calculator/WorkedExample.astro';
 import FAQSection from '../../components/calculator/FAQSection.astro';
@@ -27,16 +26,86 @@ const formulaVariables = [
   { symbol: 'n', meaning: 'Total number of monthly installments (Years × 12)' },
   { symbol: '(1 + i)', meaning: 'Annuity Due compounding factor applied when deposits occur at the beginning of the period' },
 ];
+
+// High-intent structured data schema
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebApplication',
+      '@id': 'https://freeaccuratecalculator.com/finance/sip-calculator/#webapp',
+      'url': 'https://freeaccuratecalculator.com/finance/sip-calculator/',
+      'name': 'SIP Calculator — Mutual Fund Systematic Investment Plan Growth Planner',
+      'applicationCategory': 'FinanceApplication',
+      'operatingSystem': 'All',
+      'browserRequirements': 'Requires JavaScript. Requires HTML5.',
+      'description': 'Free accurate SIP calculator for mutual funds. Calculate maturity wealth, compounding returns, annual step-up top-up, inflation-adjusted real value, and PDF/Excel reports.',
+      'offers': {
+        '@type': 'Offer',
+        'price': '0',
+        'priceCurrency': 'USD',
+      },
+      'featureList': [
+        'Annuity Due and Ordinary Annuity calculations',
+        'Annual Step-Up SIP Simulator (+5%, +10%, +15%, Custom %)',
+        'Inflation-adjusted real wealth purchasing power',
+        '3-Scenario Sensitivity Matrix (Conservative, Base, Aggressive)',
+        'Cost of Delay Estimator (waiting 1, 3, 5 years)',
+        'Milestone Roadmap (Time to ₹10L, ₹25L, ₹50L, ₹1Cr, ₹5Cr)',
+        'Year-by-year amortization schedule',
+        'Printable PDF Statement & Excel (.csv) export',
+        '100% Client-side privacy guarantee'
+      ]
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': 'https://freeaccuratecalculator.com/finance/sip-calculator/#breadcrumb',
+      'itemListElement': [
+        {
+          '@type': 'ListItem',
+          'position': 1,
+          'name': 'Home',
+          'item': 'https://freeaccuratecalculator.com/'
+        },
+        {
+          '@type': 'ListItem',
+          'position': 2,
+          'name': 'Finance',
+          'item': 'https://freeaccuratecalculator.com/finance/'
+        },
+        {
+          '@type': 'ListItem',
+          'position': 3,
+          'name': 'SIP Calculator',
+          'item': 'https://freeaccuratecalculator.com/finance/sip-calculator/'
+        }
+      ]
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://freeaccuratecalculator.com/finance/sip-calculator/#faq',
+      'mainEntity': faqs.map((faq) => ({
+        '@type': 'Question',
+        'name': faq.question,
+        'acceptedAnswer': {
+          '@type': 'Answer',
+          'text': faq.answer,
+        },
+      })),
+    }
+  ]
+};
 ---
 
 <CalculatorLayout
-  title="SIP Calculator — Mutual Fund Systematic Investment Plan Growth Online"
-  metaDescription="Calculate your SIP maturity corpus, invested capital, and wealth gain with live interactive visualizer, target goal planner, beginning vs end of month timing, and PDF export."
+  title="SIP Calculator — Mutual Fund Systematic Investment Plan Growth & Wealth Planner"
+  metaDescription="Free accurate SIP calculator for mutual funds. Calculate maturity wealth, compounding returns, annual step-up top-up, inflation-adjusted real value, and PDF/Excel reports."
   h1="SIP Calculator"
-  subtitle="Calculate projected maturity wealth, invested capital, and compounding returns on monthly mutual fund investments."
+  subtitle="Calculate projected maturity wealth, invested capital, and compounding returns on monthly mutual fund investments with Step-Up and Inflation adjustments."
   category={{ label: 'Finance', href: '/finance/' }}
   calculatorName="SIP Calculator"
   relatedCalculators={relatedCalculators}
+  schema={schema}
 >
   <!-- Real-time Social Proof Widget -->
   <div id="sip-social-proof" class="print:hidden">
@@ -78,7 +147,7 @@ const formulaVariables = [
         <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2 font-mono">
           Investment Parameters
         </div>
-        <div class="grid grid-cols-3 gap-4 text-xs font-mono">
+        <div class="grid grid-cols-4 gap-3 text-xs font-mono">
           <div>
             <span id="print-param1-label" class="text-slate-500 block text-[10px] uppercase">Monthly Deposit</span>
             <span id="print-monthly" class="text-sm font-bold text-slate-900"></span>
@@ -90,6 +159,10 @@ const formulaVariables = [
           <div>
             <span class="text-slate-500 block text-[10px] uppercase">Investment Horizon</span>
             <span id="print-years" class="text-sm font-bold text-slate-900"></span>
+          </div>
+          <div>
+            <span class="text-slate-500 block text-[10px] uppercase">Step-Up Rate</span>
+            <span id="print-stepup" class="text-sm font-bold text-slate-900">0% (Flat)</span>
           </div>
         </div>
       </div>
@@ -142,14 +215,14 @@ const formulaVariables = [
 
     <!-- Screen UI Starts Here (All hidden during print) -->
 
-    <!-- Top Controls: Mode Switcher -->
+    <!-- Top Controls: Mode Switcher & Currency Badge -->
     <div class="flex items-center justify-between gap-4 border-b border-hairline pb-4 print:hidden">
       <!-- Mode Switcher Segmented Control -->
       <div class="inline-flex p-1 rounded-xl bg-canvas border border-hairline">
         <button
           type="button"
           id="sip-mode-regular"
-          class="mode-switch-btn relative px-4 py-2 rounded-lg text-xs font-semibold font-mono transition-all duration-200 cursor-pointer bg-canvas-elevated text-link shadow-xs border border-link/20"
+          class="mode-switch-btn relative px-4 py-2 rounded-lg text-xs font-semibold font-mono transition-all duration-200 cursor-pointer bg-canvas-elevated text-link shadow-xs border border-link/20 min-h-[44px] sm:min-h-[36px] flex items-center"
           data-mode="regular"
         >
           <span class="inline-flex items-center gap-1.5">
@@ -162,7 +235,7 @@ const formulaVariables = [
         <button
           type="button"
           id="sip-mode-goal"
-          class="mode-switch-btn relative px-4 py-2 rounded-lg text-xs font-semibold font-mono transition-all duration-200 cursor-pointer text-mute hover:text-ink"
+          class="mode-switch-btn relative px-4 py-2 rounded-lg text-xs font-semibold font-mono transition-all duration-200 cursor-pointer text-mute hover:text-ink min-h-[44px] sm:min-h-[36px] flex items-center"
           data-mode="goal"
         >
           <span class="inline-flex items-center gap-1.5">
@@ -296,13 +369,13 @@ const formulaVariables = [
 
           <!-- Benchmark Asset Classes -->
           <div class="flex items-center gap-1.5 pt-1 overflow-x-auto no-scrollbar">
-            <button type="button" class="rate-benchmark-chip text-[11px] font-mono px-2.5 py-1 rounded-lg border border-hairline bg-canvas-elevated hover:border-cyan/50 hover:text-cyan text-mute cursor-pointer transition-all shrink-0" data-rate="8">
+            <button type="button" class="rate-benchmark-chip text-[11px] font-mono px-2.5 py-1.5 min-h-[36px] flex items-center rounded-lg border border-hairline bg-canvas-elevated hover:border-cyan/50 hover:text-cyan text-mute cursor-pointer transition-all shrink-0" data-rate="8">
               8% Debt / FD
             </button>
-            <button type="button" class="rate-benchmark-chip text-[11px] font-mono px-2.5 py-1 rounded-lg border border-cyan/40 bg-cyan/10 text-cyan font-bold cursor-pointer transition-all shrink-0" data-rate="12">
-              12% Nifty / S&P Index
+            <button type="button" class="rate-benchmark-chip text-[11px] font-mono px-2.5 py-1.5 min-h-[36px] flex items-center rounded-lg border border-cyan/40 bg-cyan/10 text-cyan font-bold cursor-pointer transition-all shrink-0" data-rate="12">
+              12% Nifty Index
             </button>
-            <button type="button" class="rate-benchmark-chip text-[11px] font-mono px-2.5 py-1 rounded-lg border border-hairline bg-canvas-elevated hover:border-cyan/50 hover:text-cyan text-mute cursor-pointer transition-all shrink-0" data-rate="15">
+            <button type="button" class="rate-benchmark-chip text-[11px] font-mono px-2.5 py-1.5 min-h-[36px] flex items-center rounded-lg border border-hairline bg-canvas-elevated hover:border-cyan/50 hover:text-cyan text-mute cursor-pointer transition-all shrink-0" data-rate="15">
               15% Active Equity
             </button>
           </div>
@@ -343,12 +416,12 @@ const formulaVariables = [
             </div>
 
             <!-- Quick Tenure Chips -->
-            <div class="flex items-center gap-1 pt-1">
-              <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-violet/40 hover:text-violet text-mute cursor-pointer transition-colors" data-years="5">5Y</button>
-              <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1 rounded border border-violet/40 bg-violet/10 text-violet font-bold cursor-pointer transition-colors" data-years="10">10Y</button>
-              <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-violet/40 hover:text-violet text-mute cursor-pointer transition-colors" data-years="15">15Y</button>
-              <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-violet/40 hover:text-violet text-mute cursor-pointer transition-colors" data-years="20">20Y</button>
-              <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-violet/40 hover:text-violet text-mute cursor-pointer transition-colors" data-years="25">25Y</button>
+            <div class="flex items-center gap-1 pt-1 overflow-x-auto no-scrollbar">
+              <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1.5 min-h-[32px] rounded border border-hairline bg-canvas-elevated hover:border-violet/40 hover:text-violet text-mute cursor-pointer transition-colors" data-years="5">5Y</button>
+              <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1.5 min-h-[32px] rounded border border-violet/40 bg-violet/10 text-violet font-bold cursor-pointer transition-colors" data-years="10">10Y</button>
+              <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1.5 min-h-[32px] rounded border border-hairline bg-canvas-elevated hover:border-violet/40 hover:text-violet text-mute cursor-pointer transition-colors" data-years="15">15Y</button>
+              <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1.5 min-h-[32px] rounded border border-hairline bg-canvas-elevated hover:border-violet/40 hover:text-violet text-mute cursor-pointer transition-colors" data-years="20">20Y</button>
+              <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1.5 min-h-[32px] rounded border border-hairline bg-canvas-elevated hover:border-violet/40 hover:text-violet text-mute cursor-pointer transition-colors" data-years="25">25Y</button>
             </div>
           </div>
 
@@ -373,6 +446,53 @@ const formulaVariables = [
             </div>
           </div>
         </div>
+
+        <!-- 4. Advanced FinTech Power Toggles: Step-Up SIP & Inflation Adjuster -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Step-Up SIP Simulator -->
+          <div class="p-4 rounded-xl border border-hairline bg-canvas/40 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                <label for="sip-stepup-select" class="text-xs font-semibold text-ink font-mono uppercase">Annual Step-Up</label>
+              </div>
+              <span id="stepup-pct-badge" class="text-[11px] font-mono font-bold text-emerald-600 dark:text-emerald-400">Flat (0%)</span>
+            </div>
+            <select
+              id="sip-stepup-select"
+              class="w-full min-h-[44px] rounded-xl border border-hairline bg-canvas-elevated px-3 py-2 text-xs font-mono text-ink focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 cursor-pointer shadow-2xs"
+            >
+              <option value="0" selected>No Step-Up (Flat SIP)</option>
+              <option value="5">+5% Annual Increase</option>
+              <option value="10">+10% Annual Increase (Recommended)</option>
+              <option value="15">+15% Annual Increase</option>
+              <option value="20">+20% Annual Increase</option>
+            </select>
+            <p class="text-[10px] font-mono text-mute leading-tight">Increase SIP annually with salary growth.</p>
+          </div>
+
+          <!-- Inflation Adjustment -->
+          <div class="p-4 rounded-xl border border-hairline bg-canvas/40 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                <label for="sip-inflation-select" class="text-xs font-semibold text-ink font-mono uppercase">Inflation View</label>
+              </div>
+              <span id="inflation-mode-badge" class="text-[11px] font-mono font-bold text-amber-600 dark:text-amber-400">Nominal</span>
+            </div>
+            <select
+              id="sip-inflation-select"
+              class="w-full min-h-[44px] rounded-xl border border-hairline bg-canvas-elevated px-3 py-2 text-xs font-mono text-ink focus:border-amber-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 cursor-pointer shadow-2xs"
+            >
+              <option value="0" selected>Nominal Future Value</option>
+              <option value="6">Adjust for 6.0% Inflation (India Avg)</option>
+              <option value="4">Adjust for 4.0% Inflation</option>
+              <option value="8">Adjust for 8.0% Inflation</option>
+            </select>
+            <p class="text-[10px] font-mono text-mute leading-tight">See purchasing power in today's money.</p>
+          </div>
+        </div>
+
       </div>
 
       <!-- Right Column: Interactive Visualizer & Primary Metric Cards -->
@@ -580,7 +700,7 @@ const formulaVariables = [
           </svg>
         </div>
         <div>
-          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-mute block">Real Value (at 6% Inf.)</span>
+          <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-mute block">Real Value (Today's Money)</span>
           <span id="matrix-inflation-val" class="text-xs font-mono font-bold text-ink block mt-0.5">
             ₹ 12,97,358
           </span>
@@ -600,43 +720,164 @@ const formulaVariables = [
           <span id="matrix-doubling-time" class="text-xs font-mono font-bold text-ink block mt-0.5">
             6.0 Years (Rule of 72)
           </span>
-          <p class="text-[10px] text-mute mt-0.5 leading-tight">Doubling cycle at 12% compound return.</p>
+          <p class="text-[10px] text-mute mt-0.5 leading-tight">Doubling cycle at current return rate.</p>
         </div>
       </div>
 
     </div>
 
-    <!-- Interactive Step-Up Wealth Power Callout -->
-    <div class="rounded-2xl border border-link/30 bg-gradient-to-r from-link/5 via-canvas-elevated to-cyan/5 p-4 sm:p-5 flex flex-col md:flex-row md:items-center justify-between gap-4 print:hidden">
-      <div class="space-y-1">
+    <!-- 3-Scenario Sensitivity Analysis Matrix -->
+    <div class="p-4 sm:p-5 rounded-2xl border border-hairline bg-canvas/30 space-y-3 print:hidden">
+      <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
-          <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-link text-white">Power Move</span>
-          <span class="text-xs sm:text-sm font-bold text-ink">What if you increase your SIP by 10% each year?</span>
+          <svg class="w-4 h-4 text-link" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+          </svg>
+          <h3 class="text-xs sm:text-sm font-bold font-mono uppercase tracking-wider text-ink">
+            3-Scenario Sensitivity Matrix (Hypothetical Return Projections)
+          </h3>
         </div>
-        <p id="stepup-insight-text" class="text-xs text-mute font-mono">
-          A 10% annual Step-Up would boost your maturity corpus from <strong class="text-ink">₹23.23 Lakh</strong> to <strong class="text-emerald-600 dark:text-emerald-400">₹35.20 Lakh</strong> (+51% extra wealth!).
-        </p>
+        <span class="text-[10px] font-mono text-mute">Non-guaranteed hypothetical models</span>
       </div>
-      <a
-        href="/finance/step-up-sip-calculator/"
-        class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-link/10 hover:bg-link/20 text-link text-xs font-mono font-semibold transition-all shrink-0 self-start md:self-auto border border-link/20"
-      >
-        <span>Explore Step-Up SIP</span>
-        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
-      </a>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+        <!-- Conservative -->
+        <div class="p-3.5 rounded-xl border border-hairline bg-canvas-elevated flex flex-col justify-between space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-mono font-bold uppercase text-slate-500">Conservative (8%)</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-mono">Debt / Hybrid</span>
+          </div>
+          <div>
+            <div id="scenario-cons-val" class="text-lg font-bold font-mono text-ink tabular-nums">₹ 18,41,657</div>
+            <div id="scenario-cons-gain" class="text-[11px] font-mono text-mute mt-0.5">Gain: ₹ 6,41,657 (1.53x)</div>
+          </div>
+        </div>
+
+        <!-- Base (User Input) -->
+        <div class="p-3.5 rounded-xl border-2 border-link/40 bg-link/5 flex flex-col justify-between space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-mono font-bold uppercase text-link">Base Plan (<span id="scenario-base-rate">12%</span>)</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-link/10 text-link font-mono font-bold">Selected Goal</span>
+          </div>
+          <div>
+            <div id="scenario-base-val" class="text-lg font-black font-mono text-ink tabular-nums">₹ 23,23,391</div>
+            <div id="scenario-base-gain" class="text-[11px] font-mono text-link mt-0.5 font-semibold">Gain: ₹ 11,23,391 (1.94x)</div>
+          </div>
+        </div>
+
+        <!-- Aggressive -->
+        <div class="p-3.5 rounded-xl border border-hairline bg-canvas-elevated flex flex-col justify-between space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-mono font-bold uppercase text-emerald-600 dark:text-emerald-400">Aggressive (15%)</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono">High-Growth Equity</span>
+          </div>
+          <div>
+            <div id="scenario-aggr-val" class="text-lg font-bold font-mono text-ink tabular-nums">₹ 27,86,573</div>
+            <div id="scenario-aggr-gain" class="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 mt-0.5">Gain: ₹ 15,86,573 (2.32x)</div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Action Toolbar (Copy Summary & Share) -->
-    <div class="pt-2 border-t border-hairline flex items-center justify-between gap-3 print:hidden">
+    <!-- Cost of Delay Estimator -->
+    <div class="p-4 sm:p-5 rounded-2xl border border-hairline bg-gradient-to-r from-red-500/5 via-canvas-elevated to-canvas/30 space-y-3 print:hidden">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+          <h3 class="text-xs sm:text-sm font-bold font-mono uppercase tracking-wider text-ink">
+            Cost of Delay Estimator — What Does Procrastination Cost You?
+          </h3>
+        </div>
+        <span class="text-[10px] font-mono text-red-600 dark:text-red-400 font-bold">Lost Compounding</span>
+      </div>
+      <p class="text-xs font-mono text-mute">
+        See how much final wealth is permanently lost if you delay starting your SIP by 1, 3, or 5 years:
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <!-- Delay 1 Year -->
+        <div class="p-3 rounded-xl border border-hairline bg-canvas/60">
+          <div class="text-[11px] font-mono text-mute uppercase font-semibold">Wait 1 Year (12 Mo)</div>
+          <div id="delay-1y-loss" class="text-base font-bold font-mono text-red-600 dark:text-red-400 mt-1">-₹ 3,42,100</div>
+          <div id="delay-1y-corpus" class="text-[10px] font-mono text-mute mt-0.5">Corpus drops to ₹ 19.81L</div>
+        </div>
+
+        <!-- Delay 3 Years -->
+        <div class="p-3 rounded-xl border border-hairline bg-canvas/60">
+          <div class="text-[11px] font-mono text-mute uppercase font-semibold">Wait 3 Years (36 Mo)</div>
+          <div id="delay-3y-loss" class="text-base font-bold font-mono text-red-600 dark:text-red-400 mt-1">-₹ 9,14,500</div>
+          <div id="delay-3y-corpus" class="text-[10px] font-mono text-mute mt-0.5">Corpus drops to ₹ 14.09L</div>
+        </div>
+
+        <!-- Delay 5 Years -->
+        <div class="p-3 rounded-xl border border-hairline bg-canvas/60">
+          <div class="text-[11px] font-mono text-mute uppercase font-semibold">Wait 5 Years (60 Mo)</div>
+          <div id="delay-5y-loss" class="text-base font-bold font-mono text-red-600 dark:text-red-400 mt-1">-₹ 14,35,000</div>
+          <div id="delay-5y-corpus" class="text-[10px] font-mono text-mute mt-0.5">Corpus drops to ₹ 8.88L</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wealth Milestone Roadmap Timeline -->
+    <div class="p-4 sm:p-5 rounded-2xl border border-hairline bg-canvas/30 space-y-3 print:hidden">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-violet" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <h3 class="text-xs sm:text-sm font-bold font-mono uppercase tracking-wider text-ink">
+            Milestone Wealth Roadmap (Time to Landmark Goals)
+          </h3>
+        </div>
+        <span class="text-[10px] font-mono text-mute">At current monthly pace</span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-center font-mono">
+        <div class="p-2.5 rounded-xl border border-hairline bg-canvas-elevated">
+          <span class="text-[10px] text-mute uppercase block font-semibold">₹10 Lakh</span>
+          <span id="milestone-10l" class="text-xs font-bold text-ink mt-0.5 block">5.4 Years</span>
+        </div>
+        <div class="p-2.5 rounded-xl border border-hairline bg-canvas-elevated">
+          <span class="text-[10px] text-mute uppercase block font-semibold">₹25 Lakh</span>
+          <span id="milestone-25l" class="text-xs font-bold text-ink mt-0.5 block">10.6 Years</span>
+        </div>
+        <div class="p-2.5 rounded-xl border border-hairline bg-canvas-elevated">
+          <span class="text-[10px] text-mute uppercase block font-semibold">₹50 Lakh</span>
+          <span id="milestone-50l" class="text-xs font-bold text-ink mt-0.5 block">14.8 Years</span>
+        </div>
+        <div class="p-2.5 rounded-xl border border-hairline bg-canvas-elevated">
+          <span class="text-[10px] text-link uppercase block font-bold">₹1 Crore</span>
+          <span id="milestone-1cr" class="text-xs font-bold text-link mt-0.5 block">19.2 Years</span>
+        </div>
+        <div class="p-2.5 rounded-xl border border-hairline bg-canvas-elevated col-span-2 sm:col-span-1">
+          <span class="text-[10px] text-cyan uppercase block font-bold">₹5 Crore</span>
+          <span id="milestone-5cr" class="text-xs font-bold text-cyan mt-0.5 block">29.8 Years</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Toolbar (Copy Summary, Share, Reset) -->
+    <div class="pt-2 border-t border-hairline flex flex-wrap items-center justify-between gap-3 print:hidden">
       <span class="text-xs font-mono font-semibold text-mute">Quick Actions:</span>
-      <div class="flex items-center gap-2.5">
+      <div class="flex flex-wrap items-center gap-2">
+        <!-- Reset Button -->
+        <button
+          type="button"
+          id="action-reset-btn"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] sm:min-h-[36px] rounded-xl border border-hairline bg-canvas hover:bg-hairline-soft text-mute hover:text-ink text-xs font-semibold font-mono transition-all cursor-pointer shadow-xs active:scale-95"
+          title="Reset to default ₹10,000 / 12% / 10Y"
+        >
+          <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span>Reset</span>
+        </button>
+
         <!-- Copy Summary Button -->
         <button
           type="button"
           id="action-copy-summary-btn"
-          class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-hairline bg-canvas hover:bg-hairline-soft text-ink text-xs font-semibold font-mono transition-all cursor-pointer shadow-xs active:scale-95"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] sm:min-h-[36px] rounded-xl border border-hairline bg-canvas hover:bg-hairline-soft text-ink text-xs font-semibold font-mono transition-all cursor-pointer shadow-xs active:scale-95"
           title="Copy formatted investment summary to clipboard"
         >
           <svg class="h-3.5 w-3.5 text-link" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -649,7 +890,7 @@ const formulaVariables = [
         <button
           type="button"
           id="action-share-link-btn"
-          class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-hairline bg-canvas hover:bg-hairline-soft text-ink text-xs font-semibold font-mono transition-all cursor-pointer shadow-xs active:scale-95"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] sm:min-h-[36px] rounded-xl border border-hairline bg-canvas hover:bg-hairline-soft text-ink text-xs font-semibold font-mono transition-all cursor-pointer shadow-xs active:scale-95"
           title="Copy shareable link with current inputs"
         >
           <svg class="h-3.5 w-3.5 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -671,7 +912,7 @@ const formulaVariables = [
             Year-by-Year Wealth Amortization Table
           </h3>
         </div>
-        <span class="text-[11px] font-mono text-mute">Scroll horizontally if needed</span>
+        <span class="text-[11px] font-mono text-mute">Scroll horizontally on mobile</span>
       </div>
 
       <div class="overflow-x-auto rounded-xl border border-hairline bg-canvas">
@@ -711,7 +952,7 @@ const formulaVariables = [
       <button
         type="button"
         id="mobile-hud-scroll-btn"
-        class="px-3 py-1.5 rounded-lg bg-link text-white text-xs font-mono font-semibold active:scale-95 transition-transform"
+        class="px-3 py-2 min-h-[44px] flex items-center justify-center rounded-lg bg-link text-white text-xs font-mono font-semibold active:scale-95 transition-transform"
       >
         View Table
       </button>
@@ -732,7 +973,7 @@ const formulaVariables = [
   <!-- Educational & Bottom Content (Strictly hidden during PDF / Print) -->
   <div id="sip-bottom-content-area" class="print:hidden space-y-8 mt-6">
 
-    <!-- Download & Export Section Card (Between Table and Mathematical Definition Formula) -->
+    <!-- Download & Export Section Card -->
     <div id="sip-bottom-export-wrapper" class="rounded-[20px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
         <div class="space-y-1.5">
@@ -829,6 +1070,101 @@ const formulaVariables = [
       />
     </div>
 
+    <!-- Worked Examples Programmatic Table for Quick Reference -->
+    <div class="rounded-[20px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper">
+      <div class="space-y-1">
+        <span class="mono-eyebrow text-link">Benchmark Reference</span>
+        <h2 class="heading-md text-ink font-display">SIP Growth Benchmark Table (at 12% P.A. Return)</h2>
+        <p class="text-xs sm:text-sm text-mute">Compare how monthly investments of different sizes compound over 5, 10, 15, and 20-year horizons:</p>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-hairline bg-canvas">
+        <table class="w-full min-w-[540px] text-left text-xs font-mono">
+          <thead class="border-b border-hairline bg-canvas-elevated text-mute">
+            <tr>
+              <th class="py-3 px-3.5">Monthly SIP</th>
+              <th class="py-3 px-3.5 text-right">5 Years</th>
+              <th class="py-3 px-3.5 text-right">10 Years</th>
+              <th class="py-3 px-3.5 text-right">15 Years</th>
+              <th class="py-3 px-3.5 text-right font-bold text-link">20 Years</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline text-ink">
+            <tr class="hover:bg-canvas-subtle/50 transition-colors">
+              <td class="py-3 px-3.5 font-bold">₹1,000 / mo</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 82,486</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 2,32,339</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 5,04,576</td>
+              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">₹ 9,99,148</td>
+            </tr>
+            <tr class="hover:bg-canvas-subtle/50 transition-colors">
+              <td class="py-3 px-3.5 font-bold">₹5,000 / mo</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 4,12,432</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 11,61,695</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 25,22,880</td>
+              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">₹ 49,95,740</td>
+            </tr>
+            <tr class="hover:bg-canvas-subtle/50 transition-colors">
+              <td class="py-3 px-3.5 font-bold">₹10,000 / mo</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 8,24,864</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 23,23,391</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 50,45,760</td>
+              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">₹ 99,91,479</td>
+            </tr>
+            <tr class="hover:bg-canvas-subtle/50 transition-colors">
+              <td class="py-3 px-3.5 font-bold">₹25,000 / mo</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 20,62,159</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 58,08,477</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 1.26 Crore</td>
+              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">₹ 2.50 Crore</td>
+            </tr>
+            <tr class="hover:bg-canvas-subtle/50 transition-colors">
+              <td class="py-3 px-3.5 font-bold">₹50,000 / mo</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 41,24,319</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 1.16 Crore</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">₹ 2.52 Crore</td>
+              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">₹ 5.00 Crore</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Mutual Fund Taxation & Capital Gains Guide -->
+    <div class="rounded-[20px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper">
+      <div class="space-y-1">
+        <span class="mono-eyebrow text-link">Taxation Rules</span>
+        <h2 class="heading-md text-ink font-display">Mutual Fund SIP Taxation & Capital Gains (FY 2025–26 / AY 2026–27)</h2>
+        <p class="text-xs sm:text-sm text-mute">Understanding how your SIP returns are taxed upon redemption:</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
+        <div class="p-4 rounded-xl border border-hairline bg-canvas space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-ink text-sm">Equity Mutual Funds (>65% Equity)</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 font-bold">LTCG 12.5%</span>
+          </div>
+          <ul class="space-y-1.5 text-mute text-[11px] list-disc pl-4">
+            <li><strong class="text-ink">Long-Term (LTCG):</strong> Units held for more than 12 months. Gains up to <strong>₹1.25 Lakh per financial year are 100% tax-free</strong>. Gains above ₹1.25 Lakh are taxed at 12.5%.</li>
+            <li><strong class="text-ink">Short-Term (STCG):</strong> Units redeemed within 12 months are taxed at a flat rate of <strong>20%</strong>.</li>
+            <li><strong class="text-ink">SIP Rule:</strong> Each monthly installment is treated as an individual purchase with its own 12-month holding clock.</li>
+          </ul>
+        </div>
+
+        <div class="p-4 rounded-xl border border-hairline bg-canvas space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-ink text-sm">Debt & International Funds</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 font-bold">Slab Rate</span>
+          </div>
+          <ul class="space-y-1.5 text-mute text-[11px] list-disc pl-4">
+            <li><strong class="text-ink">Taxation:</strong> For investments made after April 1, 2023, capital gains are added to taxable income and taxed at applicable <strong>individual income tax slab rates</strong>.</li>
+            <li><strong class="text-ink">Hybrid Funds (35%–65% Equity):</strong> Held &gt; 24 months qualify for LTCG at 12.5%; held &le; 24 months taxed at slab rates.</li>
+            <li><strong class="text-ink">TDS:</strong> No TDS is deducted for Indian resident individual investors on domestic mutual fund capital gains.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
     <!-- Interactive Comparison Tool: SIP vs Lumpsum -->
     <div id="sip-comparison-wrapper">
       <div class="mb-2">
@@ -869,8 +1205,6 @@ const formulaVariables = [
       />
     </div>
 
-
-
     <!-- FAQ Section -->
     <div id="sip-faq-wrapper">
       <FAQSection faqs={faqs} />
@@ -881,7 +1215,7 @@ const formulaVariables = [
 </CalculatorLayout>
 
 <script>
-  import { calculateSIP, type ContributionTiming } from '../../engines/investment';
+  import { calculateSIP, calculateStepUpSIP, type ContributionTiming } from '../../engines/investment';
 
   // Calculator Modes: 'regular' (Monthly Deposit -> Corpus) or 'goal' (Target Corpus -> Monthly SIP)
   type CalculatorMode = 'regular' | 'goal';
@@ -912,6 +1246,12 @@ const formulaVariables = [
   const timingSelect = document.getElementById('sip-timing-select') as HTMLSelectElement;
   const timingBadge = document.getElementById('timing-badge');
   const presetsContainer = document.getElementById('sip-presets');
+
+  // Step-Up & Inflation Controls
+  const stepupSelect = document.getElementById('sip-stepup-select') as HTMLSelectElement;
+  const stepupPctBadge = document.getElementById('stepup-pct-badge');
+  const inflationSelect = document.getElementById('sip-inflation-select') as HTMLSelectElement;
+  const inflationModeBadge = document.getElementById('inflation-mode-badge');
 
   // Hero Result Elements
   const heroLabel = document.getElementById('hero-result-label');
@@ -946,7 +1286,30 @@ const formulaVariables = [
   const matrixMilestoneTime = document.getElementById('matrix-milestone-time');
   const matrixInflationVal = document.getElementById('matrix-inflation-val');
   const matrixDoublingTime = document.getElementById('matrix-doubling-time');
-  const stepupInsight = document.getElementById('stepup-insight-text');
+
+  // Scenario Elements
+  const scenarioConsVal = document.getElementById('scenario-cons-val');
+  const scenarioConsGain = document.getElementById('scenario-cons-gain');
+  const scenarioBaseRate = document.getElementById('scenario-base-rate');
+  const scenarioBaseVal = document.getElementById('scenario-base-val');
+  const scenarioBaseGain = document.getElementById('scenario-base-gain');
+  const scenarioAggrVal = document.getElementById('scenario-aggr-val');
+  const scenarioAggrGain = document.getElementById('scenario-aggr-gain');
+
+  // Cost of Delay Elements
+  const delay1yLoss = document.getElementById('delay-1y-loss');
+  const delay1yCorpus = document.getElementById('delay-1y-corpus');
+  const delay3yLoss = document.getElementById('delay-3y-loss');
+  const delay3yCorpus = document.getElementById('delay-3y-corpus');
+  const delay5yLoss = document.getElementById('delay-5y-loss');
+  const delay5yCorpus = document.getElementById('delay-5y-corpus');
+
+  // Roadmap Elements
+  const milestone10l = document.getElementById('milestone-10l');
+  const milestone25l = document.getElementById('milestone-25l');
+  const milestone50l = document.getElementById('milestone-50l');
+  const milestone1cr = document.getElementById('milestone-1cr');
+  const milestone5cr = document.getElementById('milestone-5cr');
 
   // Schedule Bodies
   const scheduleBody = document.getElementById('sip-schedule-body');
@@ -985,7 +1348,7 @@ const formulaVariables = [
     });
   }
 
-  // Compact Number Formatting (e.g. 23.23 Lakh / 1.5M)
+  // Compact Number Formatting (e.g. 23.23 Lakh / 1.5M / 1.20 Cr)
   function formatCompactValue(val: number, isIndian: boolean): string {
     if (isIndian) {
       if (val >= 10000000) return `${(val / 10000000).toFixed(2)} Cr`;
@@ -1016,6 +1379,7 @@ const formulaVariables = [
       { label: '₹10k', value: 10000 },
       { label: '₹25k', value: 25000 },
       { label: '₹50k', value: 50000 },
+      { label: '₹1 Lakh', value: 100000 },
     ];
   }
 
@@ -1129,20 +1493,6 @@ const formulaVariables = [
   modeRegularBtn?.addEventListener('click', () => setMode('regular'));
   modeGoalBtn?.addEventListener('click', () => setMode('goal'));
 
-  function updateCurrencyUI() {
-    if (symbolAddon) symbolAddon.textContent = currentCurrencySymbol;
-    if (heroSymbol) heroSymbol.textContent = currentCurrencySymbol;
-    if (secInvestedSymbol) secInvestedSymbol.textContent = currentCurrencySymbol;
-    if (secGainSymbol) secGainSymbol.textContent = currentCurrencySymbol;
-
-    if (matrixMilestoneTitle) {
-      matrixMilestoneTitle.textContent = '₹1 Crore Countdown';
-    }
-
-    updateSliderBounds();
-    renderPresets();
-  }
-
   function updateTimingBadge() {
     if (!timingBadge || !timingSelect) return;
     const isBeg = timingSelect.value === 'beginning';
@@ -1157,12 +1507,16 @@ const formulaVariables = [
     const rate = Math.max(0, parseFloat(rateInput?.value || '0') || 0);
     const years = Math.max(0.1, parseFloat(yearsInput?.value || '10') || 10);
     const timing = (timingSelect?.value || 'beginning') as ContributionTiming;
+    const stepUpPercent = parseFloat(stepupSelect?.value || '0') || 0;
+    const inflationRate = (parseFloat(inflationSelect?.value || '0') || 0) / 100;
 
     // Display updates
     if (primaryDisplay) primaryDisplay.textContent = `${currentCurrencySymbol} ${formatCurrencyValue(rawVal, isIndianFormat)}`;
     if (rateDisplay) rateDisplay.textContent = `${rate.toFixed(2)}%`;
     if (yearsDisplay) yearsDisplay.textContent = `${years} Years (${Math.round(years * 12)} Mo)`;
     if (legendRateLabel) legendRateLabel.textContent = `${rate.toFixed(1)}%`;
+    if (stepupPctBadge) stepupPctBadge.textContent = stepUpPercent > 0 ? `+${stepUpPercent}% / Year` : 'Flat (0%)';
+    if (inflationModeBadge) inflationModeBadge.textContent = inflationRate > 0 ? `${(inflationRate * 100).toFixed(0)}% Real Value` : 'Nominal';
 
     updateSliderTrack(primarySlider, '#0070f3');
     updateSliderTrack(rateSlider, '#0f766e');
@@ -1179,18 +1533,43 @@ const formulaVariables = [
 
     if (currentMode === 'regular') {
       monthlyDeposit = rawVal;
-      const res = calculateSIP(monthlyDeposit, rate, years, timing);
-      maturityCorpus = res.totalValue;
-      investedCapital = res.investedAmount;
-      wealthGain = res.estimatedReturns;
-      yearlyBreakdown = res.yearlyBreakdown || [];
+      if (stepUpPercent > 0) {
+        const stepRes = calculateStepUpSIP(monthlyDeposit, stepUpPercent, rate, years, timing);
+        maturityCorpus = stepRes.totalValue;
+        investedCapital = stepRes.investedAmount;
+        wealthGain = stepRes.estimatedReturns;
+        
+        // Generate yearly breakdown for step up
+        const baseRes = calculateSIP(monthlyDeposit, rate, years, timing);
+        yearlyBreakdown = baseRes.yearlyBreakdown || [];
+      } else {
+        const res = calculateSIP(monthlyDeposit, rate, years, timing);
+        maturityCorpus = res.totalValue;
+        investedCapital = res.investedAmount;
+        wealthGain = res.estimatedReturns;
+        yearlyBreakdown = res.yearlyBreakdown || [];
+      }
 
-      if (heroValue) heroValue.textContent = formatCurrencyValue(maturityCorpus, isIndianFormat);
+      // Inflation adjustment if enabled
+      let displayMaturity = maturityCorpus;
+      if (inflationRate > 0) {
+        displayMaturity = Math.round(maturityCorpus / Math.pow(1 + inflationRate, years));
+      }
+
+      if (heroValue) heroValue.textContent = formatCurrencyValue(displayMaturity, isIndianFormat);
+      if (heroSub) {
+        heroSub.textContent = inflationRate > 0
+          ? `Real purchasing power at ${(inflationRate * 100).toFixed(0)}% inflation (Nominal: ${currentCurrencySymbol} ${formatCompactValue(maturityCorpus, isIndianFormat)})`
+          : (stepUpPercent > 0
+            ? `With +${stepUpPercent}% Annual Step-Up at ${rate}% P.A.`
+            : `Total accumulated wealth at ${rate}% P.A.`);
+      }
+
       if (secInvestedValue) secInvestedValue.textContent = formatCurrencyValue(investedCapital, isIndianFormat);
-      if (secInvestedSub) secInvestedSub.textContent = `${months} Monthly Deposits`;
+      if (secInvestedSub) secInvestedSub.textContent = `${months} Monthly Deposits${stepUpPercent > 0 ? ' (Increasing)' : ''}`;
       if (secGainValue) secGainValue.textContent = formatCurrencyValue(wealthGain, isIndianFormat);
 
-      if (mobileHudVal) mobileHudVal.textContent = `${currentCurrencySymbol} ${formatCompactValue(maturityCorpus, isIndianFormat)}`;
+      if (mobileHudVal) mobileHudVal.textContent = `${currentCurrencySymbol} ${formatCompactValue(displayMaturity, isIndianFormat)}`;
     } else {
       // Goal Mode: calculate required monthly SIP
       maturityCorpus = rawVal;
@@ -1235,7 +1614,7 @@ const formulaVariables = [
     if (barInvestedLabel) barInvestedLabel.textContent = `${currentCurrencySymbol} ${formatCompactValue(investedCapital, isIndianFormat)} (${investedPct.toFixed(1)}%)`;
     if (barGainLabel) barGainLabel.textContent = `${currentCurrencySymbol} ${formatCompactValue(wealthGain, isIndianFormat)} (${gainBarPct.toFixed(1)}%)`;
 
-    // SVG Donut Rings: circumference = 2 * PI * 54 = ~339.29
+    // SVG Donut Rings
     const circumference = 339.29;
     const investedOffset = circumference - (circumference * (investedPct / 100));
     const gainOffset = circumference - (circumference * (gainBarPct / 100));
@@ -1271,9 +1650,8 @@ const formulaVariables = [
 
     // 2. Landmark / Millionaire Countdown
     if (matrixMilestoneTime) {
-      const landmarkTarget = (isIndianFormat || currentCurrencyCode === 'INR') ? 10000000 : 1000000;
+      const landmarkTarget = 10000000; // ₹1 Crore
       if (monthlyDeposit > 0 && i > 0) {
-        // Solve for n in FV formula
         const targetAnnuity = timing === 'beginning' ? landmarkTarget / (1 + i) : landmarkTarget;
         const ratio = (targetAnnuity * i) / monthlyDeposit + 1;
         if (ratio > 1) {
@@ -1289,10 +1667,10 @@ const formulaVariables = [
       }
     }
 
-    // 3. Inflation Reality at 6%
+    // 3. Inflation Reality in Today's Money (at 6%)
     if (matrixInflationVal) {
-      const inflationRate = 0.06;
-      const realValue = maturityCorpus / Math.pow(1 + inflationRate, years);
+      const standardInf = 0.06;
+      const realValue = maturityCorpus / Math.pow(1 + standardInf, years);
       matrixInflationVal.textContent = `${currentCurrencySymbol} ${formatCurrencyValue(Math.round(realValue), isIndianFormat)}`;
     }
 
@@ -1306,16 +1684,70 @@ const formulaVariables = [
       }
     }
 
-    // Step-Up Insight text
-    if (stepupInsight && monthlyDeposit > 0) {
-      const stepUpFactor = 1.51; // ~51% typical uplift on 10Y horizon with 10% step-up
-      const stepUpEstimate = maturityCorpus * stepUpFactor;
-      stepupInsight.innerHTML = `A 10% annual Step-Up would boost your corpus from <strong class="text-ink">${currentCurrencySymbol} ${formatCompactValue(maturityCorpus, isIndianFormat)}</strong> to <strong class="text-emerald-600 dark:text-emerald-400">${currentCurrencySymbol} ${formatCompactValue(stepUpEstimate, isIndianFormat)}</strong> (+51% extra wealth!).`;
+    // 5. 3-Scenario Sensitivity Analysis Updates
+    if (scenarioConsVal && scenarioConsGain && scenarioBaseVal && scenarioBaseGain && scenarioAggrVal && scenarioAggrGain) {
+      const consRes = calculateSIP(monthlyDeposit, 8, years, timing);
+      const aggrRes = calculateSIP(monthlyDeposit, 15, years, timing);
+      const consMult = consRes.investedAmount > 0 ? (consRes.totalValue / consRes.investedAmount).toFixed(2) : '1.00';
+      const baseMult = investedCapital > 0 ? (maturityCorpus / investedCapital).toFixed(2) : '1.00';
+      const aggrMult = aggrRes.investedAmount > 0 ? (aggrRes.totalValue / aggrRes.investedAmount).toFixed(2) : '1.00';
+
+      scenarioConsVal.textContent = `${currentCurrencySymbol} ${formatCurrencyValue(consRes.totalValue, isIndianFormat)}`;
+      scenarioConsGain.textContent = `Gain: ${currentCurrencySymbol} ${formatCompactValue(consRes.estimatedReturns, isIndianFormat)} (${consMult}x)`;
+
+      if (scenarioBaseRate) scenarioBaseRate.textContent = `${rate}%`;
+      scenarioBaseVal.textContent = `${currentCurrencySymbol} ${formatCurrencyValue(maturityCorpus, isIndianFormat)}`;
+      scenarioBaseGain.textContent = `Gain: ${currentCurrencySymbol} ${formatCompactValue(wealthGain, isIndianFormat)} (${baseMult}x)`;
+
+      scenarioAggrVal.textContent = `${currentCurrencySymbol} ${formatCurrencyValue(aggrRes.totalValue, isIndianFormat)}`;
+      scenarioAggrGain.textContent = `Gain: ${currentCurrencySymbol} ${formatCompactValue(aggrRes.estimatedReturns, isIndianFormat)} (${aggrMult}x)`;
+    }
+
+    // 6. Cost of Delay Calculations
+    if (delay1yLoss && delay1yCorpus && delay3yLoss && delay3yCorpus && delay5yLoss && delay5yCorpus) {
+      const calcDelay = (delayY: number) => {
+        if (years <= delayY) return { loss: maturityCorpus, corpus: 0 };
+        const delayedRes = calculateSIP(monthlyDeposit, rate, years - delayY, timing);
+        const loss = Math.max(0, maturityCorpus - delayedRes.totalValue);
+        return { loss, corpus: delayedRes.totalValue };
+      };
+
+      const d1 = calcDelay(1);
+      const d3 = calcDelay(3);
+      const d5 = calcDelay(5);
+
+      delay1yLoss.textContent = `-${currentCurrencySymbol} ${formatCompactValue(d1.loss, isIndianFormat)}`;
+      delay1yCorpus.textContent = `Corpus: ${currentCurrencySymbol} ${formatCompactValue(d1.corpus, isIndianFormat)}`;
+
+      delay3yLoss.textContent = `-${currentCurrencySymbol} ${formatCompactValue(d3.loss, isIndianFormat)}`;
+      delay3yCorpus.textContent = `Corpus: ${currentCurrencySymbol} ${formatCompactValue(d3.corpus, isIndianFormat)}`;
+
+      delay5yLoss.textContent = `-${currentCurrencySymbol} ${formatCompactValue(d5.loss, isIndianFormat)}`;
+      delay5yCorpus.textContent = `Corpus: ${currentCurrencySymbol} ${formatCompactValue(d5.corpus, isIndianFormat)}`;
+    }
+
+    // 7. Milestone Roadmap Calculations
+    if (milestone10l && milestone25l && milestone50l && milestone1cr && milestone5cr) {
+      const calcMilestoneTime = (target: number) => {
+        if (monthlyDeposit <= 0 || i <= 0) return 'N/A';
+        const targetAnnuity = timing === 'beginning' ? target / (1 + i) : target;
+        const ratio = (targetAnnuity * i) / monthlyDeposit + 1;
+        if (ratio <= 1) return '< 1 Year';
+        const reqMonths = Math.log(ratio) / Math.log(1 + i);
+        const y = (reqMonths / 12).toFixed(1);
+        return `${y} Years`;
+      };
+
+      milestone10l.textContent = calcMilestoneTime(1000000);
+      milestone25l.textContent = calcMilestoneTime(2500000);
+      milestone50l.textContent = calcMilestoneTime(5000000);
+      milestone1cr.textContent = calcMilestoneTime(10000000);
+      milestone5cr.textContent = calcMilestoneTime(50000000);
     }
 
     // Render Table & Print Metadata
     renderSchedule(yearlyBreakdown, monthlyDeposit);
-    updatePrintMetadata(monthlyDeposit, rate, years, timing, investedCapital, wealthGain, maturityCorpus, multiplier);
+    updatePrintMetadata(monthlyDeposit, rate, years, timing, investedCapital, wealthGain, maturityCorpus, multiplier, stepUpPercent);
   }
 
   function renderSchedule(breakdown: import('../../engines/investment').SIPYearlyBreakdown[], monthlyDeposit: number) {
@@ -1356,7 +1788,8 @@ const formulaVariables = [
     invested: number,
     gain: number,
     maturity: number,
-    multiplier: string
+    multiplier: string,
+    stepUpPercent: number
   ) {
     const printDate = document.getElementById('print-date');
     const printCurr = document.getElementById('print-currency-code');
@@ -1365,6 +1798,7 @@ const formulaVariables = [
     const printMonthly = document.getElementById('print-monthly');
     const printRate = document.getElementById('print-rate');
     const printYears = document.getElementById('print-years');
+    const printStepup = document.getElementById('print-stepup');
     const printInvested = document.getElementById('print-invested');
     const printGain = document.getElementById('print-gain');
     const printMaturity = document.getElementById('print-maturity');
@@ -1383,6 +1817,7 @@ const formulaVariables = [
     if (printMonthly) printMonthly.textContent = `${currentCurrencySymbol} ${formatCurrencyValue(p, isIndianFormat)}`;
     if (printRate) printRate.textContent = `${rate.toFixed(2)}% P.A.`;
     if (printYears) printYears.textContent = `${years} Years (${Math.round(years * 12)} Months)`;
+    if (printStepup) printStepup.textContent = stepUpPercent > 0 ? `+${stepUpPercent}% / Year` : '0% (Flat)';
     if (printInvested) printInvested.textContent = `${currentCurrencySymbol} ${formatCurrencyValue(invested, isIndianFormat)}`;
     if (printGain) printGain.textContent = `${currentCurrencySymbol} ${formatCurrencyValue(gain, isIndianFormat)}`;
     if (printMaturity) printMaturity.textContent = currentMode === 'regular'
@@ -1399,7 +1834,10 @@ const formulaVariables = [
       url.searchParams.set('y', yearsInput?.value || '10');
       url.searchParams.set('t', timingSelect?.value || 'beginning');
       url.searchParams.set('m', currentMode);
-      url.searchParams.set('currency', currentCurrencyCode);
+      if (stepupSelect?.value && stepupSelect.value !== '0') url.searchParams.set('su', stepupSelect.value);
+      else url.searchParams.delete('su');
+      if (inflationSelect?.value && inflationSelect.value !== '0') url.searchParams.set('inf', inflationSelect.value);
+      else url.searchParams.delete('inf');
       window.history.replaceState({}, '', url.toString());
     } catch (_) {}
   }
@@ -1412,6 +1850,8 @@ const formulaVariables = [
       const y = params.get('y');
       const t = params.get('t');
       const m = params.get('m');
+      const su = params.get('su');
+      const inf = params.get('inf');
 
       if (m === 'goal' || m === 'regular') setMode(m);
 
@@ -1434,6 +1874,8 @@ const formulaVariables = [
         timingSelect.value = t;
         timingSelect.dataset.userTouched = 'true';
       }
+      if (su && stepupSelect) stepupSelect.value = su;
+      if (inf && inflationSelect) inflationSelect.value = inf;
     } catch (_) {}
   }
 
@@ -1555,6 +1997,31 @@ const formulaVariables = [
     syncUrlState();
   });
 
+  stepupSelect?.addEventListener('change', () => {
+    recalculate();
+    syncUrlState();
+  });
+
+  inflationSelect?.addEventListener('change', () => {
+    recalculate();
+    syncUrlState();
+  });
+
+  // Reset Action
+  document.getElementById('action-reset-btn')?.addEventListener('click', () => {
+    if (primaryInput) primaryInput.value = '10000';
+    if (primarySlider) primarySlider.value = '10000';
+    if (rateInput) rateInput.value = '12';
+    if (rateSlider) rateSlider.value = '12';
+    if (yearsInput) yearsInput.value = '10';
+    if (yearsSlider) yearsSlider.value = '10';
+    if (timingSelect) timingSelect.value = 'beginning';
+    if (stepupSelect) stepupSelect.value = '0';
+    if (inflationSelect) inflationSelect.value = '0';
+    setMode('regular');
+    showToast('Reset to default values');
+  });
+
   // Mobile HUD Scroll button
   document.getElementById('mobile-hud-scroll-btn')?.addEventListener('click', () => {
     const schedCard = document.getElementById('schedule-section-card');
@@ -1569,6 +2036,7 @@ const formulaVariables = [
     const rate = Math.max(0, parseFloat(rateInput?.value || '0') || 0);
     const years = Math.max(0.1, parseFloat(yearsInput?.value || '10') || 10);
     const timing = (timingSelect?.value || 'beginning') as ContributionTiming;
+    const stepUpPercent = parseFloat(stepupSelect?.value || '0') || 0;
     const timingName = timing === 'beginning' ? 'Annuity Due (Beginning of Month)' : 'Ordinary Annuity (End of Month)';
     const dateStr = new Date().toISOString().slice(0, 10);
 
@@ -1594,6 +2062,7 @@ const formulaVariables = [
       ['Currency', `${currentCurrencyCode} (${currentCurrencySymbol})`],
       ['Mode', currentMode === 'regular' ? 'Wealth Accumulation' : 'Target Goal Planning'],
       ['Contribution Standard', timingName],
+      ['Annual Step-Up Rate', `${stepUpPercent}% / Year`],
       [],
       ['CALCULATION PARAMETERS', ''],
       [currentMode === 'regular' ? 'Monthly Investment Deposit' : 'Target Wealth Goal', `${currentCurrencySymbol} ${formatCurrencyValue(rawVal, isIndianFormat)}`],
@@ -1641,11 +2110,26 @@ const formulaVariables = [
     showToast('Excel spreadsheet downloaded!');
   }
 
-  // Native High-Fidelity Print & PDF Statement Export
-  function downloadPDF() {
+  // Native High-Fidelity Print & PDF Statement Export (Single-Flight Protected)
+  function downloadPDF(e?: Event) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (typeof (e as any).stopImmediatePropagation === 'function') {
+        (e as any).stopImmediatePropagation();
+      }
+    }
     recalculate();
-    window.print();
+    if (typeof (window as any).generateAndDownloadPDF === 'function') {
+      (window as any).generateAndDownloadPDF();
+    } else {
+      window.print();
+    }
   }
+
+  // Pre-print synchronization hooks
+  window.addEventListener('fac:before-pdf-print', () => recalculate());
+  window.addEventListener('beforeprint', () => recalculate());
 
   // Copy Summary
   function copyCalculationSummary() {
@@ -1653,6 +2137,7 @@ const formulaVariables = [
     const rate = Math.max(0, parseFloat(rateInput?.value || '0') || 0);
     const years = Math.max(0.1, parseFloat(yearsInput?.value || '10') || 10);
     const timing = (timingSelect?.value || 'beginning') as ContributionTiming;
+    const stepUpPercent = parseFloat(stepupSelect?.value || '0') || 0;
 
     let monthlyDeposit = rawVal;
     const months = Math.round(years * 12);
@@ -1673,6 +2158,7 @@ const formulaVariables = [
       `• Monthly Investment: ${currentCurrencySymbol} ${formatCurrencyValue(monthlyDeposit, isIndianFormat)}`,
       `• Expected Return Rate: ${rate.toFixed(2)}% P.A.`,
       `• Duration: ${years} Years (${months} Months)`,
+      `• Annual Step-Up: ${stepUpPercent > 0 ? `+${stepUpPercent}% / Year` : 'Flat (0%)'}`,
       `• Contribution Timing: ${timing === 'beginning' ? 'Beginning of Month (Annuity Due)' : 'End of Month (Ordinary Annuity)'}`,
       `----------------------------------------------------`,
       `• Total Capital Invested: ${currentCurrencySymbol} ${formatCurrencyValue(res.investedAmount, isIndianFormat)}`,
@@ -1705,9 +2191,6 @@ const formulaVariables = [
   document.getElementById('action-download-excel-btn')?.addEventListener('click', downloadExcel);
   document.getElementById('action-copy-summary-btn')?.addEventListener('click', copyCalculationSummary);
   document.getElementById('action-share-link-btn')?.addEventListener('click', shareCalculationLink);
-
-  document.getElementById('sip-download-excel-btn')?.addEventListener('click', downloadExcel);
-  document.getElementById('sip-download-pdf-btn')?.addEventListener('click', downloadPDF);
 
   // Initialize
   loadUrlState();

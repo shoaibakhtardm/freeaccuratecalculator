@@ -16,6 +16,8 @@
 /home                               /                             301
 
 # Generic calculators removed from France pages redirected to relevant French tools
+/countries/france                       /countries/france/fr/        301
+/countries/france/                      /countries/france/fr/        301
 /countries/france/age-calculator            /countries/france/retirement-calculator/    301
 /countries/france/calorie-calculator        /countries/france/health/                   301
 /countries/france/bmi-calculator            /countries/france/health/                   301
