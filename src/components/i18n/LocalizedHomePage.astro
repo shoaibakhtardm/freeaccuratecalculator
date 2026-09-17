@@ -1,102 +1,399 @@
 ---
 // src/components/i18n/LocalizedHomePage.astro
 import Layout from '../../layouts/Layout.astro';
-import type { SupportedLocale } from '../../types/i18n.ts';
-import { LOCALE_CONFIGS } from '../../i18n/config.ts';
-import { translate } from '../../i18n/engine.ts';
+import AutocompleteSearch from '../common/AutocompleteSearch.astro';
+import CategoriesSection from '../CategoriesSection.astro';
+import OrphanRescueLinks from '../SEO/OrphanRescueLinks.astro';
+import { POPULAR_COUNTRIES } from '../../data/countries';
+import { getHomepageStrings } from '../../i18n/homepageDict';
+import type { SupportedLocale } from '../../types/i18n';
 
 interface Props {
-  locale: SupportedLocale;
+  locale?: string;
 }
 
-const { locale } = Astro.props;
-const config = LOCALE_CONFIGS[locale] || LOCALE_CONFIGS.en;
+const { locale: propLocale } = Astro.props;
+const currentLocale = (propLocale || Astro.currentLocale || 'en').toLowerCase() as SupportedLocale;
+const hpStrings = getHomepageStrings(currentLocale);
 
-const title = translate(locale, 'seo.homeTitle');
-const description = translate(locale, 'seo.homeDescription');
+const FEATURED_COUNTRIES = POPULAR_COUNTRIES.map((c) => ({
+  slug: c.slug,
+  name: hpStrings.regionsSection.countries[c.slug] || c.name,
+  flagUrl: c.flagUrl,
+  emoji: c.flag,
+  href: `/countries/${c.slug}/`,
+}));
 
-const bmiTitle = translate(locale, 'calc.bmi.title');
-const bmiDesc = translate(locale, 'calc.bmi.description');
-const emiTitle = translate(locale, 'calc.emi.title');
-const emiDesc = translate(locale, 'calc.emi.description');
-const sipTitle = translate(locale, 'calc.sip.title');
-const sipDesc = translate(locale, 'calc.sip.description');
+const websiteOrigin = 'https://freeaccuratecalculator.com';
+const pageUrl = currentLocale === 'en' ? `${websiteOrigin}/` : `${websiteOrigin}/${currentLocale}/`;
 
-const featuredCalculators = [
-  {
-    name: emiTitle,
-    desc: emiDesc,
-    href: '/finance/emi-calculator/',
-    badge: translate(locale, 'nav.finance'),
-    categoryColor: 'from-blue-500/20 to-indigo-500/20 text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-800',
-    icon: '💰',
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: hpStrings.seo.websiteName,
+  url: pageUrl,
+  description: hpStrings.seo.websiteDesc,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${websiteOrigin}/?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
   },
-  {
-    name: bmiTitle,
-    desc: bmiDesc,
-    href: '/health/bmi-calculator/',
-    badge: translate(locale, 'nav.health'),
-    categoryColor: 'from-emerald-500/20 to-teal-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800',
-    icon: '⚖️',
-  },
-  {
-    name: sipTitle,
-    desc: sipDesc,
-    href: '/finance/sip-calculator/',
-    badge: translate(locale, 'nav.finance'),
-    categoryColor: 'from-purple-500/20 to-pink-500/20 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800',
-    icon: '📈',
-  },
+};
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Free Accurate Calculator',
+  url: websiteOrigin,
+  logo: `${websiteOrigin}/favicon.svg`,
+  sameAs: [
+    'https://twitter.com/FreeAccurateCalc',
+    'https://github.com/shoaibakhtardm/freeaccuratecalculator',
+  ],
+  description: hpStrings.seo.websiteDesc,
+};
+
+const RAW_POPULAR_CALCULATORS = [
+  // 1. Finance: EMI / Mortgage
+  { key: 'emi-calculator', icon: '🏦', href: '/finance/emi-calculator/' },
+  // 2. Insurance: Auto Insurance Estimator
+  { key: 'auto-insurance-calculator', icon: '🛡️', href: '/insurance/auto-insurance-calculator/' },
+  // 3. Legal: Child Support Calculator
+  { key: 'child-support-calculator', icon: '⚖️', href: '/legal/child-support-calculator/' },
+  // 4. Business: ROI Calculator
+  { key: 'roi-calculator', icon: '💼', href: '/business/roi-calculator/' },
+  // 5. Construction: Concrete Volume Calculator
+  { key: 'concrete-calculator', icon: '🏗️', href: '/construction/concrete-calculator/' },
+  // 6. Real Estate: Property Tax / Stamp Duty Calculator
+  { key: 'property-tax-calculator', icon: '🏢', href: '/real-estate/property-tax-calculator/' },
+  // 7. Technology: Password Generator
+  { key: 'password-generator', icon: '🔐', href: '/technology/password-generator/' },
+  // 8. Health: BMI Calculator
+  { key: 'bmi-calculator', icon: '🩺', href: '/health/bmi-calculator/' },
+  // 9. Statistics: Sample Size Calculator
+  { key: 'sample-size-calculator', icon: '📊', href: '/statistics/sample-size-calculator/' },
+  // 10. Marketing: ROAS Calculator
+  { key: 'roas-calculator', icon: '🎯', href: '/marketing/roas-calculator/' },
+  // 11. Math: Percentage Calculator
+  { key: 'percentage-calculator', icon: '📐', href: '/math/percentage-calculator/' },
+  // 12. Automotive: Fuel Cost / MPG Calculator
+  { key: 'fuel-cost-calculator', icon: '⛽', href: '/automotive/fuel-cost-calculator/' },
+  // 13. Biology: Genetics / Biology Calculator
+  { key: 'punnett-square-calculator', icon: '🧬', href: '/biology/punnett-square-calculator/' },
+  // 14. Chemistry: Molar Mass Calculator
+  { key: 'molar-mass-calculator', icon: '🧪', href: '/chemistry/molar-mass-calculator/' },
+  // 15. Physics: Ohm’s Law Calculator
+  { key: 'ohms-law-calculator', icon: '⚡', href: '/physics/ohms-law-calculator/' },
+  // 16. Food: TDEE / Calorie & Macro Calculator
+  { key: 'macronutrient-calculator', icon: '🥗', href: '/food/macronutrient-calculator/' },
+  // 17. Sports: 1RM (One Rep Max) Calculator
+  { key: 'one-rep-max-calculator', icon: '🏋️', href: '/sports/one-rep-max-calculator/' },
+  // 18. Ecology: Carbon Footprint Calculator
+  { key: 'carbon-footprint-calculator', icon: '🌱', href: '/ecology/carbon-footprint-calculator/' },
+  // 19. Everyday: Exact Age Calculator
+  { key: 'age-calculator', icon: '🎂', href: '/everyday/age-calculator/' },
+  // 20. Converter: Universal Unit/Currency Converter
+  { key: 'length-converter', icon: '🔄', href: '/converter/length-converter/' },
+  // 21. Love: Love Compatibility Calculator
+  { key: 'love-calculator', icon: '💖', href: '/love/love-calculator/' },
 ];
+
+const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
+  ...item,
+  name: hpStrings.popularSection.tools[item.key] || item.key,
+}));
 ---
 
-<Layout title={title} description={description} lang={locale}>
-  <!-- Hero Section -->
-  <section class="py-12 md:py-16 text-center space-y-6 max-w-4xl mx-auto px-4">
-    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-900 bg-indigo-50/60 dark:bg-indigo-950/40 text-xs font-semibold text-indigo-700 dark:text-indigo-300 shadow-xs">
-      <span class="text-sm">{config.flag}</span>
-      <span>{config.name} ({config.englishName})</span>
+<Layout
+  title={hpStrings.seo.title}
+  description={hpStrings.seo.description}
+  jsonLd={[websiteSchema, organizationSchema]}
+  lang={currentLocale}
+>
+  <!-- [STARTUP HERO SECTION]: Silicon Valley Precision Layout -->
+  <section class="relative overflow-hidden rounded-3xl sm:rounded-[36px] border border-slate-200/80 dark:border-slate-800/80 bg-white/70 dark:bg-slate-950/70 px-4 py-10 sm:py-16 md:py-20 text-center hero-mesh-gradient shadow-xs sm:shadow-lg backdrop-blur-xl">
+    <!-- Top Ambient Studio Glow (Linear / Vercel style) -->
+    <div
+      class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 sm:w-[540px] h-44 sm:h-64 bg-gradient-to-b from-indigo-500/20 via-blue-500/10 to-transparent blur-3xl pointer-events-none"
+      aria-hidden="true"
+    ></div>
+
+    <div class="relative z-10 mx-auto max-w-2xl sm:max-w-3xl lg:max-w-4xl space-y-5 sm:space-y-6">
+      <!-- 1. The Startup Pill Badge -->
+      <div class="inline-flex items-center gap-2 rounded-full border border-indigo-500/20 dark:border-indigo-400/30 bg-gradient-to-r from-blue-500/8 via-indigo-500/8 to-purple-500/8 dark:from-blue-500/15 dark:via-indigo-500/15 dark:to-purple-500/15 px-3.5 py-1.5 shadow-2xs backdrop-blur-md transition-all hover:border-indigo-500/40 select-none">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="font-outfit text-[11px] sm:text-xs font-bold tracking-wider uppercase text-slate-700 dark:text-slate-200">
+          {hpStrings.hero.pillBadge}
+        </span>
+        <span class="text-indigo-500 dark:text-indigo-400 text-xs font-bold ml-0.5">✦</span>
+      </div>
+
+      <!-- 2. The Main H1 Headline: Outfit Font, Startup Rhythm & Gradient -->
+      <h1 class="display-hero font-outfit text-3xl sm:text-5xl lg:text-[56px] xl:text-[62px] font-black tracking-[-0.035em] text-slate-900 dark:text-white leading-[1.12] sm:leading-[1.08] text-balance">
+        {hpStrings.hero.h1Line1} <br class="hidden sm:inline" />
+        <span class="bg-gradient-to-r from-blue-600 via-indigo-600 via-purple-600 to-pink-500 dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent">
+          {hpStrings.hero.h1Highlight}
+        </span>
+      </h1>
+
+      <!-- 3. Subtitle Paragraph: Refined Typography & Balanced Width -->
+      <p class="font-sans text-sm sm:text-base md:text-[17px] text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal text-balance px-2">
+        {hpStrings.hero.subtitle}
+      </p>
+
+      <!-- 4. Interactive Live Spotlight Search Bar with Instant Suggestions -->
+      <div class="pt-2 max-w-2xl mx-auto">
+        <AutocompleteSearch
+          id="search-input"
+          locale={currentLocale}
+        />
+      </div>
+
+      <!-- 5. 3-Grid Quick Trust & Performance Metrics -->
+      <div class="grid grid-cols-3 gap-2 sm:gap-3 max-w-2xl mx-auto pt-2 text-center">
+        <div class="rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/60 p-2 sm:p-2.5 backdrop-blur-md">
+          <span class="block text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit">{hpStrings.hero.metric1Value}</span>
+          <span class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">{hpStrings.hero.metric1Label}</span>
+        </div>
+        <div class="rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/60 p-2 sm:p-2.5 backdrop-blur-md">
+          <span class="block text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit">{hpStrings.hero.metric2Value}</span>
+          <span class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">{hpStrings.hero.metric2Label}</span>
+        </div>
+        <div class="rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/60 p-2 sm:p-2.5 backdrop-blur-md">
+          <span class="block text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit">{hpStrings.hero.metric3Value}</span>
+          <span class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">{hpStrings.hero.metric3Label}</span>
+        </div>
+      </div>
+
+      <!-- 6. 3-by-3 Category Navigation Grid ("tin tin karke" - UI/UX Designer Scaled Edition) -->
+      <CategoriesSection locale={currentLocale} />
     </div>
-
-    <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
-      {title}
-    </h1>
-
-    <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-      {description}
-    </p>
   </section>
 
-  <!-- Featured Tools Grid -->
-  <section class="max-w-6xl mx-auto px-4 py-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-      {featuredCalculators.map((calc) => (
+  <!-- Popular Calculators Section (3-Column Grid Layout) -->
+  <section
+    aria-label={hpStrings.popularSection.heading}
+    class="my-10 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-3 sm:p-5 md:p-6 shadow-sm dark:shadow-xl backdrop-blur-xl box-border text-center transition-all duration-300"
+  >
+    <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-3 sm:pb-3.5 mb-3.5 sm:mb-4 px-1">
+      <div class="flex items-center gap-2">
+        <span class="flex h-2 w-2 rounded-full bg-amber-500 animate-pulse"></span>
+        <h2 class="font-outfit text-xs sm:text-sm font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white flex items-center gap-2">
+          <span class="text-base sm:text-lg">⚡</span>
+          <span>{hpStrings.popularSection.heading}</span>
+        </h2>
+      </div>
+      <span class="text-[11px] font-mono text-slate-500 dark:text-slate-400 font-semibold bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-full border border-slate-200/80 dark:border-slate-700/80">
+        {POPULAR_CALCULATORS.length} {hpStrings.popularSection.toolsCount.replace(/^\d+\s*/, '') || 'Tools'}
+      </span>
+    </div>
+
+    <!-- 21 Popular Calculators in 3-Column Grid Layout (1 Top Calculator per Category) -->
+    <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
+      {POPULAR_CALCULATORS.map((item) => (
         <a
-          href={calc.href}
-          class="group block p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm shadow-xs hover:shadow-xl hover:border-indigo-500/40 dark:hover:border-indigo-500/40 transition-all duration-300"
+          href={item.href}
+          title={`${hpStrings.search.openCalc || 'Explore'} ${item.name}`}
+          class="group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[72px] sm:min-h-[82px] md:min-h-[90px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/90 hover:border-indigo-500/60 dark:hover:border-indigo-400/60 p-2 sm:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-lg hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 active:scale-[0.97]"
         >
-          <div class="flex items-center justify-between mb-4">
-            <span class="text-3xl p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/80 group-hover:scale-110 transition-transform">
-              {calc.icon}
-            </span>
-            <span class={`text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border ${calc.categoryColor}`}>
-              {calc.badge}
-            </span>
-          </div>
-
-          <h2 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors mb-2">
-            {calc.name}
-          </h2>
-
-          <p class="text-xs text-slate-600 dark:text-slate-400 line-clamp-2 mb-4 leading-relaxed">
-            {calc.desc}
-          </p>
-
-          <span class="inline-flex items-center text-xs font-semibold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">
-            {translate(locale, 'ui.calculate')} →
+          <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-base sm:text-lg md:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-950/30 transition-all mb-1 sm:mb-1.5">
+            {item.icon}
+          </span>
+          <span class="w-full text-center font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-[10.5px] sm:text-xs md:text-sm leading-tight whitespace-nowrap overflow-hidden">
+            {item.name}
           </span>
         </a>
       ))}
     </div>
   </section>
+
+  <!-- Country-Wise Calculators Section (3-Column Grid Layout) -->
+  <section
+    aria-label={hpStrings.regionsSection.heading}
+    class="my-10 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-3 sm:p-5 md:p-6 shadow-sm dark:shadow-xl backdrop-blur-xl box-border text-center transition-all duration-300"
+  >
+    <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-3 sm:pb-3.5 mb-3.5 sm:mb-4 px-1">
+      <div class="flex items-center gap-2">
+        <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <h2 class="font-outfit text-xs sm:text-sm font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white flex items-center gap-2">
+          <span class="text-base sm:text-lg">🌍</span>
+          <span>{hpStrings.regionsSection.heading}</span>
+        </h2>
+      </div>
+      <span class="text-[11px] font-mono text-slate-500 dark:text-slate-400 font-semibold bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-full border border-slate-200/80 dark:border-slate-700/80">
+        {FEATURED_COUNTRIES.length} {hpStrings.regionsSection.economiesCount.replace(/^\d+\s*/, '') || 'Economies'}
+      </span>
+    </div>
+
+    <!-- 18 Supported Countries in 3-Column Grid Layout (Top Flag, Bottom Clean Text) -->
+    <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
+      {FEATURED_COUNTRIES.map((item) => (
+        <a
+          href={item.href}
+          title={`${hpStrings.regionsSection.heading}: ${item.name}`}
+          class="group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[72px] sm:min-h-[82px] md:min-h-[90px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/90 hover:border-indigo-500/60 dark:hover:border-indigo-400/60 p-2 sm:p-2.5 md:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-lg hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 active:scale-[0.97]"
+        >
+          <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 overflow-hidden shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-950/30 transition-all mb-1 sm:mb-1.5 p-1.5">
+            <img
+              src={item.flagUrl}
+              alt={`${item.name} flag`}
+              class="w-full h-full object-cover rounded-[3px] shadow-2xs"
+              loading="lazy"
+              decoding="async"
+              width="32"
+              height="24"
+            />
+          </span>
+          <span class="w-full text-center font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-[10px] sm:text-xs md:text-sm leading-[1.15] break-words line-clamp-2 px-0.5">
+            {item.name}
+          </span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- About Us Section (Tech Startup Style, 6-Pillar 3-Grid Full Width Architecture) -->
+  <section class="mt-12 mb-4 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto px-1">
+    <div class="text-center space-y-2 mb-8">
+      <span class="font-outfit text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">{hpStrings.aboutSection.eyebrow}</span>
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight font-outfit">
+        {hpStrings.aboutSection.h2}
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl mx-auto">
+        {hpStrings.aboutSection.desc}
+      </p>
+    </div>
+
+    <div
+      aria-label={hpStrings.aboutSection.h2}
+      class="w-full rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-4 sm:p-6 md:p-8 shadow-sm dark:shadow-xl backdrop-blur-xl box-border flex flex-col space-y-5"
+    >
+      <!-- Header row inside the box -->
+      <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-3.5">
+        <div class="flex items-center gap-2">
+          <span class="flex h-2 w-2 rounded-full bg-cyan animate-pulse"></span>
+          <span class="font-outfit text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">{hpStrings.aboutSection.headerLeft}</span>
+        </div>
+        <span class="text-[11px] font-mono text-slate-500 dark:text-slate-400 font-semibold bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-full border border-slate-200/80 dark:border-slate-700/80">
+          {hpStrings.aboutSection.headerRight}
+        </span>
+      </div>
+
+      <!-- 6 Equal Boxes in a Unified 3-Column Grid (3 grids x 2 rows) -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 w-full">
+        <!-- Box 1 -->
+        <div class="group rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 p-4 sm:p-5 flex flex-col items-center justify-center text-center space-y-2 shadow-2xs transition-all duration-200 hover:shadow-lg hover:-translate-y-1 hover:border-indigo-500/50 dark:hover:border-indigo-400/50">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-lg shadow-2xs group-hover:scale-110 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-950/30 transition-all">
+            ⚡
+          </div>
+          <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+            {hpStrings.aboutSection.pillar1Title}
+          </h3>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+            {hpStrings.aboutSection.pillar1Desc}
+          </p>
+        </div>
+
+        <!-- Box 2 -->
+        <div class="group rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 p-4 sm:p-5 flex flex-col items-center justify-center text-center space-y-2 shadow-2xs transition-all duration-200 hover:shadow-lg hover:-translate-y-1 hover:border-indigo-500/50 dark:hover:border-indigo-400/50">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-lg shadow-2xs group-hover:scale-110 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-950/30 transition-all">
+            🌍
+          </div>
+          <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+            {hpStrings.aboutSection.pillar2Title}
+          </h3>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+            {hpStrings.aboutSection.pillar2Desc}
+          </p>
+        </div>
+
+        <!-- Box 3 -->
+        <div class="group rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 p-4 sm:p-5 flex flex-col items-center justify-center text-center space-y-2 shadow-2xs transition-all duration-200 hover:shadow-lg hover:-translate-y-1 hover:border-indigo-500/50 dark:hover:border-indigo-400/50">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-lg shadow-2xs group-hover:scale-110 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-950/30 transition-all">
+            🛡️
+          </div>
+          <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+            {hpStrings.aboutSection.pillar3Title}
+          </h3>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+            {hpStrings.aboutSection.pillar3Desc}
+          </p>
+        </div>
+
+        <!-- Box 4 -->
+        <div class="group rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 p-4 sm:p-5 flex flex-col items-center justify-center text-center space-y-2 shadow-2xs transition-all duration-200 hover:shadow-lg hover:-translate-y-1 hover:border-indigo-500/50 dark:hover:border-indigo-400/50">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-lg shadow-2xs group-hover:scale-110 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-950/30 transition-all">
+            🎯
+          </div>
+          <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+            {hpStrings.aboutSection.pillar4Title}
+          </h3>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+            {hpStrings.aboutSection.pillar4Desc}
+          </p>
+        </div>
+
+        <!-- Box 5 -->
+        <div class="group rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 p-4 sm:p-5 flex flex-col items-center justify-center text-center space-y-2 shadow-2xs transition-all duration-200 hover:shadow-lg hover:-translate-y-1 hover:border-indigo-500/50 dark:hover:border-indigo-400/50">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-lg shadow-2xs group-hover:scale-110 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-950/30 transition-all">
+            📊
+          </div>
+          <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+            {hpStrings.aboutSection.pillar5Title}
+          </h3>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+            {hpStrings.aboutSection.pillar5Desc}
+          </p>
+        </div>
+
+        <!-- Box 6 -->
+        <div class="group rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 p-4 sm:p-5 flex flex-col items-center justify-center text-center space-y-2 shadow-2xs transition-all duration-200 hover:shadow-lg hover:-translate-y-1 hover:border-indigo-500/50 dark:hover:border-indigo-400/50">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-lg shadow-2xs group-hover:scale-110 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-950/30 transition-all">
+            📑
+          </div>
+          <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit leading-tight group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+            {hpStrings.aboutSection.pillar6Title}
+          </h3>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
+            {hpStrings.aboutSection.pillar6Desc}
+          </p>
+        </div>
+      </div>
+
+      <!-- Know More Link to About Page (Centered CTA Button) -->
+      <div class="pt-4 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-center">
+        <a
+          href="/about/"
+          title={hpStrings.aboutSection.ctaButton}
+          class="group inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200/90 dark:border-slate-700/90 bg-slate-900 dark:bg-white text-white dark:text-slate-950 hover:bg-indigo-600 dark:hover:bg-indigo-50 px-6 py-2.5 text-xs sm:text-sm font-bold cursor-pointer transition-all duration-200 shadow-md hover:shadow-xl hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 active:scale-[0.98]"
+        >
+          <span>{hpStrings.aboutSection.ctaButton}</span>
+          <svg class="h-4 w-4 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- High-Value Regional & Specialized Deep Calculator Index (3-Grid Layout) -->
+  <OrphanRescueLinks limit={6} locale={currentLocale} />
 </Layout>
+
+<script is:inline>
+  (function () {
+    const filterButtons = document.querySelectorAll('.category-filter-btn');
+
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const cat = btn.getAttribute('data-category');
+        if (cat) {
+          window.location.href = `/${cat}/`;
+        }
+      });
+    });
+  })();
+</script>

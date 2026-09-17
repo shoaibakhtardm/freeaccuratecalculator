@@ -19,9 +19,9 @@ export async function getStaticPaths() {
   const programmaticList = getAllCalculators();
   const dedicatedPages = new Set(['income-tax-calculator', 'sip-calculator', 'age-calculator', 'ai-token-cost-calculator', 'bmi-calculator', 'emi-calculator', 'percentage-calculator']);
 
-  // Map programmatic calculators
+  // Map programmatic calculators (exclude love category which has dedicated /love/[slug].astro handler)
   const routes = programmaticList
-    .filter((c) => !dedicatedPages.has(c.slug))
+    .filter((c) => c.category !== 'love' && !dedicatedPages.has(c.slug))
     .map((calc) => ({
       params: {
         category: calc.category,
@@ -35,7 +35,7 @@ export async function getStaticPaths() {
   // Also include remaining calculators from registry adapted to entity structure
   const registrySlugs = new Set(programmaticList.map((p) => p.slug));
   for (const regCalc of CALCULATORS) {
-    if (registrySlugs.has(regCalc.id) || dedicatedPages.has(regCalc.id)) continue;
+    if (regCalc.category === 'love' || registrySlugs.has(regCalc.id) || dedicatedPages.has(regCalc.id)) continue;
 
     const adaptedCalc: CalculatorEntity = {
       slug: regCalc.id,

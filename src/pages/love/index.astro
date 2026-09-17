@@ -114,12 +114,12 @@ const loveHubSchema = {
     />
 
     <!-- ULTRA-ROMANTIC HERO SECTION -->
-    <section class="hero-section relative overflow-hidden rounded-3xl sm:rounded-[36px] border border-rose-200/80 dark:border-rose-900/60 bg-white/75 dark:bg-slate-950/80 px-4 py-8 sm:py-12 md:py-14 text-center shadow-xs sm:shadow-xl backdrop-blur-xl">
+    <section class="hero-section relative overflow-hidden rounded-3xl sm:rounded-[36px] border border-rose-200/80 dark:border-rose-900/60 bg-white/75 dark:bg-slate-950/80 px-4 py-8 sm:py-12 md:py-14 text-center shadow-xs sm:shadow-xl backdrop-blur-xl transform-gpu">
       
       <div class="relative z-10 mx-auto max-w-2xl sm:max-w-3xl lg:max-w-4xl space-y-4 sm:space-y-6">
         
         <!-- Romantic Pill Badge -->
-        <div class="inline-flex items-center gap-2 rounded-full border border-rose-300 dark:border-rose-700/60 bg-gradient-to-r from-rose-500/15 via-red-500/15 to-purple-500/15 px-4 py-1.5 shadow-2xs backdrop-blur-md select-none">
+        <div class="inline-flex items-center gap-2 rounded-full border border-rose-300 dark:border-rose-700/60 bg-gradient-to-r from-rose-500/15 via-red-500/15 to-purple-500/15 px-4 py-1.5 shadow-2xs backdrop-blur-md select-none transform-gpu">
           <span class="text-base animate-bounce">🌹</span>
           <span class="font-outfit text-[11px] sm:text-xs font-bold tracking-widest uppercase text-rose-700 dark:text-rose-300">
             21 Verified Romantic Testing Suites
@@ -146,20 +146,20 @@ const loveHubSchema = {
         <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
             href="#hero-quick-calc-form"
-            class="calculate-cta-btn px-6 py-3 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 hover:from-red-500 hover:to-pink-500 text-white font-bold text-xs sm:text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-2 animate-pulse"
+            class="calculate-cta-btn px-6 py-3 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 hover:from-red-500 hover:to-pink-500 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-95 transition-all duration-200 flex items-center gap-2 transform-gpu"
           >
             <span>❤️ Calculate Your Love Now</span>
           </a>
           <button
             id="hero-share-partner-btn"
             type="button"
-            class="px-5 py-3 rounded-xl border border-rose-300 dark:border-rose-700 bg-rose-50/80 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 font-bold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-2"
+            class="px-5 py-3 rounded-xl border border-rose-300 dark:border-rose-700 bg-rose-50/80 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/60 hover:scale-[1.01] active:scale-95 text-rose-700 dark:text-rose-300 font-bold text-xs sm:text-sm shadow-xs transition-all duration-200 flex items-center gap-2 cursor-pointer transform-gpu"
           >
             <span>💌 Share Results with Partner</span>
           </button>
           <a
             href="#love-calculators-grid"
-            class="px-5 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white/60 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-1.5"
+            class="px-5 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white/60 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800 hover:scale-[1.01] active:scale-95 text-slate-700 dark:text-slate-300 font-bold text-xs sm:text-sm shadow-xs transition-all duration-200 flex items-center gap-1.5 transform-gpu"
           >
             <span>✨ Explore All 21 Tests ↓</span>
           </a>
@@ -174,20 +174,20 @@ const loveHubSchema = {
                 type="text"
                 required
                 placeholder="Your Name 💖"
-                class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-rose-200 dark:border-rose-700 bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white placeholder-slate-400 focus:border-red-500 outline-none"
+                class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-rose-200 dark:border-rose-700 bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white placeholder-slate-400 focus:border-red-500 outline-none transition-colors duration-150"
               />
               <input
                 id="hero-quick-p2"
                 type="text"
                 required
                 placeholder="Partner / Crush 💘"
-                class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-rose-200 dark:border-rose-700 bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white placeholder-slate-400 focus:border-red-500 outline-none"
+                class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-rose-200 dark:border-rose-700 bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white placeholder-slate-400 focus:border-red-500 outline-none transition-colors duration-150"
               />
             </div>
             <button
               id="hero-calculate-btn"
               type="submit"
-              class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-red-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+              class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-red-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs shadow-md transition-all duration-150 active:scale-95 flex items-center justify-center gap-2 cursor-pointer transform-gpu"
             >
               <span>❤️ Test Instant Chemistry</span>
             </button>
@@ -200,7 +200,7 @@ const loveHubSchema = {
               <span class="font-mono text-xl font-black text-rose-600 dark:text-rose-400" id="hero-quick-score">96%</span>
             </div>
             <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden p-0.5">
-              <div id="hero-quick-bar" class="h-full rounded-full bg-gradient-to-r from-red-600 via-pink-500 to-amber-400 transition-all duration-700 w-0"></div>
+              <div id="hero-quick-bar" class="h-full w-full rounded-full bg-gradient-to-r from-red-600 via-pink-500 to-amber-400 transition-transform duration-600 ease-out origin-left scale-x-0 transform-gpu"></div>
             </div>
             <p id="hero-quick-verdict" class="text-[11px] text-slate-600 dark:text-slate-300 font-medium">
               🌟 Exceptional romantic resonance!
@@ -226,7 +226,7 @@ const loveHubSchema = {
         </div>
         <a
           href="/"
-          class="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:underline"
+          class="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:underline transition-colors"
         >
           <span>← All Categories</span>
         </a>
@@ -255,11 +255,11 @@ const loveHubSchema = {
           <a
             href={calc.href}
             title={`${calc.name} - ${calc.description}`}
-            class={`calculator-card love-item-card card-index-${index + 1} group relative flex flex-col items-center justify-between text-center min-w-0 min-h-[120px] sm:min-h-[160px] md:min-h-[180px] rounded-2xl border border-rose-200/80 dark:border-rose-900/60 bg-white/85 dark:bg-slate-900/85 hover:bg-rose-50/50 dark:hover:bg-slate-800/90 hover:border-red-500/70 hover:shadow-[0_0_25px_rgba(239,68,68,0.35)] p-2.5 sm:p-4 md:p-5 transition-all duration-300 shadow-2xs active:scale-[0.98] cursor-pointer`}
+            class={`calculator-card love-item-card card-index-${index + 1} group relative flex flex-col items-center justify-between text-center min-w-0 min-h-[120px] sm:min-h-[160px] md:min-h-[180px] rounded-2xl border border-rose-200/80 dark:border-rose-900/60 bg-white/85 dark:bg-slate-900/85 hover:bg-rose-50/50 dark:hover:bg-slate-800/90 hover:border-red-500/70 p-2.5 sm:p-4 md:p-5 shadow-2xs active:scale-[0.98] cursor-pointer transform-gpu`}
             data-search={`${calc.name} ${calc.keyword} ${calc.description} ${calc.shortName}`.toLowerCase()}
           >
             <!-- Top Icon Emblem with Romantic Hover Glow -->
-            <div class="flex h-9 w-9 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200/80 dark:border-rose-800/80 text-lg sm:text-2xl shadow-2xs group-hover:scale-115 group-hover:border-red-400 transition-transform duration-300" role="img" aria-label={`${calc.name} icon`}>
+            <div class="flex h-9 w-9 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200/80 dark:border-rose-800/80 text-lg sm:text-2xl shadow-2xs group-hover:scale-110 group-hover:border-red-400 transition-transform duration-200 transform-gpu" role="img" aria-label={`${calc.name} icon`}>
               {calc.romanticIcon}
             </div>
 
@@ -283,7 +283,7 @@ const loveHubSchema = {
               </span>
               <span class="text-[10px] sm:text-[11px] font-bold text-rose-600 dark:text-rose-400 group-hover:underline flex items-center gap-0.5">
                 <span>Calculate Match 💕</span>
-                <span class="text-xs transition-transform group-hover:translate-x-0.5">→</span>
+                <span class="text-xs transition-transform duration-150 group-hover:translate-x-0.5 transform-gpu">→</span>
               </span>
             </div>
           </a>
@@ -308,7 +308,7 @@ const loveHubSchema = {
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div class="space-y-2 p-4 rounded-2xl bg-rose-50/60 dark:bg-slate-800/50 border border-rose-200/60 dark:border-slate-700/60">
+        <div class="space-y-2 p-4 rounded-2xl bg-rose-50/60 dark:bg-slate-800/50 border border-rose-200/60 dark:border-slate-700/60 transition-transform duration-200 hover:-translate-y-0.5 transform-gpu">
           <div class="text-xl">🔒</div>
           <h3 class="font-outfit text-xs sm:text-sm font-bold text-slate-900 dark:text-white">100% Client-Side Privacy</h3>
           <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -316,7 +316,7 @@ const loveHubSchema = {
           </p>
         </div>
 
-        <div class="space-y-2 p-4 rounded-2xl bg-rose-50/60 dark:bg-slate-800/50 border border-rose-200/60 dark:border-slate-700/60">
+        <div class="space-y-2 p-4 rounded-2xl bg-rose-50/60 dark:bg-slate-800/50 border border-rose-200/60 dark:border-slate-700/60 transition-transform duration-200 hover:-translate-y-0.5 transform-gpu">
           <div class="text-xl">⚡</div>
           <h3 class="font-outfit text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Zero-Latency Algorithmic Engines</h3>
           <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -324,7 +324,7 @@ const loveHubSchema = {
           </p>
         </div>
 
-        <div class="space-y-2 p-4 rounded-2xl bg-rose-50/60 dark:bg-slate-800/50 border border-rose-200/60 dark:border-slate-700/60">
+        <div class="space-y-2 p-4 rounded-2xl bg-rose-50/60 dark:bg-slate-800/50 border border-rose-200/60 dark:border-slate-700/60 transition-transform duration-200 hover:-translate-y-0.5 transform-gpu">
           <div class="text-xl">💎</div>
           <h3 class="font-outfit text-xs sm:text-sm font-bold text-slate-900 dark:text-white">21 Specialized Romantic Suites</h3>
           <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
@@ -345,7 +345,7 @@ const loveHubSchema = {
         </div>
         <a
           href="/love/guides/"
-          class="text-xs font-bold text-rose-600 dark:text-rose-400 hover:underline flex items-center gap-1"
+          class="text-xs font-bold text-rose-600 dark:text-rose-400 hover:underline flex items-center gap-1 transition-colors"
         >
           View All Guides →
         </a>
@@ -354,11 +354,11 @@ const loveHubSchema = {
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
         <a
           href="/love/guides/how-love-calculator-works/"
-          class="group p-4 rounded-2xl border border-rose-200/70 dark:border-rose-800/70 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md hover:border-rose-400 transition hover:-translate-y-1 shadow-xs space-y-2 flex flex-col justify-between"
+          class="group p-4 rounded-2xl border border-rose-200/70 dark:border-rose-800/70 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md hover:border-rose-400 transition-all duration-200 hover:-translate-y-0.5 shadow-xs space-y-2 flex flex-col justify-between transform-gpu"
         >
           <div class="space-y-1.5">
             <span class="text-2xl">🔬</span>
-            <h4 class="font-serif text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-rose-600 transition">
+            <h4 class="font-serif text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-rose-600 transition-colors">
               How Love Calculators Work
             </h4>
             <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
@@ -370,11 +370,11 @@ const loveHubSchema = {
 
         <a
           href="/love/guides/zodiac-compatibility/"
-          class="group p-4 rounded-2xl border border-rose-200/70 dark:border-rose-800/70 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md hover:border-rose-400 transition hover:-translate-y-1 shadow-xs space-y-2 flex flex-col justify-between"
+          class="group p-4 rounded-2xl border border-rose-200/70 dark:border-rose-800/70 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md hover:border-rose-400 transition-all duration-200 hover:-translate-y-0.5 shadow-xs space-y-2 flex flex-col justify-between transform-gpu"
         >
           <div class="space-y-1.5">
             <span class="text-2xl">✨</span>
-            <h4 class="font-serif text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-rose-600 transition">
+            <h4 class="font-serif text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-rose-600 transition-colors">
               Zodiac Compatibility Guide
             </h4>
             <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
@@ -386,11 +386,11 @@ const loveHubSchema = {
 
         <a
           href="/love/guides/twin-flame-vs-soulmate/"
-          class="group p-4 rounded-2xl border border-rose-200/70 dark:border-rose-800/70 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md hover:border-rose-400 transition hover:-translate-y-1 shadow-xs space-y-2 flex flex-col justify-between"
+          class="group p-4 rounded-2xl border border-rose-200/70 dark:border-rose-800/70 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md hover:border-rose-400 transition-all duration-200 hover:-translate-y-0.5 shadow-xs space-y-2 flex flex-col justify-between transform-gpu"
         >
           <div class="space-y-1.5">
             <span class="text-2xl">🔥</span>
-            <h4 class="font-serif text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-rose-600 transition">
+            <h4 class="font-serif text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-rose-600 transition-colors">
               Twin Flame vs Soulmate
             </h4>
             <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
@@ -402,11 +402,11 @@ const loveHubSchema = {
 
         <a
           href="/love/blog/love-compatibility-tips/"
-          class="group p-4 rounded-2xl border border-rose-200/70 dark:border-rose-800/70 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md hover:border-rose-400 transition hover:-translate-y-1 shadow-xs space-y-2 flex flex-col justify-between"
+          class="group p-4 rounded-2xl border border-rose-200/70 dark:border-rose-800/70 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md hover:border-rose-400 transition-all duration-200 hover:-translate-y-0.5 shadow-xs space-y-2 flex flex-col justify-between transform-gpu"
         >
           <div class="space-y-1.5">
             <span class="text-2xl">💡</span>
-            <h4 class="font-serif text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-rose-600 transition">
+            <h4 class="font-serif text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-rose-600 transition-colors">
               10 Compatibility Tips
             </h4>
             <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
@@ -418,7 +418,7 @@ const loveHubSchema = {
       </div>
     </section>
 
-    <!-- FAQS ACCORDION SECTION -->
+    <!-- FAQS ACCORDION SECTION (Ultra-Smooth CSS Grid Expansion) -->
     <section class="rounded-3xl border border-rose-200/80 dark:border-rose-900/60 bg-white/75 dark:bg-slate-900/75 p-6 sm:p-9 space-y-6 shadow-sm dark:shadow-xl backdrop-blur-xl">
       <div class="flex items-center gap-3 border-b border-rose-200/80 dark:border-rose-800/80 pb-4">
         <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 text-lg font-bold">
@@ -436,14 +436,18 @@ const loveHubSchema = {
 
       <div class="space-y-3">
         {faqs.map((faq) => (
-          <details class="group rounded-2xl border border-rose-200/80 dark:border-rose-800/80 bg-rose-50/40 dark:bg-slate-800/40 p-4 transition-all open:bg-white dark:open:bg-slate-850">
-            <summary class="flex cursor-pointer items-center justify-between font-outfit text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 list-none">
+          <details class="group rounded-2xl border border-rose-200/80 dark:border-rose-800/80 bg-rose-50/40 dark:bg-slate-800/40 p-4 transition-colors duration-200 open:bg-white dark:open:bg-slate-850">
+            <summary class="flex cursor-pointer items-center justify-between font-outfit text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 list-none select-none">
               <span>{faq.question}</span>
-              <span class="text-xs text-rose-600 dark:text-rose-400 transition-transform group-open:rotate-180">▼</span>
+              <span class="text-xs text-rose-600 dark:text-rose-400 transition-transform duration-200 group-open:rotate-180 transform-gpu">▼</span>
             </summary>
-            <p class="mt-3 text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              {faq.answer}
-            </p>
+            <div class="grid grid-rows-[0fr] transition-all duration-200 ease-out group-open:grid-rows-[1fr]">
+              <div class="overflow-hidden">
+                <p class="pt-3 text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {faq.answer}
+                </p>
+              </div>
+            </div>
           </details>
         ))}
       </div>
@@ -452,98 +456,103 @@ const loveHubSchema = {
   </div>
 
   <!-- Confetti Canvas for Cosmic Celebration -->
-  <canvas id="love-confetti-canvas" class="pointer-events-none fixed inset-0 z-50 w-full h-full hidden"></canvas>
+  <canvas id="love-confetti-canvas" class="pointer-events-none fixed inset-0 z-50 w-full h-full hidden transform-gpu"></canvas>
 
-  <!-- PHASE 4 ADVANCED CSS ANIMATIONS -->
+  <!-- ADVANCED GPU-ACCELERATED CSS ANIMATIONS -->
   <style is:inline>
     /* 1. Hero Section Entrance */
     .hero-section {
-      animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: heroFadeInUp 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
     }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
+    @keyframes heroFadeInUp {
+      from { opacity: 0; transform: translate3d(0, 16px, 0); }
+      to { opacity: 1; transform: translate3d(0, 0, 0); }
     }
 
-    /* 2. Calculator Cards Staggered Entrance */
+    /* 2. Calculator Cards Capped Staggered Entrance */
     .calculator-card {
       opacity: 0;
-      animation: cardEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-      will-change: transform, box-shadow;
-      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.35s ease;
+      animation: cardEntrance 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+      transform: translate3d(0, 0, 0);
     }
-    .card-index-1 { animation-delay: 0.05s; }
-    .card-index-2 { animation-delay: 0.10s; }
-    .card-index-3 { animation-delay: 0.15s; }
-    .card-index-4 { animation-delay: 0.20s; }
-    .card-index-5 { animation-delay: 0.25s; }
-    .card-index-6 { animation-delay: 0.30s; }
-    .card-index-7 { animation-delay: 0.35s; }
-    .card-index-8 { animation-delay: 0.40s; }
-    .card-index-9 { animation-delay: 0.45s; }
-    .card-index-10 { animation-delay: 0.50s; }
-    .card-index-11 { animation-delay: 0.55s; }
-    .card-index-12 { animation-delay: 0.60s; }
-    .card-index-13 { animation-delay: 0.65s; }
-    .card-index-14 { animation-delay: 0.70s; }
-    .card-index-15 { animation-delay: 0.75s; }
-    .card-index-16 { animation-delay: 0.80s; }
-    .card-index-17 { animation-delay: 0.85s; }
-    .card-index-18 { animation-delay: 0.90s; }
-    .card-index-19 { animation-delay: 0.95s; }
-    .card-index-20 { animation-delay: 1.00s; }
-    .card-index-21 { animation-delay: 1.05s; }
+    .card-index-1 { animation-delay: 0.015s; }
+    .card-index-2 { animation-delay: 0.030s; }
+    .card-index-3 { animation-delay: 0.045s; }
+    .card-index-4 { animation-delay: 0.060s; }
+    .card-index-5 { animation-delay: 0.075s; }
+    .card-index-6 { animation-delay: 0.090s; }
+    .card-index-7 { animation-delay: 0.105s; }
+    .card-index-8 { animation-delay: 0.120s; }
+    .card-index-9 { animation-delay: 0.135s; }
+    .card-index-10 { animation-delay: 0.150s; }
+    .card-index-11 { animation-delay: 0.165s; }
+    .card-index-12 { animation-delay: 0.180s; }
+    .card-index-13 { animation-delay: 0.195s; }
+    .card-index-14 { animation-delay: 0.210s; }
+    .card-index-15 { animation-delay: 0.225s; }
+    .card-index-16 { animation-delay: 0.240s; }
+    .card-index-17 { animation-delay: 0.250s; }
+    .card-index-18 { animation-delay: 0.250s; }
+    .card-index-19 { animation-delay: 0.250s; }
+    .card-index-20 { animation-delay: 0.250s; }
+    .card-index-21 { animation-delay: 0.250s; }
 
     @keyframes cardEntrance {
       from {
         opacity: 0;
-        transform: translateY(35px) scale(0.96);
+        transform: translate3d(0, 14px, 0) scale(0.98);
       }
       to {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translate3d(0, 0, 0) scale(1);
       }
     }
 
-    /* 3. Hover Lift & Romantic Neon Glow */
+    /* 3. Subtle Card Hover Lift */
     .calculator-card:hover {
-      transform: translateY(-10px) scale(1.02) !important;
-      box-shadow: 0 16px 36px rgba(244, 63, 94, 0.28) !important;
+      transform: translate3d(0, -4px, 0) scale(1.015);
+      box-shadow: 0 10px 24px rgba(244, 63, 94, 0.18);
     }
 
     /* 4. Heartbeat pulse */
     @keyframes heartBeatPulse {
       0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.25); }
+      50% { transform: scale(1.2); }
     }
     .heart-beat-icon {
       display: inline-block;
       animation: heartBeatPulse 1s ease-in-out infinite;
     }
+
+    /* 5. Reduced Motion Rules */
+    @media (prefers-reduced-motion: reduce) {
+      .hero-section,
+      .calculator-card,
+      .heart-beat-icon,
+      .animate-bounce,
+      .animate-pulse,
+      .animate-fade-in {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+      }
+      .calculator-card {
+        transition: none !important;
+      }
+      .calculator-card:hover {
+        transform: none !important;
+        box-shadow: none !important;
+      }
+    }
   </style>
 
-  <!-- CLIENT-SIDE SCRIPT (Phase 4 Interactions) -->
+  <!-- CLIENT-SIDE SCRIPT (Optimized 60/120 FPS Interactions) -->
   <script is:inline>
     document.addEventListener('DOMContentLoaded', () => {
-      // 0. Performance: 3D Parallax Tilt on Cards
-      document.querySelectorAll('.calculator-card').forEach((card) => {
-        card.addEventListener('mousemove', (e) => {
-          const rect = card.getBoundingClientRect();
-          const x = (e.clientX - rect.left) / rect.width - 0.5;
-          const y = (e.clientY - rect.top) / rect.height - 0.5;
-          card.style.transform = `
-            translateY(-10px) 
-            perspective(900px) 
-            rotateX(${-y * 8}deg) 
-            rotateY(${x * 8}deg)
-          `;
-        });
-        card.addEventListener('mouseleave', () => {
-          card.style.transform = '';
-        });
-      });
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      // 1. Real-Time Search Filter
+      // 1. Real-Time Directory Search Filter
       const searchInput = document.getElementById('love-directory-search');
       const cards = document.querySelectorAll('.love-item-card');
       const countBadge = document.getElementById('love-search-counter');
@@ -571,30 +580,34 @@ const loveHubSchema = {
         }
       });
 
-      // 2. Confetti Particle Explosion
+      // 2. High-Performance Confetti Particle Explosion
       function triggerLoveConfetti() {
+        if (prefersReducedMotion) return;
         const canvas = document.getElementById('love-confetti-canvas');
         if (!canvas) return;
         canvas.classList.remove('hidden');
         const ctx = canvas.getContext('2d');
+        if (!ctx) return;
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
+        const isMobile = window.innerWidth < 768;
+        const particleCount = isMobile ? 35 : 55;
         const particles = [];
         const colors = ['#f43f5e', '#ec4899', '#ef4444', '#fb7185', '#fda4af', '#fbbf24'];
 
-        for (let i = 0; i < 70; i++) {
+        for (let i = 0; i < particleCount; i++) {
           particles.push({
-            x: canvas.width / 2 + (Math.random() - 0.5) * 100,
-            y: canvas.height / 2 + (Math.random() - 0.5) * 50,
-            r: Math.random() * 5 + 3,
+            x: canvas.width / 2 + (Math.random() - 0.5) * 80,
+            y: canvas.height / 2 + (Math.random() - 0.5) * 40,
+            r: Math.random() * 4 + 2.5,
             color: colors[Math.floor(Math.random() * colors.length)],
-            vx: (Math.random() - 0.5) * 14,
-            vy: (Math.random() - 0.9) * 16,
-            gravity: 0.35,
+            vx: (Math.random() - 0.5) * 12,
+            vy: (Math.random() - 0.85) * 14,
+            gravity: 0.32,
             opacity: 1,
             rotation: Math.random() * 360,
-            vRot: (Math.random() - 0.5) * 10
+            vRot: (Math.random() - 0.5) * 8
           });
         }
 
@@ -603,11 +616,12 @@ const loveHubSchema = {
           ctx.clearRect(0, 0, canvas.width, canvas.height);
           let active = false;
 
-          particles.forEach((p) => {
+          for (let i = 0; i < particles.length; i++) {
+            const p = particles[i];
             p.x += p.vx;
             p.y += p.vy;
             p.vy += p.gravity;
-            p.opacity -= 0.012;
+            p.opacity -= 0.015;
             p.rotation += p.vRot;
 
             if (p.opacity > 0) {
@@ -622,7 +636,7 @@ const loveHubSchema = {
               ctx.fill();
               ctx.restore();
             }
-          });
+          }
 
           if (active) {
             animFrame = requestAnimationFrame(renderConfetti);
@@ -634,7 +648,7 @@ const loveHubSchema = {
         renderConfetti();
       }
 
-      // 3. Hero Quick Calculator Form with Progress Animation & Confetti
+      // 3. Hero Quick Calculator Form with Hardware-Accelerated Progress Animation
       const quickForm = document.getElementById('hero-quick-calc-form');
       const quickP1 = document.getElementById('hero-quick-p1');
       const quickP2 = document.getElementById('hero-quick-p2');
@@ -673,13 +687,15 @@ const loveHubSchema = {
           quickNames.textContent = `${p1} & ${p2}`;
           quickScore.textContent = `${score}%`;
           quickResult.classList.remove('hidden');
-          quickBar.style.width = '0%';
-          setTimeout(() => {
-            quickBar.style.width = `${score}%`;
-          }, 50);
+          if (quickBar) {
+            quickBar.style.transform = 'scaleX(0)';
+            requestAnimationFrame(() => {
+              quickBar.style.transform = `scaleX(${score / 100})`;
+            });
+          }
 
           triggerLoveConfetti();
-        }, 900);
+        }, 750);
       });
 
       // 4. Share with Partner CTA

@@ -167,7 +167,7 @@ const isFrench = currentLocale === 'fr' || Astro.url.pathname.includes('/countri
     // Detect currently active locale
     function getActiveLocale() {
       const path = window.location.pathname.toLowerCase();
-      const match = path.match(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi)(\/|$)/);
+      const match = path.match(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)(\/|$)/);
       if (match) return match[1];
       return localStorage.getItem('fac_locale') || 'en';
     }
@@ -185,6 +185,7 @@ const isFrench = currentLocale === 'fr' || Astro.url.pathname.includes('/countri
       ru: { flag: '🇷🇺', name: 'Русский' },
       ja: { flag: '🇯🇵', name: '日本語' },
       hi: { flag: '🇮🇳', name: 'हिन्दी' },
+      zh: { flag: '🇨🇳', name: '中文' },
     };
 
     wrappers.forEach((wrapper) => {
@@ -348,7 +349,7 @@ const isFrench = currentLocale === 'fr' || Astro.url.pathname.includes('/countri
             window.facSetActiveLanguage(targetLang);
           } else {
             const currentPath = window.location.pathname;
-            const cleanPath = currentPath.replace(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi)(\/|$)/i, '/') || '/';
+            const cleanPath = currentPath.replace(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)(\/|$)/i, '/') || '/';
             let targetPath = '';
             if (targetLang === 'en') {
               targetPath = cleanPath;

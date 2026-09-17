@@ -9,7 +9,6 @@ import Toast from '../components/common/Toast.astro';
 import LanguageCountryModal from '../components/LanguageCountryModal.astro';
 import LocaleDetectionToast from '../components/common/LocaleDetectionToast.astro';
 import LocalizedCalculatorBridge from '../components/calculator/LocalizedCalculatorBridge.astro';
-import CountrySelector from '../components/CountrySelector.astro';
 import { EXCHANGE_RATE_SNAPSHOT } from '../data/exchangeRates';
 import { getLocaleDirection, ALL_SUPPORTED_LOCALES } from '../i18n/config';
 import { LOCALES, DEFAULT_LOCALE } from '../i18n/localeConfig';
@@ -530,7 +529,7 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
 
           // Native Locale Management (Independent from Currency)
           let savedLocale = (localStorage.getItem('fac_locale') || '').toLowerCase();
-          const pathMatch = window.location.pathname.match(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi)(\/|$)/i);
+          const pathMatch = window.location.pathname.match(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)(\/|$)/i);
           if (pathMatch) {
             savedLocale = pathMatch[1].toLowerCase();
             localStorage.setItem('fac_locale', savedLocale);
@@ -595,7 +594,7 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
     </main>
 
     <slot name="footer">
-      <Footer />
+      <Footer locale={currentLocale} />
     </slot>
     <ConsentBanner />
     <Toast />

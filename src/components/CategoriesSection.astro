@@ -2,7 +2,7 @@
 // src/components/CategoriesSection.astro
 import type { CountryConfig } from '../data/countries';
 import { getCountryCategories, type CategoryItem } from '../data/categories';
-import { frCategories } from '../data/i18n';
+import { getHomepageStrings } from '../i18n/homepageDict';
 import AutocompleteSearch from './common/AutocompleteSearch.astro';
 
 interface Props {
@@ -11,6 +11,7 @@ interface Props {
   icon?: string;
   class?: string;
   showSearch?: boolean;
+  locale?: string;
 }
 
 const {
@@ -19,15 +20,19 @@ const {
   icon = '📁',
   class: className = '',
   showSearch = country ? true : false,
+  locale: propLocale,
 } = Astro.props;
 
+const currentLocale = (propLocale || Astro.currentLocale || 'en').toLowerCase();
+const hpStrings = getHomepageStrings(currentLocale);
 const isFrancePage = Astro.url.pathname.startsWith('/countries/france') || Astro.url.pathname.startsWith('/fr/');
-const isFrench = country?.slug === 'france' || isFrancePage || Astro.currentLocale === 'fr';
+const isFrench = country?.slug === 'france' || isFrancePage || currentLocale === 'fr';
+
 const categories: CategoryItem[] = getCountryCategories(country);
-const sectionHeading = title || (isFrench ? 'Catégories' : 'Categories');
+const sectionHeading = title || hpStrings.categoriesSection.heading;
 const sectionAriaLabel = country
   ? (isFrench ? `Catégories de simulateurs France` : `${country.name} Calculator Categories`)
-  : (isFrench ? 'Catégories de simulateurs et calculateurs' : 'Calculator Categories');
+  : hpStrings.categoriesSection.heading;
 ---
 
 <!-- 3-by-3 Category Navigation Grid ("tin tin karke" - UI/UX Designer Ultra Elite Edition) -->
@@ -47,7 +52,7 @@ const sectionAriaLabel = country
       </h2>
     </div>
     <span class="text-[11px] font-mono text-slate-500 dark:text-slate-400 font-semibold bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-full border border-slate-200/80 dark:border-slate-700/80">
-      {categories.length} Domains
+      {categories.length} {hpStrings.categoriesSection.domainsCount.replace(/^\d+\s*/, '') || 'Domains'}
     </span>
   </div>
 
@@ -57,6 +62,7 @@ const sectionAriaLabel = country
       <AutocompleteSearch
         id={country ? `categories-search-${country.slug}` : 'categories-search'}
         country={country}
+        locale={currentLocale}
         isFrench={isFrench}
       />
     </div>
@@ -66,10 +72,10 @@ const sectionAriaLabel = country
   <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
     {categories.map((cat) => {
       const href = country ? `/countries/${country.slug}/${cat.id}/` : `/${cat.id}/`;
-      const catDisplayName = isFrench ? (frCategories[cat.id] || cat.name) : cat.name;
+      const catDisplayName = hpStrings.categoriesSection.categories[cat.id] || cat.name;
       const linkTitle = country
         ? (isFrench ? `Explorer les simulateurs et calculateurs France ${catDisplayName}` : `Explore ${country.name} ${cat.name} Calculators`)
-        : (isFrench ? `Explorer les simulateurs et calculateurs ${catDisplayName}` : `Explore ${cat.name} Calculators`);
+        : `${sectionHeading} ${catDisplayName}`;
 
       return (
         <a
