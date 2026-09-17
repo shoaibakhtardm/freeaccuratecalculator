@@ -1,0 +1,102 @@
+---
+// File: src/pages/love/blog/zodiac-signs-in-love.astro
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/common/Breadcrumbs.astro';
+import RomanticBackground from '../../../components/love/RomanticBackground.astro';
+
+const siteOrigin = 'https://freeaccuratecalculator.com';
+const canonicalUrl = `${siteOrigin}/love/blog/zodiac-signs-in-love/`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How Each Zodiac Sign Behaves When Truly in Love (2026 Astrological Guide)",
+  "description": "Decode the secret romantic behaviors, devotion markers, and affection patterns of all 12 astrological signs.",
+  "author": {
+    "@type": "Organization",
+    "name": "Free Accurate Calculator"
+  },
+  "mainEntityOfPage": canonicalUrl
+};
+---
+
+<Layout
+  title="How Each Zodiac Sign Behaves When in Love (2026 Guide)"
+  description="Discover how all 12 zodiac signs act when deeply in love. Uncover secret signs of devotion, vulnerability triggers, and romantic styles."
+  keywords="zodiac signs in love, how zodiac signs love, astrology signs in love, star signs romance behavior"
+  canonicalUrl={canonicalUrl}
+  ogTitle="How Each Zodiac Sign Behaves When Truly in Love"
+  ogDescription="Explore the telltale romance traits and signs of devotion for Aries through Pisces."
+  jsonLd={jsonLd}
+>
+  <RomanticBackground />
+
+  <article class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <Breadcrumbs
+      items={[
+        { label: 'Love Calculators', href: '/love/' },
+        { label: 'Blog', href: '/love/blog/zodiac-signs-in-love/' },
+        { label: 'Zodiac in Love' }
+      ]}
+    />
+
+    <header class="space-y-4 border-b border-rose-200/60 dark:border-rose-900/60 pb-6">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/10 text-rose-600 dark:text-rose-400 text-xs font-bold uppercase tracking-wider">
+        <span>🌟 Astrological Romance</span>
+      </div>
+      <h1 class="font-serif text-3xl sm:text-5xl font-black text-slate-900 dark:text-white leading-tight">
+        How Each Zodiac Sign Acts <span class="bg-gradient-to-r from-red-600 via-rose-500 to-pink-500 bg-clip-text text-transparent">When Truly in Love</span>
+      </h1>
+      <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
+        From fiery grand gestures to quiet, protective devotion—learn how the 12 signs reveal genuine love.
+      </p>
+    </header>
+
+    <div class="prose prose-rose dark:prose-invert max-w-none text-sm sm:text-base space-y-6 text-slate-700 dark:text-slate-300">
+      <section class="space-y-4">
+        <h2 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+          The 12 Signs &amp; Their Devotion Markers
+        </h2>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 not-prose">
+          <div class="p-4 rounded-xl border border-rose-200 dark:border-rose-800 bg-white/70 dark:bg-slate-900/70">
+            <h3 class="font-bold text-rose-600 dark:text-rose-400">♈ Aries (Mar 21 – Apr 19)</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Boldly initiates, invites you on adrenaline-filled adventures, and fiercely champions your ambitions.</p>
+          </div>
+          <div class="p-4 rounded-xl border border-rose-200 dark:border-rose-800 bg-white/70 dark:bg-slate-900/70">
+            <h3 class="font-bold text-rose-600 dark:text-rose-400">♉ Taurus (Apr 20 – May 20)</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Cooks gourmet comfort meals, offers unwavering physical presence, and shares their most prized comforts.</p>
+          </div>
+          <div class="p-4 rounded-xl border border-rose-200 dark:border-rose-800 bg-white/70 dark:bg-slate-900/70">
+            <h3 class="font-bold text-rose-600 dark:text-rose-400">♊ Gemini (May 21 – Jun 20)</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Sends endless curated articles and songs, engages in 3 AM philosophical debates, and integrates you into their inner social circle.</p>
+          </div>
+          <div class="p-4 rounded-xl border border-rose-200 dark:border-rose-800 bg-white/70 dark:bg-slate-900/70">
+            <h3 class="font-bold text-rose-600 dark:text-rose-400">♋ Cancer (Jun 21 – Jul 22)</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-1">Invites you into their sanctuary home, remembers every emotional detail, and provides unconditional emotional shelter.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="mt-8 p-6 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 space-y-4">
+      <h3 class="font-serif text-lg font-bold text-slate-900 dark:text-white">
+        Calculate your Zodiac match:
+      </h3>
+      <div class="flex flex-wrap gap-3">
+        <a
+          href="/love/zodiac-compatibility/"
+          class="px-4 py-2 rounded-xl bg-purple-600 text-white font-bold text-xs shadow hover:bg-purple-500 transition"
+        >
+          ✨ Zodiac Compatibility Calculator
+        </a>
+        <a
+          href="/love/love-calculator-by-name/"
+          class="px-4 py-2 rounded-xl bg-red-600 text-white font-bold text-xs shadow hover:bg-red-500 transition"
+        >
+          💖 Name Match Calculator
+        </a>
+      </div>
+    </div>
+  </article>
+</Layout>

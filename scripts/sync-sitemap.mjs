@@ -44,7 +44,7 @@ function getAllHtmlRoutes(dir, baseDir = dir) {
 const validHtmlRoutes = new Set(getAllHtmlRoutes(distClientDir));
 
 // Clean up any extra sitemap files from public
-const publicExtras = ['sitemap-0.xml', 'sitemap-index.xml', 'sitemap.xsl'];
+const publicExtras = ['sitemap-0.xml', 'sitemap-index.xml', 'sitemap_index.xml', 'sitemap.xsl'];
 for (const extra of publicExtras) {
   const p = path.join(publicDir, extra);
   if (fs.existsSync(p)) fs.unlinkSync(p);

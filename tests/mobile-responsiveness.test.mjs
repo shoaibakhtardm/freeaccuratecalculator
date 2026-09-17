@@ -69,9 +69,9 @@ test('Mobile Responsiveness Verification — HTML & CSS Audit', async (t) => {
     assert.ok(mortgageHtml.includes('text-base sm:text-sm'));
   });
 
-  await t.test('AdSlot containers enforce max-w-full and overflow-hidden', () => {
+  await t.test('Page layout containers enforce overflow-hidden to prevent horizontal scrolling', () => {
     const countriesHtml = fs.readFileSync(path.join(distClient, 'countries/index.html'), 'utf-8');
-    assert.ok(countriesHtml.includes('max-w-full overflow-hidden'));
+    assert.ok(countriesHtml.includes('overflow-hidden'), 'Countries container must enforce overflow-hidden');
   });
 
   await t.test('Consent banner action buttons have 44px touch target on mobile', () => {

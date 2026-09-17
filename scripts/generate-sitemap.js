@@ -5,13 +5,14 @@ import path from 'node:path';
 const SITE_URL = process.env.BASE_URL || 'https://freeaccuratecalculator.com';
 const distClientDir = path.resolve('dist/client');
 const publicDir = path.resolve('public');
+const MAX_URLS_PER_SITEMAP = 500;
 
-// Ensure target directory exists in fresh CI runner
+// Ensure target directory exists
 if (!fs.existsSync(publicDir)) {
   fs.mkdirSync(publicDir, { recursive: true });
 }
 
-// 1. Recursive helper to discover all generated HTML routes from dist/client if built
+// 1. Recursive helper to discover all generated HTML routes from dist/client
 function getAllHtmlRoutes(dir, baseDir = dir) {
   let routes = [];
   if (!fs.existsSync(dir)) return routes;
@@ -37,7 +38,28 @@ function getAllHtmlRoutes(dir, baseDir = dir) {
   return routes;
 }
 
-// 2. Determine URL list
+// 2. Parse public/_redirects to get all redirect source paths to avoid including any 301/302 redirects
+const redirectedSources = new Set();
+const redirectsFilePath = path.join(publicDir, '_redirects');
+if (fs.existsSync(redirectsFilePath)) {
+  const lines = fs.readFileSync(redirectsFilePath, 'utf-8').split('\n');
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    const parts = trimmed.split(/\s+/);
+    if (parts.length >= 2) {
+      let src = parts[0].trim();
+      redirectedSources.add(src);
+      if (src.endsWith('/')) {
+        redirectedSources.add(src.slice(0, -1));
+      } else {
+        redirectedSources.add(src + '/');
+      }
+    }
+  }
+}
+
+// 3. Determine URL list
 let allUrls = [];
 const publicSitemapXml = path.join(publicDir, 'sitemap.xml');
 const distSitemap0 = path.join(distClientDir, 'sitemap-0.xml');
@@ -70,9 +92,16 @@ if (discoveredRoutes.length > 0) {
   allUrls = Array.from(set);
 }
 
-// Filter out excluded / non-canonical routes
+// Filter out excluded, redirecting, or error routes
 allUrls = allUrls.filter((route) => {
   if (!route) return false;
+  const normalized = route.endsWith('/') ? route : `${route}/`;
+  const unslashed = route.endsWith('/') ? route.slice(0, -1) : route;
+
+  if (redirectedSources.has(route) || redirectedSources.has(normalized) || redirectedSources.has(unslashed)) {
+    return false;
+  }
+
   if (
     route.includes('/dev-preview') ||
     route.includes('/api/') ||
@@ -95,9 +124,9 @@ allUrls = allUrls.filter((route) => {
 // Remove duplicates and sort
 allUrls = Array.from(new Set(allUrls)).sort();
 
-console.log(`🔍 Total verified URLs to partition: ${allUrls.length}`);
+console.log(`🔍 Total verified 200 OK URLs to partition: ${allUrls.length}`);
 
-// 3. Category partition configuration
+// 4. Category partition configuration
 const I18N_LOCALES = new Set(['es', 'fr', 'de', 'ar', 'nl', 'pt', 'it', 'ru', 'ja', 'hi', 'zh']);
 const BUSINESS_CATS = new Set(['business', 'insurance', 'legal', 'real-estate', 'marketing']);
 const SCIENCE_CATS = new Set(['physics', 'chemistry', 'biology', 'ecology', 'technology', 'automotive', 'converter', 'construction', 'statistics']);
@@ -138,7 +167,7 @@ for (const route of allUrls) {
   categorizedRoutes[cat].push(route);
 }
 
-// 4. Build XML helpers
+// 5. Build XML helpers
 function getPriorityAndChangeFreq(route) {
   if (route === '/' || /^\/(en|es|fr|de|ar|nl|pt|it|ru|ja|hi|zh)\/?$/.test(route)) {
     return { priority: '1.0', changefreq: 'daily' };
@@ -149,7 +178,7 @@ function getPriorityAndChangeFreq(route) {
   if (route.includes('-calculator') || route.includes('/sip/')) {
     return { priority: '0.7', changefreq: 'weekly' };
   }
-  if (route.startsWith('/guides/')) {
+  if (route.startsWith('/guides/') || route.startsWith('/countries/france/guides/')) {
     return { priority: '0.6', changefreq: 'weekly' };
   }
   return { priority: '0.5', changefreq: 'monthly' };
@@ -177,30 +206,66 @@ ${entries.join('\n')}
 `;
 }
 
-// 5. Generate and write chunked sitemaps
+// 6. Generate and write chunked sitemaps (strict max 500 URLs per file)
 const generatedSitemaps = [];
+
+// Clean up any existing sitemap-*.xml files in public and dist/client
+const cleanupDirs = [publicDir, distClientDir].filter((d) => fs.existsSync(d));
+for (const dir of cleanupDirs) {
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    if (file.startsWith('sitemap-') && file.endsWith('.xml') && file !== 'sitemap-index.xml') {
+      try {
+        fs.unlinkSync(path.join(dir, file));
+      } catch {}
+    }
+  }
+}
 
 for (const [category, routes] of Object.entries(categorizedRoutes)) {
   if (routes.length === 0) continue;
 
-  const sitemapFilename = `sitemap-${category}.xml`;
-  const xmlContent = generateUrlsetXml(routes);
+  if (routes.length <= MAX_URLS_PER_SITEMAP) {
+    const sitemapFilename = `sitemap-${category}.xml`;
+    const xmlContent = generateUrlsetXml(routes);
 
-  fs.writeFileSync(path.join(publicDir, sitemapFilename), xmlContent, 'utf-8');
-  if (fs.existsSync(distClientDir)) {
-    fs.writeFileSync(path.join(distClientDir, sitemapFilename), xmlContent, 'utf-8');
+    fs.writeFileSync(path.join(publicDir, sitemapFilename), xmlContent, 'utf-8');
+    if (fs.existsSync(distClientDir)) {
+      fs.writeFileSync(path.join(distClientDir, sitemapFilename), xmlContent, 'utf-8');
+    }
+
+    generatedSitemaps.push({
+      filename: sitemapFilename,
+      count: routes.length,
+      loc: `${SITE_URL}/${sitemapFilename}`,
+    });
+
+    console.log(`  📁 Generated ${sitemapFilename}: ${routes.length} URLs (<= 500 cap)`);
+  } else {
+    // Chunk category into smaller files of at most MAX_URLS_PER_SITEMAP URLs
+    const chunksCount = Math.ceil(routes.length / MAX_URLS_PER_SITEMAP);
+    for (let i = 0; i < chunksCount; i++) {
+      const chunkRoutes = routes.slice(i * MAX_URLS_PER_SITEMAP, (i + 1) * MAX_URLS_PER_SITEMAP);
+      const sitemapFilename = `sitemap-${category}-${i + 1}.xml`;
+      const xmlContent = generateUrlsetXml(chunkRoutes);
+
+      fs.writeFileSync(path.join(publicDir, sitemapFilename), xmlContent, 'utf-8');
+      if (fs.existsSync(distClientDir)) {
+        fs.writeFileSync(path.join(distClientDir, sitemapFilename), xmlContent, 'utf-8');
+      }
+
+      generatedSitemaps.push({
+        filename: sitemapFilename,
+        count: chunkRoutes.length,
+        loc: `${SITE_URL}/${sitemapFilename}`,
+      });
+
+      console.log(`  📁 Generated chunk ${sitemapFilename}: ${chunkRoutes.length} URLs (<= 500 cap)`);
+    }
   }
-
-  generatedSitemaps.push({
-    filename: sitemapFilename,
-    count: routes.length,
-    loc: `${SITE_URL}/${sitemapFilename}`,
-  });
-
-  console.log(`  📁 Generated ${sitemapFilename}: ${routes.length} URLs`);
 }
 
-// 6. Generate master sitemap-index.xml
+// 7. Generate Master Sitemap Index (both sitemap_index.xml and sitemap-index.xml)
 const sitemapIndexEntries = generatedSitemaps.map((sm) => `  <sitemap>
     <loc>${sm.loc}</loc>
     <lastmod>${nowIso}</lastmod>
@@ -212,16 +277,30 @@ ${sitemapIndexEntries}
 </sitemapindex>
 `;
 
-fs.writeFileSync(path.join(publicDir, 'sitemap-index.xml'), sitemapIndexXml, 'utf-8');
-if (fs.existsSync(distClientDir)) {
-  fs.writeFileSync(path.join(distClientDir, 'sitemap-index.xml'), sitemapIndexXml, 'utf-8');
+// Write both sitemap_index.xml and sitemap-index.xml
+const indexFilenames = ['sitemap_index.xml', 'sitemap-index.xml'];
+for (const filename of indexFilenames) {
+  fs.writeFileSync(path.join(publicDir, filename), sitemapIndexXml, 'utf-8');
+  if (fs.existsSync(distClientDir)) {
+    fs.writeFileSync(path.join(distClientDir, filename), sitemapIndexXml, 'utf-8');
+  }
 }
-console.log(`✅ Generated sitemap-index.xml referencing ${generatedSitemaps.length} categorized sitemaps.`);
+console.log(`✅ Generated sitemap_index.xml & sitemap-index.xml referencing ${generatedSitemaps.length} chunked sitemaps (all <= 500 URLs).`);
 
-// Also write unified sitemap.xml to maintain complete backward compatibility
+// 8. Also write unified sitemap.xml fallback
 const fullUnifiedXml = generateUrlsetXml(allUrls);
 fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), fullUnifiedXml, 'utf-8');
 if (fs.existsSync(distClientDir)) {
   fs.writeFileSync(path.join(distClientDir, 'sitemap.xml'), fullUnifiedXml, 'utf-8');
 }
 console.log(`✅ Maintained canonical sitemap.xml fallback with ${allUrls.length} total URLs.`);
+
+// 9. Sync rss.xml between dist/client and public
+const distRss = path.join(distClientDir, 'rss.xml');
+const publicRss = path.join(publicDir, 'rss.xml');
+if (fs.existsSync(distRss)) {
+  fs.copyFileSync(distRss, publicRss);
+} else if (fs.existsSync(publicRss) && fs.existsSync(distClientDir)) {
+  fs.copyFileSync(publicRss, distRss);
+}
+

@@ -1,0 +1,252 @@
+---
+// File: src/components/love/PartnerShareSuite.astro
+interface Props {
+  calculatorName: string;
+  calculatorSlug: string;
+}
+
+const { calculatorName, calculatorSlug } = Astro.props;
+---
+
+<!-- PARTNER WELCOME BANNER (Only shows when accessed via ?from=partner or ?p1=Name) -->
+<div id="partner-incoming-banner" class="hidden relative overflow-hidden rounded-2xl border border-rose-300 dark:border-rose-700 bg-gradient-to-r from-rose-500/15 via-pink-500/15 to-purple-500/15 p-4 sm:p-5 shadow-lg backdrop-blur-md animate-fade-in mb-6">
+  <div class="flex items-center gap-3">
+    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-rose-500 text-white text-xl shadow-md animate-bounce">
+      💌
+    </div>
+    <div class="min-w-0 flex-1">
+      <div class="text-[11px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400">
+        Special Love Invitation Received
+      </div>
+      <h3 class="font-outfit text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+        <span id="partner-inviter-name">Your Partner</span> has invited you to calculate your romantic synergy!
+      </h3>
+      <p class="text-xs text-slate-600 dark:text-slate-300 mt-0.5">
+        Your names have been aligned. Enter your details below to reveal your mutual cosmic score.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- INLINE VIRAL SHARE WIDGET -->
+<div class="rounded-3xl border border-rose-200/80 dark:border-rose-900/60 bg-gradient-to-br from-rose-500/10 via-pink-500/5 to-transparent p-5 sm:p-7 shadow-sm dark:shadow-xl backdrop-blur-xl space-y-4">
+  <div class="flex items-center justify-between border-b border-rose-200/60 dark:border-rose-800/60 pb-3">
+    <div class="flex items-center gap-2">
+      <span class="text-2xl animate-pulse">💌</span>
+      <div>
+        <h3 class="font-outfit text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+          Send This Love Test to Your Partner / Crush
+        </h3>
+        <p class="text-[11px] text-slate-500 dark:text-slate-400">
+          Surprise them with a personalized test link with your name pre-filled
+        </p>
+      </div>
+    </div>
+    <span class="hidden sm:inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-600 dark:text-rose-300 border border-rose-400/30">
+      🔥 1-Click Viral
+    </span>
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+    <!-- WhatsApp Share Button -->
+    <button
+      type="button"
+      id="whatsapp-share-btn"
+      class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 cursor-pointer"
+    >
+      <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
+        <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
+      </svg>
+      <span>Share via WhatsApp</span>
+    </button>
+
+    <!-- Copy Personalized Link Button -->
+    <button
+      type="button"
+      id="copy-partner-link-btn"
+      class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 cursor-pointer"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+      </svg>
+      <span id="copy-partner-link-text">Copy Couple Link</span>
+    </button>
+
+    <!-- Generate Story Card Button -->
+    <button
+      type="button"
+      id="open-story-card-btn"
+      class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-900 dark:bg-white hover:opacity-90 text-white dark:text-slate-900 text-xs font-bold shadow-md transition-all duration-300 active:scale-95 cursor-pointer"
+    >
+      <span>📸</span>
+      <span>Couple Story Card</span>
+    </button>
+  </div>
+</div>
+
+<!-- COUPLE STORY CARD MODAL (For Instagram/Snapchat/TikTok) -->
+<div id="story-card-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-fade-in">
+  <div class="relative w-full max-w-sm rounded-3xl overflow-hidden bg-gradient-to-b from-[#2E003E] via-[#1a001e] to-black border border-rose-500/40 p-6 text-center text-white shadow-2xl space-y-5">
+    
+    <!-- Close Modal Button -->
+    <button
+      type="button"
+      id="close-story-modal-btn"
+      class="absolute top-4 right-4 p-1.5 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-colors cursor-pointer"
+    >
+      ✕
+    </button>
+
+    <!-- Visual Story Card Content -->
+    <div id="story-card-exportable" class="p-6 rounded-2xl bg-gradient-to-b from-rose-950/80 via-[#2E003E]/90 to-purple-950/80 border border-rose-400/40 shadow-inner space-y-4">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-[10px] font-bold uppercase tracking-wider border border-rose-400/30">
+        <span>❤️</span>
+        <span>Verified Romance Index</span>
+      </div>
+
+      <div class="space-y-1">
+        <h4 id="story-names-display" class="text-lg font-bold font-serif text-[#FFD1DC]">
+          Partner 1 & Partner 2
+        </h4>
+        <p class="text-[11px] text-slate-300 font-light">
+          {calculatorName}
+        </p>
+      </div>
+
+      <!-- Score Gauge Circle -->
+      <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-tr from-rose-600 via-pink-500 to-amber-400 p-1 shadow-[0_0_25px_rgba(244,63,94,0.6)]">
+        <div class="flex flex-col items-center justify-center w-full h-full rounded-full bg-[#1a001e]">
+          <span id="story-score-display" class="font-mono text-2xl font-black text-rose-300">96%</span>
+          <span class="text-[9px] uppercase font-bold text-amber-300">Match</span>
+        </div>
+      </div>
+
+      <p id="story-verdict-display" class="text-xs text-rose-200/90 italic font-serif leading-relaxed px-2">
+        "Soulmate frequency in the top 0.1% of cosmic resonance."
+      </p>
+
+      <div class="pt-2 border-t border-white/10 text-[10px] text-slate-400 font-mono">
+        freeaccuratecalculator.com/love/
+      </div>
+    </div>
+
+    <!-- Modal Actions -->
+    <div class="space-y-2 pt-1">
+      <button
+        type="button"
+        id="copy-story-text-btn"
+        class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-xs shadow-md transition-all active:scale-95 cursor-pointer"
+      >
+        Copy Shareable Result Text 📋
+      </button>
+      <p class="text-[10px] text-slate-400">
+        Take a screenshot of this card to share on Instagram & Snapchat Stories!
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<!-- CLIENT LOGIC FOR PARTNER SHARING -->
+<script is:inline define:vars={{ calculatorName, calculatorSlug }}>
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. Detect incoming partner parameter from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const partnerParam = urlParams.get('p1') || urlParams.get('from');
+    const partnerBanner = document.getElementById('partner-incoming-banner');
+    const partnerInviterName = document.getElementById('partner-inviter-name');
+    const input1 = document.getElementById('love-input-1');
+    const input2 = document.getElementById('love-input-2');
+
+    if (partnerParam) {
+      if (partnerBanner && partnerInviterName) {
+        partnerInviterName.textContent = partnerParam !== '1' && partnerParam !== 'partner' ? decodeURIComponent(partnerParam) : 'Your Partner';
+        partnerBanner.classList.remove('hidden');
+      }
+      if (input1 && partnerParam !== '1' && partnerParam !== 'partner') {
+        input1.value = decodeURIComponent(partnerParam);
+        input2?.focus();
+      }
+    }
+
+    // 2. Generate customized partner share link
+    function getShareData() {
+      const p1Val = input1?.value?.trim() || '';
+      const p2Val = input2?.value?.trim() || '';
+      const baseUrl = `https://freeaccuratecalculator.com/love/${calculatorSlug}/`;
+      const personalizedUrl = p1Val ? `${baseUrl}?p1=${encodeURIComponent(p1Val)}&from=partner` : baseUrl;
+      
+      const textMessage = p1Val && p2Val
+        ? `Hey! I just calculated our love compatibility score on Free Accurate Calculator for ${p1Val} & ${p2Val} 💕! Check our match here: ${personalizedUrl}`
+        : `Hey! Test our romantic compatibility on this Love Calculator 💕! Click here: ${personalizedUrl}`;
+
+      return { p1Val, p2Val, personalizedUrl, textMessage };
+    }
+
+    // 3. WhatsApp Direct Share
+    const whatsappBtn = document.getElementById('whatsapp-share-btn');
+    whatsappBtn?.addEventListener('click', () => {
+      const { textMessage } = getShareData();
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(textMessage)}`;
+      window.open(whatsappUrl, '_blank');
+    });
+
+    // 4. Copy Couple Link
+    const copyLinkBtn = document.getElementById('copy-partner-link-btn');
+    const copyLinkText = document.getElementById('copy-partner-link-text');
+    copyLinkBtn?.addEventListener('click', async () => {
+      const { personalizedUrl } = getShareData();
+      try {
+        await navigator.clipboard.writeText(personalizedUrl);
+        if (copyLinkText) copyLinkText.textContent = 'Copied Link! 💖';
+        setTimeout(() => {
+          if (copyLinkText) copyLinkText.textContent = 'Copy Couple Link';
+        }, 2500);
+      } catch (err) {
+        prompt('Copy this link to send to your partner:', personalizedUrl);
+      }
+    });
+
+    // 5. Story Card Modal
+    const storyModal = document.getElementById('story-card-modal');
+    const openStoryBtn = document.getElementById('open-story-card-btn');
+    const closeStoryBtn = document.getElementById('close-story-modal-btn');
+    const storyNamesDisplay = document.getElementById('story-names-display');
+    const storyScoreDisplay = document.getElementById('story-score-display');
+    const scoreNum = document.getElementById('dedicated-score-num');
+
+    openStoryBtn?.addEventListener('click', () => {
+      const { p1Val, p2Val } = getShareData();
+      if (storyNamesDisplay) {
+        storyNamesDisplay.textContent = p1Val && p2Val ? `${p1Val} & ${p2Val}` : 'Cosmic Love Test';
+      }
+      if (storyScoreDisplay && scoreNum && scoreNum.textContent !== '0%') {
+        storyScoreDisplay.textContent = scoreNum.textContent;
+      }
+      storyModal?.classList.remove('hidden');
+    });
+
+    closeStoryBtn?.addEventListener('click', () => {
+      storyModal?.classList.add('hidden');
+    });
+
+    storyModal?.addEventListener('click', (e) => {
+      if (e.target === storyModal) storyModal.classList.add('hidden');
+    });
+
+    // 6. Copy Story Text
+    const copyStoryTextBtn = document.getElementById('copy-story-text-btn');
+    copyStoryTextBtn?.addEventListener('click', async () => {
+      const { textMessage } = getShareData();
+      try {
+        await navigator.clipboard.writeText(textMessage);
+        copyStoryTextBtn.textContent = 'Copied to Clipboard! 🎉';
+        setTimeout(() => {
+          copyStoryTextBtn.textContent = 'Copy Shareable Result Text 📋';
+        }, 2000);
+      } catch (e) {
+        alert(textMessage);
+      }
+    });
+  });
+</script>

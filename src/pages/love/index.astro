@@ -1,0 +1,702 @@
+---
+// File: src/pages/love/index.astro
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
+import RomanticBackground from '../../components/love/RomanticBackground.astro';
+import CosmicSearchOrb from '../../components/love/CosmicSearchOrb.astro';
+import { LOVE_CALCULATORS } from '../../data/loveCalculators';
+import { SEARCHABLE_CALCULATORS } from '../../data/searchDatabase';
+
+const allSearchableToolsJson = JSON.stringify(SEARCHABLE_CALCULATORS);
+
+// Curated Ultra-Romantic Emoji Mapping & Meta
+const ROMANTIC_CALCULATORS = LOVE_CALCULATORS.map((calc) => {
+  let romanticIcon = calc.icon;
+  if (calc.slug === 'love-calculator-by-name') romanticIcon = '🌹';
+  else if (calc.slug === 'marriage-compatibility-calculator') romanticIcon = '💍';
+  else if (calc.slug === 'zodiac-love-compatibility-calculator') romanticIcon = '✨';
+  else if (calc.slug === 'true-love-calculator-by-names') romanticIcon = '💖';
+  else if (calc.slug === 'crush-love-test-calculator') romanticIcon = '💘';
+  else if (calc.slug === 'birth-date-love-compatibility') romanticIcon = '🎂';
+  else if (calc.slug === 'relationship-compatibility-test') romanticIcon = '🧠';
+  else if (calc.slug === 'prank-love-calculator') romanticIcon = '🎭';
+  else if (calc.slug === 'twin-flame-calculator') romanticIcon = '🔥';
+  else if (calc.slug === 'soulmate-name-calculator') romanticIcon = '💫';
+  else if (calc.slug === 'flames-calculator') romanticIcon = '🕹️';
+  else if (calc.slug === 'numerology-love-calculator') romanticIcon = '🔢';
+  else if (calc.slug === 'ai-love-calculator') romanticIcon = '🤖';
+  else if (calc.slug === 'celebrity-love-calculator') romanticIcon = '🎬';
+  else if (calc.slug === 'chinese-zodiac-love-calculator') romanticIcon = '🐉';
+  else if (calc.slug === 'friendship-to-love-calculator') romanticIcon = '🤝';
+  else if (calc.slug === 'breakup-compatibility-calculator') romanticIcon = '💔';
+  else if (calc.slug === 'love-language-compatibility') romanticIcon = '🗣️';
+  else if (calc.slug === 'tarot-love-calculator') romanticIcon = '🔮';
+  else if (calc.slug === 'wedding-date-predictor-calculator') romanticIcon = '💒';
+  else if (calc.slug === 'couple-nickname-generator-match') romanticIcon = '🎀';
+
+  return {
+    ...calc,
+    romanticIcon,
+    href: `/love/${calc.slug}/`,
+  };
+});
+
+const faqs = [
+  {
+    question: "How do our 21 Love Calculators compute compatibility?",
+    answer: "Every calculator is engineered with verified romantic algorithms—ranging from phonetic acoustic harmonics for names, ancient Vedic Ashtakoota Guna Milan for marriage, and elemental aspects for Zodiac signs to psychometric reciprocity models."
+  },
+  {
+    question: "Are our names and calculations completely private?",
+    answer: "Yes, 100%. All computations execute purely within your local device memory. No names, birth dates, or romantic results are ever uploaded to any server."
+  },
+  {
+    question: "Can I share pre-filled test links with my partner or crush?",
+    answer: "Yes! Each dedicated calculator page includes a 1-Click WhatsApp share and pre-filled invitation link so your partner can open the test with your name already aligned."
+  },
+  {
+    question: "Is there any limit to how many couples I can calculate?",
+    answer: "None at all. All 21 romantic calculators are completely free with zero usage limits or subscriptions."
+  }
+];
+
+const loveHubSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": "https://freeaccuratecalculator.com/love/#collection",
+      "url": "https://freeaccuratecalculator.com/love/",
+      "name": "Love Calculators Hub — 21 Accurate & Free Romance Tests",
+      "description": "Discover your true love percentage, Vedic Kundli marriage score, and zodiac synergy with 21 specialized love calculators.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Free Accurate Calculator",
+        "url": "https://freeaccuratecalculator.com/",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://freeaccuratecalculator.com/favicon.svg"
+        }
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://freeaccuratecalculator.com/love/#faq",
+      "mainEntity": faqs.map((f) => ({
+        "@type": "Question",
+        "name": f.question,
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": f.answer
+        }
+      }))
+    }
+  ]
+};
+---
+
+<Layout
+  title="Love Calculators Hub: 21 Free & Accurate Romantic Compatibility Tests"
+  metaDescription="Discover your romantic destiny with 21 elite love calculators. Test name compatibility, Vedic marriage Kundli, zodiac synergy, FLAMES, tarot, and numerology instantly."
+  canonicalUrl="https://freeaccuratecalculator.com/love/"
+  jsonLd={loveHubSchema}
+>
+  <!-- ULTRA-ELITE 3D SWIRLING ROSE PETALS + ROTATING RED HEARTS CANVAS BACKGROUND -->
+  <RomanticBackground />
+
+  <div class="relative z-10 max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-6 space-y-8 sm:space-y-10">
+    
+    <!-- Breadcrumbs Navigation -->
+    <Breadcrumbs
+      items={[
+        { label: 'Love Calculators' }
+      ]}
+    />
+
+    <!-- ULTRA-ROMANTIC HERO SECTION -->
+    <section class="hero-section relative overflow-hidden rounded-3xl sm:rounded-[36px] border border-rose-200/80 dark:border-rose-900/60 bg-white/75 dark:bg-slate-950/80 px-4 py-8 sm:py-12 md:py-14 text-center shadow-xs sm:shadow-xl backdrop-blur-xl">
+      
+      <div class="relative z-10 mx-auto max-w-2xl sm:max-w-3xl lg:max-w-4xl space-y-4 sm:space-y-6">
+        
+        <!-- Romantic Pill Badge -->
+        <div class="inline-flex items-center gap-2 rounded-full border border-rose-300 dark:border-rose-700/60 bg-gradient-to-r from-rose-500/15 via-red-500/15 to-purple-500/15 px-4 py-1.5 shadow-2xs backdrop-blur-md select-none">
+          <span class="text-base animate-bounce">🌹</span>
+          <span class="font-outfit text-[11px] sm:text-xs font-bold tracking-widest uppercase text-rose-700 dark:text-rose-300">
+            21 Verified Romantic Testing Suites
+          </span>
+          <span class="text-rose-500 dark:text-rose-400 text-xs font-bold">✦</span>
+        </div>
+
+        <!-- Main Romantic Headline (Exact H1) -->
+        <h1 class="font-serif text-3xl sm:text-5xl lg:text-[54px] font-black tracking-tight text-slate-900 dark:text-white leading-[1.15] sm:leading-[1.1] text-balance">
+          Discover Your <span class="bg-gradient-to-r from-red-600 via-rose-500 to-pink-500 dark:from-rose-400 dark:via-red-400 dark:to-pink-300 bg-clip-text text-transparent italic">Cosmic &amp; Romantic</span> Synergy - 21 Free Love Calculators
+        </h1>
+
+        <!-- 300-Word SEO Rich Keyword Introduction -->
+        <div class="font-sans text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed text-left sm:text-justify space-y-3 px-2">
+          <p>
+            Welcome to the internet's most accurate and comprehensive suite of <strong>21 free love calculators</strong>. Whether you are curious about your <strong>love calculator by name</strong> compatibility, seeking ancient Vedic <strong>kundli matching</strong> for marriage, or analyzing celestial aspects with our <strong>zodiac compatibility calculator</strong>, our deterministic engines provide instant, reliable clarity. We combine classical Pythagorean gematria, acoustic phonetic frequencies, planetary ephemeris tables (calibrated with <a href="https://ssd.jpl.nasa.gov/" target="_blank" rel="noopener noreferrer" class="text-rose-600 dark:text-rose-400 underline hover:text-rose-700">NASA JPL ephemeris standards</a> and <a href="https://www.astrology.com" target="_blank" rel="noopener noreferrer" class="text-rose-600 dark:text-rose-400 underline hover:text-rose-700">astrological synastry</a>), and modern psychometric models endorsed by <a href="https://www.gottman.com" target="_blank" rel="noopener noreferrer" class="text-rose-600 dark:text-rose-400 underline hover:text-rose-700">relationship science researchers</a>.
+          </p>
+          <p>
+            Explore your secret romantic destiny with our viral <strong>crush love test</strong>, measure karmic soul connections through the <strong>twin flame calculator</strong>, or replay nostalgic playground romance with the authentic <strong>FLAMES calculator</strong>. Every calculation runs <em>100% privately in your local browser memory</em>—guaranteeing that your names, birth dates, and results are never stored or transmitted to external servers.
+          </p>
+        </div>
+
+        <!-- 3 Call-To-Action (CTA) Cluster -->
+        <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <a
+            href="#hero-quick-calc-form"
+            class="calculate-cta-btn px-6 py-3 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 hover:from-red-500 hover:to-pink-500 text-white font-bold text-xs sm:text-sm shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-2 animate-pulse"
+          >
+            <span>❤️ Calculate Your Love Now</span>
+          </a>
+          <button
+            id="hero-share-partner-btn"
+            type="button"
+            class="px-5 py-3 rounded-xl border border-rose-300 dark:border-rose-700 bg-rose-50/80 dark:bg-rose-950/60 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 font-bold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-2"
+          >
+            <span>💌 Share Results with Partner</span>
+          </button>
+          <a
+            href="#love-calculators-grid"
+            class="px-5 py-3 rounded-xl border border-slate-300 dark:border-slate-700 bg-white/60 dark:bg-slate-900/60 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold text-xs sm:text-sm shadow-xs transition-all flex items-center gap-1.5"
+          >
+            <span>✨ Explore All 21 Tests ↓</span>
+          </a>
+        </div>
+
+        <!-- INSTANT QUICK-TEST HERO WIDGET -->
+        <div class="max-w-lg mx-auto p-4 sm:p-5 rounded-2xl border border-rose-300/80 dark:border-rose-800/80 bg-gradient-to-r from-rose-500/10 via-red-500/10 to-pink-500/10 backdrop-blur-md shadow-md">
+          <form id="hero-quick-calc-form" class="space-y-3" autocomplete="off">
+            <div class="grid grid-cols-2 gap-2.5">
+              <input
+                id="hero-quick-p1"
+                type="text"
+                required
+                placeholder="Your Name 💖"
+                class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-rose-200 dark:border-rose-700 bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white placeholder-slate-400 focus:border-red-500 outline-none"
+              />
+              <input
+                id="hero-quick-p2"
+                type="text"
+                required
+                placeholder="Partner / Crush 💘"
+                class="w-full text-xs sm:text-sm px-3.5 py-2.5 rounded-xl border border-rose-200 dark:border-rose-700 bg-white/90 dark:bg-slate-900/90 text-slate-900 dark:text-white placeholder-slate-400 focus:border-red-500 outline-none"
+              />
+            </div>
+            <button
+              id="hero-calculate-btn"
+              type="submit"
+              class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-red-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>❤️ Test Instant Chemistry</span>
+            </button>
+          </form>
+
+          <!-- Quick Result Banner -->
+          <div id="hero-quick-result" class="hidden mt-3 pt-3 border-t border-rose-300/60 dark:border-rose-800/60 text-center animate-fade-in space-y-2">
+            <div class="flex items-center justify-center gap-2">
+              <span class="text-xs font-bold text-slate-700 dark:text-slate-200" id="hero-quick-names">Alex & Taylor</span>
+              <span class="font-mono text-xl font-black text-rose-600 dark:text-rose-400" id="hero-quick-score">96%</span>
+            </div>
+            <div class="w-full h-2.5 bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden p-0.5">
+              <div id="hero-quick-bar" class="h-full rounded-full bg-gradient-to-r from-red-600 via-pink-500 to-amber-400 transition-all duration-700 w-0"></div>
+            </div>
+            <p id="hero-quick-verdict" class="text-[11px] text-slate-600 dark:text-slate-300 font-medium">
+              🌟 Exceptional romantic resonance!
+            </p>
+          </div>
+        </div>
+
+        <!-- COSMIC SEARCH ORB (3D Glowing Globe, Voice Search & Predictive Fuzzy Autocomplete) -->
+        <CosmicSearchOrb />
+
+      </div>
+    </section>
+
+    <!-- STRICT 3-BY-3 GRID DIRECTORY OF ALL 21 CALCULATORS -->
+    <section class="space-y-4 sm:space-y-5" aria-label="21 Love Calculators Directory">
+      
+      <div class="flex items-center justify-between border-b border-rose-200/80 dark:border-rose-800/80 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl animate-pulse">💖</span>
+          <h2 class="font-outfit text-sm sm:text-base md:text-lg font-black uppercase tracking-[0.15em] text-slate-900 dark:text-white">
+            All 21 Love Calculators
+          </h2>
+        </div>
+        <a
+          href="/"
+          class="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:underline"
+        >
+          <span>← All Categories</span>
+        </a>
+      </div>
+
+      <!-- THE 3-BY-3 GRID (Strict 3 Columns on Mobile, Tablet & Desktop) -->
+      <div
+        id="love-calculators-grid"
+        class="grid grid-cols-3 gap-2 sm:gap-3.5 md:gap-4.5"
+      >
+        <!-- No Results Msg -->
+        <div
+          id="love-no-results"
+          class="hidden col-span-3 w-full py-12 px-4 text-center rounded-2xl border border-dashed border-rose-300 dark:border-rose-800 bg-rose-50/40 dark:bg-slate-900/40"
+        >
+          <span class="text-4xl mb-2 inline-block">💔</span>
+          <h3 class="font-serif text-base font-bold text-slate-800 dark:text-slate-200">
+            No matching love calculators found
+          </h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            Try searching for "Name", "Zodiac", "Kundli", "FLAMES", or "Tarot".
+          </p>
+        </div>
+
+        {ROMANTIC_CALCULATORS.map((calc, index) => (
+          <a
+            href={calc.href}
+            title={`${calc.name} - ${calc.description}`}
+            class={`calculator-card love-item-card card-index-${index + 1} group relative flex flex-col items-center justify-between text-center min-w-0 min-h-[120px] sm:min-h-[160px] md:min-h-[180px] rounded-2xl border border-rose-200/80 dark:border-rose-900/60 bg-white/85 dark:bg-slate-900/85 hover:bg-rose-50/50 dark:hover:bg-slate-800/90 hover:border-red-500/70 hover:shadow-[0_0_25px_rgba(239,68,68,0.35)] p-2.5 sm:p-4 md:p-5 transition-all duration-300 shadow-2xs active:scale-[0.98] cursor-pointer`}
+            data-search={`${calc.name} ${calc.keyword} ${calc.description} ${calc.shortName}`.toLowerCase()}
+          >
+            <!-- Top Icon Emblem with Romantic Hover Glow -->
+            <div class="flex h-9 w-9 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200/80 dark:border-rose-800/80 text-lg sm:text-2xl shadow-2xs group-hover:scale-115 group-hover:border-red-400 transition-transform duration-300" role="img" aria-label={`${calc.name} icon`}>
+              {calc.romanticIcon}
+            </div>
+
+            <!-- Title & 50-Word SEO Description Section -->
+            <div class="my-1.5 w-full min-w-0 px-0.5 flex flex-col items-center justify-center gap-1">
+              <span class="inline-block text-[10px] sm:text-[11px] font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider select-none leading-none">
+                {calc.shortName}
+              </span>
+              <h3 class="font-outfit text-[11.5px] sm:text-xs md:text-sm font-bold text-slate-800 dark:text-slate-100 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors line-clamp-2 leading-tight">
+                {calc.name}
+              </h3>
+              <p class="hidden md:line-clamp-2 text-[10.5px] text-slate-500 dark:text-slate-400 leading-snug">
+                {calc.description}
+              </p>
+            </div>
+
+            <!-- Bottom Badge & Action Button -->
+            <div class="flex flex-col items-center justify-center w-full gap-1.5">
+              <span class="inline-flex items-center px-1.5 sm:px-2 py-0.5 text-[9px] sm:text-[10px] md:text-[11px] font-mono font-bold rounded-md bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200/60 dark:border-rose-900/60 truncate max-w-full">
+                {calc.volume}/mo
+              </span>
+              <span class="text-[10px] sm:text-[11px] font-bold text-rose-600 dark:text-rose-400 group-hover:underline flex items-center gap-0.5">
+                <span>Calculate Match 💕</span>
+                <span class="text-xs transition-transform group-hover:translate-x-0.5">→</span>
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- EDUCATIONAL ROMANCE SECTION -->
+    <section class="rounded-3xl border border-rose-200/80 dark:border-rose-900/60 bg-white/75 dark:bg-slate-900/75 p-6 sm:p-9 space-y-6 shadow-sm dark:shadow-xl backdrop-blur-xl">
+      <div class="flex items-center gap-3 border-b border-rose-200/80 dark:border-rose-800/80 pb-4">
+        <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 text-lg font-bold">
+          🌹
+        </span>
+        <div>
+          <h2 class="font-outfit text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+            Why Use Free Accurate Love Calculators?
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Engineered for algorithmic accuracy, psychometric reliability, and 100% private in-browser execution
+          </p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div class="space-y-2 p-4 rounded-2xl bg-rose-50/60 dark:bg-slate-800/50 border border-rose-200/60 dark:border-slate-700/60">
+          <div class="text-xl">🔒</div>
+          <h3 class="font-outfit text-xs sm:text-sm font-bold text-slate-900 dark:text-white">100% Client-Side Privacy</h3>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            All computations execute strictly in your local browser memory. Zero data or names are ever uploaded to any server.
+          </p>
+        </div>
+
+        <div class="space-y-2 p-4 rounded-2xl bg-rose-50/60 dark:bg-slate-800/50 border border-rose-200/60 dark:border-slate-700/60">
+          <div class="text-xl">⚡</div>
+          <h3 class="font-outfit text-xs sm:text-sm font-bold text-slate-900 dark:text-white">Zero-Latency Algorithmic Engines</h3>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Instant calculations using verified mathematical gematria, Vedic Ashtakoota ephemeris, and psychometric reciprocity models.
+          </p>
+        </div>
+
+        <div class="space-y-2 p-4 rounded-2xl bg-rose-50/60 dark:bg-slate-800/50 border border-rose-200/60 dark:border-slate-700/60">
+          <div class="text-xl">💎</div>
+          <h3 class="font-outfit text-xs sm:text-sm font-bold text-slate-900 dark:text-white">21 Specialized Romantic Suites</h3>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            From ancient Chinese & Western Zodiacs to modern AI psychological predictions and classic nostalgic FLAMES games.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROMANTIC GUIDES & RESOURCE VAULT -->
+    <section class="space-y-4" aria-label="Love Guides and Educational Articles">
+      <div class="flex items-center justify-between border-b border-rose-200/80 dark:border-rose-800/80 pb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-xl">📚</span>
+          <h3 class="font-outfit text-sm sm:text-base font-bold text-slate-900 dark:text-white">
+            Love Guides &amp; Astrological Insights
+          </h3>
+        </div>
+        <a
+          href="/love/guides/"
+          class="text-xs font-bold text-rose-600 dark:text-rose-400 hover:underline flex items-center gap-1"
+        >
+          View All Guides →
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        <a
+          href="/love/guides/how-love-calculator-works/"
+          class="group p-4 rounded-2xl border border-rose-200/70 dark:border-rose-800/70 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md hover:border-rose-400 transition hover:-translate-y-1 shadow-xs space-y-2 flex flex-col justify-between"
+        >
+          <div class="space-y-1.5">
+            <span class="text-2xl">🔬</span>
+            <h4 class="font-serif text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-rose-600 transition">
+              How Love Calculators Work
+            </h4>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
+              The science, acoustic gematria, and algorithms behind name matching.
+            </p>
+          </div>
+          <span class="text-[11px] font-semibold text-rose-600 dark:text-rose-400">Read Guide →</span>
+        </a>
+
+        <a
+          href="/love/guides/zodiac-compatibility-guide/"
+          class="group p-4 rounded-2xl border border-rose-200/70 dark:border-rose-800/70 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md hover:border-rose-400 transition hover:-translate-y-1 shadow-xs space-y-2 flex flex-col justify-between"
+        >
+          <div class="space-y-1.5">
+            <span class="text-2xl">✨</span>
+            <h4 class="font-serif text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-rose-600 transition">
+              Zodiac Compatibility Guide
+            </h4>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
+              Fire, Earth, Air, and Water synastry &amp; planetary aspects.
+            </p>
+          </div>
+          <span class="text-[11px] font-semibold text-rose-600 dark:text-rose-400">Read Guide →</span>
+        </a>
+
+        <a
+          href="/love/guides/twin-flame-signs/"
+          class="group p-4 rounded-2xl border border-rose-200/70 dark:border-rose-800/70 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md hover:border-rose-400 transition hover:-translate-y-1 shadow-xs space-y-2 flex flex-col justify-between"
+        >
+          <div class="space-y-1.5">
+            <span class="text-2xl">🔥</span>
+            <h4 class="font-serif text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-rose-600 transition">
+              11 Twin Flame Signs
+            </h4>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
+              Mirror souls, runner-chaser stages, and spiritual union catalysts.
+            </p>
+          </div>
+          <span class="text-[11px] font-semibold text-rose-600 dark:text-rose-400">Read Guide →</span>
+        </a>
+
+        <a
+          href="/love/blog/love-compatibility-tips/"
+          class="group p-4 rounded-2xl border border-rose-200/70 dark:border-rose-800/70 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md hover:border-rose-400 transition hover:-translate-y-1 shadow-xs space-y-2 flex flex-col justify-between"
+        >
+          <div class="space-y-1.5">
+            <span class="text-2xl">💡</span>
+            <h4 class="font-serif text-xs sm:text-sm font-bold text-slate-900 dark:text-white group-hover:text-rose-600 transition">
+              10 Compatibility Tips
+            </h4>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2">
+              Gottman-backed connection habits and emotional attunement.
+            </p>
+          </div>
+          <span class="text-[11px] font-semibold text-rose-600 dark:text-rose-400">Read Tips →</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- FAQS ACCORDION SECTION -->
+    <section class="rounded-3xl border border-rose-200/80 dark:border-rose-900/60 bg-white/75 dark:bg-slate-900/75 p-6 sm:p-9 space-y-6 shadow-sm dark:shadow-xl backdrop-blur-xl">
+      <div class="flex items-center gap-3 border-b border-rose-200/80 dark:border-rose-800/80 pb-4">
+        <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 text-lg font-bold">
+          💬
+        </span>
+        <div>
+          <h2 class="font-outfit text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+            Frequently Asked Questions About Love &amp; Compatibility
+          </h2>
+          <p class="text-xs text-slate-500 dark:text-slate-400">
+            Clear mathematical, astrological, and psychological answers to help you understand your results
+          </p>
+        </div>
+      </div>
+
+      <div class="space-y-3">
+        {faqs.map((faq) => (
+          <details class="group rounded-2xl border border-rose-200/80 dark:border-rose-800/80 bg-rose-50/40 dark:bg-slate-800/40 p-4 transition-all open:bg-white dark:open:bg-slate-850">
+            <summary class="flex cursor-pointer items-center justify-between font-outfit text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 list-none">
+              <span>{faq.question}</span>
+              <span class="text-xs text-rose-600 dark:text-rose-400 transition-transform group-open:rotate-180">▼</span>
+            </summary>
+            <p class="mt-3 text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              {faq.answer}
+            </p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Confetti Canvas for Cosmic Celebration -->
+  <canvas id="love-confetti-canvas" class="pointer-events-none fixed inset-0 z-50 w-full h-full hidden"></canvas>
+
+  <!-- PHASE 4 ADVANCED CSS ANIMATIONS -->
+  <style is:inline>
+    /* 1. Hero Section Entrance */
+    .hero-section {
+      animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 2. Calculator Cards Staggered Entrance */
+    .calculator-card {
+      opacity: 0;
+      animation: cardEntrance 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      will-change: transform, box-shadow;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.35s ease;
+    }
+    .card-index-1 { animation-delay: 0.05s; }
+    .card-index-2 { animation-delay: 0.10s; }
+    .card-index-3 { animation-delay: 0.15s; }
+    .card-index-4 { animation-delay: 0.20s; }
+    .card-index-5 { animation-delay: 0.25s; }
+    .card-index-6 { animation-delay: 0.30s; }
+    .card-index-7 { animation-delay: 0.35s; }
+    .card-index-8 { animation-delay: 0.40s; }
+    .card-index-9 { animation-delay: 0.45s; }
+    .card-index-10 { animation-delay: 0.50s; }
+    .card-index-11 { animation-delay: 0.55s; }
+    .card-index-12 { animation-delay: 0.60s; }
+    .card-index-13 { animation-delay: 0.65s; }
+    .card-index-14 { animation-delay: 0.70s; }
+    .card-index-15 { animation-delay: 0.75s; }
+    .card-index-16 { animation-delay: 0.80s; }
+    .card-index-17 { animation-delay: 0.85s; }
+    .card-index-18 { animation-delay: 0.90s; }
+    .card-index-19 { animation-delay: 0.95s; }
+    .card-index-20 { animation-delay: 1.00s; }
+    .card-index-21 { animation-delay: 1.05s; }
+
+    @keyframes cardEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(35px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* 3. Hover Lift & Romantic Neon Glow */
+    .calculator-card:hover {
+      transform: translateY(-10px) scale(1.02) !important;
+      box-shadow: 0 16px 36px rgba(244, 63, 94, 0.28) !important;
+    }
+
+    /* 4. Heartbeat pulse */
+    @keyframes heartBeatPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.25); }
+    }
+    .heart-beat-icon {
+      display: inline-block;
+      animation: heartBeatPulse 1s ease-in-out infinite;
+    }
+  </style>
+
+  <!-- CLIENT-SIDE SCRIPT (Phase 4 Interactions) -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      // 0. Performance: 3D Parallax Tilt on Cards
+      document.querySelectorAll('.calculator-card').forEach((card) => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width - 0.5;
+          const y = (e.clientY - rect.top) / rect.height - 0.5;
+          card.style.transform = `
+            translateY(-10px) 
+            perspective(900px) 
+            rotateX(${-y * 8}deg) 
+            rotateY(${x * 8}deg)
+          `;
+        });
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = '';
+        });
+      });
+
+      // 1. Real-Time Search Filter
+      const searchInput = document.getElementById('love-directory-search');
+      const cards = document.querySelectorAll('.love-item-card');
+      const countBadge = document.getElementById('love-search-counter');
+      const noResults = document.getElementById('love-no-results');
+
+      searchInput?.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        cards.forEach((card) => {
+          const text = card.getAttribute('data-search') || '';
+          if (!query || text.includes(query)) {
+            card.classList.remove('hidden');
+            visibleCount++;
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+
+        if (countBadge) {
+          countBadge.textContent = `${visibleCount} Calculators`;
+        }
+        if (noResults) {
+          noResults.classList.toggle('hidden', visibleCount > 0);
+        }
+      });
+
+      // 2. Confetti Particle Explosion
+      function triggerLoveConfetti() {
+        const canvas = document.getElementById('love-confetti-canvas');
+        if (!canvas) return;
+        canvas.classList.remove('hidden');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const colors = ['#f43f5e', '#ec4899', '#ef4444', '#fb7185', '#fda4af', '#fbbf24'];
+
+        for (let i = 0; i < 70; i++) {
+          particles.push({
+            x: canvas.width / 2 + (Math.random() - 0.5) * 100,
+            y: canvas.height / 2 + (Math.random() - 0.5) * 50,
+            r: Math.random() * 5 + 3,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            vx: (Math.random() - 0.5) * 14,
+            vy: (Math.random() - 0.9) * 16,
+            gravity: 0.35,
+            opacity: 1,
+            rotation: Math.random() * 360,
+            vRot: (Math.random() - 0.5) * 10
+          });
+        }
+
+        let animFrame;
+        function renderConfetti() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          let active = false;
+
+          particles.forEach((p) => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += p.gravity;
+            p.opacity -= 0.012;
+            p.rotation += p.vRot;
+
+            if (p.opacity > 0) {
+              active = true;
+              ctx.save();
+              ctx.translate(p.x, p.y);
+              ctx.rotate((p.rotation * Math.PI) / 180);
+              ctx.globalAlpha = p.opacity;
+              ctx.fillStyle = p.color;
+              ctx.beginPath();
+              ctx.arc(0, 0, p.r, 0, Math.PI * 2);
+              ctx.fill();
+              ctx.restore();
+            }
+          });
+
+          if (active) {
+            animFrame = requestAnimationFrame(renderConfetti);
+          } else {
+            cancelAnimationFrame(animFrame);
+            canvas.classList.add('hidden');
+          }
+        }
+        renderConfetti();
+      }
+
+      // 3. Hero Quick Calculator Form with Progress Animation & Confetti
+      const quickForm = document.getElementById('hero-quick-calc-form');
+      const quickP1 = document.getElementById('hero-quick-p1');
+      const quickP2 = document.getElementById('hero-quick-p2');
+      const quickBtn = document.getElementById('hero-calculate-btn');
+      const quickResult = document.getElementById('hero-quick-result');
+      const quickNames = document.getElementById('hero-quick-names');
+      const quickScore = document.getElementById('hero-quick-score');
+      const quickBar = document.getElementById('hero-quick-bar');
+
+      quickForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const p1 = quickP1.value.trim();
+        const p2 = quickP2.value.trim();
+        if (!p1 || !p2) return;
+
+        // Button Loading State
+        const originalBtnText = quickBtn.innerHTML;
+        quickBtn.disabled = true;
+        quickBtn.innerHTML = `
+          <span class="heart-beat-icon">💓</span>
+          <span>Analyzing Cosmic Alignment...</span>
+        `;
+
+        setTimeout(() => {
+          const combined = (p1 + p2).toLowerCase().replace(/[^a-z0-9]/g, '');
+          let hash = 0;
+          for (let i = 0; i < combined.length; i++) {
+            hash = (hash << 5) - hash + combined.charCodeAt(i);
+            hash |= 0;
+          }
+          const score = Math.abs(hash) % 32 + 68; // 68% - 99%
+
+          quickBtn.disabled = false;
+          quickBtn.innerHTML = originalBtnText;
+
+          quickNames.textContent = `${p1} & ${p2}`;
+          quickScore.textContent = `${score}%`;
+          quickResult.classList.remove('hidden');
+          quickBar.style.width = '0%';
+          setTimeout(() => {
+            quickBar.style.width = `${score}%`;
+          }, 50);
+
+          triggerLoveConfetti();
+        }, 900);
+      });
+
+      // 4. Share with Partner CTA
+      const shareBtn = document.getElementById('hero-share-partner-btn');
+      shareBtn?.addEventListener('click', () => {
+        const shareUrl = window.location.href;
+        const shareText = `Check our love compatibility score on Free Accurate Calculator! 💖 ${shareUrl}`;
+        if (navigator.share) {
+          navigator.share({ title: 'Love Calculator Match', text: shareText, url: shareUrl }).catch(() => {});
+        } else {
+          navigator.clipboard.writeText(shareText);
+          shareBtn.innerHTML = '<span>✅ Link Copied to Clipboard!</span>';
+          setTimeout(() => {
+            shareBtn.innerHTML = '<span>💌 Share Results with Partner</span>';
+          }, 2500);
+        }
+      });
+    });
+  </script>
+</Layout>

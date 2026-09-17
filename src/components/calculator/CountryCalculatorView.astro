@@ -71,25 +71,38 @@ const relatedCalculators = CALCULATORS.filter((c) => popularSet.has(c.id) && c.i
     };
   });
 
-const localizedMathInputs = calc.inputs.map((inp) => {
-  const frInp = franceData?.inputs[inp.id];
-  return {
-    id: inp.id,
-    label: isFrance && frInp?.labelFr
-      ? frInp.labelFr
-      : inp.label.replace(/\(\$\)/g, `(${country.currencySymbol})`).replace(/\$/g, country.currencySymbol),
-    type: (inp.type === 'select' ? 'select' : 'number') as 'select' | 'number',
-    defaultValue: inp.defaultValue,
-    min: inp.min,
-    max: inp.max,
-    step: inp.step,
-    unit: inp.unit === '$' ? country.currencySymbol : inp.unit,
-    options: isFrance && frInp?.options
-      ? frInp.options.map((o) => ({ value: o.value, label: o.labelFr }))
-      : inp.options,
-    helpText: isFrance && frInp?.helpFr ? frInp.helpFr : inp.helpText,
-  };
-});
+const localizedMathInputs = (isFrance && franceData?.customInputs)
+  ? franceData.customInputs.map((inp) => ({
+      id: inp.id,
+      label: inp.labelFr,
+      type: inp.type,
+      defaultValue: inp.defaultValue,
+      min: inp.min,
+      max: inp.max,
+      step: inp.step,
+      unit: inp.unit,
+      options: inp.options ? inp.options.map((o) => ({ value: o.value, label: o.labelFr })) : undefined,
+      helpText: inp.helpFr,
+    }))
+  : calc.inputs.map((inp) => {
+      const frInp = franceData?.inputs[inp.id];
+      return {
+        id: inp.id,
+        label: isFrance && frInp?.labelFr
+          ? frInp.labelFr
+          : inp.label.replace(/\(\$\)/g, `(${country.currencySymbol})`).replace(/\$/g, country.currencySymbol),
+        type: (inp.type === 'select' ? 'select' : 'number') as 'select' | 'number',
+        defaultValue: inp.defaultValue,
+        min: inp.min,
+        max: inp.max,
+        step: inp.step,
+        unit: inp.unit === '$' ? country.currencySymbol : inp.unit,
+        options: isFrance && frInp?.options
+          ? frInp.options.map((o) => ({ value: o.value, label: o.labelFr }))
+          : inp.options,
+        helpText: isFrance && frInp?.helpFr ? frInp.helpFr : inp.helpText,
+      };
+    });
 
 const defaultFaqs = isFrance
   ? [

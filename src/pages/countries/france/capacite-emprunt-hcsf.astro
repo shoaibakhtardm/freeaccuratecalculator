@@ -1,0 +1,537 @@
+---
+// src/pages/countries/france/capacite-emprunt-hcsf.astro
+import Layout from '../../../layouts/Layout.astro';
+import ThemeToggle from '../../../components/ThemeToggle.astro';
+import { getCountryBySlug } from '../../../data/countries';
+
+const country = getCountryBySlug('france')!;
+
+const pageTitle = "Simulateur Capacité d'Emprunt HCSF 35% 2026 Gratuit | Calcul Prêt Immobilier";
+const pageDescription = "Calculez votre capacité d'emprunt immobilier maximale selon les règles obligatoires HCSF 2026 (taux d'endettement max 35% assurance comprise, reste à vivre et taux d'usure).";
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: "Simulateur Capacité d'Emprunt HCSF 2026 France",
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'All',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'EUR',
+      },
+      description: pageDescription,
+      inLanguage: 'fr-FR',
+      url: 'https://freeaccuratecalculator.com/countries/france/capacite-emprunt-hcsf/',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://freeaccuratecalculator.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Pays', item: 'https://freeaccuratecalculator.com/countries/' },
+        { '@type': 'ListItem', position: 3, name: 'France', item: 'https://freeaccuratecalculator.com/countries/france/' },
+        { '@type': 'ListItem', position: 4, name: 'Prêt Immobilier', item: 'https://freeaccuratecalculator.com/countries/france/guides/' },
+        { '@type': 'ListItem', position: 5, name: "Capacité d'Emprunt HCSF", item: 'https://freeaccuratecalculator.com/countries/france/capacite-emprunt-hcsf/' },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: "Quelle est la règle obligatoire du HCSF sur le taux d'endettement en 2026 ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Le Haut Conseil de Stabilité Financière (HCSF) impose aux banques françaises une norme juridique stricte : les mensualités totales de crédit (capital, intérêts ET assurance emprunteur) ne peuvent excéder 35 % des revenus nets de l'emprunteur. La durée maximale d'emprunt est fixée à 25 ans (ou 27 ans en cas de différé d'amortissement lié à des travaux représentant au moins 10 % du montant total).",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "Comment les banques pondèrent-elles les revenus locatifs pour le calcul des 35 % ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Pour intégrer vos revenus locatifs existants ou futurs dans votre capacité d'emprunt, les banques appliquent une décote de prudence forfaitaire de 30 % (seuls 70 % des loyers bruts sont retenus comme revenus) afin de couvrir la vacance locative, la taxe foncière et les travaux d'entretien.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "Qu'est-ce que le 'Reste à Vivre' exigé par les banques ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Le reste à vivre est la somme restante sur votre compte bancaire après paiement de toutes les mensualités d'emprunt. Même avec un taux d'endettement inférieur à 35 %, les banques exigent généralement un minimum vital de 800 € à 1 000 € pour une personne seule, 1 200 € à 1 500 € pour un couple, augmenté de 300 € à 400 € par enfant à charge.",
+          },
+        },
+      ],
+    },
+  ],
+};
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonicalUrl="https://freeaccuratecalculator.com/countries/france/capacite-emprunt-hcsf/"
+  jsonLd={jsonLd}
+  lang="fr-FR"
+  locale="fr"
+>
+  <div class="max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-8">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+      <a href="/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Accueil</a>
+      <span>/</span>
+      <a href="/countries/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Pays</a>
+      <span>/</span>
+      <a href="/countries/france/" class="hover:text-indigo-600 dark:hover:text-indigo-400">France</a>
+      <span>/</span>
+      <a href="/countries/france/guides/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Prêt Immobilier</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold">Capacité d'Emprunt HCSF</span>
+    </nav>
+
+    <!-- Hero Title -->
+    <div class="space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/50">
+        <span>Norme Contraignante HCSF (35% Max)</span>
+        <span>•</span>
+        <span>Assurance Emprunteur Incluse</span>
+        <span>•</span>
+        <span>Contrôle Reste à Vivre</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white font-outfit">
+        Simulateur Capacité d'Emprunt HCSF 2026 : Règle des 35% & Taux d'Endettement
+      </h1>
+      <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
+        Découvrez combien la banque peut légalement vous prêter pour votre projet immobilier en France. Ce calculateur applique les critères stricts du Haut Conseil de Stabilité Financière, avec assurance obligatoire, pondération locative et calcul du reste à vivre.
+      </p>
+    </div>
+
+    <!-- CALCULATOR CONTAINER -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      <!-- FORM INPUTS (7 cols) -->
+      <div class="lg:col-span-7 bg-white dark:bg-slate-900/90 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 p-5 sm:p-7 shadow-sm space-y-5">
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center justify-between">
+          <span>1. Vos Revenus & Charges Mensuelles</span>
+          <span class="text-xs font-normal text-indigo-600 dark:text-indigo-400">Norme HCSF</span>
+        </h2>
+
+        <!-- Revenus Nets Mensuels -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center">
+            <label for="hcsf-salaires" class="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+              Salaires Nets Mensuels Avant Impôt (€)
+            </label>
+            <span class="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400" id="hcsf-salaires-display">4 500 € / m</span>
+          </div>
+          <div class="relative">
+            <input
+              type="number"
+              id="hcsf-salaires"
+              min="1000"
+              max="50000"
+              step="100"
+              value="4500"
+              class="w-full px-3.5 py-2.5 pr-12 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-bold">€/m</span>
+          </div>
+          <input type="range" id="hcsf-salaires-range" min="1500" max="12000" step="100" value="4500" class="w-full accent-indigo-600 cursor-pointer" />
+        </div>
+
+        <!-- Revenus Locatifs & Charges -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div class="space-y-1.5">
+            <label for="hcsf-locatif" class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+              Revenus Locatifs Mensuels (€)
+            </label>
+            <div class="relative">
+              <input
+                type="number"
+                id="hcsf-locatif"
+                min="0"
+                max="20000"
+                step="50"
+                value="0"
+                class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              />
+              <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-bold">€/m</span>
+            </div>
+            <p class="text-[10px] text-slate-500 dark:text-slate-400">Pondération bancaire à 70%.</p>
+          </div>
+
+          <div class="space-y-1.5">
+            <label for="hcsf-credits" class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+              Crédits Existants & Charges (€/m)
+            </label>
+            <div class="relative">
+              <input
+                type="number"
+                id="hcsf-credits"
+                min="0"
+                max="10000"
+                step="25"
+                value="0"
+                placeholder="Crédit auto, conso, pensions"
+                class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+              />
+              <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-bold">€/m</span>
+            </div>
+            <p class="text-[10px] text-slate-500 dark:text-slate-400">Mensualités de crédits en cours.</p>
+          </div>
+        </div>
+
+        <!-- Paramètres du Prêt -->
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-2 pt-2">
+          2. Paramètres du Crédit Immobilier
+        </h2>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <!-- Durée -->
+          <div class="space-y-1.5">
+            <label for="hcsf-duration" class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+              Durée d'Emprunt
+            </label>
+            <select
+              id="hcsf-duration"
+              class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-semibold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            >
+              <option value="15">15 ans (180 mois)</option>
+              <option value="20">20 ans (240 mois)</option>
+              <option value="25" selected>25 ans (300 mois - Max HCSF)</option>
+              <option value="27">27 ans (Avec différé travaux)</option>
+            </select>
+          </div>
+
+          <!-- Taux d'Intérêt -->
+          <div class="space-y-1.5">
+            <label for="hcsf-rate" class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+              Taux d'Intérêt Annuel (%)
+            </label>
+            <input
+              type="number"
+              id="hcsf-rate"
+              min="0.5"
+              max="10"
+              step="0.05"
+              value="3.45"
+              class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+          </div>
+
+          <!-- Assurance Emprunteur -->
+          <div class="space-y-1.5">
+            <label for="hcsf-insurance" class="block text-xs font-semibold text-slate-700 dark:text-slate-300">
+              Taux d'Assurance (%)
+            </label>
+            <input
+              type="number"
+              id="hcsf-insurance"
+              min="0.05"
+              max="2"
+              step="0.05"
+              value="0.30"
+              class="w-full px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+          </div>
+        </div>
+
+        <!-- Apport Personnel Optionnel -->
+        <div class="space-y-1.5">
+          <label for="hcsf-apport" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Apport Personnel Disponible (€)
+          </label>
+          <div class="relative">
+            <input
+              type="number"
+              id="hcsf-apport"
+              min="0"
+              max="1000000"
+              step="5000"
+              value="30000"
+              class="w-full px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-bold">€</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RESULTS STICKY SUMMARY (5 cols) -->
+      <div class="lg:col-span-5 space-y-5 lg:sticky lg:top-24">
+        <div class="bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-950 text-white rounded-2xl p-5 sm:p-7 shadow-xl border border-indigo-500/30 relative overflow-hidden">
+          <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl"></div>
+
+          <div class="space-y-4 relative z-10">
+            <!-- JAUGE TAUX D'ENDETTEMENT HCSF -->
+            <div class="p-3 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-between" id="hcsf-gauge-box">
+              <div>
+                <span class="text-[11px] font-bold uppercase tracking-wider text-emerald-300 block">Taux d'Endettement</span>
+                <span class="text-lg font-extrabold text-white" id="hcsf-endettement-text">35,0 % (Conforme HCSF)</span>
+              </div>
+              <span class="text-2xl" id="hcsf-badge-icon">✅</span>
+            </div>
+
+            <!-- CAPACITE GLOBALE -->
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-indigo-300">
+                Capacité d'Emprunt Maximale (Prêt Seul)
+              </span>
+              <div class="text-3xl sm:text-4xl font-extrabold font-outfit text-white tracking-tight mt-0.5" id="hcsf-emprunt-max">
+                302 400 €
+              </div>
+              <p class="text-xs text-slate-300 mt-1">
+                Budget d'achat total (+ apport) : <strong id="hcsf-budget-total" class="text-emerald-400">332 400 €</strong>
+              </p>
+            </div>
+
+            <!-- DETAIL MENSUALITÉ & FRAIS -->
+            <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+              <div class="flex justify-between text-slate-300">
+                <span>Mensualité Maximale (35%) :</span>
+                <span class="font-bold text-white font-mono" id="hcsf-mensualite-max">1 575 € / mois</span>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span>Part Assurance Emprunteur :</span>
+                <span class="font-bold text-indigo-300 font-mono" id="hcsf-part-assurance">75 € / mois</span>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span>Coût Total des Intérêts :</span>
+                <span class="font-bold text-slate-300 font-mono" id="hcsf-cout-interets">151 200 €</span>
+              </div>
+              <div class="flex justify-between text-slate-300 border-t border-slate-800 pt-1 font-semibold">
+                <span>Reste à Vivre Mensuel :</span>
+                <span class="font-bold text-emerald-400 font-mono" id="hcsf-reste-a-vivre">2 925 € / mois</span>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="pt-2">
+              <button
+                type="button"
+                id="btn-print-hcsf"
+                class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2"
+              >
+                <span>🖨️</span> Exporter la Fiche de Financement
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contextual Card -->
+        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs space-y-2 text-slate-600 dark:text-slate-400">
+          <p class="font-bold text-slate-900 dark:text-white flex items-center gap-1">
+            <span>💡</span> Frais Complémentaires :
+          </p>
+          <p>
+            Prévoyez les frais de notaire (~7-8% dans l'ancien) qui sont déduits de votre apport personnel.
+          </p>
+          <a href="/countries/france/frais-de-notaire/" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline block pt-1">
+            → Calculer vos frais de notaire exacts
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUIDE PEDAGOGIQUE HCSF -->
+    <article class="bg-white dark:bg-slate-900/90 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 p-6 sm:p-8 space-y-6 text-slate-800 dark:text-slate-200 leading-relaxed text-sm sm:text-base">
+      <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-outfit border-b border-slate-100 dark:border-slate-800 pb-3">
+        Comment les Banques Calculent Votre Capacité d'Emprunt (2026)
+      </h2>
+
+      <div class="space-y-4">
+        <p>
+          Depuis la décision contraignante du <strong>Haut Conseil de Stabilité Financière (HCSF)</strong>, les banques ne peuvent plus déroger librement aux règles d'octroi de crédit immobilier :
+        </p>
+
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white pt-2">
+          1. La Formule Actuarielle de Mensualité Maximale
+        </h3>
+        <p>
+          La mensualité maximale autorisée est calculée comme suit :
+        </p>
+        <div class="p-4 rounded-xl bg-slate-100 dark:bg-slate-800 font-mono text-xs sm:text-sm">
+          Mensualité Max = (Salaires Nets + Revenus Locatifs × 70 %) × 35 % - Charges de Crédits en Cours
+        </div>
+
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white pt-2">
+          2. La Marge de Dérogation de 20 %
+        </h3>
+        <p>
+          Les banques disposent d'un quota de flexibilité leur permettant de déroger à la règle des 35 % pour 20 % de leur production de crédits. Cependant, au moins 70 % de cette poche de dérogation doit être réservée à l'acquisition d'une résidence principale (dont 30 % pour les primo-accédants).
+        </p>
+      </div>
+
+      <!-- FAQ Accordions -->
+      <div class="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+          Foire Aux Questions : Capacité d'Emprunt
+        </h3>
+
+        <details class="group rounded-xl border border-slate-200 dark:border-slate-800 p-3.5 bg-slate-50/50 dark:bg-slate-800/40">
+          <summary class="font-bold text-slate-900 dark:text-white cursor-pointer list-none flex justify-between items-center text-sm">
+            <span>Comment augmenter sa capacité d'emprunt ?</span>
+            <span class="text-indigo-600 dark:text-indigo-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2">
+            Vous pouvez allonger la durée du crédit (ex: passer de 20 à 25 ans), solder vos petits crédits à la consommation par anticipation, déléguer votre assurance emprunteur (loi Lemoine) pour abaisser le taux d'assurance, ou intégrer un Prêt à Taux Zéro (PTZ) qui augmente votre pouvoir d'achat sans générer d'intérêts.
+          </p>
+        </details>
+      </div>
+    </article>
+
+    <!-- PROJETS CONNEXES -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+      <a
+        href="/countries/france/simulateur-ptz/"
+        class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-indigo-500 transition-all group"
+      >
+        <div class="text-xl mb-1">🏛️</div>
+        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+          Simulateur PTZ 2026
+        </h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          Prêt à taux zéro sans intérêt pour compléter votre emprunt.
+        </p>
+      </a>
+
+      <a
+        href="/countries/france/frais-de-notaire/"
+        class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-indigo-500 transition-all group"
+      >
+        <div class="text-xl mb-1">⚖️</div>
+        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+          Frais de Notaire 2026
+        </h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          Calculez le montant à financer avec votre apport.
+        </p>
+      </a>
+
+      <a
+        href="/countries/france/simulateur-lmnp-reel-micro-bic/"
+        class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-indigo-500 transition-all group"
+      >
+        <div class="text-xl mb-1">📊</div>
+        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+          Simulateur LMNP Réel
+        </h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          Investissement locatif meublé et amortissement.
+        </p>
+      </a>
+    </div>
+  </div>
+
+  <script is:inline>
+    (function () {
+      const salairesInput = document.getElementById('hcsf-salaires');
+      const salairesRange = document.getElementById('hcsf-salaires-range');
+      const salairesDisplay = document.getElementById('hcsf-salaires-display');
+      const locatifInput = document.getElementById('hcsf-locatif');
+      const creditsInput = document.getElementById('hcsf-credits');
+
+      const durationSelect = document.getElementById('hcsf-duration');
+      const rateInput = document.getElementById('hcsf-rate');
+      const insuranceInput = document.getElementById('hcsf-insurance');
+      const apportInput = document.getElementById('hcsf-apport');
+
+      const gaugeBox = document.getElementById('hcsf-gauge-box');
+      const endettementText = document.getElementById('hcsf-endettement-text');
+      const badgeIcon = document.getElementById('hcsf-badge-icon');
+
+      const empruntMaxDisplay = document.getElementById('hcsf-emprunt-max');
+      const budgetTotalDisplay = document.getElementById('hcsf-budget-total');
+      const mensualiteMaxDisplay = document.getElementById('hcsf-mensualite-max');
+      const partAssuranceDisplay = document.getElementById('hcsf-part-assurance');
+      const coutInteretsDisplay = document.getElementById('hcsf-cout-interets');
+      const resteAVivreDisplay = document.getElementById('hcsf-reste-a-vivre');
+
+      const formatEuro = (val) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(val);
+
+      function calculate() {
+        const salaires = parseFloat(salairesInput.value) || 0;
+        const locatif = parseFloat(locatifInput.value) || 0;
+        const credits = parseFloat(creditsInput.value) || 0;
+        const durationYears = parseInt(durationSelect.value, 10) || 25;
+        const nominalRate = (parseFloat(rateInput.value) || 3.45) / 100;
+        const insuranceRate = (parseFloat(insuranceInput.value) || 0.30) / 100;
+        const apport = parseFloat(apportInput.value) || 0;
+
+        salairesDisplay.textContent = `${formatEuro(salaires)} / m`;
+
+        // 1. Revenus totaux retenus (Pondération locative 70%)
+        const totalRevenus = salaires + (locatif * 0.70);
+
+        // 2. Mensualité maximale autorisée (35% - charges existantes)
+        const mensualiteMax = Math.max(0, (totalRevenus * 0.35) - credits);
+
+        // 3. Calcul capacité d'emprunt actuarielle
+        const nMonths = durationYears * 12;
+        const monthlyRate = nominalRate / 12;
+        const monthlyInsuranceRate = insuranceRate / 12;
+
+        // Taux effectif mensuel global pour la mensualité
+        // Mensualité = Capital * [i / (1 - (1+i)^-n) + ia]
+        // => Capital = Mensualité / [i / (1 - (1+i)^-n) + ia]
+        let capital = 0;
+        if (monthlyRate > 0 && nMonths > 0) {
+          const factor = monthlyRate / (1 - Math.pow(1 + monthlyRate, -nMonths));
+          const totalFactor = factor + monthlyInsuranceRate;
+          capital = mensualiteMax / totalFactor;
+        }
+
+        const empruntMax = Math.round(capital);
+        const budgetTotal = Math.round(empruntMax + apport);
+
+        // Part assurance mensuelle
+        const partAssurance = Math.round(empruntMax * monthlyInsuranceRate);
+        const partCredit = mensualiteMax - partAssurance;
+        const coutTotalCredit = Math.round((mensualiteMax * nMonths) - empruntMax);
+
+        // Reste à vivre
+        const resteAVivre = Math.round(totalRevenus - mensualiteMax - credits);
+
+        // Update UI
+        empruntMaxDisplay.textContent = formatEuro(empruntMax);
+        budgetTotalDisplay.textContent = formatEuro(budgetTotal);
+        mensualiteMaxDisplay.textContent = `${formatEuro(mensualiteMax)} / mois`;
+        partAssuranceDisplay.textContent = `${formatEuro(partAssurance)} / mois`;
+        coutInteretsDisplay.textContent = formatEuro(coutTotalCredit);
+        resteAVivreDisplay.textContent = `${formatEuro(resteAVivre)} / mois`;
+
+        // Check HCSF & Reste à vivre
+        if (mensualiteMax <= 0 || resteAVivre < 800) {
+          gaugeBox.className = 'p-3 rounded-xl bg-rose-500/20 border border-rose-400/40 flex items-center justify-between';
+          endettementText.textContent = 'Capacité d\'emprunt nulle ou reste à vivre critique';
+          badgeIcon.textContent = '⚠️';
+        } else {
+          gaugeBox.className = 'p-3 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-between';
+          endettementText.textContent = '35,0 % (Conforme Norme HCSF)';
+          badgeIcon.textContent = '✅';
+        }
+      }
+
+      salairesInput.addEventListener('input', () => {
+        salairesRange.value = salairesInput.value;
+        calculate();
+      });
+
+      salairesRange.addEventListener('input', () => {
+        salairesInput.value = salairesRange.value;
+        calculate();
+      });
+
+      [locatifInput, creditsInput, durationSelect, rateInput, insuranceInput, apportInput].forEach((el) => {
+        el.addEventListener('input', calculate);
+        el.addEventListener('change', calculate);
+      });
+
+      document.getElementById('btn-print-hcsf')?.addEventListener('click', () => {
+        window.print();
+      });
+
+      calculate();
+    })();
+  </script>
+</Layout>

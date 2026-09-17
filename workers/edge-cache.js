@@ -25,7 +25,22 @@ export default {
       return fetch(request);
     }
 
-    // 2. Open Cloudflare Edge Cache
+    // 2. Normalize URLs without trailing slash to canonical trailing-slash URL with 301 Permanent Redirect
+    // (excluding static files with extensions like .xml, .txt, .svg, .js, .css, etc.)
+    const isFile = pathname.split('/').pop().includes('.');
+    if (!isFile && !pathname.endsWith('/')) {
+      const canonicalTarget = new URL(`${pathname}/${url.search}`, url.origin);
+      return new Response(null, {
+        status: 301,
+        statusText: 'Moved Permanently',
+        headers: {
+          Location: canonicalTarget.toString(),
+          'Cache-Control': 'public, max-age=31536000, immutable',
+        },
+      });
+    }
+
+    // 3. Open Cloudflare Edge Cache
     const cache = caches.default;
     const cacheKey = new Request(url.toString(), request);
     let response = await cache.match(cacheKey);
@@ -41,8 +56,28 @@ export default {
       });
     }
 
-    // 3. Cache Miss: Fetch from Origin / Cloudflare Pages Asset Binding
+    // 4. Cache Miss: Fetch from Origin / Cloudflare Pages Asset Binding
     response = await fetch(request);
+
+    // Convert temporary 307/308 or relative redirects to 301 with absolute Location for search bots
+    if (response.status === 301 || response.status === 302 || response.status === 307 || response.status === 308) {
+      const location = response.headers.get('Location');
+      if (location) {
+        const absoluteLocation = location.startsWith('http')
+          ? location
+          : new URL(location, url.origin).toString();
+        
+        return new Response(null, {
+          status: 301,
+          statusText: 'Moved Permanently',
+          headers: {
+            ...Object.fromEntries(response.headers.entries()),
+            Location: absoluteLocation,
+            'Cache-Control': 'public, max-age=31536000, immutable',
+          },
+        });
+      }
+    }
 
     // Only cache successful 200 OK responses
     if (response.status === 200) {

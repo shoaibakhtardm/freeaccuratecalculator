@@ -1,0 +1,205 @@
+---
+// File: src/components/love/LoveCalculatorCard.astro
+interface Props {
+  calculator: {
+    id: string;
+    name: string;
+    keyword: string;
+    volume: string;
+    badge: string;
+    category: string;
+    inputType: string;
+    description: string;
+    fields: { p1: string; p2: string; placeholder1?: string; placeholder2?: string };
+    deepDiveFeatures: string[];
+  };
+  index: number;
+}
+
+const { calculator, index } = Astro.props;
+
+const zodiacSigns = [
+  'Aries ♈', 'Taurus ♉', 'Gemini ♊', 'Cancer ♋',
+  'Leo ♌', 'Virgo ♍', 'Libra ♎', 'Scorpio ♏',
+  'Sagittarius ♐', 'Capricorn ♑', 'Aquarius ♒', 'Pisces ♓'
+];
+
+const loveLanguages = [
+  'Words of Affirmation 💬',
+  'Quality Time ⏳',
+  'Receiving Gifts 🎁',
+  'Acts of Service 🤝',
+  'Physical Touch 🫂'
+];
+---
+
+<div 
+  class="love-calc-card group relative rounded-3xl p-6 sm:p-7 bg-[#2E003E]/60 hover:bg-[#2E003E]/80 backdrop-blur-xl border border-white/15 hover:border-[#FFD1DC]/50 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:shadow-[0_0_30px_rgba(255,182,193,0.25)] transition-all duration-500 flex flex-col justify-between overflow-hidden"
+  id={`card-${calculator.id}`}
+  data-category={calculator.category}
+  data-search={`${calculator.name} ${calculator.keyword} ${calculator.description}`.toLowerCase()}
+>
+  <!-- Ambient Card Glow -->
+  <div class="absolute -top-16 -right-16 w-32 h-32 bg-[#8B0000]/25 rounded-full blur-2xl pointer-events-none group-hover:bg-[#B76E79]/35 transition-all duration-700"></div>
+
+  <!-- Header & Metadata -->
+  <div class="relative z-10">
+    <div class="flex items-center justify-between gap-2 mb-3">
+      <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-[#8B0000]/90 to-[#B76E79]/90 border border-[#FFD1DC]/30 text-[#FFD1DC] shadow-sm">
+        {calculator.badge}
+      </span>
+      <div class="flex items-center gap-1 text-[11px] font-mono text-slate-300 bg-white/5 px-2.5 py-1 rounded-lg border border-white/10" title="Global Monthly Search Volume">
+        <svg class="w-3.5 h-3.5 text-rose-400" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path>
+        </svg>
+        <span>{calculator.volume}/mo</span>
+      </div>
+    </div>
+
+    <!-- H2 Tag with Primary Keyword for SEO -->
+    <h2 class="text-xl sm:text-2xl font-bold font-serif text-white group-hover:text-[#FFD1DC] transition-colors duration-300 mb-2 leading-snug">
+      {calculator.name}
+    </h2>
+
+    <p class="text-xs text-[#B76E79] font-medium tracking-wide uppercase mb-2">
+      Target: "{calculator.keyword}"
+    </p>
+
+    <p class="text-sm text-slate-300 leading-relaxed mb-6 font-light">
+      {calculator.description}
+    </p>
+  </div>
+
+  <!-- Interactive Form Section -->
+  <div class="relative z-10 calculator-form-container">
+    <form class="calc-form space-y-3.5" data-calc-id={calculator.id}>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <!-- Input 1 -->
+        <div>
+          <label class="block text-xs font-medium text-[#FFD1DC]/90 mb-1">
+            {calculator.fields.p1}
+          </label>
+          {calculator.inputType === 'zodiac' ? (
+            <select class="input-p1 w-full bg-white/10 border border-white/20 focus:border-[#FFD1DC] focus:bg-[#2E003E] text-white text-xs sm:text-sm rounded-xl px-3 py-2.5 outline-none transition-all cursor-pointer">
+              <option value="" disabled selected>Select Sign</option>
+              {zodiacSigns.map(s => <option value={s} class="bg-[#2E003E] text-white">{s}</option>)}
+            </select>
+          ) : calculator.inputType === 'love-language' ? (
+            <select class="input-p1 w-full bg-white/10 border border-white/20 focus:border-[#FFD1DC] focus:bg-[#2E003E] text-white text-xs sm:text-sm rounded-xl px-3 py-2.5 outline-none transition-all cursor-pointer">
+              <option value="" disabled selected>Select Language</option>
+              {loveLanguages.map(l => <option value={l} class="bg-[#2E003E] text-white">{l}</option>)}
+            </select>
+          ) : (
+            <input 
+              type={calculator.inputType === 'dates' || calculator.inputType === 'birthdate' ? 'date' : 'text'}
+              required
+              placeholder={calculator.fields.placeholder1 || 'e.g. Alex'}
+              class="input-p1 w-full bg-white/5 border border-white/20 focus:border-[#FFD1DC] focus:bg-white/10 text-white placeholder-slate-400 text-sm rounded-xl px-3.5 py-2.5 transition-all outline-none"
+            />
+          )}
+        </div>
+
+        <!-- Input 2 -->
+        <div>
+          <label class="block text-xs font-medium text-[#FFD1DC]/90 mb-1">
+            {calculator.fields.p2}
+          </label>
+          {calculator.inputType === 'zodiac' ? (
+            <select class="input-p2 w-full bg-white/10 border border-white/20 focus:border-[#FFD1DC] focus:bg-[#2E003E] text-white text-xs sm:text-sm rounded-xl px-3 py-2.5 outline-none transition-all cursor-pointer">
+              <option value="" disabled selected>Select Partner Sign</option>
+              {zodiacSigns.map(s => <option value={s} class="bg-[#2E003E] text-white">{s}</option>)}
+            </select>
+          ) : calculator.inputType === 'love-language' ? (
+            <select class="input-p2 w-full bg-white/10 border border-white/20 focus:border-[#FFD1DC] focus:bg-[#2E003E] text-white text-xs sm:text-sm rounded-xl px-3 py-2.5 outline-none transition-all cursor-pointer">
+              <option value="" disabled selected>Select Partner's</option>
+              {loveLanguages.map(l => <option value={l} class="bg-[#2E003E] text-white">{l}</option>)}
+            </select>
+          ) : (
+            <input 
+              type={calculator.inputType === 'dates' || calculator.inputType === 'birthdate' ? 'date' : 'text'}
+              required
+              placeholder={calculator.fields.placeholder2 || 'e.g. Taylor'}
+              class="input-p2 w-full bg-white/5 border border-white/20 focus:border-[#FFD1DC] focus:bg-white/10 text-white placeholder-slate-400 text-sm rounded-xl px-3.5 py-2.5 transition-all outline-none"
+            />
+          )}
+        </div>
+      </div>
+
+      <!-- Animated Calculate CTA Button with Heartbeat Pulse -->
+      <button 
+        type="submit"
+        class="calc-submit-btn w-full mt-2 relative group/btn overflow-hidden rounded-xl bg-gradient-to-r from-[#8B0000] via-[#B76E79] to-[#8B0000] bg-[length:200%_auto] hover:bg-right text-white font-semibold text-sm py-3 px-4 shadow-[0_4px_20px_rgba(139,0,0,0.4)] hover:shadow-[0_0_25px_rgba(255,182,193,0.6)] transition-all duration-500 active:scale-[0.98] flex items-center justify-center gap-2 cursor-pointer"
+      >
+        <span class="heartbeat-icon inline-block text-rose-300 animate-pulse text-base">❤️</span>
+        <span class="btn-text tracking-wide">Calculate Compatibility</span>
+      </button>
+    </form>
+
+    <!-- Loading Animation State (Hidden by default) -->
+    <div class="calc-loading hidden py-6 text-center">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/10 border border-[#FFD1DC]/30 mb-3 animate-spin">
+        <span class="text-xl">💖</span>
+      </div>
+      <p class="loading-status-text text-xs text-[#FFD1DC] font-mono tracking-wider animate-pulse">
+        Aligning Harmonic Frequencies...
+      </p>
+    </div>
+
+    <!-- Tier 1: Free Compatibility Result Display (Hidden by default) -->
+    <div class="calc-result hidden mt-5 pt-5 border-t border-white/15 animate-fade-in">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs uppercase tracking-wider text-slate-300 font-semibold">Chemistry Rating</span>
+        <span class="result-percentage font-mono text-2xl font-black text-[#FFD1DC] drop-shadow-[0_0_12px_rgba(255,209,220,0.6)]">
+          0%
+        </span>
+      </div>
+
+      <!-- Animated Score Progress Bar -->
+      <div class="w-full h-3 bg-black/40 rounded-full overflow-hidden p-0.5 border border-white/15">
+        <div class="result-progress-bar h-full rounded-full bg-gradient-to-r from-[#8B0000] via-[#B76E79] to-[#FFD1DC] transition-all duration-1000 ease-out w-0"></div>
+      </div>
+
+      <!-- Result Verdict Text -->
+      <p class="result-verdict-text text-xs text-slate-200 mt-3 font-medium leading-relaxed bg-white/5 p-2.5 rounded-xl border border-white/10">
+        Calculating synergy verdict...
+      </p>
+
+      <!-- Tier 2: Premium Teaser Lock (Included in EVERY calculator) -->
+      <div class="mt-4 relative rounded-2xl overflow-hidden border border-amber-400/30 bg-gradient-to-b from-amber-500/10 to-transparent p-4">
+        <div class="flex items-center gap-2 mb-2 text-amber-200 text-xs font-bold uppercase tracking-wider">
+          <svg class="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+          </svg>
+          <span>🔒 Unlock Premium Deep-Dive Report</span>
+        </div>
+
+        <!-- Premium Teaser Feature Bullets -->
+        <ul class="space-y-1.5 my-3 text-[11px] text-slate-300">
+          {calculator.deepDiveFeatures.map((feat) => (
+            <li class="flex items-center gap-2">
+              <span class="text-amber-400 text-xs">✦</span>
+              <span class="filter blur-[0.6px] select-none hover:blur-none transition-all duration-300">{feat}</span>
+            </li>
+          ))}
+        </ul>
+
+        <!-- Premium CTA Button -->
+        <button 
+          type="button"
+          class="unlock-premium-btn w-full py-2 px-3 rounded-lg text-xs font-bold text-black bg-gradient-to-r from-amber-300 via-amber-200 to-amber-400 hover:from-amber-200 hover:to-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.4)] hover:shadow-[0_0_22px_rgba(251,191,36,0.7)] transition-all duration-300 active:scale-95 flex items-center justify-center gap-1.5 cursor-pointer"
+        >
+          <span>Get VIP Breakdown Report (Instant PDF)</span>
+          <span>→</span>
+        </button>
+      </div>
+
+      <!-- Recalculate Trigger -->
+      <button 
+        type="button" 
+        class="recalc-btn text-[11px] text-slate-400 hover:text-[#FFD1DC] underline w-full text-center mt-3 transition-colors cursor-pointer block"
+      >
+        ← Test another pair
+      </button>
+    </div>
+  </div>
+</div>

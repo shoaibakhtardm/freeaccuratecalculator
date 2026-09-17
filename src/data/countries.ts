@@ -598,6 +598,7 @@ export const COUNTRIES: Record<string, CountryConfig> = {
     numberSystem: 'international',
     dateFormat: 'DD/MM/YYYY',
     unitSystem: 'metric',
+    isPopular: true,
     popularCalculators: ['salary-calculator', 'mortgage-calculator', 'compound-interest-calculator'],
   },
 
@@ -710,6 +711,7 @@ export const COUNTRIES: Record<string, CountryConfig> = {
     numberSystem: 'international',
     dateFormat: 'DD/MM/YYYY',
     unitSystem: 'metric',
+    isPopular: true,
     popularCalculators: ['salary-calculator', 'loan-calculator', 'mortgage-calculator'],
   },
 
@@ -727,6 +729,23 @@ export const COUNTRIES: Record<string, CountryConfig> = {
     dateFormat: 'YYYY. MM. DD.',
     unitSystem: 'metric',
     popularCalculators: ['compound-interest-calculator', 'salary-calculator', 'bmi-calculator'],
+  },
+
+  // 26. Colombia
+  CO: {
+    code: 'CO',
+    slug: 'colombia',
+    name: 'Colombia',
+    nativeName: 'Colombia',
+    flag: '🇨🇴',
+    currency: 'USD',
+    currencySymbol: '$',
+    locale: 'es-CO',
+    numberSystem: 'international',
+    dateFormat: 'DD/MM/YYYY',
+    unitSystem: 'metric',
+    isPopular: true,
+    popularCalculators: ['salary-calculator', 'loan-calculator', 'mortgage-calculator'],
   },
 };
 

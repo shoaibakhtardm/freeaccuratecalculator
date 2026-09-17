@@ -21,8 +21,15 @@ interface Props {
   title: string;
   description?: string;
   metaDescription?: string;
+  keywords?: string;
   canonicalUrl?: string;
   image?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogImage?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
+  twitterImage?: string;
   jsonLd?: Record<string, any> | Array<Record<string, any>>;
   noindex?: boolean;
   lang?: string;
@@ -38,8 +45,15 @@ const {
   title,
   description,
   metaDescription,
+  keywords,
   canonicalUrl = `${siteOrigin}${normalizedPathname}`,
   image = `${siteOrigin}/og-image.svg`,
+  ogTitle,
+  ogDescription,
+  ogImage,
+  twitterTitle,
+  twitterDescription,
+  twitterImage,
   jsonLd,
   noindex = false,
   lang,
@@ -185,6 +199,7 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
 
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="color-scheme" content="light dark" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#0070f3" />
@@ -240,12 +255,24 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
 
       /* Native High-Fidelity PDF & Print Export */
       @media print {
-        header, footer, aside, nav, #smart-email-modal, #country-modal, .fac-copy-result-btn, .ad-slot-container, .breadcrumbs-container {
+        html, body, .dark, .dark body {
+          color-scheme: light !important;
+          background-color: #ffffff !important;
+          color: #000000 !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+        header, footer, aside, nav, #main-header, #smart-email-modal, #country-modal, .fac-copy-result-btn, .ad-slot-container, .breadcrumbs-container, button, .dark-mode-toggle, .no-print, .print\:hidden {
           display: none !important;
         }
-        body {
-          background: white !important;
-          color: black !important;
+        *, .dark * {
+          box-shadow: none !important;
+          text-shadow: none !important;
+        }
+        h1, h2, h3, h4, h5, h6, p, span, div, table, th, td,
+        .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
+        .dark p, .dark span, .dark div, .dark table, .dark th, .dark td {
+          color: #000000 !important;
         }
         main {
           max-width: 100% !important;
@@ -268,9 +295,11 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
     <!-- SEO Meta Tags -->
     <title>{fullTitle}</title>
     <meta name="description" content={pageDescription} />
+    {keywords && <meta name="keywords" content={keywords} />}
     <link rel="canonical" href={finalCanonical} />
-    <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="sitemap" href="/sitemap_index.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="sitemap" href="/sitemap.xml" />
     <link rel="alternate" type="application/rss+xml" title="Free Accurate Calculator RSS Feed" href="/rss.xml" />
     {noindex ? (
       <>
@@ -304,22 +333,22 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={finalCanonical} />
-    <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={pageDescription} />
+    <meta property="og:title" content={ogTitle || fullTitle} />
+    <meta property="og:description" content={ogDescription || pageDescription} />
     <meta property="og:site_name" content={siteName} />
     <meta property="og:locale" content={ogLocale} />
-    <meta property="og:image" content={socialImage} />
-    <meta property="og:image:alt" content={fullTitle} />
+    <meta property="og:image" content={ogImage || socialImage} />
+    <meta property="og:image:alt" content={ogTitle || fullTitle} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:url" content={finalCanonical} />
-    <meta name="twitter:title" content={fullTitle} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={socialImage} />
-    <meta name="twitter:image:alt" content={fullTitle} />
+    <meta name="twitter:title" content={twitterTitle || fullTitle} />
+    <meta name="twitter:description" content={twitterDescription || pageDescription} />
+    <meta name="twitter:image" content={twitterImage || socialImage} />
+    <meta name="twitter:image:alt" content={twitterTitle || fullTitle} />
 
     <!-- Anti-FOUT Dark Mode Script: Runs immediately before paint -->
     <script is:inline>
@@ -620,20 +649,49 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
           "Search 💡 ROI & Return Calc..."
         ];
 
+        const FRENCH_PROMPTS = [
+          "Rechercher un calculateur (ex: prêt, TVA, salaire, impôt, amortissement)...",
+          "Rechercher 💶 Calculateur de TVA (20% & 5,5%)...",
+          "Rechercher 💼 Simulateur Salaire Brut / Net...",
+          "Rechercher 🏢 Simulateur de Prêt Immobilier & HCSF...",
+          "Rechercher 🏛️ Simulateur d'Impôt sur le Revenu 2026...",
+          "Rechercher 🛡️ Simulateur d'Assurance Emprunteur...",
+          "Rechercher 🏡 Simulateur APL 2026...",
+          "Rechercher ⚖️ Indemnité de Licenciement...",
+          "Rechercher 🚗 Frais Kilométriques DGFIP...",
+          "Rechercher 📊 Frais Réels vs Abattement 10%...",
+          "Rechercher 📈 Calculateur d'Intérêts Composés...",
+          "Rechercher 🏖️ Simulateur de Retraite...",
+          "Rechercher 💰 Rendement Locatif...",
+          "Rechercher 📉 Calculateur d'Inflation...",
+          "Rechercher 🔄 Convertisseur d'Unités..."
+        ];
+
         function initSearchTypewriter(wrapper) {
-          if (wrapper.closest('.fac-autocomplete-container') || wrapper.__facTypewriterInit) return;
+          if (wrapper.closest('.fac-autocomplete-container') || 
+              wrapper.__facTypewriterInit || 
+              wrapper.hasAttribute('data-custom-typewriter') ||
+              wrapper.dataset.customTypewriter === 'true') return;
           wrapper.__facTypewriterInit = true;
 
+          const isFr = (document.documentElement.lang || '').startsWith('fr') || 
+                       window.location.pathname.startsWith('/countries/france') || 
+                       window.location.pathname.startsWith('/fr/');
+          const activePrompts = isFr ? FRENCH_PROMPTS : UNIVERSAL_PROMPTS;
+
           const textEl = wrapper.querySelector('.fac-typewriter-text');
-          const inputEl = wrapper.querySelector('input');
           const container = wrapper.querySelector('.fac-typewriter-container');
+          const inputEl = wrapper.querySelector('input');
           if (!textEl || !inputEl) return;
+          if (inputEl.placeholder) {
+            inputEl.placeholder = '';
+          }
 
           function getRandomIndex(excludeIdx) {
             let next;
             do {
-              next = Math.floor(Math.random() * UNIVERSAL_PROMPTS.length);
-            } while (next === excludeIdx && UNIVERSAL_PROMPTS.length > 1);
+              next = Math.floor(Math.random() * activePrompts.length);
+            } while (next === excludeIdx && activePrompts.length > 1);
             return next;
           }
 
@@ -647,7 +705,7 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
               return;
             }
 
-            const currentPrompt = UNIVERSAL_PROMPTS[promptIndex];
+            const currentPrompt = activePrompts[promptIndex];
 
             if (!isDeleting) {
               charIndex++;
@@ -708,11 +766,64 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
         }
       })();
 
-      // Global Resilient PDF Download & Print Delegator
+      // Global Resilient PDF Download & Print Delegator (Guaranteed Light Mode Export)
       (function () {
         let isPrinting = false;
-        window.addEventListener('beforeprint', () => { isPrinting = true; });
-        window.addEventListener('afterprint', () => { isPrinting = false; });
+        let wasDarkMode = false;
+
+        function forceLightMode() {
+          const root = document.documentElement;
+          wasDarkMode = root.classList.contains('dark');
+          if (wasDarkMode) {
+            root.classList.remove('dark');
+            root.style.colorScheme = 'light';
+            if (document.body) {
+              document.body.style.backgroundColor = '#ffffff';
+              document.body.style.color = '#000000';
+            }
+          }
+        }
+
+        function restoreDarkMode() {
+          if (wasDarkMode) {
+            const root = document.documentElement;
+            root.classList.add('dark');
+            root.style.colorScheme = 'dark';
+            if (document.body) {
+              document.body.style.backgroundColor = '';
+              document.body.style.color = '';
+            }
+            wasDarkMode = false;
+          }
+          isPrinting = false;
+        }
+
+        // Global async function callable by any calculator or script
+        window.generateAndDownloadPDF = async function (elementId, filename) {
+          forceLightMode();
+          try {
+            // Wait 100ms for CSS to apply and layout to repaint in light mode
+            await new Promise((resolve) => setTimeout(resolve, 100));
+            isPrinting = true;
+            window.print();
+            console.log('PDF generated in light mode successfully.');
+          } catch (error) {
+            console.error('PDF generation failed:', error);
+          } finally {
+            // Safe delayed restore if afterprint doesn't trigger immediately
+            setTimeout(restoreDarkMode, 300);
+          }
+        };
+
+        // Browser-level print lifecycle hooks (handles Ctrl+P, browser menus, direct window.print())
+        window.addEventListener('beforeprint', () => {
+          isPrinting = true;
+          forceLightMode();
+        });
+
+        window.addEventListener('afterprint', () => {
+          restoreDarkMode();
+        });
 
         document.addEventListener('click', (e) => {
           const target = e.target;
@@ -743,12 +854,9 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
             text === 'print / save pdf';
 
           if (isPdfAction) {
-            setTimeout(() => {
-              if (!isPrinting) {
-                isPrinting = true;
-                window.print();
-              }
-            }, 60);
+            if (!isPrinting) {
+              window.generateAndDownloadPDF();
+            }
           }
         });
       })();

@@ -1,0 +1,526 @@
+---
+// src/pages/countries/france/frais-notaire/[city].astro
+import Layout from '../../../../layouts/Layout.astro';
+import ThemeToggle from '../../../../components/ThemeToggle.astro';
+import { FRANCE_CITIES_NOTAIRE, type FranceCityNotaireData } from '../../../../data/france-cities-notaire';
+
+export function getStaticPaths() {
+  return FRANCE_CITIES_NOTAIRE.map((cityData) => ({
+    params: { city: cityData.slug },
+    props: { cityData },
+  }));
+}
+
+interface Props {
+  cityData: FranceCityNotaireData;
+}
+
+const { cityData } = Astro.props;
+
+const pageTitle = `Frais de Notaire ${cityData.city} 2026 : Calcul Gratuit & Barème ${cityData.dept}`;
+const pageDescription = `Calculez les frais de notaire exacts pour votre achat immobilier à ${cityData.city} (${cityData.postalCode}). Droits de mutation DMTO (${cityData.rateDmto}%), émoluments 2026 et optimisation mobilier.`;
+const canonicalUrl = `https://freeaccuratecalculator.com/countries/france/frais-notaire/${cityData.slug}/`;
+
+const otherCities = FRANCE_CITIES_NOTAIRE.filter((c) => c.slug !== cityData.slug);
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: `Simulateur Frais de Notaire ${cityData.city} 2026`,
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'All',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'EUR',
+      },
+      description: pageDescription,
+      inLanguage: 'fr-FR',
+      url: canonicalUrl,
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://freeaccuratecalculator.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Pays', item: 'https://freeaccuratecalculator.com/countries/' },
+        { '@type': 'ListItem', position: 3, name: 'France', item: 'https://freeaccuratecalculator.com/countries/france/' },
+        { '@type': 'ListItem', position: 4, name: 'Frais de Notaire', item: 'https://freeaccuratecalculator.com/countries/france/frais-de-notaire/' },
+        { '@type': 'ListItem', position: 5, name: cityData.city, item: canonicalUrl },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: `Quel est le montant des frais de notaire pour un achat immobilier à ${cityData.city} en 2026 ?`,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `À ${cityData.city} (${cityData.dept}), les frais de notaire s'élèvent à environ 7,5 % à 8 % du prix d'achat dans l'immobilier ancien, et entre 2 % et 3 % dans l'immobilier neuf (VEFA). Le taux départemental des droits de mutation (DMTO) est de ${cityData.rateDmto} %.`,
+          },
+        },
+        {
+          '@type': 'Question',
+          name: `Comment réduire les frais de notaire lors d'un achat à ${cityData.city} ?`,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `Vous pouvez réduire vos frais de notaire à ${cityData.city} en déduisant la valeur du mobilier meublant (cuisine équipée, électroménager) jusqu'à 5 % du prix de vente, ce qui vous fait économiser ${cityData.totalRateDmto} % de taxes sur le montant du mobilier déduit.`,
+          },
+        },
+        {
+          '@type': 'Question',
+          name: `Quel est le prix moyen au m² à ${cityData.city} et l'impact sur les émoluments ?`,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: `Le prix moyen constaté à ${cityData.city} est d'environ ${cityData.avgPriceM2Ancien} €/m² dans l'ancien et ${cityData.avgPriceM2Neuf} €/m² dans le neuf. Les émoluments proportionnels du notaire sont réglementés par l'article A444-91 du Code de commerce et sont identiques dans toute la France.`,
+          },
+        },
+      ],
+    },
+  ],
+};
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonicalUrl={canonicalUrl}
+  jsonLd={jsonLd}
+  lang="fr-FR"
+  locale="fr"
+>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+      <a href="/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Accueil</a>
+      <span>/</span>
+      <a href="/countries/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Pays</a>
+      <span>/</span>
+      <a href="/countries/france/" class="hover:text-indigo-600 dark:hover:text-indigo-400">France</a>
+      <span>/</span>
+      <a href="/countries/france/frais-de-notaire/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Frais de Notaire</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold">{cityData.city}</span>
+    </nav>
+
+    <!-- Hero Title -->
+    <div class="space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/50">
+        <span>Barème 2026 {cityData.deptName} ({cityData.dept})</span>
+        <span>•</span>
+        <span>DMTO {cityData.rateDmto}%</span>
+        <span>•</span>
+        <span>Prix Moyen : {cityData.avgPriceM2Ancien} €/m²</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white font-outfit">
+        Simulateur Frais de Notaire à {cityData.city} (2026) : Calcul Achat {cityData.dept}
+      </h1>
+      <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
+        {cityData.description} Calculez instantanément le montant exact de vos droits de mutation, émoluments réglementés et l'économie générée par la déduction du mobilier pour votre projet immobilier à {cityData.city}.
+      </p>
+    </div>
+
+    <!-- CALCULATOR CONTAINER -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      <!-- FORM INPUTS (7 cols) -->
+      <div class="lg:col-span-7 bg-white dark:bg-slate-900/90 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 p-5 sm:p-7 shadow-sm space-y-5">
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center justify-between">
+          <span>1. Projet Immobilier à {cityData.city}</span>
+          <span class="text-xs font-normal text-indigo-600 dark:text-indigo-400">Taux {cityData.dept} : {cityData.rateDmto}%</span>
+        </h2>
+
+        <!-- Type de bien (Ancien vs Neuf) -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Nature du Logement
+          </label>
+          <div class="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              id="city-btn-ancien"
+              class="type-btn py-3 px-4 rounded-xl border-2 font-bold text-sm text-center transition-all border-indigo-600 bg-indigo-50/70 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300"
+              data-type="ancien"
+            >
+              Ancien (~7,8%)
+            </button>
+            <button
+              type="button"
+              id="city-btn-neuf"
+              class="type-btn py-3 px-4 rounded-xl border-2 font-bold text-sm text-center transition-all border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-slate-300"
+              data-type="neuf"
+            >
+              Neuf / VEFA (~2,3%)
+            </button>
+          </div>
+        </div>
+
+        <!-- Prix d'achat FAI -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center">
+            <label for="city-price" class="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+              Prix d'Achat du Bien à {cityData.city} (€ FAI)
+            </label>
+            <span class="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400" id="city-price-display">
+              {cityData.typicalProjectAmount.toLocaleString('fr-FR')} €
+            </span>
+          </div>
+          <div class="relative">
+            <input
+              type="number"
+              id="city-price"
+              min="10000"
+              max="10000000"
+              step="5000"
+              value={cityData.typicalProjectAmount}
+              class="w-full px-3.5 py-2.5 pr-12 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400 font-bold">€</span>
+          </div>
+          <input
+            type="range"
+            id="city-price-range"
+            min="50000"
+            max="1500000"
+            step="5000"
+            value={cityData.typicalProjectAmount}
+            class="w-full accent-indigo-600 cursor-pointer"
+          />
+        </div>
+
+        <!-- Déduction Mobilier -->
+        <div class="p-4 rounded-xl border border-indigo-100 dark:border-indigo-950/80 bg-indigo-50/40 dark:bg-indigo-950/20 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <span>🛋️</span> Déduction du Mobilier (Cuisine, Équipements)
+            </span>
+            <button
+              type="button"
+              id="city-btn-furniture"
+              class="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 underline hover:text-indigo-700"
+            >
+              Appliquer 5% optimal
+            </button>
+          </div>
+          <div class="relative">
+            <input
+              type="number"
+              id="city-furniture"
+              min="0"
+              max="200000"
+              step="500"
+              value="0"
+              placeholder="Valeur des meubles meublants"
+              class="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-bold">€</span>
+          </div>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">
+            À {cityData.city}, le mobilier déduit génère une économie nette de <strong>{cityData.totalRateDmto} %</strong> de droits fiscaux.
+          </p>
+        </div>
+      </div>
+
+      <!-- RESULTS STICKY SUMMARY (5 cols) -->
+      <div class="lg:col-span-5 space-y-5 lg:sticky lg:top-24">
+        <div class="bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-950 text-white rounded-2xl p-5 sm:p-7 shadow-xl border border-indigo-500/30 relative overflow-hidden">
+          <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl"></div>
+
+          <div class="space-y-4 relative z-10">
+            <div class="flex justify-between items-start">
+              <span class="text-xs font-bold uppercase tracking-wider text-indigo-300">
+                Frais de Notaire Estimés ({cityData.city})
+              </span>
+              <span id="city-ratio-badge" class="px-2 py-0.5 rounded-full text-xs font-bold bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
+                7,32 %
+              </span>
+            </div>
+
+            <div>
+              <div class="text-3xl sm:text-4xl font-extrabold font-outfit text-white tracking-tight" id="city-total-display">
+                0 €
+              </div>
+              <p class="text-xs text-slate-300 mt-1">
+                Budget total d'acquisition : <strong id="city-total-project" class="text-white">0 €</strong>
+              </p>
+            </div>
+
+            <!-- Économie Mobilier -->
+            <div id="city-savings-box" class="hidden p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-xs text-emerald-200">
+              ⚡ Économie fiscale sur le mobilier : <strong id="city-savings" class="text-white">0 €</strong>
+            </div>
+
+            <!-- DETAIL -->
+            <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+              <div class="flex justify-between text-slate-300">
+                <span>Taxes Trésor Public ({cityData.dept}) :</span>
+                <span class="font-bold text-white font-mono" id="city-detail-taxes">0 €</span>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span>Émoluments Notaire (TTC) :</span>
+                <span class="font-bold text-white font-mono" id="city-detail-emoluments">0 €</span>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span>Débours & Sécurité Foncière :</span>
+                <span class="font-bold text-white font-mono" id="city-detail-debours">0 €</span>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="pt-2">
+              <button
+                type="button"
+                id="city-btn-print"
+                class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2"
+              >
+                <span>🖨️</span> Exporter le Récapitulatif {cityData.city}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Repères Prix Marché -->
+        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs space-y-2 text-slate-600 dark:text-slate-400">
+          <p class="font-bold text-slate-900 dark:text-white flex items-center gap-1">
+            <span>📊</span> Repères Prix Immobilier {cityData.city} (2026) :
+          </p>
+          <div class="grid grid-cols-2 gap-2 pt-1">
+            <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60">
+              <span class="block text-[10px] text-slate-400">Ancien Moyen</span>
+              <strong class="text-slate-900 dark:text-white font-mono">{cityData.avgPriceM2Ancien.toLocaleString('fr-FR')} €/m²</strong>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-50 dark:bg-slate-800/60">
+              <span class="block text-[10px] text-slate-400">Neuf VEFA</span>
+              <strong class="text-slate-900 dark:text-white font-mono">{cityData.avgPriceM2Neuf.toLocaleString('fr-FR')} €/m²</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUIDE LOCALISE APPROFONDI -->
+    <article class="bg-white dark:bg-slate-900/90 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 p-6 sm:p-8 space-y-6 text-slate-800 dark:text-slate-200 leading-relaxed text-sm sm:text-base">
+      <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-outfit border-b border-slate-100 dark:border-slate-800 pb-3">
+        Achat Immobilier à {cityData.city} ({cityData.postalCode}) : Fiscalité & Droits de Mutation
+      </h2>
+
+      <div class="space-y-4">
+        <p>
+          Pour toute acquisition immobilière réalisée dans la commune de <strong>{cityData.city}</strong> ou dans le département de <strong>{cityData.deptName} ({cityData.dept})</strong>, les droits d'enregistrement s'appliquent selon les taux votés par les collectivités locales.
+        </p>
+
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white pt-2">
+          1. Spécificités du Marché Immobilier à {cityData.city}
+        </h3>
+        <p>
+          {cityData.localParticularity}
+        </p>
+        <p>
+          Principaux secteurs et quartiers recherchés à {cityData.city} :
+        </p>
+        <div class="flex flex-wrap gap-2 pt-1">
+          {cityData.topQuarters.map((q) => (
+            <span class="px-3 py-1 rounded-lg text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+              📍 {q}
+            </span>
+          ))}
+        </div>
+
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white pt-2">
+          2. Exemple de Frais de Notaire pour Différents Types de Logements à {cityData.city}
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs sm:text-sm border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden font-mono">
+            <thead class="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-sans font-bold">
+              <tr>
+                <th class="p-3">Type de Bien</th>
+                <th class="p-3">Surface Estimée</th>
+                <th class="p-3">Prix Moyen {cityData.city}</th>
+                <th class="p-3">Frais Ancien (~7,8%)</th>
+                <th class="p-3">Frais Neuf (~2,3%)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800 text-xs">
+              <tr>
+                <td class="p-3 font-sans font-semibold">Studio / T1</td>
+                <td class="p-3">25 m²</td>
+                <td class="p-3 font-bold">{(cityData.avgPriceM2Ancien * 25).toLocaleString('fr-FR')} €</td>
+                <td class="p-3 text-indigo-600 dark:text-indigo-400 font-bold">{Math.round(cityData.avgPriceM2Ancien * 25 * 0.078).toLocaleString('fr-FR')} €</td>
+                <td class="p-3 text-emerald-600 dark:text-emerald-400 font-bold">{Math.round(cityData.avgPriceM2Neuf * 25 * 0.023).toLocaleString('fr-FR')} €</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-sans font-semibold">Appartement T2</td>
+                <td class="p-3">45 m²</td>
+                <td class="p-3 font-bold">{(cityData.avgPriceM2Ancien * 45).toLocaleString('fr-FR')} €</td>
+                <td class="p-3 text-indigo-600 dark:text-indigo-400 font-bold">{Math.round(cityData.avgPriceM2Ancien * 45 * 0.076).toLocaleString('fr-FR')} €</td>
+                <td class="p-3 text-emerald-600 dark:text-emerald-400 font-bold">{Math.round(cityData.avgPriceM2Neuf * 45 * 0.022).toLocaleString('fr-FR')} €</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-sans font-semibold">Appartement T3</td>
+                <td class="p-3">68 m²</td>
+                <td class="p-3 font-bold">{(cityData.avgPriceM2Ancien * 68).toLocaleString('fr-FR')} €</td>
+                <td class="p-3 text-indigo-600 dark:text-indigo-400 font-bold">{Math.round(cityData.avgPriceM2Ancien * 68 * 0.074).toLocaleString('fr-FR')} €</td>
+                <td class="p-3 text-emerald-600 dark:text-emerald-400 font-bold">{Math.round(cityData.avgPriceM2Neuf * 68 * 0.021).toLocaleString('fr-FR')} €</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-sans font-semibold">Maison / T4+</td>
+                <td class="p-3">110 m²</td>
+                <td class="p-3 font-bold">{(cityData.avgPriceM2Ancien * 110).toLocaleString('fr-FR')} €</td>
+                <td class="p-3 text-indigo-600 dark:text-indigo-400 font-bold">{Math.round(cityData.avgPriceM2Ancien * 110 * 0.072).toLocaleString('fr-FR')} €</td>
+                <td class="p-3 text-emerald-600 dark:text-emerald-400 font-bold">{Math.round(cityData.avgPriceM2Neuf * 110 * 0.020).toLocaleString('fr-FR')} €</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- VILLES DU RESEAU PROGRAMMATIQUE -->
+      <div class="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+          Consulter les Frais de Notaire dans d'Autres Grandes Métropoles Françaises :
+        </h3>
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1">
+          {otherCities.map((c) => (
+            <a
+              href={`/countries/france/frais-notaire/${c.slug}/`}
+              class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-indigo-500 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors flex items-center justify-between"
+            >
+              <span>{c.city} ({c.dept})</span>
+              <span>→</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <script is:inline define:vars={{ cityData }}>
+    (function () {
+      let propertyType = 'ancien';
+
+      const priceInput = document.getElementById('city-price');
+      const priceRange = document.getElementById('city-price-range');
+      const priceDisplay = document.getElementById('city-price-display');
+      const furnitureInput = document.getElementById('city-furniture');
+      const btnAutoFurniture = document.getElementById('city-btn-furniture');
+
+      const btnAncien = document.getElementById('city-btn-ancien');
+      const btnNeuf = document.getElementById('city-btn-neuf');
+
+      const totalDisplay = document.getElementById('city-total-display');
+      const totalProject = document.getElementById('city-total-project');
+      const ratioBadge = document.getElementById('city-ratio-badge');
+      const savingsBox = document.getElementById('city-savings-box');
+      const savingsDisplay = document.getElementById('city-savings');
+
+      const detailTaxes = document.getElementById('city-detail-taxes');
+      const detailEmoluments = document.getElementById('city-detail-emoluments');
+      const detailDebours = document.getElementById('city-detail-debours');
+
+      const formatEuro = (val) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(val);
+
+      function calculateEmolumentsHT(price) {
+        let emo = 0;
+        if (price > 60000) {
+          emo += (price - 60000) * 0.00799;
+          emo += (60000 - 17000) * 0.01064;
+          emo += (17000 - 6500) * 0.01596;
+          emo += 6500 * 0.0387;
+        } else if (price > 17000) {
+          emo += (price - 17000) * 0.01064;
+          emo += (17000 - 6500) * 0.01596;
+          emo += 6500 * 0.0387;
+        } else if (price > 6500) {
+          emo += (price - 6500) * 0.01596;
+          emo += 6500 * 0.0387;
+        } else {
+          emo += price * 0.0387;
+        }
+        return emo;
+      }
+
+      function calculate() {
+        const rawPrice = parseFloat(priceInput.value) || 0;
+        const furniture = Math.min(parseFloat(furnitureInput.value) || 0, rawPrice * 0.15);
+        const taxablePrice = Math.max(0, rawPrice - furniture);
+        const dmtoRate = cityData.totalRateDmto / 100;
+
+        // 1. Émoluments du notaire
+        const emoTTC = calculateEmolumentsHT(rawPrice) * 1.2;
+
+        // 2. Taxes publiques
+        let taxesPublic = 0;
+        if (propertyType === 'ancien') {
+          taxesPublic = taxablePrice * dmtoRate;
+        } else {
+          taxesPublic = taxablePrice * 0.00715; // Neuf VEFA
+        }
+
+        // 3. CSI + Débours
+        const csi = Math.max(15, taxablePrice * 0.001);
+        const debours = propertyType === 'ancien' ? 1150 : 1350;
+
+        const total = Math.round(taxesPublic + emoTTC + debours + csi);
+        const projectCost = Math.round(rawPrice + total);
+        const ratio = rawPrice > 0 ? ((total / rawPrice) * 100).toFixed(2) : 0;
+        const savings = Math.round(furniture * (propertyType === 'ancien' ? dmtoRate : 0.00715));
+
+        // Update UI
+        priceDisplay.textContent = formatEuro(rawPrice);
+        totalDisplay.textContent = formatEuro(total);
+        totalProject.textContent = formatEuro(projectCost);
+        ratioBadge.textContent = `${ratio} %`;
+
+        detailTaxes.textContent = formatEuro(taxesPublic);
+        detailEmoluments.textContent = formatEuro(emoTTC);
+        detailDebours.textContent = formatEuro(debours + csi);
+
+        if (furniture > 0 && savings > 0) {
+          savingsBox.classList.remove('hidden');
+          savingsDisplay.textContent = formatEuro(savings);
+        } else {
+          savingsBox.classList.add('hidden');
+        }
+      }
+
+      priceInput.addEventListener('input', () => {
+        priceRange.value = priceInput.value;
+        calculate();
+      });
+
+      priceRange.addEventListener('input', () => {
+        priceInput.value = priceRange.value;
+        calculate();
+      });
+
+      furnitureInput.addEventListener('input', calculate);
+
+      btnAutoFurniture.addEventListener('click', () => {
+        const curPrice = parseFloat(priceInput.value) || 0;
+        furnitureInput.value = Math.round(curPrice * 0.05);
+        calculate();
+      });
+
+      btnAncien.addEventListener('click', () => {
+        propertyType = 'ancien';
+        btnAncien.className = 'type-btn py-3 px-4 rounded-xl border-2 font-bold text-sm text-center transition-all border-indigo-600 bg-indigo-50/70 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300';
+        btnNeuf.className = 'type-btn py-3 px-4 rounded-xl border-2 font-bold text-sm text-center transition-all border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-slate-300';
+        calculate();
+      });
+
+      btnNeuf.addEventListener('click', () => {
+        propertyType = 'neuf';
+        btnNeuf.className = 'type-btn py-3 px-4 rounded-xl border-2 font-bold text-sm text-center transition-all border-indigo-600 bg-indigo-50/70 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300';
+        btnAncien.className = 'type-btn py-3 px-4 rounded-xl border-2 font-bold text-sm text-center transition-all border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-slate-300';
+        calculate();
+      });
+
+      document.getElementById('city-btn-print')?.addEventListener('click', () => {
+        window.print();
+      });
+
+      calculate();
+    })();
+  </script>
+</Layout>

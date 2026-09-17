@@ -1,0 +1,309 @@
+---
+// File: src/components/love/RomanticBackground.astro
+---
+
+<!-- ULTRA-ELITE AMBIENT ROMANCE BACKGROUND: 3D ROSE PETALS + GLOWING RED HEARTS + SPARKLE STARDUST -->
+<div class="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none" aria-hidden="true">
+  <!-- Multi-layered Warm Velvet Ambient Glow Orbs -->
+  <div class="absolute -top-24 left-1/4 w-[32rem] sm:w-[46rem] h-[32rem] sm:h-[46rem] bg-gradient-to-br from-rose-600/30 via-red-600/20 to-transparent rounded-full blur-[120px] sm:blur-[160px] dark:from-rose-950/60 dark:via-purple-950/50 animate-pulse" style="animation-duration: 8s;"></div>
+  <div class="absolute top-1/3 right-5 sm:right-10 w-[26rem] sm:w-[38rem] h-[26rem] sm:h-[38rem] bg-gradient-to-bl from-pink-500/25 via-rose-500/20 to-transparent rounded-full blur-[110px] sm:blur-[150px] dark:from-rose-900/35 dark:via-red-950/35" style="animation-duration: 12s;"></div>
+  <div class="absolute bottom-10 left-5 sm:left-1/3 w-[30rem] h-[30rem] bg-gradient-to-t from-red-600/20 via-purple-600/15 to-transparent rounded-full blur-[130px] dark:from-purple-950/50 dark:via-rose-950/40"></div>
+
+  <!-- Ultra-Elite Canvas for 3D Rose Petals + Rotating Red Hearts + Sparkle Stardust -->
+  <canvas id="ultra-romantic-canvas" class="w-full h-full opacity-85 dark:opacity-95"></canvas>
+</div>
+
+<script is:inline>
+  (function initUltraRomanticEngine() {
+    const canvas = document.getElementById('ultra-romantic-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    const isMobile = window.innerWidth < 768;
+    const numPetals = isMobile ? 18 : 32;
+    const numHearts = isMobile ? 14 : 26;
+    const numSparkles = isMobile ? 15 : 25;
+
+    const petals = [];
+    const hearts = [];
+    const sparkles = [];
+    const interactiveParticles = [];
+
+    // 1. 3D Botanical Rose Petals
+    class RosePetal {
+      constructor() {
+        this.reset(true);
+      }
+      reset(initial = false) {
+        this.x = Math.random() * width;
+        this.y = initial ? Math.random() * height : -35;
+        this.size = Math.random() * 16 + 12;
+        this.speedY = Math.random() * 1.1 + 0.5;
+        this.speedX = Math.random() * 0.8 - 0.4;
+        this.rotation = Math.random() * 360;
+        this.rotationSpeed = (Math.random() - 0.5) * 1.6;
+        this.roll = Math.random() * Math.PI;
+        this.rollSpeed = Math.random() * 0.03 + 0.015;
+        this.opacity = Math.random() * 0.45 + 0.35;
+        this.swaySpeed = Math.random() * 0.02 + 0.01;
+        this.swayOffset = Math.random() * Math.PI * 2;
+        
+        const colors = [
+          ['#E11D48', '#BE123C'],
+          ['#F43F5E', '#9F1239'],
+          ['#FB7185', '#E11D48'],
+          ['#881337', '#4C0519'],
+        ];
+        this.palette = colors[Math.floor(Math.random() * colors.length)];
+      }
+      update() {
+        this.y += this.speedY;
+        this.swayOffset += this.swaySpeed;
+        this.x += Math.sin(this.swayOffset) * 1.2 + this.speedX;
+        this.rotation += this.rotationSpeed;
+        this.roll += this.rollSpeed;
+
+        if (this.y > height + 45 || this.x < -45 || this.x > width + 45) {
+          this.reset(false);
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.rotation * Math.PI) / 180);
+        
+        const scaleY = Math.sin(this.roll);
+        ctx.scale(1, Math.abs(scaleY) * 0.8 + 0.2);
+
+        const grad = ctx.createLinearGradient(-this.size / 2, -this.size / 2, this.size / 2, this.size / 2);
+        grad.addColorStop(0, this.palette[0]);
+        grad.addColorStop(1, this.palette[1]);
+
+        ctx.fillStyle = grad;
+        ctx.globalAlpha = this.opacity;
+        ctx.shadowColor = 'rgba(190, 18, 60, 0.35)';
+        ctx.shadowBlur = 8;
+
+        ctx.beginPath();
+        ctx.moveTo(0, -this.size / 2);
+        ctx.bezierCurveTo(this.size / 1.5, -this.size / 2, this.size / 1.5, this.size / 2, 0, this.size);
+        ctx.bezierCurveTo(-this.size / 1.5, this.size / 2, -this.size / 1.5, -this.size / 2, 0, -this.size / 2);
+        ctx.fill();
+
+        ctx.restore();
+      }
+    }
+
+    // 2. Swirling & Floating Glowing Red Hearts
+    class RedHeart {
+      constructor() {
+        this.reset(true);
+      }
+      reset(initial = false) {
+        this.x = Math.random() * width;
+        this.y = initial ? Math.random() * height : height + 30;
+        this.size = Math.random() * 14 + 8;
+        this.speedY = Math.random() * 0.9 + 0.4;
+        this.rotation = Math.random() * 360;
+        this.rotationSpeed = (Math.random() - 0.5) * 1.8;
+        this.roll = Math.random() * Math.PI;
+        this.rollSpeed = Math.random() * 0.025 + 0.01;
+        this.opacity = Math.random() * 0.5 + 0.3;
+        this.pulse = Math.random() * Math.PI;
+        this.pulseSpeed = Math.random() * 0.04 + 0.02;
+        this.swaySpeed = Math.random() * 0.02 + 0.01;
+        this.swayOffset = Math.random() * Math.PI * 2;
+
+        const redVariants = [
+          ['#DC2626', '#991B1B'], // Pure Deep Red
+          ['#EF4444', '#B91C1C'], // Vivid Crimson Red
+          ['#E11D48', '#881337'], // Rose Velvet Red
+          ['#F43F5E', '#BE123C'], // Ruby Passion
+        ];
+        this.palette = redVariants[Math.floor(Math.random() * redVariants.length)];
+      }
+      update() {
+        this.y -= this.speedY;
+        this.swayOffset += this.swaySpeed;
+        this.x += Math.sin(this.swayOffset) * 0.8;
+        this.rotation += this.rotationSpeed;
+        this.roll += this.rollSpeed;
+        this.pulse += this.pulseSpeed;
+
+        if (this.y < -40 || this.x < -40 || this.x > width + 40) {
+          this.reset(false);
+        }
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.rotation * Math.PI) / 180);
+
+        // 3D perspective & heartbeat pulse
+        const scaleX = Math.cos(this.roll) * 0.3 + 0.7;
+        const pulseScale = (Math.sin(this.pulse) * 0.15 + 1) * (this.size / 22);
+        ctx.scale(scaleX * pulseScale, pulseScale);
+
+        const grad = ctx.createRadialGradient(0, 0, 2, 0, 0, 18);
+        grad.addColorStop(0, this.palette[0]);
+        grad.addColorStop(1, this.palette[1]);
+
+        ctx.fillStyle = grad;
+        ctx.globalAlpha = this.opacity;
+        ctx.shadowColor = 'rgba(239, 68, 68, 0.5)';
+        ctx.shadowBlur = 12;
+
+        // Draw perfect heart curve
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(-10, -12, -22, 2, 0, 20);
+        ctx.bezierCurveTo(22, 2, 10, -12, 0, 0);
+        ctx.fill();
+
+        ctx.restore();
+      }
+    }
+
+    // 3. Ambient Stardust Sparkles
+    class StardustSparkle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 2.5 + 1;
+        this.alpha = Math.random() * 0.6 + 0.2;
+        this.twinkleSpeed = Math.random() * 0.03 + 0.01;
+        this.twinkleOffset = Math.random() * Math.PI * 2;
+      }
+      update() {
+        this.twinkleOffset += this.twinkleSpeed;
+        this.alpha = Math.sin(this.twinkleOffset) * 0.4 + 0.5;
+        this.y -= 0.15;
+        if (this.y < 0) this.y = height;
+      }
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.fillStyle = '#FFD1DC';
+        ctx.globalAlpha = Math.max(0.1, this.alpha);
+        ctx.shadowColor = '#FFD700';
+        ctx.shadowBlur = 6;
+        
+        ctx.beginPath();
+        ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // 4. Interactive Cursor Burst on Move/Tap
+    class CursorSparkle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.vx = (Math.random() - 0.5) * 2.5;
+        this.vy = (Math.random() - 0.5) * 2.5 - 0.5;
+        this.size = Math.random() * 6 + 3;
+        this.alpha = 1;
+        this.color = Math.random() > 0.4 ? '#EF4444' : '#FB7185';
+        this.isHeart = Math.random() > 0.5;
+      }
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.alpha -= 0.025;
+      }
+      draw() {
+        if (this.alpha <= 0) return;
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = this.color;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 8;
+
+        if (this.isHeart) {
+          const s = this.size / 15;
+          ctx.scale(s, s);
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.bezierCurveTo(-6, -8, -12, 2, 0, 12);
+          ctx.bezierCurveTo(12, 2, 6, -8, 0, 0);
+          ctx.fill();
+        } else {
+          ctx.beginPath();
+          ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      }
+    }
+
+    // Initialize Particle Arrays
+    for (let i = 0; i < numPetals; i++) petals.push(new RosePetal());
+    for (let i = 0; i < numHearts; i++) hearts.push(new RedHeart());
+    for (let i = 0; i < numSparkles; i++) sparkles.push(new StardustSparkle());
+
+    // Mouse & Touch Interaction Listeners
+    let lastSpawn = 0;
+    function addInteractiveSparkles(x, y) {
+      const now = Date.now();
+      if (now - lastSpawn < 30) return; // throttle
+      lastSpawn = now;
+      for (let i = 0; i < 2; i++) {
+        interactiveParticles.push(new CursorSparkle(x, y));
+      }
+      if (interactiveParticles.length > 50) interactiveParticles.shift();
+    }
+
+    window.addEventListener('mousemove', (e) => addInteractiveSparkles(e.clientX, e.clientY));
+    window.addEventListener('touchmove', (e) => {
+      if (e.touches[0]) addInteractiveSparkles(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+
+    // Master Animation Loop
+    function renderFrame() {
+      ctx.clearRect(0, 0, width, height);
+
+      // Render Stardust
+      for (let i = 0; i < sparkles.length; i++) {
+        sparkles[i].update();
+        sparkles[i].draw();
+      }
+
+      // Render Floating Red Hearts
+      for (let i = 0; i < hearts.length; i++) {
+        hearts[i].update();
+        hearts[i].draw();
+      }
+
+      // Render 3D Rose Petals
+      for (let i = 0; i < petals.length; i++) {
+        petals[i].update();
+        petals[i].draw();
+      }
+
+      // Render Cursor Burst Particles
+      for (let i = interactiveParticles.length - 1; i >= 0; i--) {
+        const p = interactiveParticles[i];
+        p.update();
+        p.draw();
+        if (p.alpha <= 0) {
+          interactiveParticles.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(renderFrame);
+    }
+    renderFrame();
+  })();
+</script>

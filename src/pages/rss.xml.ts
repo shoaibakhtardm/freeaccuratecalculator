@@ -2,6 +2,8 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 
+export const prerender = true;
+
 export const GET: APIRoute = async (context) => {
   const siteUrl = 'https://freeaccuratecalculator.com';
   const guides = await getCollection('guides');

@@ -84,7 +84,7 @@ const {
   directoryIcon = '🧮',
   directoryFlagUrl,
   backLink,
-  searchPlaceholder = 'Search calculators...',
+  searchPlaceholder: searchPlaceholderProp,
   tools,
   allSearchableToolsJson,
   educationHeading,
@@ -98,7 +98,16 @@ const {
   headlineGradientDark = 'dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300',
 } = Astro.props;
 
-const isFrench = isFrenchProp ?? (country?.slug === 'france' || Astro.url.pathname.includes('/countries/france') || Astro.currentLocale === 'fr');
+const isFrench = isFrenchProp ?? (
+  country?.slug === 'france' || 
+  Astro.url.pathname.startsWith('/countries/france') || 
+  Astro.url.pathname.startsWith('/fr/') || 
+  Astro.currentLocale === 'fr'
+);
+const defaultSearchPlaceholder = isFrench 
+  ? "Rechercher (ex: prêt, TVA, salaire, impôt, retraite, amortissement)" 
+  : 'Search calculators...';
+const searchPlaceholder = searchPlaceholderProp || defaultSearchPlaceholder;
 const rawPath = Astro.url.pathname.replace(/\/$/, '');
 ---
 
@@ -218,14 +227,15 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
             </div>
           </div>
 
+          <label for="directory-filter-input" class="sr-only">{isFrench ? "Rechercher" : "Search"}</label>
           <input
             id="directory-filter-input"
             type="search"
             autocomplete="off"
             spellcheck="false"
-            placeholder={searchPlaceholder}
-            class="fac-search-input relative z-20 w-full rounded-2xl bg-transparent py-2.5 sm:py-3 pl-10 pr-24 text-xs sm:text-sm font-bold text-slate-900 dark:text-white placeholder:font-medium placeholder-slate-400 dark:placeholder-slate-400 shadow-2xs outline-none border-none ring-0 transition-all tracking-tight sm:tracking-normal"
-            aria-label={searchPlaceholder}
+            placeholder=""
+            class="fac-search-input relative z-20 w-full rounded-2xl bg-transparent py-2.5 sm:py-3 pl-10 pr-24 text-xs sm:text-sm font-bold text-slate-900 dark:text-white placeholder:text-transparent placeholder:opacity-0 shadow-2xs outline-none border-none ring-0 transition-all tracking-tight sm:tracking-normal"
+            aria-label={isFrench ? "Rechercher" : searchPlaceholder}
           />
           <div class="absolute right-2.5 z-20 flex items-center gap-1.5">
             <button
@@ -233,13 +243,14 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
               id="directory-filter-clear"
               class="hidden p-1 rounded-full text-slate-400 hover:text-cyan-500 dark:hover:text-cyan-400 hover:bg-cyan-500/10 dark:hover:bg-cyan-500/20 transition-colors cursor-pointer"
               aria-label={isFrench ? "Effacer la recherche" : "Clear search"}
+              title={isFrench ? "Effacer la recherche" : "Clear search"}
             >
               <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
             <span id="directory-match-counter" class="text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-900/60">
-              {isFrench ? "Tous les Outils" : "All Tools"}
+              {isFrench ? "Tous les outils" : "All Tools"}
             </span>
           </div>
         </div>
@@ -251,8 +262,8 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
           role="listbox"
         >
           <div class="px-3.5 py-2 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-            <span id="directory-dropdown-title">{isFrench ? "Outils Suggérés" : "Suggested Tools"}</span>
-            <span class="text-[10px] lowercase font-normal hidden sm:inline">{isFrench ? "appuyez sur entrée ↵ pour ouvrir" : "press enter ↵ to open"}</span>
+            <span id="directory-dropdown-title">{isFrench ? "Outils suggérés" : "Suggested Tools"}</span>
+            <span class="text-[10px] lowercase font-normal hidden sm:inline">{isFrench ? "↵ pour ouvrir" : "press enter ↵ to open"}</span>
           </div>
           <div id="directory-dropdown-list" class="max-h-[280px] overflow-y-auto p-1.5 space-y-1"></div>
         </div>
@@ -270,13 +281,9 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
           style="display: none;"
         >
           <span class="text-3xl mb-2 inline-block">🔍</span>
-          <h3 class="font-outfit text-sm sm:text-base font-bold text-slate-800 dark:text-slate-200">
-            {isFrench ? "Aucune calculatrice trouvée pour cette recherche." : "No calculators found"}
+          <h3 id="directory-no-results-title" class="font-outfit text-sm sm:text-base font-bold text-slate-800 dark:text-slate-200">
           </h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            {isFrench
-              ? "Essayez avec des termes comme prêt, tva, salaire, imc, âge ou vérifiez l'orthographe."
-              : 'Try searching for another keyword like "sip", "emi", "tax", "age", or "bmi".'}
+          <p id="directory-no-results-subtitle" class="text-xs text-slate-500 dark:text-slate-400 mt-1">
           </p>
           <div class="mt-3">
             <button
@@ -284,7 +291,7 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
               id="reset-directory-search-btn"
               class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-colors cursor-pointer"
             >
-              <span>{isFrench ? "Afficher Tous les Outils" : "Show All Tools"}</span>
+              <span>{isFrench ? "Afficher tous les outils" : "Show All Tools"}</span>
             </button>
           </div>
         </div>
@@ -349,7 +356,7 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
 
     <!-- Categories Section (Exact Homepage Style, Scoped to Country, with Embedded Live Spotlight Search) -->
     {country && showCategories && (
-      <CategoriesSection country={country} />
+      <CategoriesSection country={country} showSearch={false} />
     )}
 
     <!-- Educational & Domain Value Section -->
@@ -490,7 +497,7 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
     }
 
     const path = window.location.pathname;
-    const isFr = path.includes('/countries/france') || (document.documentElement.lang || '').startsWith('fr');
+    const isFr = path.startsWith('/countries/france') || path.startsWith('/fr/') || (document.documentElement.lang || '').startsWith('fr');
 
     if (noResults) {
       noResults.style.display = 'none';
@@ -517,6 +524,7 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
 
         const match = !q || fullHaystack.includes(q) || cleanHaystack.includes(cleanQ);
         card.style.display = match ? 'flex' : 'none';
+        card.classList.toggle('hidden', !match);
         if (match) {
           visibleCount++;
           if (!firstMatchHref) {
@@ -526,15 +534,23 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
       });
 
       if (!q) {
+        cards.forEach((card) => {
+          card.style.display = 'flex';
+          card.classList.remove('hidden');
+        });
         closeDropdown();
         if (crossContainer) crossContainer.classList.add('hidden');
         if (noResults) {
           noResults.style.display = 'none';
           noResults.classList.add('hidden');
         }
+        const titleEl = document.getElementById('directory-no-results-title');
+        const subEl = document.getElementById('directory-no-results-subtitle');
+        if (titleEl) titleEl.textContent = '';
+        if (subEl) subEl.textContent = '';
         if (dirClearBtn) dirClearBtn.classList.add('hidden');
         if (dirCounter) {
-          dirCounter.textContent = isFr ? 'Tous les Outils' : 'All Tools';
+          dirCounter.textContent = isFr ? 'Tous les outils' : 'All Tools';
           dirCounter.className = 'text-[10px] sm:text-[11px] font-mono font-semibold px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 border border-indigo-200/60 dark:border-indigo-900/60';
         }
         return;
@@ -574,7 +590,7 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
           firstMatchHref = currentDropdownMatches[0].href;
         }
         if (dirDropdownTitle) {
-          dirDropdownTitle.textContent = isFr ? 'Outils Suggérés' : 'Suggested Tools';
+          dirDropdownTitle.textContent = isFr ? 'Outils suggérés' : 'Suggested Tools';
         }
         if (dirDropdownList) {
           const openText = isFr ? 'Ouvrir ↗' : 'Open ↗';
@@ -629,7 +645,7 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
       // 5. Handle Cross-Category Results Grid
       if (visibleCount === 0 && matchedAll.length > 0) {
         if (crossContainer) crossContainer.classList.remove('hidden');
-        if (crossBadge) crossBadge.textContent = isFr ? 'Outils Suggérés' : 'Suggested Tools';
+        if (crossBadge) crossBadge.textContent = isFr ? 'Outils suggérés' : 'Suggested Tools';
         if (crossGrid) {
           crossGrid.innerHTML = matchedAll.slice(0, 9).map((calc) => `
             <a
@@ -658,12 +674,21 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
       }
 
       // 6. No Results State: STRICTLY only when q is NOT empty AND no matches found
+      const titleEl = document.getElementById('directory-no-results-title');
+      const subEl = document.getElementById('directory-no-results-subtitle');
+
       if (q.length > 0 && visibleCount === 0 && matchedAll.length === 0) {
+        if (titleEl) titleEl.textContent = isFr ? "Aucun calculateur trouvé" : "No calculators found";
+        if (subEl) subEl.innerHTML = isFr 
+          ? 'Essayez avec des termes comme <span class="font-semibold text-indigo-600 dark:text-indigo-400">prêt, tva, salaire, impôt, amortissement</span> ou vérifiez l\'orthographe.' 
+          : 'Try searching for another keyword like "sip", "emi", "tax", "age", or "bmi".';
         if (noResults) {
           noResults.style.display = 'block';
           noResults.classList.remove('hidden');
         }
       } else {
+        if (titleEl) titleEl.textContent = '';
+        if (subEl) subEl.textContent = '';
         if (noResults) {
           noResults.style.display = 'none';
           noResults.classList.add('hidden');
@@ -741,6 +766,9 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
     });
 
     // Initialize full tool list on load
+    if (dirSearchInput && dirSearchInput.value.trim() === '') {
+      dirSearchInput.value = '';
+    }
     filterTools('');
   })();
 </script>

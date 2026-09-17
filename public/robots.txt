@@ -46,6 +46,9 @@ Disallow: /
 # ==============================================================================
 # 2. General Search Engine Crawlers & Content Signal
 # ==============================================================================
+User-agent: Googlebot
+User-agent: Googlebot-Mobile
+User-agent: Bingbot
 User-agent: *
 Content-Signal: search=yes,ai-train=no,use=reference
 Allow: /
@@ -55,6 +58,9 @@ Disallow: /admin/
 Disallow: /draft/
 
 # ==============================================================================
-# 3. Master Sitemap Index
+# 3. Master Sitemap Indexes
 # ==============================================================================
+Sitemap: https://freeaccuratecalculator.com/sitemap_index.xml
 Sitemap: https://freeaccuratecalculator.com/sitemap-index.xml
+Sitemap: https://freeaccuratecalculator.com/sitemap.xml
+

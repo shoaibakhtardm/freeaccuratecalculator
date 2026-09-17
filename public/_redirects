@@ -15,46 +15,47 @@
 /index.html                         /                             301
 /home                               /                             301
 
-
 # Generic calculators removed from France pages redirected to relevant French tools
-/countries/france/age-calculator/           /countries/france/retirement-calculator/    301
 /countries/france/age-calculator            /countries/france/retirement-calculator/    301
-/countries/france/calorie-calculator/       /countries/france/health/                   301
 /countries/france/calorie-calculator        /countries/france/health/                   301
-/countries/france/bmi-calculator/           /countries/france/health/                   301
 /countries/france/bmi-calculator            /countries/france/health/                   301
-/countries/france/date-calculator/          /countries/france/everyday/                 301
 /countries/france/date-calculator           /countries/france/everyday/                 301
 
 # French slug redirects
 /calculateur-age                            /countries/france/retirement-calculator/    301
-/calculateur-age/                           /countries/france/retirement-calculator/    301
 /calculateur-calories                       /countries/france/health/                   301
-/calculateur-calories/                      /countries/france/health/                   301
 /calculateur-imc                            /countries/france/health/                   301
-/calculateur-imc/                           /countries/france/health/                   301
 /calculateur-dates                          /countries/france/everyday/                 301
-/calculateur-dates/                         /countries/france/everyday/                 301
 
-# Aliases for new French calculators
-/countries/france/apl-simulator/            /countries/france/simulateur-apl/           301
+# Aliases for French calculators
 /countries/france/apl-simulator             /countries/france/simulateur-apl/           301
-/countries/france/severance-calculator/     /countries/france/indemnite-licenciement/   301
 /countries/france/severance-calculator      /countries/france/indemnite-licenciement/   301
-/countries/france/real-expenses-calculator/ /countries/france/frais-reels-abattement/   301
 /countries/france/real-expenses-calculator  /countries/france/frais-reels-abattement/   301
-/countries/france/mileage-allowance-calculator/ /countries/france/indemnites-kilometriques/ 301
-/countries/france/mileage-allowance-calculator  /countries/france/indemnites-kilometriques/ 301
-/countries/france/math/percentage-calculator/   /fr/math/percentage-calculator/             301
-/countries/france/math/percentage-calculator    /fr/math/percentage-calculator/             301
-/countries/france/percentage-calculator/        /fr/math/percentage-calculator/             301
-/countries/france/percentage-calculator         /fr/math/percentage-calculator/             301
-/countries/france/finance/simulateur-apl/       /countries/france/simulateur-apl/           301
-/countries/france/finance/simulateur-apl        /countries/france/simulateur-apl/           301
-/countries/france/finance/indemnite-licenciement/ /countries/france/indemnite-licenciement/ 301
-/countries/france/finance/indemnite-licenciement  /countries/france/indemnite-licenciement/ 301
-/countries/france/finance/frais-reels-abattement/ /countries/france/frais-reels-abattement/ 301
-/countries/france/finance/frais-reels-abattement  /countries/france/frais-reels-abattement/ 301
-/countries/france/finance/indemnites-kilometriques/ /countries/france/indemnites-kilometriques/ 301
-/countries/france/finance/indemnites-kilometriques  /countries/france/indemnites-kilometriques/ 301
+/countries/france/mileage-allowance-calculator /countries/france/indemnites-kilometriques/ 301
+/countries/france/math/percentage-calculator   /fr/math/percentage-calculator/          301
+/countries/france/percentage-calculator        /fr/math/percentage-calculator/          301
+/countries/france/finance/simulateur-apl        /countries/france/simulateur-apl/        301
+/countries/france/finance/indemnite-licenciement /countries/france/indemnite-licenciement/ 301
+/countries/france/finance/frais-reels-abattement /countries/france/frais-reels-abattement/ 301
+/countries/france/finance/indemnites-kilometriques /countries/france/indemnites-kilometriques/ 301
+/countries/france/simulateur-taxe-amenagement   /countries/france/taxe-amenagement/     301
+/countries/france/development-tax-calculator    /countries/france/taxe-amenagement/     301
+/simulateur-taxe-amenagement                    /countries/france/taxe-amenagement/     301
+/countries/france/frais-notaire                 /countries/france/frais-de-notaire/     301
+/countries/france/simulateur-lmnp               /countries/france/simulateur-lmnp-reel-micro-bic/ 301
+/countries/france/lmnp                          /countries/france/simulateur-lmnp-reel-micro-bic/ 301
+/countries/france/ptz                           /countries/france/simulateur-ptz/       301
+/countries/france/hcsf                          /countries/france/capacite-emprunt-hcsf/ 301
+/countries/france/salaire-brut-net              /countries/france/simulateur-salaire-brut-net/ 301
 
+# Programmatic City Redirects
+/countries/france/frais-notaire-paris           /countries/france/frais-notaire/paris/      301
+/countries/france/frais-notaire-marseille       /countries/france/frais-notaire/marseille/  301
+/countries/france/frais-notaire-lyon            /countries/france/frais-notaire/lyon/       301
+/countries/france/frais-notaire-toulouse        /countries/france/frais-notaire/toulouse/   301
+/countries/france/frais-notaire-nice            /countries/france/frais-notaire/nice/       301
+/countries/france/frais-notaire-nantes          /countries/france/frais-notaire/nantes/     301
+/countries/france/frais-notaire-montpellier     /countries/france/frais-notaire/montpellier/ 301
+/countries/france/frais-notaire-strasbourg      /countries/france/frais-notaire/strasbourg/ 301
+/countries/france/frais-notaire-bordeaux        /countries/france/frais-notaire/bordeaux/   301
+/countries/france/frais-notaire-lille           /countries/france/frais-notaire/lille/      301

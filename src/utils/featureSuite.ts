@@ -27,10 +27,50 @@ export function exportToCSV(filename: string, headers: string[], rows: (string |
 }
 
 // ==========================================
-// FEATURE 2: One-Click Print & PDF Receipt
+// FEATURE 2: One-Click Print & PDF Receipt (Guaranteed Light Mode)
 // ==========================================
+export async function generateAndDownloadPDF(elementId?: string, filename?: string): Promise<void> {
+  if (typeof window === 'undefined') return;
+
+  if (typeof (window as any).generateAndDownloadPDF === 'function') {
+    await (window as any).generateAndDownloadPDF(elementId, filename);
+    return;
+  }
+
+  const rootElement = document.documentElement;
+  const isDarkMode = rootElement.classList.contains('dark');
+
+  if (isDarkMode) {
+    rootElement.classList.remove('dark');
+    rootElement.style.colorScheme = 'light';
+    if (document.body) {
+      document.body.style.backgroundColor = '#ffffff';
+      document.body.style.color = '#000000';
+    }
+  }
+
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    window.print();
+    console.log('PDF generated in light mode successfully.');
+  } catch (error) {
+    console.error('PDF generation failed:', error);
+  } finally {
+    if (isDarkMode) {
+      setTimeout(() => {
+        rootElement.classList.add('dark');
+        rootElement.style.colorScheme = 'dark';
+        if (document.body) {
+          document.body.style.backgroundColor = '';
+          document.body.style.color = '';
+        }
+      }, 300);
+    }
+  }
+}
+
 export function printCalculationReceipt(): void {
-  window.print();
+  generateAndDownloadPDF();
 }
 
 // ==========================================

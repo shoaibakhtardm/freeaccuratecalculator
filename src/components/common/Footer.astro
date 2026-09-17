@@ -1,34 +1,43 @@
 ---
 // src/components/common/Footer.astro
 const currentYear = new Date().getFullYear();
+const pathname = Astro.url.pathname;
+const isFrench = pathname.includes('/countries/france') || pathname.startsWith('/fr/') || Astro.currentLocale === 'fr';
 
 const companyLinks = [
-  { name: 'About Us', href: '/about/', icon: '👥' },
-  { name: 'Contact Us', href: '/contact/', icon: '✉️' },
+  { name: isFrench ? 'À propos' : 'About Us', href: '/about/', icon: '👥' },
+  { name: isFrench ? 'Contact' : 'Contact Us', href: '/contact/', icon: '✉️' },
 ];
 
 const legalLinks = [
-  { name: 'Terms & Conditions', href: '/terms-of-use/', icon: '📜' },
-  { name: 'Privacy Policy', href: '/privacy-policy/', icon: '🛡️' },
+  { name: isFrench ? "Conditions d'utilisation" : 'Terms & Conditions', href: '/terms-of-use/', icon: '📜' },
+  { name: isFrench ? 'Politique de confidentialité' : 'Privacy Policy', href: '/privacy-policy/', icon: '🛡️' },
 ];
+
+const guidesTitle = isFrench ? 'Guides Pratiques France' : 'Guides';
+const guidesHref = isFrench ? '/countries/france/guides/' : '/guides/';
+const guidesAria = isFrench ? 'Consulter les guides pratiques pour la France' : 'Browse All Guides';
+const statementText = isFrench
+  ? 'Conçu pour une précision mathématique rigoureuse, une latence zéro et une confidentialité totale côté client.'
+  : 'Engineered for Mathematical Accuracy, Zero Latency & Complete Client-Side Privacy.';
 ---
 
 <footer class="mt-6 sm:mt-8 border-t border-hairline bg-canvas transition-colors">
   <div class="mx-auto max-w-7xl px-3 py-8 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center space-y-6">
     <!-- 1. Navigation Links in 3 Perfectly Aligned Tiers -->
-    <nav aria-label="Footer Navigation" class="flex flex-col items-center justify-center gap-2.5 sm:gap-3 w-full max-w-md sm:max-w-lg mx-auto">
+    <nav aria-label={isFrench ? "Navigation de bas de page" : "Footer Navigation"} class="flex flex-col items-center justify-center gap-2.5 sm:gap-3 w-full max-w-md sm:max-w-lg mx-auto">
       <!-- Line 1: Big Featured Guides Box on Top -->
       <div class="w-full flex justify-center">
         <a
-          href="/guides/"
-          title="Browse All Guides"
+          href={guidesHref}
+          title={guidesAria}
           class="group relative flex items-center justify-center gap-3 w-full h-12 sm:h-14 rounded-2xl border border-hairline bg-canvas hover:bg-canvas-elevated hover:border-link/60 px-4 sm:px-6 text-sm sm:text-base font-semibold cursor-pointer transition-all duration-200 shadow-whisper hover:shadow-card hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link active:scale-[0.98]"
         >
           <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-full bg-canvas-elevated border border-hairline text-base sm:text-lg shadow-xs group-hover:scale-110 group-hover:bg-hairline-soft transition-transform">
             📚
           </span>
           <span class="font-semibold text-ink group-hover:text-link transition-colors whitespace-nowrap">
-            Guides
+            {guidesTitle}
           </span>
           <span class="w-2 h-2 rounded-full bg-cyan animate-pulse group-hover:bg-link transition-colors ml-1"></span>
           <svg class="h-3.5 w-3.5 text-mute group-hover:text-link group-hover:translate-x-0.5 transition-all" viewBox="0 0 20 20" fill="currentColor">
@@ -79,10 +88,10 @@ const legalLinks = [
       <p class="text-[11px] sm:text-xs md:text-sm text-ink/90 font-medium tracking-tight leading-relaxed max-w-2xl mx-auto">
         <span class="inline-flex items-center gap-1.5 align-baseline">
           <span class="inline-block h-1.5 w-1.5 rounded-full bg-cyan animate-pulse shrink-0"></span>
-          <span>&copy; {currentYear} Free Accurate Calculator</span>
+          <span>&copy; {currentYear} {isFrench ? 'Calculatrice Précise Gratuite' : 'Free Accurate Calculator'}</span>
         </span>
         <span class="text-faint mx-1">&mdash;</span>
-        <span>Engineered for Mathematical Accuracy, Zero Latency &amp; Complete Client-Side Privacy.</span>
+        <span>{statementText}</span>
       </p>
     </div>
   </div>

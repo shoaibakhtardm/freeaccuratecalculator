@@ -444,9 +444,9 @@ export function getCountryPageConfig(country: CountryConfig): CountryPageConfig 
     country.numberSystem === 'lakh-crore' ? 'the South Asian Lakh/Crore system' : 'standard international groupings'
   }. Zero cold starts and instant client privacy.`;
 
-  const directoryTitle = `${cleanCountryName} Directory All Tools`;
-  const backLink = { label: '← All Countries', href: '/countries/' };
-  const searchPlaceholder = `Search ${cleanCountryName} calculators...`;
+  const directoryTitle = country.slug === 'france' ? `Calculatrices France` : `${cleanCountryName} Directory All Tools`;
+  const backLink = country.slug === 'france' ? { label: '← Tous les Pays', href: '/countries/' } : { label: '← All Countries', href: '/countries/' };
+  const searchPlaceholder = country.slug === 'france' ? frUI.searchPlaceholder : `Search ${cleanCountryName} calculators...`;
 
   const tools = getCountryTools(country);
   const allSearchableToolsJson = JSON.stringify(SEARCHABLE_CALCULATORS);

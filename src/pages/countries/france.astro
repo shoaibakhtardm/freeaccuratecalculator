@@ -99,7 +99,7 @@ const CATEGORIES_DATA = [
 const FRANCE_TOOLS_DATA = [
   {
     id: 'frais-reels-abattement',
-    nameFr: 'Frais Réels vs Abattement 10%',
+    nameFr: 'Simulateur Frais Réels vs Abattement 10%',
     nameEn: 'Actual Expenses vs 10% Flat',
     shortNameFr: 'Frais Réels',
     shortNameEn: 'Actual Expenses',
@@ -114,7 +114,7 @@ const FRANCE_TOOLS_DATA = [
   },
   {
     id: 'income-tax-calculator',
-    nameFr: 'Impôt sur le Revenu',
+    nameFr: "Simulateur d'Impôt sur le Revenu",
     nameEn: 'Income Tax Calculator',
     shortNameFr: 'Impôt Revenu',
     shortNameEn: 'Income Tax',
@@ -129,7 +129,7 @@ const FRANCE_TOOLS_DATA = [
   },
   {
     id: 'indemnite-licenciement',
-    nameFr: 'Indemnité de Licenciement',
+    nameFr: "Simulateur d'Indemnité de Licenciement",
     nameEn: 'Severance Pay Calculator',
     shortNameFr: 'Licenciement',
     shortNameEn: 'Severance',
@@ -144,7 +144,7 @@ const FRANCE_TOOLS_DATA = [
   },
   {
     id: 'indemnites-kilometriques',
-    nameFr: 'Indemnités Kilométriques 2026',
+    nameFr: "Calculateur d'Indemnités Kilométriques 2026",
     nameEn: 'Mileage Allowance 2026',
     shortNameFr: 'Indemnités Km',
     shortNameEn: 'Mileage',
@@ -159,7 +159,7 @@ const FRANCE_TOOLS_DATA = [
   },
   {
     id: 'compound-interest-calculator',
-    nameFr: 'Intérêts Composés',
+    nameFr: "Calculateur d'Intérêts Composés",
     nameEn: 'Compound Interest',
     shortNameFr: 'Intérêts Comp.',
     shortNameEn: 'Compound Int',
@@ -174,7 +174,7 @@ const FRANCE_TOOLS_DATA = [
   },
   {
     id: 'emi-calculator',
-    nameFr: 'Mensualités de Prêt',
+    nameFr: 'Simulateur de Mensualités de Prêt',
     nameEn: 'EMI Calculator',
     shortNameFr: 'Mensualités',
     shortNameEn: 'EMI',
@@ -204,7 +204,7 @@ const FRANCE_TOOLS_DATA = [
   },
   {
     id: 'auto-loan-calculator',
-    nameFr: 'Prêt Auto',
+    nameFr: 'Simulateur de Prêt Auto',
     nameEn: 'Auto Loan Calculator',
     shortNameFr: 'Prêt Auto',
     shortNameEn: 'Auto Loan',
@@ -219,7 +219,7 @@ const FRANCE_TOOLS_DATA = [
   },
   {
     id: 'mortgage-calculator',
-    nameFr: 'Prêt Immobilier',
+    nameFr: 'Simulateur de Prêt Immobilier',
     nameEn: 'Mortgage Calculator',
     shortNameFr: 'Prêt Immo',
     shortNameEn: 'Mortgage',
@@ -234,7 +234,7 @@ const FRANCE_TOOLS_DATA = [
   },
   {
     id: 'retirement-calculator',
-    nameFr: 'Calculateur de Retraite',
+    nameFr: 'Simulateur de Retraite',
     nameEn: 'Retirement Calculator',
     shortNameFr: 'Retraite',
     shortNameEn: 'Retirement',
@@ -249,7 +249,7 @@ const FRANCE_TOOLS_DATA = [
   },
   {
     id: 'salary-calculator',
-    nameFr: 'Salaire Net',
+    nameFr: 'Simulateur de Salaire Net',
     nameEn: 'Salary Calculator',
     shortNameFr: 'Salaire Net',
     shortNameEn: 'Salary Take-Home',
@@ -278,8 +278,23 @@ const FRANCE_TOOLS_DATA = [
     href: '/countries/france/simulateur-apl/',
   },
   {
+    id: 'taxe-amenagement',
+    nameFr: "Simulateur Taxe d'Aménagement 2026",
+    nameEn: 'Development Tax Calculator',
+    shortNameFr: 'Taxe Aménagement',
+    shortNameEn: 'Dev Tax',
+    icon: '📐',
+    badgeFr: 'Barème 2026',
+    badgeEn: '2026 Rates',
+    descFr: "Calcul officiel de la taxe d'aménagement pour maison, extension, abri de jardin et piscine.",
+    descEn: 'Official French urban development tax calculation for new builds, sheds, and pools.',
+    categoryFr: 'Immobilier',
+    searchKeywords: 'taxe amenagement permis construire declaration prealable abri jardin piscine dgfip',
+    href: '/countries/france/taxe-amenagement/',
+  },
+  {
     id: 'sip-calculator',
-    nameFr: 'Épargne Programmée',
+    nameFr: "Simulateur d'Épargne Programmée",
     nameEn: 'SIP Calculator',
     shortNameFr: 'Épargne Prog.',
     shortNameEn: 'SIP',
@@ -294,7 +309,7 @@ const FRANCE_TOOLS_DATA = [
   },
   {
     id: 'step-up-sip-calculator',
-    nameFr: 'Épargne avec Boost',
+    nameFr: "Simulateur d'Épargne avec Boost",
     nameEn: 'Step-Up SIP',
     shortNameFr: 'Boost Épargne',
     shortNameEn: 'Step-Up SIP',
@@ -322,6 +337,81 @@ const FRANCE_TOOLS_DATA = [
     searchKeywords: 'tva taxe hors taxe ttc ht valeur ajoutee taux 20 5.5 facturation',
     href: '/countries/france/vat-calculator/',
   },
+  {
+    id: 'frais-de-notaire',
+    nameFr: 'Simulateur Frais de Notaire 2026',
+    nameEn: 'Notary Fees & DMTO Calculator',
+    shortNameFr: 'Frais de Notaire',
+    shortNameEn: 'Notary Fees',
+    icon: '⚖️',
+    badgeFr: 'Nouveau 2026',
+    badgeEn: 'New 2026',
+    descFr: "Calcul des droits de mutation (DMTO), émoluments réglementés et optimisation mobilier.",
+    descEn: 'French real estate acquisition tax, notary regulated fees, and furniture deductions.',
+    categoryFr: 'Finance',
+    searchKeywords: 'frais de notaire dmto droits de mutation achat immobilier taxe mobilier compromis',
+    href: '/countries/france/frais-de-notaire/',
+  },
+  {
+    id: 'simulateur-lmnp',
+    nameFr: 'Simulateur LMNP Réel vs Micro-BIC',
+    nameEn: 'LMNP Furnished Rental Tax',
+    shortNameFr: 'LMNP Réel / Micro',
+    shortNameEn: 'LMNP Tax',
+    icon: '📊',
+    badgeFr: 'Réforme 2026',
+    badgeEn: '2026 Reform',
+    descFr: "Comparatif fiscal Réel vs Micro-BIC avec amortissement par composants et TMI.",
+    descEn: 'Furnished rental tax simulator with building component amortization and bracket math.',
+    categoryFr: 'Finance',
+    searchKeywords: 'lmnp reel micro bic amortissement composants fiscalite meuble loyer tmi',
+    href: '/countries/france/simulateur-lmnp-reel-micro-bic/',
+  },
+  {
+    id: 'simulateur-ptz',
+    nameFr: 'Simulateur PTZ 2026 (Prêt Taux Zéro)',
+    nameEn: 'Zero-Interest Loan (PTZ)',
+    shortNameFr: 'PTZ 2026',
+    shortNameEn: 'PTZ Loan',
+    icon: '🏛️',
+    badgeFr: 'Barème 2026',
+    badgeEn: 'Official Tiers',
+    descFr: "Éligibilité au prêt à taux zéro, zonage A/B1/B2/C, quotité jusqu'à 50% et calcul du différé.",
+    descEn: 'Zero interest loan eligibility, official zones, 50% maximum ratio, and deferred payoff.',
+    categoryFr: 'Finance',
+    searchKeywords: 'ptz pret a taux zero 2026 eligibilite montant zone differe achat premier logement',
+    href: '/countries/france/simulateur-ptz/',
+  },
+  {
+    id: 'simulateur-salaire-brut-net',
+    nameFr: 'Simulateur Salaire Brut en Net',
+    nameEn: 'Gross to Net Salary France',
+    shortNameFr: 'Brut en Net 2026',
+    shortNameEn: 'Gross / Net',
+    icon: '💼',
+    badgeFr: 'Cadre / Non-Cadre',
+    badgeEn: 'PAS Tax Net',
+    descFr: "Conversion Brut en Net, prélèvement à la source (PAS) et coût total employeur 2026.",
+    descEn: 'Gross to net pay conversion, income tax withholding, and total employer cost.',
+    categoryFr: 'Finance',
+    searchKeywords: 'salaire brut en net cadre non cadre pas impots employeur urssaf fds',
+    href: '/countries/france/simulateur-salaire-brut-net/',
+  },
+  {
+    id: 'capacite-emprunt-hcsf',
+    nameFr: "Simulateur Capacité d'Emprunt HCSF",
+    nameEn: 'Borrowing Capacity HCSF',
+    shortNameFr: 'Capacité HCSF 35%',
+    shortNameEn: 'HCSF Capacity',
+    icon: '🏦',
+    badgeFr: 'Norme 35% Max',
+    badgeEn: 'HCSF Compliant',
+    descFr: "Mensualités maximales, règle des 35% assurance comprise et test du reste à vivre.",
+    descEn: 'Strict French HCSF 35% mortgage borrowing capacity, debt ratio, and living allowance.',
+    categoryFr: 'Finance',
+    searchKeywords: 'capacite emprunt pret immobilier hcsf 35 pourcent taux endettement mensualite reste a vivre',
+    href: '/countries/france/capacite-emprunt-hcsf/',
+  },
 ];
 
 // All searchable calculators for France (including additional regional and finance tools)
@@ -329,7 +419,7 @@ const ALL_SEARCHABLE_FRANCE_TOOLS = [
   ...FRANCE_TOOLS_DATA,
   {
     id: 'simple-interest-calculator',
-    nameFr: 'Intérêts Simples',
+    nameFr: "Calculateur d'Intérêts Simples",
     nameEn: 'Simple Interest Calculator',
     shortNameFr: 'Intérêts Simples',
     shortNameEn: 'Simple Int',
@@ -345,7 +435,7 @@ const ALL_SEARCHABLE_FRANCE_TOOLS = [
   },
   {
     id: 'lumpsum-calculator',
-    nameFr: 'Placement Forfaitaire',
+    nameFr: 'Simulateur de Placement Forfaitaire',
     nameEn: 'Lumpsum Calculator',
     shortNameFr: 'Placement Unique',
     shortNameEn: 'Lumpsum',
@@ -361,7 +451,7 @@ const ALL_SEARCHABLE_FRANCE_TOOLS = [
   },
   {
     id: 'swp-calculator',
-    nameFr: 'Plan de Retrait (SWP)',
+    nameFr: 'Simulateur de Retrait (SWP)',
     nameEn: 'SWP Calculator',
     shortNameFr: 'Retrait Régulier',
     shortNameEn: 'SWP',
@@ -377,7 +467,7 @@ const ALL_SEARCHABLE_FRANCE_TOOLS = [
   },
   {
     id: 'loan-calculator',
-    nameFr: 'Prêt Personnel',
+    nameFr: 'Simulateur de Prêt Personnel',
     nameEn: 'Personal Loan Calculator',
     shortNameFr: 'Prêt Perso',
     shortNameEn: 'Personal Loan',
@@ -393,7 +483,7 @@ const ALL_SEARCHABLE_FRANCE_TOOLS = [
   },
   {
     id: 'amortization-calculator',
-    nameFr: "Tableau d'Amortissement",
+    nameFr: "Simulateur d'Amortissement",
     nameEn: 'Amortization Schedule',
     shortNameFr: 'Amortissement',
     shortNameEn: 'Amortization',
@@ -421,7 +511,7 @@ const FRANCE_SPECIFIC_FEATURED = [
   },
   {
     id: 'salary-calculator',
-    title: 'Calculateur Salaire Brut / Net',
+    title: 'Simulateur Salaire Brut / Net',
     badge: 'Charges 2026',
     icon: '💼',
     desc: 'Estimez votre salaire net mensuel ou annuel après déduction des cotisations salariales et prélèvement à la source.',
@@ -429,7 +519,7 @@ const FRANCE_SPECIFIC_FEATURED = [
   },
   {
     id: 'mortgage-calculator',
-    title: 'Prêt Immobilier & Amortissement',
+    title: 'Simulateur de Prêt Immobilier',
     badge: 'Norme Française',
     icon: '🏠',
     desc: 'Simulez vos mensualités immobilières avec tableau d’amortissement complet conforme aux banques françaises.',
@@ -437,7 +527,7 @@ const FRANCE_SPECIFIC_FEATURED = [
   },
   {
     id: 'income-tax-calculator',
-    title: 'Barème Impôt sur le Revenu',
+    title: "Simulateur d'Impôt sur le Revenu",
     badge: 'Barème Officiel 2026',
     icon: '📑',
     desc: 'Évaluez votre impôt selon les tranches marginales d’imposition officielles et le quotient familial.',
@@ -445,7 +535,7 @@ const FRANCE_SPECIFIC_FEATURED = [
   },
   {
     id: 'emi-calculator',
-    title: 'Mensualités de Crédit (Capital Décroissant)',
+    title: 'Simulateur de Mensualités de Crédit',
     badge: 'EUR (€)',
     icon: '🏦',
     desc: 'Simulez tout prêt personnel ou crédit à la consommation avec calcul précis du capital restant dû.',
@@ -453,7 +543,7 @@ const FRANCE_SPECIFIC_FEATURED = [
   },
   {
     id: 'retirement-calculator',
-    title: 'Simulation Retraite & Épargne',
+    title: 'Simulateur de Retraite & Épargne',
     badge: 'Rente & Capital',
     icon: '🏖️',
     desc: 'Planifiez vos versements et estimez votre capital futur pour compléter vos droits de retraite obligatoire.',
@@ -723,7 +813,7 @@ const FAQS_DATA = [
 
       <!-- [PART 3 - ITEMS 6 & 7: SINGLE PRIMARY SEARCH BAR WITH LIVE SUGGESTIONS] -->
       <div class="relative mb-4 sm:mb-5 max-w-xl mx-auto w-full px-1">
-        <div class="fac-search-wrapper relative flex items-center group rounded-2xl sm:rounded-full transition-shadow duration-300">
+        <div class="fac-search-wrapper relative flex items-center group rounded-2xl sm:rounded-full transition-shadow duration-300" data-custom-typewriter="true">
           <div class="fac-neon-orbit-wrapper absolute -inset-[2px] rounded-2xl sm:rounded-full overflow-hidden pointer-events-none" aria-hidden="true">
             <div class="fac-neon-orbit-beam"></div>
           </div>
@@ -752,6 +842,7 @@ const FAQS_DATA = [
             </div>
           </div>
 
+          <label for="categories-france-search-input" class="sr-only">Rechercher</label>
           <input
             id="categories-france-search-input"
             type="search"
@@ -759,7 +850,7 @@ const FAQS_DATA = [
             spellcheck="false"
             placeholder=""
             class="fac-search-input relative z-20 w-full rounded-2xl sm:rounded-full bg-transparent py-3 sm:py-3.5 pl-11 sm:pl-12 pr-24 text-xs sm:text-sm md:text-base font-bold text-slate-900 dark:text-white placeholder:font-medium placeholder-slate-400 dark:placeholder-slate-400 shadow-sm outline-none border-none ring-0 transition-all tracking-tight sm:tracking-normal"
-            aria-label="Rechercher une calculatrice (ex. prêt, tva, imc, salaire, âge)..."
+            aria-label="Rechercher"
             aria-autocomplete="list"
             aria-controls="directory-filter-dropdown"
             aria-expanded="false"
@@ -778,9 +869,6 @@ const FAQS_DATA = [
                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
-            <kbd class="hidden sm:inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-md shadow-2xs pointer-events-none transition-opacity">
-              Ctrl K
-            </kbd>
           </div>
         </div>
 
@@ -792,8 +880,8 @@ const FAQS_DATA = [
         >
           <!-- Results Header -->
           <div class="px-4 py-2.5 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-            <span id="directory-dropdown-title">Outils Suggérés</span>
-            <span class="text-[10px] lowercase font-normal hidden sm:inline" id="directory-dropdown-enter-hint">appuyez sur entrée ↵ pour ouvrir</span>
+            <span id="directory-dropdown-title">Outils suggérés</span>
+            <span class="text-[10px] lowercase font-normal hidden sm:inline" id="directory-dropdown-enter-hint">↵ pour ouvrir</span>
           </div>
 
           <!-- Scrollable Results List -->
@@ -805,10 +893,8 @@ const FAQS_DATA = [
           <div id="directory-no-results-panel" class="hidden p-6 text-center space-y-1.5">
             <div class="text-2xl">🔍</div>
             <p class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200" id="directory-no-results-title">
-              Aucune calculatrice trouvée
             </p>
             <p class="text-[11px] text-slate-400 dark:text-slate-500" id="directory-no-results-subtitle">
-              Essayez avec un terme comme prêt, tva, salaire, imc, âge
             </p>
           </div>
 
@@ -819,8 +905,8 @@ const FAQS_DATA = [
               <span id="directory-footer-badge">Calculatrices Populaires France</span>
             </span>
             <div class="flex items-center gap-2">
-              <span class="hidden sm:inline"><kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800">↑</kbd> <kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:border-slate-800">↓</kbd> <span id="directory-footer-nav-hint">naviguer</span></span>
-              <span><kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:border-slate-800">esc</kbd> <span id="directory-footer-esc-hint">fermer</span></span>
+              <span class="hidden sm:inline"><kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800">↑</kbd> <kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:border-slate-800">↓</kbd> <span id="directory-footer-nav-hint">↑ ↓ pour naviguer</span></span>
+              <span><kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:border-slate-800">esc</kbd> <span id="directory-footer-esc-hint">esc pour fermer</span></span>
             </div>
           </div>
         </div>
@@ -878,12 +964,19 @@ const FAQS_DATA = [
           style="display: none;"
         >
           <div class="text-3xl sm:text-4xl mb-2">🔍</div>
-          <p class="font-outfit text-sm sm:text-base font-bold text-slate-800 dark:text-slate-200">
-            Aucune calculatrice trouvée pour cette recherche.
+          <p id="no-results-msg-title" class="font-outfit text-sm sm:text-base font-bold text-slate-800 dark:text-slate-200">
           </p>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Essayez avec des termes comme <span class="font-semibold text-indigo-600 dark:text-indigo-400">prêt, tva, salaire, imc, âge</span> ou vérifiez l'orthographe.
+          <p id="no-results-msg-subtitle" class="text-xs text-slate-500 dark:text-slate-400 mt-1">
           </p>
+          <div class="mt-3">
+            <button
+              type="button"
+              id="reset-directory-search-btn"
+              class="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-colors cursor-pointer"
+            >
+              <span>Afficher tous les outils</span>
+            </button>
+          </div>
         </div>
 
         {FRANCE_TOOLS_DATA.map((calc) => (
@@ -1090,15 +1183,15 @@ const FAQS_DATA = [
           <!-- Line 1: Guides Box -->
           <div class="w-full flex justify-center">
             <a
-              href="/guides/"
-              title="Consulter tous les guides"
+              href="/countries/france/guides/"
+              title="Consulter les guides pratiques pour la France"
               class="group relative flex items-center justify-center gap-3 w-full h-12 sm:h-14 rounded-2xl border border-hairline bg-canvas hover:bg-canvas-elevated hover:border-link/60 px-4 sm:px-6 text-sm sm:text-base font-semibold cursor-pointer transition-all duration-200 shadow-whisper hover:shadow-card hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link active:scale-[0.98]"
             >
               <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-full bg-canvas-elevated border border-hairline text-base sm:text-lg shadow-xs group-hover:scale-110 group-hover:bg-hairline-soft transition-transform">
                 📚
               </span>
               <span class="font-semibold text-ink group-hover:text-link transition-colors whitespace-nowrap">
-                Guides
+                Guides Pratiques France
               </span>
               <span class="w-2 h-2 rounded-full bg-cyan animate-pulse group-hover:bg-link transition-colors ml-1"></span>
               <svg class="h-3.5 w-3.5 text-mute group-hover:text-link group-hover:translate-x-0.5 transition-all" viewBox="0 0 20 20" fill="currentColor">
@@ -1185,7 +1278,7 @@ const FAQS_DATA = [
 
 <!-- [PART 3 & PART 10: REAL-TIME SEARCH FILTERING, SUGGESTIONS & LANGUAGE TOGGLE ENGINE] -->
 <script is:inline>
-  document.addEventListener('DOMContentLoaded', function () {
+  function initFranceSearchAndFilter() {
     const CONTENT = {
       fr: {
         docTitle: "Calculatrices Financières Gratuites France 2026 | TVA, Salaire Net, Prêt Immobilier",
@@ -1197,7 +1290,8 @@ const FAQS_DATA = [
         heroH1Highlight: "Rapides, Précises et Fiables.",
         heroSubtitle: "Calculatrices optimisées pour les conventions financières françaises, formatage EUR (€) et groupements internationaux standards. Démarrage instantané et confidentialité totale.",
         categoriesHeading: "Catégories",
-        categoriesPlaceholder: "Rechercher une calculatrice (ex. prêt, tva, imc, salaire, âge)...",
+        searchLabel: "Rechercher",
+        categoriesPlaceholder: "Rechercher (ex: prêt, TVA, salaire, impôt, retraite, amortissement)",
         toolsHeading: "Calculatrices Populaires en France",
         featureHeading: "Pourquoi Utiliser les Calculatrices France de Free Accurate ?",
         featureSubheading: "Conçues pour les normes financières françaises, les formules légales et la confidentialité totale des clients.",
@@ -1209,23 +1303,26 @@ const FAQS_DATA = [
         feature3Text: "Précision stricte en virgule flottante testée contre des formules mathématiques et bancaires de référence, éliminant les erreurs d'arrondi et adhérant aux directives légales.",
         faqHeading: "Questions Fréquemment Posées sur les Calculs pour la France",
         faqSubheading: "Réponses claires concernant la devise française, les formules légales et la précision des calculs.",
-        dropdownTitle: "Outils Suggérés",
-        dropdownEnterHint: "appuyez sur entrée ↵ pour ouvrir",
-        noResultsTitle: "Aucune calculatrice trouvée",
-        noResultsSubtitle: "Essayez avec un terme comme prêt, tva, salaire, imc, âge",
+        dropdownTitle: "Outils suggérés",
+        dropdownEnterHint: "↵ pour ouvrir",
+        noResultsTitle: "Aucun calculateur trouvé",
+        noResultsSubtitle: "Essayez avec des termes comme prêt, tva, salaire, impôt, amortissement ou vérifiez l'orthographe",
         footerBadge: "Calculatrices Populaires France",
-        footerNavHint: "naviguer",
-        footerEscHint: "fermer",
+        footerNavHint: "↑ ↓ pour naviguer",
+        footerEscHint: "esc pour fermer",
+        showAll: "Afficher tous les outils",
         openText: "Ouvrir ↗",
         typewriterPrompts: [
+          "Rechercher un calculateur (ex: prêt, TVA, salaire, impôt, amortissement)...",
           "Calculateur de TVA France (20% & 5,5%)...",
-          "Calculateur Salaire Brut / Net...",
-          "Prêt Immobilier & Amortissement...",
-          "Barème Impôt sur le Revenu 2026...",
-          "Mensualités de Prêt (Capital Décroissant)...",
-          "Simulation Retraite & Épargne...",
-          "Calculateur d'Âge Exact...",
-          "Calculateur de Calories & TDEE..."
+          "Simulateur Salaire Brut / Net...",
+          "Simulateur de Prêt Immobilier & HCSF...",
+          "Simulateur d'Impôt sur le Revenu 2026...",
+          "Simulateur d'Assurance Emprunteur...",
+          "Simulateur de Mensualités de Prêt...",
+          "Simulateur de Retraite & Épargne...",
+          "Simulateur APL 2026...",
+          "Calculateur d'Indemnités Kilométriques 2026..."
         ],
         categories: {
           'finance': 'Finance',
@@ -1250,20 +1347,20 @@ const FAQS_DATA = [
           'converter': 'Convertisseur',
         },
         tools: {
-          'frais-reels-abattement': { name: 'Frais Réels vs Abattement 10%', short: 'Frais Réels', badge: 'Optimisation Fiscale' },
-          'income-tax-calculator': { name: 'Impôt sur le Revenu', short: 'Impôt Revenu', badge: 'Barème 2026' },
-          'indemnite-licenciement': { name: 'Indemnité de Licenciement', short: 'Licenciement', badge: 'Code du Travail' },
-          'indemnites-kilometriques': { name: 'Indemnités Kilométriques 2026', short: 'Indemnités Km', badge: 'Barème DGFIP' },
-          'compound-interest-calculator': { name: 'Intérêts Composés', short: 'Intérêts Comp.', badge: 'Croissance Capital' },
-          'emi-calculator': { name: 'Mensualités de Prêt', short: 'Mensualités', badge: 'Capital Décroissant' },
+          'frais-reels-abattement': { name: 'Simulateur Frais Réels vs Abattement 10%', short: 'Frais Réels', badge: 'Optimisation Fiscale' },
+          'income-tax-calculator': { name: "Simulateur d'Impôt sur le Revenu", short: 'Impôt Revenu', badge: 'Barème 2026' },
+          'indemnite-licenciement': { name: "Simulateur d'Indemnité de Licenciement", short: 'Licenciement', badge: 'Code du Travail' },
+          'indemnites-kilometriques': { name: "Calculateur d'Indemnités Kilométriques 2026", short: 'Indemnités Km', badge: 'Barème DGFIP' },
+          'compound-interest-calculator': { name: "Calculateur d'Intérêts Composés", short: 'Intérêts Comp.', badge: 'Croissance Capital' },
+          'emi-calculator': { name: 'Simulateur de Mensualités de Prêt', short: 'Mensualités', badge: 'Capital Décroissant' },
           'percentage-calculator': { name: 'Calculateur de Pourcentage', short: 'Pourcentage', badge: 'Multi-Mode' },
-          'auto-loan-calculator': { name: 'Prêt Auto', short: 'Prêt Auto', badge: 'Crédit Véhicule' },
-          'mortgage-calculator': { name: 'Prêt Immobilier', short: 'Prêt Immo', badge: 'Amortissement' },
-          'retirement-calculator': { name: 'Calculateur de Retraite', short: 'Retraite', badge: 'Rente & Capital' },
-          'salary-calculator': { name: 'Salaire Net', short: 'Salaire Net', badge: 'Net Après Charges' },
+          'auto-loan-calculator': { name: 'Simulateur de Prêt Auto', short: 'Prêt Auto', badge: 'Crédit Véhicule' },
+          'mortgage-calculator': { name: 'Simulateur de Prêt Immobilier', short: 'Prêt Immo', badge: 'Amortissement' },
+          'retirement-calculator': { name: 'Simulateur de Retraite', short: 'Retraite', badge: 'Rente & Capital' },
+          'salary-calculator': { name: 'Simulateur de Salaire Net', short: 'Salaire Net', badge: 'Net Après Charges' },
           'simulateur-apl': { name: 'Simulateur APL 2026', short: 'APL', badge: 'Barème CAF 2026' },
-          'sip-calculator': { name: 'Épargne Programmée', short: 'Épargne Prog.', badge: 'Fonds & Épargne' },
-          'step-up-sip-calculator': { name: 'Épargne avec Boost', short: 'Boost Épargne', badge: 'Boost Annuel' },
+          'sip-calculator': { name: "Simulateur d'Épargne Programmée", short: 'Épargne Prog.', badge: 'Fonds & Épargne' },
+          'step-up-sip-calculator': { name: "Simulateur d'Épargne avec Boost", short: 'Boost Épargne', badge: 'Boost Annuel' },
           'vat-calculator': { name: 'Calculateur de TVA', short: 'TVA', badge: 'TVA 20% & 5,5%' },
         },
         faqs: {
@@ -1298,9 +1395,10 @@ const FAQS_DATA = [
         heroH1Main: "France Calculators.",
         heroH1Highlight: "Fast, Accurate & Clean.",
         heroSubtitle: "Calculators optimized for France's financial conventions, EUR (€) formatting, and standard international groupings. Zero cold starts and instant client privacy.",
-        categoriesHeading: "Categories",
-        categoriesPlaceholder: "Search a calculator (e.g. loan, vat, salary, apl, mileage)...",
-        toolsHeading: "Popular France Calculators",
+        categoriesHeading: "Catégories",
+        searchLabel: "Rechercher",
+        categoriesPlaceholder: "Rechercher (ex: prêt, TVA, salaire, impôt, retraite, amortissement)",
+        toolsHeading: "Calculatrices Populaires en France",
         featureHeading: "Why Use Free Accurate France Calculators?",
         featureSubheading: "Engineered for France financial standards, statutory formulas, and complete client privacy.",
         feature1Title: "EUR (€) & Standard Formatting",
@@ -1311,23 +1409,26 @@ const FAQS_DATA = [
         feature3Text: "Strict floating-point accuracy tested against reference mathematical and banking formulas, eliminating rounding drift and adhering to statutory guidelines.",
         faqHeading: "Frequently Asked Questions About France Calculations",
         faqSubheading: "Clear answers regarding France currency, statutory formulas, and calculation accuracy.",
-        dropdownTitle: "Suggested Tools",
-        dropdownEnterHint: "press enter ↵ to open",
-        noResultsTitle: "No calculators found",
-        noResultsSubtitle: "Try searching for loan, vat, salary, apl, mileage",
-        footerBadge: "Popular France Calculators",
-        footerNavHint: "navigate",
-        footerEscHint: "close",
-        openText: "Open ↗",
+        dropdownTitle: "Outils suggérés",
+        dropdownEnterHint: "↵ pour ouvrir",
+        noResultsTitle: "Aucun calculateur trouvé",
+        noResultsSubtitle: "Essayez avec des termes comme prêt, tva, salaire, impôt, amortissement ou vérifiez l'orthographe",
+        footerBadge: "Calculatrices Populaires France",
+        footerNavHint: "↑ ↓ pour naviguer",
+        footerEscHint: "esc pour fermer",
+        showAll: "Afficher tous les outils",
+        openText: "Ouvrir ↗",
         typewriterPrompts: [
-          "France VAT Calculator (20% & 5.5%)...",
-          "Gross to Net Salary Calculator...",
-          "Mortgage & Amortization Calculator...",
-          "Official 2026 Income Tax Slabs...",
-          "Reducing Balance EMI Calculator...",
-          "Retirement & Savings Projection...",
-          "APL Housing Aid Simulator 2026...",
-          "Official Mileage Allowance 2026..."
+          "Rechercher un calculateur (ex: prêt, TVA, salaire, impôt, amortissement)...",
+          "Calculateur de TVA France (20% & 5,5%)...",
+          "Simulateur Salaire Brut / Net...",
+          "Simulateur de Prêt Immobilier & HCSF...",
+          "Simulateur d'Impôt sur le Revenu 2026...",
+          "Simulateur d'Assurance Emprunteur...",
+          "Simulateur de Mensualités de Prêt...",
+          "Simulateur de Retraite & Épargne...",
+          "Simulateur APL 2026...",
+          "Calculateur d'Indemnités Kilométriques 2026..."
         ],
         categories: {
           'finance': 'Finance',
@@ -1399,11 +1500,6 @@ const FAQS_DATA = [
       const urlLang = urlParams.get('lang');
       if (urlLang === 'en' || urlLang === 'fr') {
         currentLang = urlLang;
-      } else {
-        const saved = localStorage.getItem('fac_france_lang');
-        if (saved === 'en' || saved === 'fr') {
-          currentLang = saved;
-        }
       }
     } catch (_) {}
 
@@ -1512,9 +1608,15 @@ const FAQS_DATA = [
           noResultsDiv.classList.add('hidden');
           noResultsDiv.style.display = 'none';
         }
+        const noResultsTitle = document.getElementById('no-results-msg-title');
+        const noResultsSubtitle = document.getElementById('no-results-msg-subtitle');
+        if (noResultsTitle) noResultsTitle.textContent = '';
+        if (noResultsSubtitle) noResultsSubtitle.textContent = '';
         if (dirNoResultsPanel) {
           dirNoResultsPanel.classList.add('hidden');
         }
+        if (dirNoResultsTitle) dirNoResultsTitle.textContent = '';
+        if (dirNoResultsSubtitle) dirNoResultsSubtitle.textContent = '';
         closeDropdown();
         return;
       }
@@ -1546,7 +1648,17 @@ const FAQS_DATA = [
       });
 
       if (noResultsDiv) {
-        if (matchCount === 0) {
+        if (q.length > 0 && matchCount === 0) {
+          const noResultsTitle = document.getElementById('no-results-msg-title');
+          const noResultsSubtitle = document.getElementById('no-results-msg-subtitle');
+          if (noResultsTitle) {
+            noResultsTitle.textContent = isEn ? "No calculators found" : "Aucun calculateur trouvé";
+          }
+          if (noResultsSubtitle) {
+            noResultsSubtitle.innerHTML = isEn
+              ? "Try searching for loan, vat, salary, apl, mileage or check spelling."
+              : 'Essayez avec des termes comme <span class="font-semibold text-indigo-600 dark:text-indigo-400">prêt, tva, salaire, impôt, amortissement</span> ou vérifiez l\'orthographe.';
+          }
           noResultsDiv.classList.remove('hidden');
           noResultsDiv.style.display = 'block';
         } else {
@@ -1624,6 +1736,12 @@ const FAQS_DATA = [
         openDropdown();
       } else {
         if (dirDropdownList) dirDropdownList.innerHTML = '';
+        if (dirNoResultsTitle) {
+          dirNoResultsTitle.textContent = isEn ? "No calculators found" : "Aucun calculateur trouvé";
+        }
+        if (dirNoResultsSubtitle) {
+          dirNoResultsSubtitle.textContent = isEn ? "Try searching for loan, vat, salary, apl, mileage" : "Essayez avec un terme comme prêt, tva, salaire, impôt ou amortissement";
+        }
         if (dirNoResultsPanel) dirNoResultsPanel.classList.remove('hidden');
         openDropdown();
       }
@@ -1681,7 +1799,7 @@ const FAQS_DATA = [
 
       const catSearchInput = document.getElementById('categories-france-search-input');
       if (catSearchInput) {
-        catSearchInput.setAttribute('placeholder', data.categoriesPlaceholder);
+        catSearchInput.setAttribute('placeholder', '');
         catSearchInput.setAttribute('aria-label', data.categoriesPlaceholder);
       }
 
@@ -1847,6 +1965,17 @@ const FAQS_DATA = [
       });
     }
 
+    const resetBtn = document.getElementById('reset-directory-search-btn');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function () {
+        if (searchInput) {
+          searchInput.value = '';
+          searchInput.focus();
+        }
+        filterTools('');
+      });
+    }
+
     // Close dropdown on click outside
     document.addEventListener('click', function (e) {
       if (!e.target.closest('.fac-search-wrapper') && !e.target.closest('#directory-filter-dropdown')) {
@@ -1868,6 +1997,10 @@ const FAQS_DATA = [
     // Typewriter effect for France search bar
     let typewriterTimer = null;
     function initFranceTypewriter() {
+      const searchWrapper = document.querySelector('.fac-search-wrapper');
+      if (searchWrapper) {
+        searchWrapper.__facTypewriterInit = true;
+      }
       const textEl = document.querySelector('.fac-typewriter-text');
       const container = document.querySelector('.fac-typewriter-container');
       if (!textEl || !searchInput) return;
@@ -1906,12 +2039,18 @@ const FAQS_DATA = [
 
       searchInput.addEventListener('focus', function () {
         if (typewriterTimer) clearTimeout(typewriterTimer);
-        if (container) container.classList.add('opacity-0');
+        if (container) {
+          container.style.display = 'none';
+          container.classList.add('opacity-0');
+        }
       });
 
       searchInput.addEventListener('blur', function () {
         if (!searchInput.value.trim()) {
-          if (container) container.classList.remove('opacity-0');
+          if (container) {
+            container.style.display = 'flex';
+            container.classList.remove('opacity-0');
+          }
           charIndex = 0;
           isDeleting = false;
           if (typewriterTimer) clearTimeout(typewriterTimer);
@@ -1921,13 +2060,23 @@ const FAQS_DATA = [
 
       searchInput.addEventListener('input', function () {
         if (searchInput.value.trim().length > 0) {
-          if (container) container.classList.add('opacity-0');
+          if (typewriterTimer) clearTimeout(typewriterTimer);
+          if (container) {
+            container.style.display = 'none';
+            container.classList.add('opacity-0');
+          }
         } else if (document.activeElement !== searchInput) {
-          if (container) container.classList.remove('opacity-0');
+          if (container) {
+            container.style.display = 'flex';
+            container.classList.remove('opacity-0');
+          }
         }
       });
     }
 
+    if (searchInput) {
+      searchInput.value = '';
+    }
     initFranceTypewriter();
     filterTools('');
 
@@ -1935,5 +2084,11 @@ const FAQS_DATA = [
     if (currentLang === 'en') {
       updateLanguage('en');
     }
-  });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initFranceSearchAndFilter);
+  } else {
+    initFranceSearchAndFilter();
+  }
 </script>

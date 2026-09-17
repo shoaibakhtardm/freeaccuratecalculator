@@ -28,7 +28,7 @@ const isFrench = pathname.includes('/countries/france') || pathname.startsWith('
       <p id="fac-toast-text" class="text-sm font-medium text-slate-800 dark:text-slate-200 mt-0.5">
         {isFrench ? (
           <>
-            Nous avons détecté que votre langue préférée est le <strong id="fac-toast-lang-name" class="text-indigo-600 dark:text-indigo-400"></strong>. Souhaitez-vous changer ?
+            Nous avons détecté que vous naviguez en <strong id="fac-toast-lang-name" class="text-indigo-600 dark:text-indigo-400"></strong>.
           </>
         ) : (
           <>
@@ -92,7 +92,7 @@ const isFrench = pathname.includes('/countries/france') || pathname.startsWith('
     if (isFrPage) {
       if (titleEl) titleEl.textContent = 'Langue Détectée';
       if (textEl) {
-        textEl.innerHTML = 'Nous avons détecté que votre langue préférée est le <strong id="fac-toast-lang-name" class="text-indigo-600 dark:text-indigo-400"></strong>. Souhaitez-vous changer ?';
+        textEl.innerHTML = 'Nous avons détecté que vous naviguez en <strong id="fac-toast-lang-name" class="text-indigo-600 dark:text-indigo-400"></strong>.';
       }
       if (switchBtn) switchBtn.textContent = 'Changer maintenant';
       if (dismissBtn) dismissBtn.textContent = 'Rester en Français';
@@ -111,16 +111,16 @@ const isFrench = pathname.includes('/countries/france') || pathname.startsWith('
     }
 
     const browserLocaleMap = {
-      fr: { code: 'fr', name: 'Français', flag: '🇫🇷' },
-      en: { code: 'en', name: 'English', flag: '🇬🇧' },
-      de: { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
-      es: { code: 'es', name: 'Español', flag: '🇪🇸' },
-      ar: { code: 'ar', name: 'العربية', flag: '🇸🇦' },
-      nl: { code: 'nl', name: 'Nederlands', flag: '🇳🇱' },
-      pt: { code: 'pt', name: 'Português', flag: '🇵🇹' },
-      it: { code: 'it', name: 'Italiano', flag: '🇮🇹' },
-      ru: { code: 'ru', name: 'Русский', flag: '🇷🇺' },
-      ja: { code: 'ja', name: '日本語', flag: '🇯🇵' },
+      fr: { code: 'fr', name: 'Français', nameFr: 'Français', flag: '🇫🇷' },
+      en: { code: 'en', name: 'English', nameFr: 'Anglais', flag: '🇬🇧' },
+      de: { code: 'de', name: 'Deutsch', nameFr: 'Allemand', flag: '🇩🇪' },
+      es: { code: 'es', name: 'Español', nameFr: 'Espagnol', flag: '🇪🇸' },
+      ar: { code: 'ar', name: 'العربية', nameFr: 'Arabe', flag: '🇸🇦' },
+      nl: { code: 'nl', name: 'Nederlands', nameFr: 'Néerlandais', flag: '🇳🇱' },
+      pt: { code: 'pt', name: 'Português', nameFr: 'Portugais', flag: '🇵🇹' },
+      it: { code: 'it', name: 'Italiano', nameFr: 'Italien', flag: '🇮🇹' },
+      ru: { code: 'ru', name: 'Русский', nameFr: 'Russe', flag: '🇷🇺' },
+      ja: { code: 'ja', name: '日本語', nameFr: 'Japonais', flag: '🇯🇵' },
     };
 
     let detected = null;
@@ -140,7 +140,8 @@ const isFrench = pathname.includes('/countries/france') || pathname.startsWith('
     if (!detected) return;
 
     const langNameEl = document.getElementById('fac-toast-lang-name');
-    if (langNameEl) langNameEl.textContent = `${detected.flag} ${detected.name}`;
+    const displayName = isFrPage ? (detected.nameFr || detected.name) : detected.name;
+    if (langNameEl) langNameEl.textContent = `${detected.flag} ${displayName}`;
 
     // Show toast with gentle delay for smooth user experience
     setTimeout(() => {

@@ -32,6 +32,7 @@ export const CATEGORY_ITEMS: readonly CategoryItem[] = [
   { id: 'ecology', name: 'Ecology', icon: '🌱' },
   { id: 'everyday', name: 'Everyday', icon: '☀️' },
   { id: 'converter', name: 'Converter', icon: '🔄' },
+  { id: 'love', name: 'Love', icon: '❤️' },
 ] as const;
 
 /**

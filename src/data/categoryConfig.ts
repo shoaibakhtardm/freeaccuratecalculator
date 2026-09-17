@@ -1631,4 +1631,79 @@ export const CATEGORY_PAGE_CONFIGS: Record<string, CategoryPageConfig> = {
       },
     ],
   },
+  love: {
+    id: 'love',
+    name: 'Love & Relationship',
+    icon: '❤️',
+    pillBadge: 'Verified Relationship Calculators',
+    headlineHighlight: 'Compatibility & Connection.',
+    subheadline: 'Explore love compatibility algorithms, zodiac harmony calculations, and anniversary milestone counters with 100% privacy.',
+    gradient: {
+      light: 'from-rose-600 via-pink-600 to-red-600',
+      dark: 'from-rose-400 dark:via-pink-300 dark:to-red-300',
+      glow: 'from-rose-500/20 via-pink-500/10 to-transparent',
+      accent: 'rose',
+    },
+    tools: [
+      {
+        id: 'love-calculator',
+        shortName: 'Love Calculator',
+        icon: '❤️',
+        badge: 'Name Match',
+        subNiche: 'Compatibility',
+        description: 'Test true name harmony and love percentage with algorithmic resonance.',
+      },
+      {
+        id: 'love-compatibility-calculator',
+        shortName: 'Zodiac Love',
+        icon: '✨',
+        badge: 'Astrology',
+        subNiche: 'Zodiac Synergy',
+        description: 'Check elemental astrological compatibility and relationship traits.',
+      },
+      {
+        id: 'relationship-counter',
+        shortName: 'Relationship Counter',
+        icon: '⏳',
+        badge: 'Milestone',
+        subNiche: 'Days Together',
+        description: 'Calculate total days, weeks, and years together since your anniversary.',
+      },
+    ],
+    educationHeading: 'Why Use Free Accurate Love Calculators?',
+    educationSubheading: 'Designed for relationship milestones, astrology synergy, and 100% private calculations',
+    educationCards: [
+      {
+        icon: '🔒',
+        title: 'Zero Data Tracking',
+        desc: 'All names, birthdays, and anniversaries are calculated entirely in your browser. Nothing is ever sent or logged to any database.',
+      },
+      {
+        icon: '✨',
+        title: 'Astrology & Resonance',
+        desc: 'Utilizes elemental zodiac matrices (Fire, Earth, Air, Water) and deterministic string algorithms for fun, accurate results.',
+      },
+      {
+        icon: '⚡',
+        title: 'Instant Milestone Calculations',
+        desc: 'Calculates exact relationship days, hours, and anniversary countdowns with leap-year precision.',
+      },
+    ],
+    faqsHeading: 'Frequently Asked Questions About Love & Compatibility',
+    faqsSubheading: 'How name scores, zodiac compatibility, and relationship counters work',
+    faqs: [
+      {
+        question: 'How is the love compatibility score calculated?',
+        answer: 'The love calculator uses character frequency analysis and deterministic hash functions to produce a fun compatibility index.',
+      },
+      {
+        question: 'Is my relationship information private?',
+        answer: 'Yes! All calculations occur 100% client-side in your device browser with zero tracking or storage.',
+      },
+      {
+        question: 'How do zodiac elements affect relationship compatibility?',
+        answer: 'Matching elements (Fire-Fire, Earth-Water, Fire-Air) offer harmonious emotional resonance and natural communication flow.',
+      },
+    ],
+  },
 };

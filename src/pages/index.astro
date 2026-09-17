@@ -7,19 +7,6 @@ import { POPULAR_COUNTRIES } from '../data/countries';
 import { CATEGORY_ITEMS } from '../data/categories';
 import OrphanRescueLinks from '../components/SEO/OrphanRescueLinks.astro';
 
-const PROFESSION_ITEMS = [
-  { name: 'Doctor', icon: '🩺', href: '/profession/doctor-pediatric-dosage-calculator/' },
-  { name: 'Engineer', icon: '⚙️', href: '/profession/engineer-project-cost-calculator/' },
-  { name: 'Lawyer', icon: '⚖️', href: '/profession/lawyer-billable-hours-calculator/' },
-  { name: 'Nurse', icon: '💉', href: '/profession/nurse-iv-drip-calculator/' },
-  { name: 'Architect', icon: '📐', href: '/profession/architect-far-calculator/' },
-  { name: 'Accountant', icon: '💼', href: '/profession/accountant-tax-calculator/' },
-  { name: 'Real Estate Agent', icon: '🏢', href: '/profession/realtor-commission-calculator/' },
-  { name: 'Software Developer', icon: '💻', href: '/profession/developer-sprint-velocity-calculator/' },
-  { name: 'Teacher', icon: '📚', href: '/profession/teacher-grade-curve-calculator/' },
-  { name: 'Pilot', icon: '✈️', href: '/profession/pilot-fuel-burn-calculator/' },
-] as const;
-
 const TOP_20_COUNTRIES = POPULAR_COUNTRIES.slice(0, 20).map((c) => ({
   name: c.name,
   flagUrl: c.flagUrl,
@@ -128,7 +115,6 @@ const POPULAR_CALCULATORS = [
       <div class="pt-2 max-w-2xl mx-auto">
         <AutocompleteSearch
           id="search-input"
-          placeholder="Search calculators (e.g., 'sip', 'mortgage', 'emi', 'tax', 'age')..."
         />
       </div>
 
@@ -155,37 +141,6 @@ const POPULAR_CALCULATORS = [
         <a
           href={item.href}
           title={`Explore ${item.name}`}
-          class="group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[68px] sm:min-h-[78px] md:min-h-[86px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/50 dark:hover:border-indigo-400/50 p-2 sm:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 active:scale-[0.97]"
-        >
-          <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-base sm:text-lg md:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 transition-transform mb-1 sm:mb-1.5">
-            {item.icon}
-          </span>
-          <span class="w-full text-center font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-[10.5px] sm:text-xs md:text-sm leading-tight whitespace-nowrap overflow-hidden">
-            {item.name}
-          </span>
-        </a>
-      ))}
-    </div>
-  </section>
-
-  <!-- Profession Calculator Section (Top Emoji, Bottom Single-Line Text) -->
-  <section
-    aria-label="Profession Calculators"
-    class="my-10 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-3 sm:p-5 md:p-6 shadow-sm dark:shadow-xl backdrop-blur-xl box-border text-center"
-  >
-    <div class="flex items-center justify-center border-b border-slate-200/80 dark:border-slate-800/80 pb-3 sm:pb-3.5 mb-3.5 sm:mb-4 px-1 text-center">
-      <h2 class="font-outfit text-xs sm:text-sm font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white flex items-center justify-center gap-2">
-        <span class="text-base sm:text-lg">🎯</span>
-        <span>Professions</span>
-      </h2>
-    </div>
-
-    <!-- 10 Professions in 3-Column Grid Layout (Top Emoji, Bottom Single-Line Text) -->
-    <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
-      {PROFESSION_ITEMS.map((item) => (
-        <a
-          href={item.href}
-          title={`Explore ${item.name} Calculator`}
           class="group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[68px] sm:min-h-[78px] md:min-h-[86px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/50 dark:hover:border-indigo-400/50 p-2 sm:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 active:scale-[0.97]"
         >
           <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-base sm:text-lg md:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 transition-transform mb-1 sm:mb-1.5">

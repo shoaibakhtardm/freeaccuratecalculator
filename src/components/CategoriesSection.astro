@@ -2,6 +2,7 @@
 // src/components/CategoriesSection.astro
 import type { CountryConfig } from '../data/countries';
 import { getCountryCategories, type CategoryItem } from '../data/categories';
+import { frCategories } from '../data/i18n';
 import AutocompleteSearch from './common/AutocompleteSearch.astro';
 
 interface Props {
@@ -14,15 +15,19 @@ interface Props {
 
 const {
   country,
-  title = 'Categories',
+  title,
   icon = '📁',
   class: className = '',
   showSearch = country ? true : false,
 } = Astro.props;
 
+const isFrancePage = Astro.url.pathname.startsWith('/countries/france') || Astro.url.pathname.startsWith('/fr/');
+const isFrench = country?.slug === 'france' || isFrancePage || Astro.currentLocale === 'fr';
 const categories: CategoryItem[] = getCountryCategories(country);
-const sectionHeading = title;
-const sectionAriaLabel = country ? `${country.name} Calculator Categories` : 'Calculator Categories';
+const sectionHeading = title || (isFrench ? 'Catégories' : 'Categories');
+const sectionAriaLabel = country
+  ? (isFrench ? `Catégories de simulateurs France` : `${country.name} Calculator Categories`)
+  : (isFrench ? 'Catégories de simulateurs et calculateurs' : 'Calculator Categories');
 ---
 
 <!-- 3-by-3 Category Navigation Grid ("tin tin karke" - UI/UX Designer Scaled Edition) -->
@@ -46,7 +51,7 @@ const sectionAriaLabel = country ? `${country.name} Calculator Categories` : 'Ca
       <AutocompleteSearch
         id={country ? `categories-search-${country.slug}` : 'categories-search'}
         country={country}
-        placeholder="Search calculators (e.g., 'sip', 'mortgage', 'emi', 'tax', 'age')..."
+        isFrench={isFrench}
       />
     </div>
   )}
@@ -55,9 +60,10 @@ const sectionAriaLabel = country ? `${country.name} Calculator Categories` : 'Ca
   <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
     {categories.map((cat) => {
       const href = country ? `/countries/${country.slug}/${cat.id}/` : `/${cat.id}/`;
+      const catDisplayName = isFrench ? (frCategories[cat.id] || cat.name) : cat.name;
       const linkTitle = country
-        ? `Explore ${country.name} ${cat.name} Calculators`
-        : `Explore ${cat.name} Calculators`;
+        ? (isFrench ? `Explorer les simulateurs et calculateurs France ${catDisplayName}` : `Explore ${country.name} ${cat.name} Calculators`)
+        : (isFrench ? `Explorer les simulateurs et calculateurs ${catDisplayName}` : `Explore ${cat.name} Calculators`);
 
       return (
         <a
@@ -70,7 +76,7 @@ const sectionAriaLabel = country ? `${country.name} Calculator Categories` : 'Ca
             {cat.icon}
           </span>
           <span class="w-full text-center font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-[11px] sm:text-xs md:text-sm leading-tight whitespace-nowrap overflow-hidden">
-            {cat.name}
+            {catDisplayName}
           </span>
         </a>
       );

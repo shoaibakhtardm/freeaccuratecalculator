@@ -21,8 +21,14 @@ const {
   isFrench: propIsFrench,
 } = Astro.props;
 
-const isFrench = propIsFrench ?? (country?.slug === 'france' || Astro.url.pathname.includes('/countries/france/') || Astro.url.pathname.startsWith('/fr/'));
-const defaultPlaceholder = isFrench ? "Rechercher 💶 Calculateur de TVA..." : "Search 📈 SIP Calculator...";
+const isFrancePage = Astro.url.pathname.startsWith('/countries/france') || 
+                     Astro.url.pathname.startsWith('/fr/');
+const isFrench = propIsFrench ?? (
+  country?.slug === 'france' || 
+  isFrancePage ||
+  Astro.currentLocale === 'fr'
+);
+const defaultPlaceholder = isFrench ? "Rechercher un calculateur (ex: prêt, TVA, salaire, impôt, amortissement)" : "Search 📈 SIP Calculator...";
 const effectivePlaceholder = placeholder ?? defaultPlaceholder;
 
 // Prepare localized dataset if country is provided
@@ -79,15 +85,15 @@ const searchDataJson = JSON.stringify(dataset);
       </div>
     </div>
 
-    <!-- Search Input (Bold & High-Contrast) -->
+    <label for={id} class="sr-only">{isFrench ? "Rechercher" : "Search"}</label>
     <input
       id={id}
       type="search"
       autocomplete="off"
       spellcheck="false"
       placeholder=""
-      class="fac-search-input relative z-20 w-full rounded-2xl sm:rounded-full bg-transparent py-3 sm:py-3.5 pl-11 sm:pl-12 pr-24 text-xs sm:text-sm md:text-base font-bold text-slate-900 dark:text-white placeholder:font-medium placeholder-slate-400 dark:placeholder-slate-400 shadow-sm outline-none border-none ring-0 transition-all tracking-tight sm:tracking-normal"
-      aria-label={isFrench ? "Rechercher une calculatrice" : "Search all calculators"}
+      class="fac-search-input relative z-20 w-full rounded-2xl sm:rounded-full bg-transparent py-3 sm:py-3.5 pl-11 sm:pl-12 pr-24 text-xs sm:text-sm md:text-base font-bold text-slate-900 dark:text-white placeholder:text-transparent placeholder:opacity-0 shadow-sm outline-none border-none ring-0 transition-all tracking-tight sm:tracking-normal"
+      aria-label={effectivePlaceholder || (isFrench ? "Rechercher" : "Search all calculators")}
       aria-autocomplete="list"
       aria-controls={`${id}-dropdown`}
       aria-expanded="false"
@@ -105,9 +111,11 @@ const searchDataJson = JSON.stringify(dataset);
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
       </button>
-      <kbd class="fac-kbd-shortcut hidden sm:inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-md shadow-2xs pointer-events-none transition-opacity">
-        Ctrl K
-      </kbd>
+      {!isFrench && !isFrancePage && (
+        <kbd class="fac-kbd-shortcut hidden sm:inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-md shadow-2xs pointer-events-none transition-opacity">
+          Ctrl K
+        </kbd>
+      )}
     </div>
   </div>
 
@@ -119,8 +127,8 @@ const searchDataJson = JSON.stringify(dataset);
   >
     <!-- Dynamic Results Header -->
     <div class="fac-results-header px-4 py-2.5 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
-      <span class="fac-results-count">{isFrench ? "Calculatrices Suggérées" : "Suggested Calculators"}</span>
-      <span class="text-[10px] lowercase font-normal hidden sm:inline">{isFrench ? "appuyez sur entrée ↵ pour ouvrir" : "press enter ↵ to open"}</span>
+      <span class="fac-results-count">{isFrench ? "Outils suggérés" : "Suggested Calculators"}</span>
+      <span class="text-[10px] lowercase font-normal hidden sm:inline">{isFrench ? "↵ pour ouvrir" : "press enter ↵ to open"}</span>
     </div>
 
     <!-- Scrollable Results Container -->
@@ -132,21 +140,21 @@ const searchDataJson = JSON.stringify(dataset);
     <div class="fac-no-results hidden p-6 text-center space-y-1.5">
       <div class="text-2xl">🔍</div>
       <p class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200">
-        {isFrench ? "Aucune calculatrice trouvée" : "No calculators found"}
+        {isFrench ? "Aucun calculateur trouvé" : "No calculators found"}
       </p>
       <p class="text-[11px] text-slate-400 dark:text-slate-500">
-        {isFrench ? 'Essayez "prêt", "salaire", "tva", "impôt" ou "placement"' : 'Try searching for "sip", "emi", "tax", "percentage", or "mortgage"'}
+        {isFrench ? "Essayez avec des termes comme prêt, tva, salaire, impôt, amortissement ou vérifiez l'orthographe" : 'Try searching for "sip", "emi", "tax", "percentage", or "mortgage"'}
       </p>
     </div>
 
     <!-- Footer Quick Help -->
     <div class="px-4 py-2 border-t border-slate-100 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/50 flex items-center justify-between text-[10px] text-slate-400 dark:text-slate-500">
       <span class="flex items-center gap-1">
-        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> {isFrench ? "Liens Calculatrices Vérifiés" : "Verified Calculator Links"}
+        <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> {isFrench ? "Calculateurs Certifiés" : "Verified Calculator Links"}
       </span>
       <div class="flex items-center gap-2">
-        <span class="hidden sm:inline"><kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800">↑</kbd> <kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800">↓</kbd> {isFrench ? "naviguer" : "navigate"}</span>
-        <span><kbd class="px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800">esc</kbd> {isFrench ? "fermer" : "close"}</span>
+        <span class="hidden sm:inline">{isFrench ? "↑ ↓ pour naviguer" : "<kbd class=\"px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800\">↑</kbd> <kbd class=\"px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800\">↓</kbd> navigate"}</span>
+        <span>{isFrench ? "esc pour fermer" : "<kbd class=\"px-1 py-0.5 rounded bg-slate-200/80 dark:bg-slate-800\">esc</kbd> close"}</span>
       </div>
     </div>
   </div>
@@ -173,6 +181,11 @@ const searchDataJson = JSON.stringify(dataset);
       const categoryScope = (container.dataset.filter || '').toLowerCase();
 
       if (!input || !panel || !resultsList || !dataEl) return;
+
+      const isFr = container.dataset.isFrench === 'true' || 
+                   window.location.pathname.startsWith('/countries/france') || 
+                   window.location.pathname.startsWith('/fr/') ||
+                   (document.documentElement.lang || '').startsWith('fr');
 
       let dataset = [];
       try {
@@ -235,7 +248,7 @@ const searchDataJson = JSON.stringify(dataset);
         if (!q) {
           closePanel();
           if (clearBtn) clearBtn.classList.add('hidden');
-          if (kbdShortcut) kbdShortcut.classList.remove('hidden');
+          if (kbdShortcut && !isFr) kbdShortcut.classList.remove('hidden');
           return;
         }
 
@@ -280,7 +293,7 @@ const searchDataJson = JSON.stringify(dataset);
 
         if (currentMatches.length === 0) {
           resultsList.innerHTML = '';
-          if (resultsCount) resultsCount.textContent = isFr ? 'Aucune suggestion' : 'No suggestions';
+          if (resultsCount) resultsCount.textContent = isFr ? 'Aucun calculateur trouvé' : 'No suggestions';
           if (noResults) noResults.classList.remove('hidden');
           openPanel();
           return;
@@ -288,7 +301,7 @@ const searchDataJson = JSON.stringify(dataset);
 
         if (noResults) noResults.classList.add('hidden');
         if (resultsCount) {
-          resultsCount.textContent = isFr ? 'Calculatrices Suggérées' : 'Suggested Calculators';
+          resultsCount.textContent = isFr ? 'Outils suggérés' : 'Suggested Calculators';
         }
 
         // Render HTML for suggestions
@@ -384,26 +397,27 @@ const searchDataJson = JSON.stringify(dataset);
           input.focus();
           closePanel();
           clearBtn.classList.add('hidden');
-          if (kbdShortcut) kbdShortcut.classList.remove('hidden');
+          if (kbdShortcut && !isFr) kbdShortcut.classList.remove('hidden');
         });
       }
 
       // Masterpiece Typewriter Animation Engine (Always Random & Natural Cadence)
       const DIVERSE_PROMPTS = isFr ? [
-        'Rechercher 💶 Calculateur de TVA...',
-        'Rechercher 💼 Salaire Brut / Net...',
-        'Rechercher 🏢 Prêt Immobilier & HCSF...',
-        'Rechercher 🏛️ Impôt sur le Revenu...',
-        'Rechercher 🏡 Simulateur APL...',
-        'Rechercher ⚖️ Indemnité Licenciement...',
-        'Rechercher 🚗 Frais Kilométriques...',
-        'Rechercher 📊 Frais Réels vs 10%...',
-        'Rechercher 📈 Intérêts Composés...',
-        'Rechercher 🏖️ Calculateur Retraite...',
+        'Rechercher un calculateur (ex: prêt, TVA, salaire, impôt, amortissement)...',
+        'Rechercher 💶 Calculateur de TVA (20% & 5,5%)...',
+        'Rechercher 💼 Simulateur Salaire Brut / Net...',
+        'Rechercher 🏢 Simulateur de Prêt Immobilier & HCSF...',
+        'Rechercher 🏛️ Simulateur d\'Impôt sur le Revenu 2026...',
+        'Rechercher 🛡️ Simulateur d\'Assurance Emprunteur...',
+        'Rechercher 🏡 Simulateur APL 2026...',
+        'Rechercher ⚖️ Indemnité de Licenciement...',
+        'Rechercher 🚗 Frais Kilométriques DGFIP...',
+        'Rechercher 📊 Frais Réels vs Abattement 10%...',
+        'Rechercher 📈 Calculateur d\'Intérêts Composés...',
+        'Rechercher 🏖️ Simulateur de Retraite...',
         'Rechercher 💰 Rendement Locatif...',
         'Rechercher 📉 Calculateur d\'Inflation...',
-        'Rechercher 🔄 Convertisseur d\'Unités...',
-        'Rechercher 📐 Théorème de Pythagore...'
+        'Rechercher 🔄 Convertisseur d\'Unités...'
       ] : [
         'Search 📈 SIP Calculator...',
         'Search 🎂 Age Calculator...',
@@ -569,8 +583,8 @@ const searchDataJson = JSON.stringify(dataset);
     font-weight: 600 !important;
   }
   .fac-search-input::placeholder {
-    font-weight: 500 !important;
-    opacity: 0.92;
+    color: transparent !important;
+    opacity: 0 !important;
   }
 
   /* ==========================================================================

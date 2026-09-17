@@ -21,6 +21,7 @@ export const frCategories: Record<string, string> = {
   everyday: "Quotidien",
   converter: "Convertisseur",
   finance: "Finance",
+  love: "Amour",
 };
 
 export const enCategories: Record<string, string> = {
@@ -44,6 +45,7 @@ export const enCategories: Record<string, string> = {
   everyday: "Everyday",
   converter: "Converter",
   finance: "Finance",
+  love: "Love",
 };
 
 export const frUI = {
@@ -51,8 +53,18 @@ export const frUI = {
   breadcrumbCountries: "Pays",
   breadcrumbFrance: "France",
   allTools: "Tous les Outils",
-  searchPlaceholder: "Rechercher une calculatrice...",
-  noResults: "Aucune calculatrice trouvée pour cette recherche.",
+  searchLabel: "Rechercher",
+  searchPlaceholder: "Rechercher (ex: prêt, TVA, salaire, impôt, retraite, amortissement)",
+  noResults: "Aucun calculateur trouvé",
+  trySearchFor: "Essayez avec des termes comme",
+  examples: "prêt, tva, salaire, impôt, amortissement",
+  checkSpelling: "ou vérifiez l'orthographe",
+  found: "calculateur(s) trouvé(s)",
+  suggestions: "Outils suggérés",
+  navigateHint: "↑ ↓ pour naviguer",
+  selectHint: "↵ pour ouvrir",
+  closeHint: "esc pour fermer",
+  showAll: "Afficher tous les outils",
   launchTool: "Lancer l'Outil",
   whyUseTitle: "Pourquoi Utiliser ces Outils ?",
   languageToggleFR: "🇫🇷 FR",
@@ -76,47 +88,47 @@ export const enUI = {
 export const frToolNames: Record<string, { name: string; shortName: string; desc: string }> = {
   // Insurance
   'term-life-insurance-calculator': {
-    name: "Calculateur d'Assurance Vie Temporaire",
-    shortName: "Assurance Vie",
-    desc: "Estimez le capital nécessaire et les primes d'assurance vie adaptées à vos besoins.",
+    name: "Simulateur de Prévoyance & Capital Décès",
+    shortName: "Prévoyance Décès",
+    desc: "Calculez le capital décès recommandé et la rente de protection pour vos proches.",
   },
   'health-insurance-calculator': {
-    name: "Calculateur de Mutuelle Santé",
+    name: "Simulateur de Mutuelle Santé",
     shortName: "Mutuelle Santé",
-    desc: "Comparez vos cotisations et remboursements complémentaires santé.",
+    desc: "Simulez vos cotisations, le taux de remboursement BRSS et votre reste à charge.",
   },
   'auto-insurance-calculator': {
-    name: "Calculateur d'Assurance Auto",
+    name: "Simulateur d'Assurance Auto",
     shortName: "Assurance Auto",
-    desc: "Estimez les primes d'assurance automobile tous risques ou au tiers.",
+    desc: "Estimez vos cotisations d'assurance auto (tiers, tous risques) et franchises.",
   },
   'homeowners-insurance-calculator': {
-    name: "Calculateur d'Assurance Habitation",
+    name: "Simulateur d'Assurance Habitation",
     shortName: "Assurance Habitation",
-    desc: "Calcul des cotisations MRH (Multirisque Habitation) pour propriétaires et locataires.",
+    desc: "Estimez votre cotisation Multirisque Habitation (MRH) selon surface, pièces et mobilier.",
   },
   'renters-insurance-calculator': {
-    name: "Calculateur d'Assurance Locataire",
+    name: "Simulateur d'Assurance Locataire",
     shortName: "Assurance Locataire",
-    desc: "Estimez le coût de votre assurance habitation obligatoire pour locataire.",
+    desc: "Calculez votre prime d'assurance locataire obligatoire et protection des biens.",
   },
   'disability-insurance-calculator': {
-    name: "Calculateur de Prévoyance Invalidité",
-    shortName: "Prévoyance",
-    desc: "Calculez vos rentes et indemnités en cas d'incapacité de travail.",
+    name: "Simulateur de Prévoyance Invalidité",
+    shortName: "Prévoyance Invalidité",
+    desc: "Calculez vos indemnités journalières et rentes complémentaires en cas d'arrêt.",
   },
   'annuity-payout-calculator': {
-    name: "Calculateur de Rente Viagère",
+    name: "Simulateur de Rente Viagère",
     shortName: "Rente Viagère",
-    desc: "Estimez les versements périodiques issus d'un capital constitué.",
+    desc: "Estimez les versements réguliers issus de votre capital constitué.",
   },
   'umbrella-insurance-calculator': {
-    name: "Calculateur d'Assurance Responsabilité Civile",
+    name: "Simulateur d'Assurance Responsabilité Civile",
     shortName: "Responsabilité Civile",
     desc: "Protection complémentaire contre les sinistres et litiges majeurs.",
   },
   'whole-life-insurance-calculator': {
-    name: "Calculateur d'Assurance Vie Entière",
+    name: "Simulateur d'Assurance Vie Entière",
     shortName: "Vie Entière",
     desc: "Épargne et transmission de capital avec fiscalité avantageuse.",
   },

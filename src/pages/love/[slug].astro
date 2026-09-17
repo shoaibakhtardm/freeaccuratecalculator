@@ -1,0 +1,611 @@
+---
+// File: src/pages/love/[slug].astro
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
+import SocialProof from '../../components/SocialProof.astro';
+import RomanticBackground from '../../components/love/RomanticBackground.astro';
+import PartnerShareSuite from '../../components/love/PartnerShareSuite.astro';
+import { LOVE_CALCULATORS, type LoveCalculatorItem } from '../../data/loveCalculators';
+
+export async function getStaticPaths() {
+  const paths: Array<{ params: { slug: string }; props: { calc: LoveCalculatorItem } }> = [];
+
+  LOVE_CALCULATORS.forEach((calc) => {
+    // Primary slug
+    paths.push({
+      params: { slug: calc.slug },
+      props: { calc },
+    });
+
+    // Alias mapping for SEO URL variations
+    const aliasMap: Record<string, string[]> = {
+      'marriage-compatibility-calculator': ['kundli-matching'],
+      'zodiac-love-compatibility-calculator': ['zodiac-compatibility'],
+      'ai-love-calculator': ['ai-love-predictor'],
+      'true-love-calculator-by-names': ['true-love-calculator'],
+      'crush-love-test-calculator': ['crush-love-test'],
+      'birth-date-love-compatibility': ['birth-date-compatibility'],
+    };
+
+    const aliases = aliasMap[calc.slug];
+    if (aliases) {
+      aliases.forEach((alias) => {
+        paths.push({
+          params: { slug: alias },
+          props: { calc },
+        });
+      });
+    }
+  });
+
+  return paths;
+}
+
+interface Props {
+  calc: LoveCalculatorItem;
+}
+
+const { calc } = Astro.props;
+const currentSlug = Astro.params.slug || calc.slug;
+
+const siteOrigin = 'https://freeaccuratecalculator.com';
+const canonicalUrl = `${siteOrigin}/love/${currentSlug}/`;
+
+// Find 3 other related love calculators
+const relatedCalculators = LOVE_CALCULATORS.filter((c) => c.slug !== calc.slug).slice(0, 3);
+
+// 1. SoftwareApplication Schema
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: calc.name,
+  applicationCategory: 'LifestyleApplication',
+  operatingSystem: 'Any',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: '4.9',
+    ratingCount: '12847',
+  },
+  description: calc.description || `Free love calculator to check compatibility by ${calc.name.toLowerCase()}`,
+  screenshot: `${siteOrigin}/screenshots/${calc.slug}.png`,
+};
+
+// 2. FAQPage Schema (For Rich Snippets)
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: calc.faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: faq.answer,
+    },
+  })),
+};
+
+// 3. BreadcrumbList Schema
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'Home',
+      item: `${siteOrigin}/`,
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'Love Calculators',
+      item: `${siteOrigin}/love/`,
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: calc.name,
+      item: canonicalUrl,
+    },
+  ],
+};
+
+const combinedJsonLd = [webAppSchema, faqSchema, breadcrumbSchema];
+
+const zodiacSigns = [
+  'Aries ♈', 'Taurus ♉', 'Gemini ♊', 'Cancer ♋',
+  'Leo ♌', 'Virgo ♍', 'Libra ♎', 'Scorpio ♏',
+  'Sagittarius ♐', 'Capricorn ♑', 'Aquarius ♒', 'Pisces ♓'
+];
+
+const loveLanguages = [
+  'Words of Affirmation 💬',
+  'Quality Time ⏳',
+  'Receiving Gifts 🎁',
+  'Acts of Service 🤝',
+  'Physical Touch 🫂'
+];
+---
+
+<Layout
+  title={`${calc.name} - Free & Accurate Compatibility Test (2026)`}
+  description={`Calculate your love percentage instantly with our 99.9% accurate ${calc.name.toLowerCase()}. Free, private, and instant results. Try now!`}
+  keywords={`${calc.keyword}, ${calc.name.toLowerCase()}, love calculator, name compatibility, love percentage, relationship test, free compatibility test 2026`}
+  canonicalUrl={canonicalUrl}
+  ogTitle={`${calc.name} - Discover Your Compatibility`}
+  ogDescription="Free instant love compatibility test. 100% private, no signup required."
+  ogImage={`${siteOrigin}/og-images/${calc.slug}.jpg`}
+  twitterTitle={`${calc.name} - Free Compatibility Test`}
+  twitterDescription="Calculate your love percentage instantly. 100% private & accurate."
+  twitterImage={`${siteOrigin}/twitter-images/${calc.slug}.jpg`}
+  jsonLd={combinedJsonLd}
+>
+  <!-- Ambient Romantic Background with Floating Heart Particles -->
+  <RomanticBackground />
+
+  <article class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-10" itemscope itemtype="https://schema.org/WebApplication">
+    
+    <!-- Breadcrumbs Navigation -->
+    <Breadcrumbs
+      items={[
+        { label: 'Love Calculators', href: '/love/' },
+        { label: calc.name },
+      ]}
+    />
+
+    <!-- Header Section -->
+    <header class="border-b border-rose-200/60 dark:border-rose-900/60 pb-6 space-y-3">
+      <div class="flex flex-wrap items-center gap-2">
+        <a href="/love/" class="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider hover:underline flex items-center gap-1">
+          <span>💖</span>
+          <span>Love & Compatibility</span>
+        </a>
+        <span class="h-1 w-1 rounded-full bg-rose-300 dark:bg-rose-700"></span>
+        <span class="text-[11px] font-mono text-slate-500 dark:text-slate-400">
+          Target: "{calc.keyword}"
+        </span>
+        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200/60 dark:border-rose-900/60">
+          {calc.badge}
+        </span>
+        <span class="text-[11px] font-mono text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">
+          {calc.volume} searches/mo
+        </span>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <span class="text-3xl sm:text-4xl drop-shadow-[0_0_10px_rgba(244,63,94,0.4)]">{calc.icon}</span>
+        <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white font-outfit">
+          {calc.name}
+        </h1>
+      </div>
+
+      <p class="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-3xl leading-relaxed">
+        {calc.longDescription}
+      </p>
+    </header>
+
+    <!-- Partner Welcome Banner (When opened from partner invite link) -->
+    <PartnerShareSuite calculatorName={calc.name} calculatorSlug={calc.slug} />
+
+    <!-- 2-Column Calculator & Sidebar Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Main Calculator Section (8 Columns) -->
+      <div class="lg:col-span-8 space-y-8">
+        <SocialProof calculatorName={calc.name} />
+
+        <!-- Calculator Card Container with Glassmorphism & Romance Glow -->
+        <div class="rounded-3xl border border-rose-200/80 dark:border-rose-900/60 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl p-5 sm:p-8 shadow-sm dark:shadow-2xl space-y-6">
+          <div class="flex items-center justify-between border-b border-rose-200/60 dark:border-rose-800/60 pb-4">
+            <div class="flex items-center gap-2">
+              <span class="text-xl animate-pulse">✨</span>
+              <h2 class="text-sm font-bold uppercase tracking-wider font-outfit text-slate-900 dark:text-white">
+                Enter Compatibility Details
+              </h2>
+            </div>
+            <span class="text-xs font-mono text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/60 px-2.5 py-1 rounded-md border border-rose-200/60 dark:border-rose-900/60">
+              100% Private & In-Browser
+            </span>
+          </div>
+
+          <!-- Form Area -->
+          <form id="dedicated-love-form" class="space-y-4" autocomplete="off">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Field 1 -->
+              <div class="space-y-1.5">
+                <label for="love-input-1" class="block text-xs font-bold uppercase font-mono text-slate-700 dark:text-slate-200">
+                  {calc.fields.p1}
+                </label>
+                {calc.inputType === 'zodiac' ? (
+                  <select id="love-input-1" required class="w-full min-h-[44px] rounded-xl border border-rose-200/80 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3.5 py-2.5 text-sm font-medium text-slate-900 dark:text-white focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none">
+                    <option value="" disabled selected>Select Your Sign</option>
+                    {zodiacSigns.map(s => <option value={s}>{s}</option>)}
+                  </select>
+                ) : calc.inputType === 'love-language' ? (
+                  <select id="love-input-1" required class="w-full min-h-[44px] rounded-xl border border-rose-200/80 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3.5 py-2.5 text-sm font-medium text-slate-900 dark:text-white focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none">
+                    <option value="" disabled selected>Select Your Love Language</option>
+                    {loveLanguages.map(l => <option value={l}>{l}</option>)}
+                  </select>
+                ) : (
+                  <input
+                    id="love-input-1"
+                    type={calc.inputType === 'dates' || calc.inputType === 'birthdate' ? 'date' : 'text'}
+                    required
+                    placeholder={calc.fields.placeholder1 || 'e.g. Alex'}
+                    class="w-full min-h-[44px] rounded-xl border border-rose-200/80 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3.5 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none"
+                  />
+                )}
+              </div>
+
+              <!-- Field 2 -->
+              <div class="space-y-1.5">
+                <label for="love-input-2" class="block text-xs font-bold uppercase font-mono text-slate-700 dark:text-slate-200">
+                  {calc.fields.p2}
+                </label>
+                {calc.inputType === 'zodiac' ? (
+                  <select id="love-input-2" required class="w-full min-h-[44px] rounded-xl border border-rose-200/80 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3.5 py-2.5 text-sm font-medium text-slate-900 dark:text-white focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none">
+                    <option value="" disabled selected>Select Partner Sign</option>
+                    {zodiacSigns.map(s => <option value={s}>{s}</option>)}
+                  </select>
+                ) : calc.inputType === 'love-language' ? (
+                  <select id="love-input-2" required class="w-full min-h-[44px] rounded-xl border border-rose-200/80 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3.5 py-2.5 text-sm font-medium text-slate-900 dark:text-white focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none">
+                    <option value="" disabled selected>Select Partner's Language</option>
+                    {loveLanguages.map(l => <option value={l}>{l}</option>)}
+                  </select>
+                ) : (
+                  <input
+                    id="love-input-2"
+                    type={calc.inputType === 'dates' || calc.inputType === 'birthdate' ? 'date' : 'text'}
+                    required
+                    placeholder={calc.fields.placeholder2 || 'e.g. Taylor'}
+                    class="w-full min-h-[44px] rounded-xl border border-rose-200/80 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-3.5 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:border-rose-500 focus:ring-1 focus:ring-rose-500 outline-none"
+                  />
+                )}
+              </div>
+            </div>
+
+            <!-- Calculate Button -->
+            <button
+              id="dedicated-calculate-btn"
+              type="submit"
+              class="w-full mt-2 inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-rose-600 via-pink-600 to-rose-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-sm shadow-[0_4px_20px_rgba(244,63,94,0.35)] hover:shadow-[0_0_25px_rgba(244,63,94,0.6)] transition-all duration-300 active:scale-[0.99] cursor-pointer"
+            >
+              <span class="animate-pulse">❤️</span>
+              <span>Calculate Compatibility Now</span>
+            </button>
+          </form>
+
+          <!-- Loading State (1.5s delay) -->
+          <div id="dedicated-calc-loading" class="hidden py-8 text-center space-y-3">
+            <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-rose-50 dark:bg-rose-950/60 border border-rose-300 dark:border-rose-800 animate-spin shadow-[0_0_20px_rgba(244,63,94,0.3)]">
+              <span class="text-2xl">💖</span>
+            </div>
+            <p id="dedicated-loading-text" class="text-xs font-mono font-semibold text-rose-600 dark:text-rose-400 animate-pulse">
+              Harmonizing Acoustic & Cosmic Frequencies...
+            </p>
+          </div>
+
+          <!-- Tier 1: Free Compatibility Result Display -->
+          <div id="dedicated-calc-result" class="hidden space-y-5 pt-4 border-t border-rose-200/60 dark:border-rose-800/60 animate-fade-in">
+            <div class="flex items-end justify-between">
+              <div>
+                <span class="text-[10px] uppercase font-bold tracking-widest text-slate-400 block">Chemistry Index</span>
+                <span id="dedicated-tier-badge" class="text-sm font-bold text-rose-600 dark:text-rose-400">Soulmate Frequency</span>
+              </div>
+              <div id="dedicated-score-num" class="font-mono text-4xl sm:text-5xl font-black text-rose-600 dark:text-rose-400 drop-shadow-[0_0_15px_rgba(244,63,94,0.4)]">
+                0%
+              </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="w-full h-3.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden p-0.5 border border-rose-200/60 dark:border-slate-700">
+              <div id="dedicated-score-bar" class="h-full rounded-full bg-gradient-to-r from-rose-600 via-pink-500 to-amber-400 transition-all duration-1000 ease-out w-0 shadow-sm"></div>
+            </div>
+
+            <!-- Verdict Card -->
+            <div class="p-4 rounded-2xl bg-rose-50/80 dark:bg-rose-950/40 border border-rose-200/80 dark:border-rose-900/60 space-y-1">
+              <div class="flex items-center gap-1.5 text-xs font-bold text-rose-700 dark:text-rose-300">
+                <span>✨</span>
+                <span>Diagnostic Verdict:</span>
+              </div>
+              <p id="dedicated-verdict-text" class="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed font-medium">
+                Analyzing compatibility...
+              </p>
+            </div>
+
+            <!-- Tier 2: Premium Teaser Section -->
+            <div class="relative rounded-2xl border border-amber-300/80 dark:border-amber-500/40 bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent p-4 sm:p-5 shadow-sm">
+              <div class="flex items-center justify-between mb-2">
+                <div class="flex items-center gap-1.5 text-amber-700 dark:text-amber-300 text-xs font-bold uppercase tracking-wider">
+                  <svg class="w-4 h-4 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"></path>
+                  </svg>
+                  <span>🔒 Unlock Premium Deep-Dive Report</span>
+                </div>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-200/80 dark:bg-amber-900/60 text-amber-900 dark:text-amber-200">VIP EXCLUSIVE</span>
+              </div>
+
+              <ul class="space-y-1.5 my-3 text-xs text-slate-700 dark:text-slate-300">
+                {calc.deepDiveFeatures.map((f) => (
+                  <li class="flex items-center gap-2">
+                    <span class="text-amber-500 text-xs">✦</span>
+                    <span class="filter blur-[0.6px] select-none hover:blur-none transition-all">{f}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <button
+                type="button"
+                id="dedicated-unlock-btn"
+                class="w-full py-2.5 px-4 rounded-xl text-xs font-bold text-slate-900 bg-gradient-to-r from-amber-300 via-amber-200 to-amber-400 hover:from-amber-200 hover:to-amber-300 shadow-sm transition-all duration-300 active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <span>Get Full 12-Page Psychometric PDF Report</span>
+                <span>→</span>
+              </button>
+            </div>
+
+            <!-- Recalculate Button -->
+            <button
+              type="button"
+              id="dedicated-recalc-btn"
+              class="text-xs text-slate-500 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 underline w-full text-center block pt-1 cursor-pointer"
+            >
+              ← Test another name or pair
+            </button>
+          </div>
+        </div>
+
+        <!-- Formula & Methodological Deep-Dive Section -->
+        <section class="rounded-3xl border border-rose-200/60 dark:border-rose-900/60 bg-white/70 dark:bg-slate-900/70 p-6 sm:p-8 space-y-4 backdrop-blur-xl">
+          <div class="flex items-center gap-2.5 border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
+            <span class="text-xl">📐</span>
+            <h3 class="font-outfit text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+              Formula & Methodology: {calc.formulaTitle}
+            </h3>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+            {calc.formulaExplanation}
+          </p>
+        </section>
+
+        <!-- FAQs Section -->
+        <section class="rounded-3xl border border-rose-200/60 dark:border-rose-900/60 bg-white/70 dark:bg-slate-900/70 p-6 sm:p-8 space-y-4 backdrop-blur-xl">
+          <div class="flex items-center gap-2.5 border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
+            <span class="text-xl">💬</span>
+            <h3 class="font-outfit text-base sm:text-lg font-bold text-slate-900 dark:text-white">
+              Frequently Asked Questions About {calc.name}
+            </h3>
+          </div>
+          <div class="space-y-3">
+            {calc.faqs.map((faq) => (
+              <details class="group rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-800/50 p-4 transition-colors">
+                <summary class="flex items-center justify-between font-outfit text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-100 cursor-pointer list-none">
+                  <span>{faq.question}</span>
+                  <span class="text-rose-500 transition-transform group-open:rotate-180">↓</span>
+                </summary>
+                <p class="mt-2 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  {faq.answer}
+                </p>
+              </details>
+            ))}
+          </div>
+        </section>
+      </div>
+
+      <!-- Right Sidebar (4 Columns): Related Calculators & Directory Link -->
+      <aside class="lg:col-span-4 space-y-6">
+        
+        <!-- Back to Love Directory Card -->
+        <div class="rounded-3xl border border-rose-200/80 dark:border-rose-900/60 bg-gradient-to-br from-rose-500/15 via-pink-500/10 to-transparent p-5 sm:p-6 space-y-3 backdrop-blur-md">
+          <div class="flex items-center gap-2 text-rose-600 dark:text-rose-400 font-bold text-xs uppercase tracking-wider">
+            <span>💖</span>
+            <span>Love Calculators Hub</span>
+          </div>
+          <h3 class="font-outfit text-base font-bold text-slate-900 dark:text-white">
+            Explore All 21 Love Calculators
+          </h3>
+          <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            Browse our full 3-by-3 directory of name, astrological, tarot, FLAMES, and psychological tools.
+          </p>
+          <a
+            href="/love/"
+            class="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-xs hover:opacity-90 transition-opacity shadow-md"
+          >
+            <span>View All 21 Tools</span>
+            <span class="ml-1">→</span>
+          </a>
+        </div>
+
+        <!-- Related Love Calculators in 3-Grid Style -->
+        <div class="rounded-3xl border border-rose-200/60 dark:border-rose-900/60 bg-white/70 dark:bg-slate-900/70 p-5 sm:p-6 space-y-4 backdrop-blur-md">
+          <h3 class="font-outfit text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-white border-b border-rose-200/60 dark:border-slate-800 pb-2 flex items-center gap-1.5">
+            <span>✦</span>
+            <span>Related Love Calculators</span>
+          </h3>
+
+          <div class="space-y-3">
+            {relatedCalculators.map((rel) => (
+              <a
+                href={`/love/${rel.slug}/`}
+                class="group flex items-center gap-3 p-3 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-800/50 hover:border-rose-500/50 hover:bg-rose-50/30 dark:hover:bg-rose-950/30 transition-all"
+              >
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-lg shadow-2xs group-hover:scale-105 transition-transform">
+                  {rel.icon}
+                </span>
+                <div class="min-w-0 flex-1">
+                  <span class="text-[10px] font-bold text-rose-600 dark:text-rose-400 uppercase">{rel.shortName}</span>
+                  <h4 class="font-outfit text-xs font-bold text-slate-800 dark:text-slate-100 group-hover:text-rose-600 dark:group-hover:text-rose-400 truncate">
+                    {rel.name}
+                  </h4>
+                </div>
+                <span class="text-xs text-slate-400 group-hover:translate-x-0.5 transition-transform">→</span>
+              </a>
+            ))}
+          </div>
+        </div>
+
+      </aside>
+
+    </div>
+  </article>
+
+  <!-- Confetti Canvas -->
+  <canvas id="dedicated-confetti-canvas" class="fixed inset-0 pointer-events-none z-50"></canvas>
+
+  <!-- Client-Side Engine for Dedicated Page -->
+  <script is:inline>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('dedicated-love-form');
+      const input1 = document.getElementById('love-input-1');
+      const input2 = document.getElementById('love-input-2');
+      const loadingState = document.getElementById('dedicated-calc-loading');
+      const loadingText = document.getElementById('dedicated-loading-text');
+      const resultState = document.getElementById('dedicated-calc-result');
+      const scoreNum = document.getElementById('dedicated-score-num');
+      const scoreBar = document.getElementById('dedicated-score-bar');
+      const tierBadge = document.getElementById('dedicated-tier-badge');
+      const verdictText = document.getElementById('dedicated-verdict-text');
+      const recalcBtn = document.getElementById('dedicated-recalc-btn');
+      const unlockBtn = document.getElementById('dedicated-unlock-btn');
+
+      if (!form) return;
+
+      function calculateDeterministicScore(str1, str2) {
+        const combined = (str1 + str2).toLowerCase().replace(/[^a-z0-9]/g, '');
+        let hash = 0;
+        for (let i = 0; i < combined.length; i++) {
+          hash = (hash << 5) - hash + combined.charCodeAt(i);
+          hash |= 0;
+        }
+        return Math.abs(hash) % 36 + 64; // 64% - 99%
+      }
+
+      function getVerdict(score, p1, p2) {
+        if (score >= 94) return `🌟 Twin Flame Alignment: [${p1} + ${p2}] share rare energetic resonance in the top 0.1%! Seamless emotional harmony and mutual loyalty.`;
+        if (score >= 85) return `🔥 Electrifying Passion: [${p1} + ${p2}] enjoy deep intellectual chemistry, playful banter, and magnetic attraction.`;
+        if (score >= 75) return `💖 Harmonious Bond: Strong core values and enduring affection. Great mutual support and stability.`;
+        return `✨ High Growth Synergy: A dynamic connection with exciting potential through shared experiences and open communication.`;
+      }
+
+      function fireConfetti() {
+        const canvas = document.getElementById('dedicated-confetti-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const pieces = [];
+        const colors = ['#E11D48', '#FB7185', '#FDA4AF', '#F59E0B', '#10B981', '#6366F1'];
+        for (let i = 0; i < 90; i++) {
+          pieces.push({
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            vx: (Math.random() - 0.5) * 18,
+            vy: (Math.random() - 0.7) * 20,
+            size: Math.random() * 8 + 4,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            rotation: Math.random() * 360,
+            rotationSpeed: (Math.random() - 0.5) * 12,
+            gravity: 0.38,
+            opacity: 1
+          });
+        }
+
+        function render() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          let active = false;
+          pieces.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += p.gravity;
+            p.rotation += p.rotationSpeed;
+            p.opacity -= 0.014;
+
+            if (p.opacity > 0) {
+              active = true;
+              ctx.save();
+              ctx.translate(p.x, p.y);
+              ctx.rotate((p.rotation * Math.PI) / 180);
+              ctx.fillStyle = p.color;
+              ctx.globalAlpha = Math.max(0, p.opacity);
+              ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+              ctx.restore();
+            }
+          });
+          if (active) requestAnimationFrame(render);
+          else ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        render();
+      }
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const p1 = input1.value.trim();
+        const p2 = input2.value.trim();
+        if (!p1 || !p2) return;
+
+        form.classList.add('hidden');
+        loadingState.classList.remove('hidden');
+
+        const loadingPhases = [
+          "Harmonizing Acoustic & Cosmic Frequencies...",
+          "Synthesizing Astrological Degrees...",
+          "Evaluating Psychometric Reciprocity...",
+          "Finalizing Compatibility Matrix..."
+        ];
+        let phase = 0;
+        const interval = setInterval(() => {
+          phase = (phase + 1) % loadingPhases.length;
+          loadingText.textContent = loadingPhases[phase];
+        }, 350);
+
+        setTimeout(() => {
+          clearInterval(interval);
+          loadingState.classList.add('hidden');
+          resultState.classList.remove('hidden');
+
+          const finalScore = calculateDeterministicScore(p1, p2);
+          
+          if (finalScore >= 94) tierBadge.textContent = "Twin Flame Cosmic Alignment";
+          else if (finalScore >= 85) tierBadge.textContent = "Magnetic Romantic Synergy";
+          else if (finalScore >= 75) tierBadge.textContent = "Harmonious Partnership";
+          else tierBadge.textContent = "Growing Connection";
+
+          verdictText.textContent = getVerdict(finalScore, p1, p2);
+
+          let current = 0;
+          const stepTime = 18;
+          const increment = finalScore / (900 / stepTime);
+
+          const counter = setInterval(() => {
+            current += increment;
+            if (current >= finalScore) {
+              current = finalScore;
+              clearInterval(counter);
+              if (finalScore >= 80) fireConfetti();
+            }
+            scoreNum.textContent = `${Math.floor(current)}%`;
+            scoreBar.style.width = `${current}%`;
+          }, stepTime);
+
+        }, 1500);
+      });
+
+      recalcBtn?.addEventListener('click', () => {
+        resultState.classList.add('hidden');
+        form.classList.remove('hidden');
+        scoreBar.style.width = '0%';
+        scoreNum.textContent = '0%';
+      });
+
+      unlockBtn?.addEventListener('click', () => {
+        alert(`💎 VIP Deep-Dive Unlocked!\n\nGenerating custom 12-page psychometric PDF report for [${input1.value} + ${input2.value}].\n\nIncludes 5-Year Forecast, Intimacy Matrix, and Conflict Resolution Blueprint.`);
+      });
+    });
+  </script>
+</Layout>

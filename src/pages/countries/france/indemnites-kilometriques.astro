@@ -70,64 +70,15 @@ const jsonLd = {
 };
 ---
 
-<Layout title={pageTitle} description={pageDescription} jsonLd={jsonLd} lang="fr-FR" locale="fr">
-  <Fragment slot="head">
-    <link rel="canonical" href="https://freeaccuratecalculator.com/countries/france/indemnites-kilometriques/" />
-    <link rel="alternate" hreflang="fr" href="https://freeaccuratecalculator.com/countries/france/indemnites-kilometriques/" />
-    <link rel="alternate" hreflang="en" href="https://freeaccuratecalculator.com/countries/france/indemnites-kilometriques/?lang=en" />
-  </Fragment>
-
-  <!-- [HEADER] -->
-  <header
-    id="main-header"
-    class="sticky top-0 left-0 right-0 z-50 w-full bg-white/90 dark:bg-gray-950/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80 transition-all duration-300"
-  >
-    <div class="h-[2.5px] w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 shadow-[0_1px_6px_rgba(99,102,241,0.4)]" aria-hidden="true"></div>
-
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between h-[66px] sm:h-20 gap-2 sm:gap-4">
-      <div class="flex items-center gap-2 sm:gap-2.5 shrink-0">
-        <a
-          href="/countries/france/"
-          aria-label="Calculatrices Gratuites France"
-          class="group relative inline-flex items-center gap-2 sm:gap-3.5 select-none shrink-0 py-1 rounded-2xl transition-all duration-300 hover:scale-[1.015]"
-        >
-          <div class="relative p-[1.2px] rounded-2xl bg-gradient-to-b from-blue-400/80 via-indigo-500/60 to-purple-700/80 shadow-sm">
-            <div class="relative flex h-9 w-9 sm:h-10.5 sm:w-10.5 items-center justify-center rounded-[13px] sm:rounded-[14.5px] bg-gradient-to-br from-blue-600 via-indigo-800 to-slate-950 text-white">
-              <span class="text-xl">🚗</span>
-            </div>
-          </div>
-
-          <div class="flex flex-col justify-center text-left min-w-0">
-            <div class="flex items-center gap-1.5 leading-none">
-              <span class="font-outfit text-[19px] sm:text-[23px] font-black tracking-tight bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent">
-                Free Accurate
-              </span>
-            </div>
-            <span class="font-outfit text-[11px] sm:text-[12px] font-semibold text-slate-500 dark:text-slate-400">
-              Indemnités Km France
-            </span>
-          </div>
-        </a>
-
-        <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border border-slate-200/90 dark:border-slate-800/90 bg-slate-50 dark:bg-slate-900/80 text-xs font-bold text-slate-800 dark:text-slate-200">
-          <span>🇫🇷</span>
-          <span>France</span>
-        </span>
-      </div>
-
-      <div class="flex items-center gap-2 shrink-0">
-        <a
-          href="/countries/france/automotive/"
-          class="text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors hidden md:inline-block"
-        >
-          ← Calculatrices Automobile
-        </a>
-        <ThemeToggle id="theme-toggle" />
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-6 sm:py-10 space-y-8">
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonicalUrl="https://freeaccuratecalculator.com/countries/france/indemnites-kilometriques/"
+  jsonLd={jsonLd}
+  lang="fr-FR"
+  locale="fr"
+>
+  <div class="max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-8">
     <!-- Breadcrumb -->
     <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
       <a href="/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Accueil</a>
@@ -294,7 +245,7 @@ const jsonLd = {
         Afin d'encourager la transition écologique, l'administration fiscale applique une <strong>majoration automatique de 20%</strong> sur le montant total calculé lorsque le véhicule utilisé est 100% électrique. Ce montant déductible couvre l'usure du véhicule, le carburant, l'assurance et l'entretien annuel. En revanche, les péages autoroutiers et tickets de stationnement peuvent être déduits en supplément sur présentation des justificatifs.
       </p>
     </article>
-  </main>
+  </div>
 </Layout>
 
 <script is:inline>

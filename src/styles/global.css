@@ -381,4 +381,54 @@ body {
     animation: none !important;
     opacity: 0.9 !important;
   }
-}
+}
+
+/* ==========================================================================
+   FORCE LIGHT MODE FOR PDFS AND PRINTS
+   ========================================================================== */
+@media print {
+  html, body, .dark, .dark body {
+    color-scheme: light !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Remove dark mode shadows, borders, and backgrounds */
+  *, .dark * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    border-color: #000000 !important;
+  }
+
+  /* Force all text to black and backgrounds to white */
+  h1, h2, h3, h4, h5, h6, p, span, div, table, th, td,
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
+  .dark p, .dark span, .dark div, .dark table, .dark th, .dark td {
+    color: #000000 !important;
+    background-color: transparent !important;
+  }
+  
+  /* Hide UI elements that shouldn't be in the PDF */
+  .no-print, nav, header, footer, button, .dark-mode-toggle, aside,
+  #main-header, #smart-email-modal, #country-modal, .fac-copy-result-btn,
+  .ad-slot-container, .breadcrumbs-container, .print\:hidden {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   Typewriter Overlap Fix: Ensure native input placeholder is 100% transparent
+   whenever an animated typewriter overlay is present across the site
+   ========================================================================== */
+.fac-typewriter-container ~ input::placeholder,
+.fac-search-wrapper input::placeholder,
+.fac-autocomplete-container input::placeholder,
+.fac-search-input::placeholder {
+  color: transparent !important;
+  opacity: 0 !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+

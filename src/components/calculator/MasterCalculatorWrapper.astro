@@ -36,6 +36,7 @@ const frSymbolMap: Record<string, string> = {
   years: 'n',
   time_period: 'n',
   time_horizon: 'n',
+  loan_term: 'n',
   loan_term_months: 'n',
   loan_term_years: 'n',
   interest_rate: 't',
@@ -54,10 +55,34 @@ const frSymbolMap: Record<string, string> = {
   annual_salary: 'S',
   property_price: 'P',
   down_payment: 'A',
+  home_price: 'P',
+  property_tax: 'T',
+  home_insurance: 'I',
+  monthly_premium: 'Pm',
+  coinsurance_rate: 'BRSS',
+  oop_max: 'Opt',
+  expected_claims: 'D',
+  annual_deductible: 'F',
+  deductible: 'F',
+  annual_income: 'R',
+  replacement_years: 'n',
+  total_debts: 'D',
+  existing_savings: 'E',
+  surface_area: 'S',
+  rooms_count: 'P',
+  furniture_value: 'M',
+  vehicle_value: 'V',
+  annual_mileage: 'K',
+  gross_monthly_salary: 'S',
+  monthly_essential_expenses: 'D',
+  annuity_principal: 'C',
+  payout_years: 'n',
 };
 
 const formulaVariables = calc.mathInputs.map((inp) => ({
-  symbol: (isFrench && frSymbolMap[inp.id]) ? frSymbolMap[inp.id] : inp.id,
+  symbol: isFrench
+    ? (frSymbolMap[inp.id] || inp.id.split('_').map(w => w.charAt(0).toUpperCase()).join(''))
+    : (frSymbolMap[inp.id] || inp.id),
   meaning: inp.label + (inp.unit ? ` (${inp.unit})` : ''),
 }));
 
@@ -654,9 +679,21 @@ const isCurrencyCalculator =
         }
 
         const totalInterest = Math.max(0, (emi * months) - actualLoan);
-        res1 = Math.round(emi);
-        res2 = Math.round(actualLoan);
-        res3 = Math.round(totalInterest);
+        const ins = parseFloat(inputs.home_insurance || 0) || 0;
+        const monthlyIns = ins / 12;
+        const totalMonthlyWithIns = emi + monthlyIns;
+        // HCSF French standard: Maximum debt-to-income ratio is 35% inclusive of borrower insurance
+        const minMonthlyIncomeHCSF = Math.round(totalMonthlyWithIns / 0.35);
+
+        if (isFrenchMode && slug.includes('mortgage')) {
+          res1 = Math.round(totalMonthlyWithIns);
+          res2 = Math.round(actualLoan);
+          res3 = minMonthlyIncomeHCSF;
+        } else {
+          res1 = Math.round(emi);
+          res2 = Math.round(actualLoan);
+          res3 = Math.round(totalInterest);
+        }
 
         let bal = actualLoan;
         for (let y = 1; y <= Math.min(Math.ceil(months / 12), 30); y++) {
@@ -670,16 +707,181 @@ const isCurrencyCalculator =
             yrPrincipal += prinPart;
             bal = Math.max(0, bal - prinPart);
           }
+          const yrPayment = (isFrenchMode && slug.includes('mortgage'))
+            ? Math.round((emi + monthlyIns) * monthsInYear)
+            : Math.round(emi * monthsInYear);
           rows.push({
             period: `${window.__facYearPrefix || (isFrenchMode ? 'Année' : 'Year')} ${y}`,
-            payment: Math.round(emi * monthsInYear),
+            payment: yrPayment,
             principal: Math.round(yrPrincipal),
             interest: Math.round(yrInterest),
             balance: Math.round(bal),
           });
         }
       }
-      // 2. SIP & Step-Up SIP
+      // 2. Health Insurance (Mutuelle Santé)
+      else if (slug.includes('health-insurance')) {
+        const monthlyPrem = parseFloat(inputs.monthly_premium || 55) || 0;
+        const brssRate = parseFloat(inputs.coinsurance_rate || inputs.brss_rate || 100) || 100;
+        const opticsDental = parseFloat(inputs.oop_max || inputs.optics_dental || 350) || 0;
+        const annualCare = parseFloat(inputs.expected_claims || inputs.annual_claims || 1800) || 0;
+        const franchise = parseFloat(inputs.annual_deductible || inputs.franchise || 50) || 0;
+
+        const annualPrem = monthlyPrem * 12;
+        const baseRate = Math.min(1.0, (brssRate / 100) * 0.90);
+        const reimbursed = Math.round(annualCare * baseRate);
+        const uncoveredCare = Math.max(0, annualCare - reimbursed);
+        const resteACharge = Math.round(uncoveredCare + opticsDental + franchise);
+        const totalHealthCost = Math.round(annualPrem + resteACharge);
+
+        res1 = resteACharge;
+        res2 = annualPrem;
+        res3 = totalHealthCost;
+
+        rows.push(
+          { period: isFrenchMode ? 'Cotisations Mutuelle (12 mois)' : 'Annual Insurance Premiums', payment: annualPrem, principal: annualPrem, interest: 0, balance: annualPrem },
+          { period: isFrenchMode ? 'Soins Médicaux Courants' : 'Routine Care Claims', payment: annualCare, principal: reimbursed, interest: 0, balance: uncoveredCare },
+          { period: isFrenchMode ? 'Optique & Dentaire Non Couverts' : 'Optical & Dental Out-of-Pocket', payment: opticsDental, principal: 0, interest: 0, balance: opticsDental },
+          { period: isFrenchMode ? 'Franchises Médicales Légales' : 'Statutory Deductibles', payment: franchise, principal: 0, interest: 0, balance: franchise },
+          { period: isFrenchMode ? 'Total Reste à Charge' : 'Total Out-of-Pocket Cost', payment: resteACharge, principal: 0, interest: 0, balance: resteACharge },
+          { period: isFrenchMode ? 'Coût Réel Global de Santé' : 'Total Healthcare Expenditure', payment: totalHealthCost, principal: annualPrem, interest: 0, balance: totalHealthCost }
+        );
+      }
+      // 3. Term Life & Family Protection (Prévoyance & Capital Décès)
+      else if (slug.includes('term-life')) {
+        const annualIncome = parseFloat(inputs.annual_income || 42000) || 0;
+        const years = parseFloat(inputs.replacement_years || 10) || 1;
+        const debts = parseFloat(inputs.total_debts || 180000) || 0;
+        const savings = parseFloat(inputs.existing_savings || 35000) || 0;
+
+        const incomeReplacement = annualIncome * years;
+        const totalObligations = incomeReplacement + debts;
+        const recommendedBenefit = Math.max(20000, totalObligations - savings);
+        const monthlyAnnuity = Math.round(recommendedBenefit / (years * 12));
+
+        res1 = Math.round(recommendedBenefit);
+        res2 = Math.round(totalObligations);
+        res3 = monthlyAnnuity;
+
+        for (let y = 1; y <= Math.min(years, 20); y++) {
+          rows.push({
+            period: `${window.__facYearPrefix || (isFrenchMode ? 'Année' : 'Year')} ${y}`,
+            payment: Math.round(monthlyAnnuity * 12),
+            principal: Math.round(monthlyAnnuity * 12 * y),
+            interest: 0,
+            balance: Math.max(0, Math.round(recommendedBenefit - (monthlyAnnuity * 12 * y))),
+          });
+        }
+      }
+      // 4. Homeowners & Renters Insurance (Multirisque Habitation & Risques Locatifs)
+      else if (slug.includes('homeowners-insurance') || slug.includes('renters-insurance')) {
+        const isRenter = slug.includes('renters');
+        const surface = parseFloat(inputs.surface_area || inputs.square_feet || (isRenter ? 45 : 90)) || (isRenter ? 45 : 90);
+        const rooms = parseFloat(inputs.rooms_count || (isRenter ? 2 : 4)) || (isRenter ? 2 : 4);
+        const furniture = parseFloat(inputs.furniture_value || (inputs.furniture_value !== undefined ? inputs.furniture_value : (isRenter ? 15000 : 30000))) || (isRenter ? 15000 : 30000);
+        const ded = parseFloat(inputs.deductible || 250) || 250;
+
+        let basePrem = isRenter
+          ? 85 + (surface * 0.90) + (rooms * 10) + (furniture * 0.0035)
+          : 150 + (surface * 1.30) + (rooms * 14) + (furniture * 0.0038);
+
+        if (ded <= 150) basePrem *= 1.08;
+        else if (ded >= 380) basePrem *= 0.92;
+
+        const annualPrem = Math.round(basePrem);
+        const monthlyPrem = Math.round(annualPrem / 12);
+
+        res1 = annualPrem;
+        res2 = Math.round(furniture);
+        res3 = monthlyPrem;
+
+        rows.push(
+          { period: isFrenchMode ? (isRenter ? 'Risques Locatifs (Incendie, Eau, Explosion)' : 'Dommages aux Biens (Incendie, Tempête, Eau)') : 'Base Property Hazard', payment: Math.round(annualPrem * 0.50), principal: Math.round(furniture), interest: 0, balance: Math.round(furniture) },
+          { period: isFrenchMode ? 'Garantie Vol & Mobilier Personnel' : 'Contents & Theft Protection', payment: Math.round(annualPrem * 0.30), principal: Math.round(furniture * 0.8), interest: 0, balance: Math.round(furniture) },
+          { period: isFrenchMode ? 'Responsabilité Civile Vie Privée' : 'Personal Liability', payment: Math.round(annualPrem * 0.12), principal: 100000, interest: 0, balance: 100000 },
+          { period: isFrenchMode ? 'Franchise Légale Catastrophes Naturelles (Fixée à 380 €)' : 'Natural Disaster Statutory Rider', payment: Math.round(annualPrem * 0.08), principal: 380, interest: 0, balance: 380 },
+          { period: isFrenchMode ? 'Cotisation Annuelle Totale' : 'Total Annual Cost', payment: annualPrem, principal: Math.round(furniture), interest: 0, balance: annualPrem }
+        );
+      }
+      // 5. Auto Insurance (Assurance Auto)
+      else if (slug.includes('auto-insurance')) {
+        const val = parseFloat(inputs.vehicle_value || 18000) || 18000;
+        const mileage = parseFloat(inputs.annual_mileage || 12000) || 12000;
+        const ded = parseFloat(inputs.deductible || 500) || 500;
+
+        let base = 350 + (val * 0.02);
+        if (mileage > 15000) base += (mileage - 15000) * 0.015;
+        if (ded <= 250) base *= 1.12;
+        else if (ded >= 800) base *= 0.88;
+
+        const annualPrem = Math.round(base);
+        const monthlyPrem = Math.round(annualPrem / 12);
+
+        res1 = annualPrem;
+        res2 = Math.round(val);
+        res3 = monthlyPrem;
+
+        rows.push(
+          { period: isFrenchMode ? 'Responsabilité Civile (Obligatoire au Tiers)' : 'Mandatory Third-Party Liability', payment: Math.round(annualPrem * 0.45), principal: Math.round(val), interest: 0, balance: Math.round(val) },
+          { period: isFrenchMode ? 'Dommages Collision & Tous Risques' : 'Collision & Comprehensive', payment: Math.round(annualPrem * 0.35), principal: Math.round(val), interest: 0, balance: Math.round(val) },
+          { period: isFrenchMode ? 'Vol, Incendie & Bris de Glace' : 'Theft & Glass Breakage', payment: Math.round(annualPrem * 0.20), principal: Math.round(val), interest: 0, balance: Math.round(val) },
+          { period: isFrenchMode ? 'Cotisation Annuelle Estimée' : 'Total Annual Premium', payment: annualPrem, principal: Math.round(val), interest: 0, balance: annualPrem }
+        );
+      }
+      // 6. Disability Insurance (Prévoyance Invalidité)
+      else if (slug.includes('disability-insurance')) {
+        const salary = parseFloat(inputs.gross_monthly_salary || 3200) || 3200;
+        const expenses = parseFloat(inputs.monthly_essential_expenses || 2100) || 2100;
+        const secuPension = Math.min(salary * 0.50, 1932);
+        const deficit = Math.max(0, Math.round(expenses - secuPension));
+        const estimatedPrem = Math.round(deficit * 0.035);
+
+        res1 = deficit;
+        res2 = Math.round(expenses);
+        res3 = Math.round(salary - secuPension);
+
+        rows.push(
+          { period: isFrenchMode ? 'Revenu Mensuel Brut Antérieur' : 'Gross Monthly Earnings', payment: Math.round(salary), principal: Math.round(salary), interest: 0, balance: Math.round(salary) },
+          { period: isFrenchMode ? 'Dépenses Incompressibles du Foyer' : 'Essential Living Expenses', payment: Math.round(expenses), principal: Math.round(expenses), interest: 0, balance: Math.round(expenses) },
+          { period: isFrenchMode ? 'Pension d’Invalidité Sécurité Sociale (Cat. 2 ~50%)' : 'Statutory Disability Pension', payment: Math.round(secuPension), principal: Math.round(secuPension), interest: 0, balance: Math.round(secuPension) },
+          { period: isFrenchMode ? 'Rente Complémentaire Requise' : 'Supplemental Benefit Needed', payment: deficit, principal: deficit, interest: 0, balance: deficit },
+          { period: isFrenchMode ? 'Cotisation Mensuelle Estimée' : 'Estimated Monthly Premium', payment: estimatedPrem, principal: estimatedPrem, interest: 0, balance: estimatedPrem }
+        );
+      }
+      // 7. Annuity Payout (Rente Viagère / Épargne Rente)
+      else if (slug.includes('annuity')) {
+        const P = parseFloat(inputs.annuity_principal || 150000) || 150000;
+        const rate = (parseFloat(inputs.interest_rate || 4.5) || 4.5) / 100 / 12;
+        const years = parseFloat(inputs.payout_years || 20) || 20;
+        const n = years * 12;
+        const pmt = Math.round(P * (rate / (1 - Math.pow(1 + rate, -n))));
+        const total = pmt * n;
+
+        res1 = pmt;
+        res2 = Math.round(P);
+        res3 = Math.max(0, Math.round(total - P));
+
+        let bal = P;
+        for (let y = 1; y <= Math.min(years, 25); y++) {
+          let yrInterest = 0;
+          let yrPrincipal = 0;
+          for (let m = 1; m <= 12; m++) {
+            const intPart = bal * rate;
+            const prinPart = pmt - intPart;
+            yrInterest += intPart;
+            yrPrincipal += prinPart;
+            bal = Math.max(0, bal - prinPart);
+          }
+          rows.push({
+            period: `${window.__facYearPrefix || (isFrenchMode ? 'Année' : 'Year')} ${y}`,
+            payment: Math.round(pmt * 12),
+            principal: Math.round(yrPrincipal),
+            interest: Math.round(yrInterest),
+            balance: Math.round(bal),
+          });
+        }
+      }
+      // 8. SIP & Step-Up SIP
       else if (slug.includes('sip')) {
         const monthly = parseFloat(inputs.monthly_investment || inputs.monthlyContribution || inputs.investment_amount || 5000) || 0;
         const rate = (parseFloat(inputs.return_rate || inputs.expected_return || 12) / 100) / 12;
@@ -712,7 +914,7 @@ const isCurrencyCalculator =
         res2 = Math.round(totalInvested);
         res3 = Math.max(0, Math.round(futureValue - totalInvested));
       }
-      // 3. PPF Calculator (Public Provident Fund)
+      // 9. PPF Calculator (Public Provident Fund)
       else if (slug.includes('ppf')) {
         const annualDeposit = parseFloat(inputs.annual_deposit || inputs.deposit || inputs.yearly_investment || 150000) || 150000;
         const rate = (parseFloat(inputs.interest_rate || 7.1) || 7.1) / 100;
@@ -737,7 +939,7 @@ const isCurrencyCalculator =
         res2 = Math.round(totalDep);
         res3 = Math.round(bal - totalDep);
       }
-      // 4. EPF Calculator (Employee Provident Fund)
+      // 10. EPF Calculator (Employee Provident Fund)
       else if (slug.includes('epf')) {
         const basicSalary = parseFloat(inputs.basic_salary || inputs.salary || 30000) || 30000;
         const currentAge = parseFloat(inputs.current_age || inputs.age || 25) || 25;
@@ -774,7 +976,7 @@ const isCurrencyCalculator =
         res2 = Math.round(totalEmpContrib + totalEmprContrib);
         res3 = Math.round(totalCorpus - (totalEmpContrib + totalEmprContrib));
       }
-      // 5. Income Tax Estimator
+      // 11. Income Tax Estimator
       else if (slug.includes('tax') || slug.includes('income')) {
         const income = parseFloat(inputs.gross_income || inputs.income || 75000) || 0;
         const deductions = parseFloat(inputs.deductions || 0) || 0;
@@ -801,7 +1003,7 @@ const isCurrencyCalculator =
         res2 = taxable;
         res3 = takeHome;
       }
-      // 6. General Compound & Investment
+      // 12. General Compound & Investment
       else {
         const p = parseFloat(inputs.principal || inputs.investment_amount || inputs.initial_deposit || inputs.initial_capital || 10000) || 0;
         const monthlyP = parseFloat(inputs.monthly_contribution || inputs.monthly_deposit || inputs.pmt || 0) || 0;

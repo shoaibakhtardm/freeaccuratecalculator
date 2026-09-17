@@ -1,0 +1,658 @@
+---
+// src/pages/countries/france/frais-de-notaire.astro
+import Layout from '../../../layouts/Layout.astro';
+import ThemeToggle from '../../../components/ThemeToggle.astro';
+import { getCountryBySlug } from '../../../data/countries';
+
+const country = getCountryBySlug('france')!;
+
+const pageTitle = "Simulateur Frais de Notaire 2026 Gratuit | Calcul Officiel Immobilier & DMTO";
+const pageDescription = "Calculez gratuitement vos frais de notaire 2026 pour un achat immobilier ancien ou neuf. Émoluments réglementés, droits de mutation (DMTO), économie sur le mobilier et barèmes officiels.";
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'SoftwareApplication',
+      name: "Simulateur Frais de Notaire 2026 France",
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'All',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'EUR',
+      },
+      description: pageDescription,
+      inLanguage: 'fr-FR',
+      url: 'https://freeaccuratecalculator.com/countries/france/frais-de-notaire/',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://freeaccuratecalculator.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Pays', item: 'https://freeaccuratecalculator.com/countries/' },
+        { '@type': 'ListItem', position: 3, name: 'France', item: 'https://freeaccuratecalculator.com/countries/france/' },
+        { '@type': 'ListItem', position: 4, name: 'Immobilier & Guides', item: 'https://freeaccuratecalculator.com/countries/france/guides/' },
+        { '@type': 'ListItem', position: 5, name: 'Simulateur Frais de Notaire', item: 'https://freeaccuratecalculator.com/countries/france/frais-de-notaire/' },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: "Quel est le pourcentage réel des frais de notaire dans l'ancien et le neuf en 2026 ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Dans l'immobilier ancien, les frais d'acquisition dits de notaire s'élèvent généralement entre 7 % et 8 % du prix d'achat. Dans le neuf (VEFA ou premier achat achevé), ces frais sont réduits et représentent environ 2 % à 3 % du prix du bien, car les droits de mutation sont allégés (taxe de publicité foncière de 0,715 % au lieu de 5,807 %).",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "Comment la déduction du mobilier permet-elle de réduire la facture fiscale ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "Les droits de mutation (droits d'enregistrement de 5,807 %) s'appliquent uniquement sur la valeur immobilière brute. En isolant la valeur des meubles meublants (cuisine équipée, électroménager, placards) dans le compromis (habituellement jusqu'à 5 % du prix sans inventaire notarié), vous réduisez directement l'assiette taxable et réalisez 58 € d'économie par tranche de 1 000 € de mobilier déduit.",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "Quelle part des frais de notaire revient réellement au notaire ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "La rémunération nette effective du notaire (les émoluments réglementés par l'article A444-91 du Code de commerce) ne représente qu'environ 10 % à 15 % du total facturé. Plus de 80 % de la somme est directement reversée à l'État et aux collectivités locales sous forme de taxes (droits départementaux, communaux et nationaux).",
+          },
+        },
+        {
+          '@type': 'Question',
+          name: "Qu'est-ce que la Contribution de Sécurité Immobilière (CSI) ?",
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: "La CSI est une taxe perçue par l'État pour l'accomplissement des formalités d'enregistrement et de publicité foncière au service de la publicité foncière. Son taux est fixé légalement à 0,10 % du prix du bien avec un montant plancher de 15 €.",
+          },
+        },
+      ],
+    },
+  ],
+};
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  canonicalUrl="https://freeaccuratecalculator.com/countries/france/frais-de-notaire/"
+  jsonLd={jsonLd}
+  lang="fr-FR"
+  locale="fr"
+>
+  <div class="max-w-5xl mx-auto px-3 sm:px-6 py-4 sm:py-8 space-y-8">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="flex items-center gap-2 text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+      <a href="/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Accueil</a>
+      <span>/</span>
+      <a href="/countries/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Pays</a>
+      <span>/</span>
+      <a href="/countries/france/" class="hover:text-indigo-600 dark:hover:text-indigo-400">France</a>
+      <span>/</span>
+      <a href="/countries/france/guides/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Immobilier</a>
+      <span>/</span>
+      <span class="text-slate-800 dark:text-slate-200 font-semibold">Frais de Notaire</span>
+    </nav>
+
+    <!-- Hero Title -->
+    <div class="space-y-3">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/50 dark:border-indigo-800/50">
+        <span>Barème Décret 2020/2026 (Art. A444-91)</span>
+        <span>•</span>
+        <span>Droits de Mutation DMTO 2026</span>
+        <span>•</span>
+        <span>Optimisation Mobilier</span>
+      </div>
+      <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white font-outfit">
+        Simulateur Frais de Notaire 2026 : Calculez Vos Droits d'Acquisition
+      </h1>
+      <p class="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-3xl leading-relaxed">
+        Estimez précisément le montant des frais d'acquisition immobilière en France : taxes d'État (DMTO), émoluments réglementés du notaire, débours et contribution de sécurité immobilière. Utilisez notre optimiseur de mobilier déductible pour réduire légalement vos impôts.
+      </p>
+    </div>
+
+    <!-- CALCULATOR CONTAINER -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
+      <!-- FORM INPUTS (7 cols) -->
+      <div class="lg:col-span-7 bg-white dark:bg-slate-900/90 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 p-5 sm:p-7 shadow-sm space-y-5">
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white border-b border-slate-100 dark:border-slate-800 pb-3 flex items-center justify-between">
+          <span>1. Caractéristiques de l'Achat</span>
+          <span class="text-xs font-normal text-indigo-600 dark:text-indigo-400">Normes 2026</span>
+        </h2>
+
+        <!-- Type de bien (Ancien vs Neuf) -->
+        <div class="space-y-1.5">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Type de Bien Immobilier
+          </label>
+          <div class="grid grid-cols-2 gap-3">
+            <button
+              type="button"
+              id="btn-type-ancien"
+              class="type-btn py-3 px-4 rounded-xl border-2 font-bold text-sm text-center transition-all border-indigo-600 bg-indigo-50/70 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300"
+              data-type="ancien"
+            >
+              Logement Ancien (~7-8%)
+            </button>
+            <button
+              type="button"
+              id="btn-type-neuf"
+              class="type-btn py-3 px-4 rounded-xl border-2 font-bold text-sm text-center transition-all border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-slate-300"
+              data-type="neuf"
+            >
+              Neuf / VEFA (~2-3%)
+            </button>
+          </div>
+        </div>
+
+        <!-- Prix d'achat FAI -->
+        <div class="space-y-1.5">
+          <div class="flex justify-between items-center">
+            <label for="fn-price" class="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+              Prix d'Achat du Bien (€ FAI)
+            </label>
+            <span class="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400" id="fn-price-display">250 000 €</span>
+          </div>
+          <div class="relative">
+            <input
+              type="number"
+              id="fn-price"
+              min="10000"
+              max="5000000"
+              step="5000"
+              value="250000"
+              class="w-full px-3.5 py-2.5 pr-12 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm text-slate-400 font-bold">€</span>
+          </div>
+          <input type="range" id="fn-price-range" min="50000" max="1000000" step="5000" value="250000" class="w-full accent-indigo-600 cursor-pointer" />
+        </div>
+
+        <!-- Département -->
+        <div class="space-y-1.5">
+          <label for="fn-department" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Département du Bien (Taux DMTO)
+          </label>
+          <select
+            id="fn-department"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer"
+          >
+            <option value="4.50" selected>Taux Standard 2026 (4,50 % départemental - Paris, Lyon, Marseille, 98% des dépts)</option>
+            <option value="3.80">Taux Réduit Historique (3,80 % départemental - Indre, Isère, Morbihan, Mayotte)</option>
+          </select>
+        </div>
+
+        <!-- Optimisation Mobilier (Meubles meublants) -->
+        <div class="p-4 rounded-xl border border-indigo-100 dark:border-indigo-950/80 bg-indigo-50/40 dark:bg-indigo-950/20 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <span>🛋️</span> Déduction du Mobilier (Cuisine, Électroménager)
+            </span>
+            <button
+              type="button"
+              id="btn-auto-furniture"
+              class="text-[11px] font-semibold text-indigo-600 dark:text-indigo-400 underline hover:text-indigo-700"
+            >
+              Appliquer 5% optimal
+            </button>
+          </div>
+          <div class="relative">
+            <input
+              type="number"
+              id="fn-furniture"
+              min="0"
+              max="100000"
+              step="500"
+              value="0"
+              placeholder="Montant du mobilier (ex: 8 000 €)"
+              class="w-full px-3.5 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-sm font-semibold text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+            />
+            <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-slate-400 font-bold">€</span>
+          </div>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">
+            Le mobilier n'est pas soumis aux droits de mutation (5,807 % d'économie immédiate sur la somme déduite).
+          </p>
+        </div>
+
+        <!-- Financement / Hypothèque -->
+        <div class="space-y-1.5">
+          <label for="fn-guarantee" class="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
+            Garantie du Prêt Bancaire
+          </label>
+          <select
+            id="fn-guarantee"
+            class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/60 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none cursor-pointer"
+          >
+            <option value="caution" selected>Caution Mutuelle (Crédit Logement, CAMCA - Sans frais notariés)</option>
+            <option value="hypotheque">Hypothèque conventionnelle / IPPD (Frais d'inscription notariés)</option>
+            <option value="cash">Achat comptant sans emprunt</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- RESULTS STICKY SUMMARY (5 cols) -->
+      <div class="lg:col-span-5 space-y-5 lg:sticky lg:top-24">
+        <div class="bg-gradient-to-br from-indigo-900 via-slate-900 to-slate-950 text-white rounded-2xl p-5 sm:p-7 shadow-xl border border-indigo-500/30 relative overflow-hidden">
+          <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl"></div>
+
+          <div class="space-y-4 relative z-10">
+            <div class="flex justify-between items-start">
+              <span class="text-xs font-bold uppercase tracking-wider text-indigo-300">
+                Total Frais de Notaire Estimés
+              </span>
+              <span id="fn-ratio-badge" class="px-2 py-0.5 rounded-full text-xs font-bold bg-indigo-500/30 text-indigo-200 border border-indigo-400/30">
+                7,32 %
+              </span>
+            </div>
+
+            <div>
+              <div class="text-3xl sm:text-4xl font-extrabold font-outfit text-white tracking-tight" id="fn-total-display">
+                18 300 €
+              </div>
+              <p class="text-xs text-slate-300 mt-1">
+                Coût global de l'opération : <strong id="fn-total-project" class="text-white">268 300 €</strong>
+              </p>
+            </div>
+
+            <!-- Économie Mobilier Badge -->
+            <div id="fn-furniture-savings-box" class="hidden p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-400/40 text-xs text-emerald-200">
+              ⚡ Économie fiscale grâce au mobilier : <strong id="fn-furniture-savings" class="text-white">0 €</strong>
+            </div>
+
+            <!-- BARRE DE VENTILATION MULTICOLORE -->
+            <div class="space-y-1.5 pt-2">
+              <div class="text-[11px] font-semibold text-slate-300 flex justify-between">
+                <span>Ventilation Réelle des Frais</span>
+                <span class="text-indigo-300">Détail légal</span>
+              </div>
+              <div class="h-3 w-full rounded-full bg-slate-800 overflow-hidden flex shadow-inner">
+                <div id="bar-taxes" style="width: 79%" class="bg-indigo-500 transition-all duration-300" title="Taxes d'État & Collectivités"></div>
+                <div id="bar-emoluments" style="width: 13%" class="bg-blue-400 transition-all duration-300" title="Émoluments du notaire"></div>
+                <div id="bar-debours" style="width: 5%" class="bg-teal-400 transition-all duration-300" title="Débours & Formalités"></div>
+                <div id="bar-csi" style="width: 3%" class="bg-amber-400 transition-all duration-300" title="Sécurité Immobilière"></div>
+              </div>
+            </div>
+
+            <!-- DETAIL DES POSTES -->
+            <div class="space-y-2 pt-2 border-t border-slate-800 text-xs">
+              <div class="flex justify-between text-slate-300">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500"></span> Taxes Trésor Public (DMTO)</span>
+                <span class="font-bold text-white font-mono" id="fn-detail-taxes">14 517 €</span>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-blue-400"></span> Émoluments Notaire (TTC)</span>
+                <span class="font-bold text-white font-mono" id="fn-detail-emoluments">2 383 €</span>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-teal-400"></span> Débours & Formalités</span>
+                <span class="font-bold text-white font-mono" id="fn-detail-debours">1 150 €</span>
+              </div>
+              <div class="flex justify-between text-slate-300">
+                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400"></span> Sécurité Immobilière (CSI 0,10%)</span>
+                <span class="font-bold text-white font-mono" id="fn-detail-csi">250 €</span>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="pt-3 flex gap-2">
+              <button
+                type="button"
+                id="btn-print"
+                class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs transition-colors flex items-center justify-center gap-2"
+              >
+                <span>🖨️</span> Imprimer / Exporter PDF
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contextual Card -->
+        <div class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-xs space-y-2 text-slate-600 dark:text-slate-400">
+          <p class="font-bold text-slate-900 dark:text-white flex items-center gap-1">
+            <span>💡</span> Bon à savoir pour votre crédit :
+          </p>
+          <p>
+            La majorité des banques exigent un apport personnel couvrant au minimum les frais de notaire (soit 7 % à 8 % du montant).
+          </p>
+          <a href="/countries/france/capacite-emprunt-hcsf/" class="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline block pt-1">
+            → Calculer votre capacité d'emprunt HCSF (35%)
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUIDE PEDAGOGIQUE APPROFONDI (DWELL TIME & SEO) -->
+    <article class="bg-white dark:bg-slate-900/90 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 p-6 sm:p-8 space-y-6 text-slate-800 dark:text-slate-200 leading-relaxed text-sm sm:text-base">
+      <h2 class="text-xl sm:text-2xl font-black text-slate-900 dark:text-white font-outfit border-b border-slate-100 dark:border-slate-800 pb-3">
+        Comprendre la Composition des Frais de Notaire en France (2026)
+      </h2>
+
+      <div class="space-y-4">
+        <p>
+          L'expression populaire « <strong>frais de notaire</strong> » est impropre : dans la réalité juridique, il s'agit de <strong>frais d'acquisition</strong> dont la majeure partie est constituée d'impôts collectés pour le compte de l'État et des départements.
+        </p>
+
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white pt-2">
+          1. Le Barème Légal des Émoluments du Notaire (Article A444-91 du Code de commerce)
+        </h3>
+        <p>
+          La rémunération propre de l'office notarial est strictement encadrée par la loi selon 4 tranches tarifaires dégressives hors taxes, soumises à la TVA de 20 % :
+        </p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden">
+            <thead class="bg-slate-100 dark:bg-slate-800 font-bold text-slate-900 dark:text-white">
+              <tr>
+                <th class="p-2.5">Tranche de Prix du Bien</th>
+                <th class="p-2.5">Taux Légal HT</th>
+                <th class="p-2.5">Taux avec TVA (20%)</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800 font-mono">
+              <tr>
+                <td class="p-2.5">De 0 € à 6 500 €</td>
+                <td class="p-2.5 text-indigo-600 dark:text-indigo-400">3,870 %</td>
+                <td class="p-2.5">4,644 %</td>
+              </tr>
+              <tr>
+                <td class="p-2.5">De 6 500 € à 17 000 €</td>
+                <td class="p-2.5 text-indigo-600 dark:text-indigo-400">1,596 %</td>
+                <td class="p-2.5">1,915 %</td>
+              </tr>
+              <tr>
+                <td class="p-2.5">De 17 000 € à 60 000 €</td>
+                <td class="p-2.5 text-indigo-600 dark:text-indigo-400">1,064 %</td>
+                <td class="p-2.5">1,277 %</td>
+              </tr>
+              <tr>
+                <td class="p-2.5">Plus de 60 000 €</td>
+                <td class="p-2.5 text-indigo-600 dark:text-indigo-400">0,799 %</td>
+                <td class="p-2.5">0,959 %</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white pt-2">
+          2. Les Droits de Mutation (DMTO) et Taxes Publiques
+        </h3>
+        <p>
+          Pour les logements anciens, les droits de mutation s'élèvent à <strong>5,807 %</strong> dans la quasi-totalité des départements métropolitains :
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-slate-600 dark:text-slate-400 text-xs sm:text-sm">
+          <li><strong>Taxe départementale :</strong> 4,50 %</li>
+          <li><strong>Taxe communale :</strong> 1,20 %</li>
+          <li><strong>Frais d'assiette et de recouvrement perçus par l'État :</strong> 2,37 % de la taxe départementale (soit 0,107 %)</li>
+        </ul>
+
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white pt-2">
+          3. L'Astuce Légale : Déduire le Mobilier Meublant
+        </h3>
+        <p>
+          Lorsque vous achetez un logement comprenant une cuisine équipée récente, des appareils électroménagers ou des dressings sur mesure, vous pouvez ventiler ce montant distinctement dans le compromis de vente. Cette somme n'étant pas constitutive de l'immeuble bâti, elle échappe intégralement aux 5,807 % de taxes fiscales.
+        </p>
+      </div>
+
+      <!-- FAQ Accordions -->
+      <div class="space-y-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white">
+          Foire Aux Questions : Frais de Notaire & Immobilier
+        </h3>
+
+        <details class="group rounded-xl border border-slate-200 dark:border-slate-800 p-3.5 bg-slate-50/50 dark:bg-slate-800/40">
+          <summary class="font-bold text-slate-900 dark:text-white cursor-pointer list-none flex justify-between items-center text-sm">
+            <span>Peut-on négocier les émoluments du notaire ?</span>
+            <span class="text-indigo-600 dark:text-indigo-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2">
+            Depuis la loi Macron, une remise maximale de 20 % (portée à 40 % au-delà de 10 millions d'euros) peut être accordée par le notaire, mais uniquement sur la tranche de prix supérieure à 100 000 €. Cette remise doit obligatoirement être appliquée de manière identique et non discriminatoire à l'ensemble des clients de l'office.
+          </p>
+        </details>
+
+        <details class="group rounded-xl border border-slate-200 dark:border-slate-800 p-3.5 bg-slate-50/50 dark:bg-slate-800/40">
+          <summary class="font-bold text-slate-900 dark:text-white cursor-pointer list-none flex justify-between items-center text-sm">
+            <span>Quand doit-on régler la provision sur frais de notaire ?</span>
+            <span class="text-indigo-600 dark:text-indigo-400 group-open:rotate-180 transition-transform">▼</span>
+          </summary>
+          <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2">
+            L'intégralité des frais de notaire doit être virée sur le compte de l'office notarial 48 heures avant la signature de l'acte authentique de vente. Quelques mois après la signature, une fois les formalités hypothécaires publiées au cadastre, le notaire vous adresse le compte définitif et vous rembourse le trop-perçu éventuel (souvent 100 à 300 €).
+          </p>
+        </details>
+      </div>
+
+      <!-- SECTION SEO PROGRAMMATIQUE : FRAIS DE NOTAIRE PAR VILLE -->
+      <div class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <h3 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+          <span>📍</span>
+          <span>Simulateur Frais de Notaire dans les 10 Plus Grandes Villes Françaises</span>
+        </h3>
+        <p class="text-xs text-slate-600 dark:text-slate-400">
+          Consultez les spécificités locales, prix moyens au m² et droits de mutation par métropole :
+        </p>
+        <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 pt-1">
+          <a href="/countries/france/frais-notaire/paris/" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-indigo-500 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-center">Paris (75)</a>
+          <a href="/countries/france/frais-notaire/marseille/" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-indigo-500 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-center">Marseille (13)</a>
+          <a href="/countries/france/frais-notaire/lyon/" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-indigo-500 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-center">Lyon (69)</a>
+          <a href="/countries/france/frais-notaire/toulouse/" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-indigo-500 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-center">Toulouse (31)</a>
+          <a href="/countries/france/frais-notaire/nice/" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-indigo-500 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-center">Nice (06)</a>
+          <a href="/countries/france/frais-notaire/nantes/" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-indigo-500 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-center">Nantes (44)</a>
+          <a href="/countries/france/frais-notaire/montpellier/" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-indigo-500 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-center">Montpellier (34)</a>
+          <a href="/countries/france/frais-notaire/strasbourg/" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-indigo-500 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-center">Strasbourg (67)</a>
+          <a href="/countries/france/frais-notaire/bordeaux/" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-indigo-500 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-center">Bordeaux (33)</a>
+          <a href="/countries/france/frais-notaire/lille/" class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/60 hover:border-indigo-500 text-xs font-semibold text-slate-800 dark:text-slate-200 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors text-center">Lille (59)</a>
+        </div>
+      </div>
+    </article>
+
+    <!-- PROJETS CONNEXES -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+      <a
+        href="/countries/france/taxe-amenagement/"
+        class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-indigo-500 transition-all group"
+      >
+        <div class="text-xl mb-1">🏗️</div>
+        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+          Taxe d'Aménagement
+        </h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          Calculez vos taxes de permis de construire, abris et piscines.
+        </p>
+      </a>
+
+      <a
+        href="/countries/france/capacite-emprunt-hcsf/"
+        class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-indigo-500 transition-all group"
+      >
+        <div class="text-xl mb-1">🏦</div>
+        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+          Capacité d'Emprunt HCSF
+        </h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          Vérifiez vos mensualités maximales et la règle des 35%.
+        </p>
+      </a>
+
+      <a
+        href="/countries/france/simulateur-lmnp-reel-micro-bic/"
+        class="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-indigo-500 transition-all group"
+      >
+        <div class="text-xl mb-1">📊</div>
+        <h4 class="font-bold text-sm text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
+          Simulateur LMNP Réel
+        </h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+          Comparez Micro-BIC et Réel pour amortir votre bien locatif.
+        </p>
+      </a>
+    </div>
+  </div>
+
+  <script is:inline>
+    (function () {
+      let propertyType = 'ancien';
+
+      const priceInput = document.getElementById('fn-price');
+      const priceRange = document.getElementById('fn-price-range');
+      const priceDisplay = document.getElementById('fn-price-display');
+      const deptSelect = document.getElementById('fn-department');
+      const furnitureInput = document.getElementById('fn-furniture');
+      const btnAutoFurniture = document.getElementById('btn-auto-furniture');
+      const guaranteeSelect = document.getElementById('fn-guarantee');
+
+      const btnTypeAncien = document.getElementById('btn-type-ancien');
+      const btnTypeNeuf = document.getElementById('btn-type-neuf');
+
+      const totalDisplay = document.getElementById('fn-total-display');
+      const totalProject = document.getElementById('fn-total-project');
+      const ratioBadge = document.getElementById('fn-ratio-badge');
+      const furnitureSavingsBox = document.getElementById('fn-furniture-savings-box');
+      const furnitureSavingsDisplay = document.getElementById('fn-furniture-savings');
+
+      const barTaxes = document.getElementById('bar-taxes');
+      const barEmoluments = document.getElementById('bar-emoluments');
+      const barDebours = document.getElementById('bar-debours');
+      const barCsi = document.getElementById('bar-csi');
+
+      const detailTaxes = document.getElementById('fn-detail-taxes');
+      const detailEmoluments = document.getElementById('fn-detail-emoluments');
+      const detailDebours = document.getElementById('fn-detail-debours');
+      const detailCsi = document.getElementById('fn-detail-csi');
+
+      const formatEuro = (val) => new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(val);
+
+      function calculateEmolumentsHT(price) {
+        let emo = 0;
+        if (price > 60000) {
+          emo += (price - 60000) * 0.00799;
+          emo += (60000 - 17000) * 0.01064;
+          emo += (17000 - 6500) * 0.01596;
+          emo += 6500 * 0.0387;
+        } else if (price > 17000) {
+          emo += (price - 17000) * 0.01064;
+          emo += (17000 - 6500) * 0.01596;
+          emo += 6500 * 0.0387;
+        } else if (price > 6500) {
+          emo += (price - 6500) * 0.01596;
+          emo += 6500 * 0.0387;
+        } else {
+          emo += price * 0.0387;
+        }
+        return emo;
+      }
+
+      function calculate() {
+        const rawPrice = parseFloat(priceInput.value) || 0;
+        const furniture = Math.min(parseFloat(furnitureInput.value) || 0, rawPrice * 0.15);
+        const taxablePrice = Math.max(0, rawPrice - furniture);
+        const deptRate = parseFloat(deptSelect.value) || 4.5;
+        const guarantee = guaranteeSelect.value;
+
+        // 1. Émoluments du notaire
+        const emolumentsHT = calculateEmolumentsHT(rawPrice);
+        const emolumentsTTC = emolumentsHT * 1.2;
+
+        // 2. Droits de Mutation / Trésor Public
+        let taxesPublic = 0;
+        let dmtoRate = 0;
+        if (propertyType === 'ancien') {
+          dmtoRate = (deptRate + 1.20 + (deptRate * 0.0237)) / 100; // ~5.807%
+          taxesPublic = taxablePrice * dmtoRate;
+        } else {
+          // Neuf / VEFA : Taxe de publicité foncière allégée 0.715%
+          dmtoRate = 0.00715;
+          taxesPublic = taxablePrice * dmtoRate;
+        }
+
+        // 3. CSI (Contribution de Sécurité Immobilière)
+        const csi = Math.max(15, taxablePrice * 0.001);
+
+        // 4. Débours forfaitaires
+        let debours = propertyType === 'ancien' ? 1150 : 1350;
+        if (guarantee === 'hypotheque') {
+          debours += 450;
+        }
+
+        const totalNotaire = Math.round(taxesPublic + emolumentsTTC + debours + csi);
+        const projectCost = Math.round(rawPrice + totalNotaire);
+        const ratio = rawPrice > 0 ? ((totalNotaire / rawPrice) * 100).toFixed(2) : 0;
+
+        // Économie mobilier
+        const furnitureSavings = Math.round(furniture * dmtoRate);
+
+        // Update UI
+        priceDisplay.textContent = formatEuro(rawPrice);
+        totalDisplay.textContent = formatEuro(totalNotaire);
+        totalProject.textContent = formatEuro(projectCost);
+        ratioBadge.textContent = `${ratio} %`;
+
+        detailTaxes.textContent = formatEuro(taxesPublic);
+        detailEmoluments.textContent = formatEuro(emolumentsTTC);
+        detailDebours.textContent = formatEuro(debours);
+        detailCsi.textContent = formatEuro(csi);
+
+        if (furniture > 0 && furnitureSavings > 0) {
+          furnitureSavingsBox.classList.remove('hidden');
+          furnitureSavingsDisplay.textContent = formatEuro(furnitureSavings);
+        } else {
+          furnitureSavingsBox.classList.add('hidden');
+        }
+
+        // Ventilation bar
+        const pTaxes = totalNotaire > 0 ? ((taxesPublic / totalNotaire) * 100).toFixed(1) : 0;
+        const pEmo = totalNotaire > 0 ? ((emolumentsTTC / totalNotaire) * 100).toFixed(1) : 0;
+        const pDeb = totalNotaire > 0 ? ((debours / totalNotaire) * 100).toFixed(1) : 0;
+        const pCsi = totalNotaire > 0 ? ((csi / totalNotaire) * 100).toFixed(1) : 0;
+
+        barTaxes.style.width = `${pTaxes}%`;
+        barEmoluments.style.width = `${pEmo}%`;
+        barDebours.style.width = `${pDeb}%`;
+        barCsi.style.width = `${pCsi}%`;
+      }
+
+      // Event Listeners
+      priceInput.addEventListener('input', () => {
+        priceRange.value = priceInput.value;
+        calculate();
+      });
+
+      priceRange.addEventListener('input', () => {
+        priceInput.value = priceRange.value;
+        calculate();
+      });
+
+      deptSelect.addEventListener('change', calculate);
+      furnitureInput.addEventListener('input', calculate);
+      guaranteeSelect.addEventListener('change', calculate);
+
+      btnAutoFurniture.addEventListener('click', () => {
+        const curPrice = parseFloat(priceInput.value) || 0;
+        furnitureInput.value = Math.round(curPrice * 0.05);
+        calculate();
+      });
+
+      btnTypeAncien.addEventListener('click', () => {
+        propertyType = 'ancien';
+        btnTypeAncien.className = 'type-btn py-3 px-4 rounded-xl border-2 font-bold text-sm text-center transition-all border-indigo-600 bg-indigo-50/70 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300';
+        btnTypeNeuf.className = 'type-btn py-3 px-4 rounded-xl border-2 font-bold text-sm text-center transition-all border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-slate-300';
+        calculate();
+      });
+
+      btnTypeNeuf.addEventListener('click', () => {
+        propertyType = 'neuf';
+        btnTypeNeuf.className = 'type-btn py-3 px-4 rounded-xl border-2 font-bold text-sm text-center transition-all border-indigo-600 bg-indigo-50/70 text-indigo-700 dark:bg-indigo-950/50 dark:text-indigo-300';
+        btnTypeAncien.className = 'type-btn py-3 px-4 rounded-xl border-2 font-bold text-sm text-center transition-all border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:border-slate-300';
+        calculate();
+      });
+
+      document.getElementById('btn-print')?.addEventListener('click', () => {
+        window.print();
+      });
+
+      calculate();
+    })();
+  </script>
+</Layout>

@@ -15,6 +15,7 @@ export default defineConfig({
       prefixDefaultLocale: false,
     },
   },
+  trailingSlash: 'always',
   // Redirects are managed directly and cleanly in public/_redirects
   integrations: [
     sitemap({
