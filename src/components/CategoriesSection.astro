@@ -30,19 +30,25 @@ const sectionAriaLabel = country
   : (isFrench ? 'Catégories de simulateurs et calculateurs' : 'Calculator Categories');
 ---
 
-<!-- 3-by-3 Category Navigation Grid ("tin tin karke" - UI/UX Designer Scaled Edition) -->
+<!-- 3-by-3 Category Navigation Grid ("tin tin karke" - UI/UX Designer Ultra Elite Edition) -->
 <nav
   aria-label={sectionAriaLabel}
   class:list={[
-    "w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-3 sm:p-5 md:p-6 shadow-sm dark:shadow-xl backdrop-blur-xl box-border text-center",
+    "w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-3 sm:p-5 md:p-6 shadow-sm dark:shadow-xl backdrop-blur-xl box-border text-center transition-all duration-300",
     className
   ]}
 >
-  <div class="flex items-center justify-center border-b border-slate-200/80 dark:border-slate-800/80 pb-3 sm:pb-3.5 mb-3.5 sm:mb-4 px-1 text-center">
-    <h2 class="font-outfit text-xs sm:text-sm font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white flex items-center justify-center gap-2">
-      <span class="text-base sm:text-lg">{icon}</span>
-      <span>{sectionHeading}</span>
-    </h2>
+  <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-3 sm:pb-3.5 mb-3.5 sm:mb-4 px-1">
+    <div class="flex items-center gap-2">
+      <span class="flex h-2 w-2 rounded-full bg-indigo-500 animate-pulse"></span>
+      <h2 class="font-outfit text-xs sm:text-sm font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white flex items-center gap-2">
+        <span class="text-base sm:text-lg">{icon}</span>
+        <span>{sectionHeading}</span>
+      </h2>
+    </div>
+    <span class="text-[11px] font-mono text-slate-500 dark:text-slate-400 font-semibold bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-full border border-slate-200/80 dark:border-slate-700/80">
+      {categories.length} Domains
+    </span>
   </div>
 
   <!-- Live Spotlight Search Bar: Directly below Categories Header -->
@@ -56,7 +62,7 @@ const sectionAriaLabel = country
     </div>
   )}
 
-  <!-- 20 Categories in 3-Column Grid Layout (Top Emoji, Bottom Single-Line Text) -->
+  <!-- 3-Column Category Grid Layout (Top Emoji, Bottom Single-Line Text) -->
   <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
     {categories.map((cat) => {
       const href = country ? `/countries/${country.slug}/${cat.id}/` : `/${cat.id}/`;
@@ -70,9 +76,9 @@ const sectionAriaLabel = country
           href={href}
           data-category={cat.id}
           title={linkTitle}
-          class="category-filter-btn group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[68px] sm:min-h-[78px] md:min-h-[86px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/80 hover:border-indigo-500/50 dark:hover:border-indigo-400/50 p-2 sm:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-md hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-indigo-500 active:scale-[0.97]"
+          class="category-filter-btn group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[72px] sm:min-h-[82px] md:min-h-[90px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/90 hover:border-indigo-500/60 dark:hover:border-indigo-400/60 p-2 sm:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-lg hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 active:scale-[0.97]"
         >
-          <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-base sm:text-lg md:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 transition-transform mb-1 sm:mb-1.5">
+          <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-base sm:text-lg md:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-950/30 transition-all mb-1 sm:mb-1.5">
             {cat.icon}
           </span>
           <span class="w-full text-center font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-[11px] sm:text-xs md:text-sm leading-tight whitespace-nowrap overflow-hidden">

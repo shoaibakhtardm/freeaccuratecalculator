@@ -76,10 +76,10 @@ const searchDataJson = JSON.stringify(dataset);
 
     <!-- Beautifully Optimized Typewriter Suggestion Overlay -->
     <div
-      class="fac-typewriter-container absolute left-11 sm:left-12 right-24 pointer-events-none overflow-hidden flex items-center h-full z-20 select-none transition-opacity duration-200"
+      class="fac-typewriter-container absolute left-11.5 sm:left-12.5 right-24 pointer-events-none overflow-hidden flex items-center h-full z-20 select-none transition-opacity duration-200"
       aria-hidden="true"
     >
-      <div class="flex items-center whitespace-nowrap overflow-hidden">
+      <div class="flex items-center whitespace-nowrap overflow-hidden pl-0.5">
         <span class="fac-typewriter-text font-semibold text-slate-700 dark:text-slate-200 text-xs sm:text-sm md:text-base tracking-tight sm:tracking-normal"></span>
         <span class="fac-typewriter-cursor inline-block w-[2px] h-3.5 sm:h-4.5 bg-cyan-500 dark:bg-cyan-400 ml-0.5 rounded-full"></span>
       </div>
@@ -92,7 +92,7 @@ const searchDataJson = JSON.stringify(dataset);
       autocomplete="off"
       spellcheck="false"
       placeholder=""
-      class="fac-search-input relative z-20 w-full rounded-2xl sm:rounded-full bg-transparent py-3 sm:py-3.5 pl-11 sm:pl-12 pr-24 text-xs sm:text-sm md:text-base font-bold text-slate-900 dark:text-white placeholder:text-transparent placeholder:opacity-0 shadow-sm outline-none border-none ring-0 transition-all tracking-tight sm:tracking-normal"
+      class="fac-search-input relative z-20 w-full rounded-2xl sm:rounded-full bg-transparent py-3 sm:py-3.5 pl-11.5 sm:pl-12.5 pr-24 text-xs sm:text-sm md:text-base font-bold text-slate-900 dark:text-white placeholder:text-transparent placeholder:opacity-0 shadow-sm outline-none border-none ring-0 transition-all tracking-tight sm:tracking-normal"
       aria-label={effectivePlaceholder || (isFrench ? "Rechercher" : "Search all calculators")}
       aria-autocomplete="list"
       aria-controls={`${id}-dropdown`}
@@ -665,8 +665,8 @@ const searchDataJson = JSON.stringify(dataset);
      Masterpiece Typewriter Suggestion Typography & Cursor
      ========================================================================== */
   .fac-typewriter-container {
-    mask-image: linear-gradient(90deg, transparent 0%, #000 2%, #000 98%, transparent 100%);
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 2%, #000 98%, transparent 100%);
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
   }
 
   .fac-typewriter-text {
