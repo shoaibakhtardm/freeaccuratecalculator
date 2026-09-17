@@ -16,7 +16,7 @@ const allSearchableToolsJson = JSON.stringify(SEARCHABLE_CALCULATORS);
 
 export async function getStaticPaths() {
   // Exclude categories that have dedicated static directories with index.astro
-  const dedicatedCategoryDirs = new Set<CategoryId>(['finance', 'everyday', 'insurance']);
+  const dedicatedCategoryDirs = new Set<CategoryId>(['finance', 'everyday', 'insurance', 'love']);
   const categoryKeys = (Object.keys(CATEGORY_METADATA) as CategoryId[]).filter(
     (catId) => !dedicatedCategoryDirs.has(catId)
   );

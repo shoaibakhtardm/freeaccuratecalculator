@@ -569,23 +569,7 @@ export const COUNTRIES: Record<string, CountryConfig> = {
     popularCalculators: ['loan-calculator', 'salary-calculator', 'mortgage-calculator'],
   },
 
-  // 16. Japan
-  JP: {
-    code: 'JP',
-    slug: 'japan',
-    name: 'Japan',
-    nativeName: '日本',
-    flag: '🇯🇵',
-    currency: 'JPY',
-    currencySymbol: '¥',
-    locale: 'ja-JP',
-    numberSystem: 'international',
-    dateFormat: 'YYYY/MM/DD',
-    unitSystem: 'metric',
-    popularCalculators: ['salary-calculator', 'compound-interest-calculator', 'loan-calculator'],
-  },
-
-  // 17. Spain
+  // 16. Spain
   ES: {
     code: 'ES',
     slug: 'spain',
@@ -602,103 +586,7 @@ export const COUNTRIES: Record<string, CountryConfig> = {
     popularCalculators: ['salary-calculator', 'mortgage-calculator', 'compound-interest-calculator'],
   },
 
-  // 18. Italy
-  IT: {
-    code: 'IT',
-    slug: 'italy',
-    name: 'Italy',
-    nativeName: 'Italia',
-    flag: '🇮🇹',
-    currency: 'EUR',
-    currencySymbol: '€',
-    locale: 'it-IT',
-    numberSystem: 'international',
-    dateFormat: 'DD/MM/YYYY',
-    unitSystem: 'metric',
-    popularCalculators: ['salary-calculator', 'mortgage-calculator', 'compound-interest-calculator'],
-  },
-
-  // 19. Sweden
-  SE: {
-    code: 'SE',
-    slug: 'sweden',
-    name: 'Sweden',
-    nativeName: 'Sverige',
-    flag: '🇸🇪',
-    currency: 'EUR',
-    currencySymbol: '€',
-    locale: 'sv-SE',
-    numberSystem: 'international',
-    dateFormat: 'YYYY-MM-DD',
-    unitSystem: 'metric',
-    popularCalculators: ['salary-calculator', 'mortgage-calculator', 'percentage-calculator'],
-  },
-
-  // 20. Norway
-  NO: {
-    code: 'NO',
-    slug: 'norway',
-    name: 'Norway',
-    nativeName: 'Norge',
-    flag: '🇳🇴',
-    currency: 'EUR',
-    currencySymbol: '€',
-    locale: 'nb-NO',
-    numberSystem: 'international',
-    dateFormat: 'DD.MM.YYYY',
-    unitSystem: 'metric',
-    popularCalculators: ['salary-calculator', 'mortgage-calculator', 'compound-interest-calculator'],
-  },
-
-  // 21. Denmark
-  DK: {
-    code: 'DK',
-    slug: 'denmark',
-    name: 'Denmark',
-    nativeName: 'Danmark',
-    flag: '🇩🇰',
-    currency: 'EUR',
-    currencySymbol: '€',
-    locale: 'da-DK',
-    numberSystem: 'international',
-    dateFormat: 'DD.MM.YYYY',
-    unitSystem: 'metric',
-    popularCalculators: ['salary-calculator', 'mortgage-calculator'],
-  },
-
-  // 22. Poland
-  PL: {
-    code: 'PL',
-    slug: 'poland',
-    name: 'Poland',
-    nativeName: 'Polska',
-    flag: '🇵🇱',
-    currency: 'EUR',
-    currencySymbol: '€',
-    locale: 'pl-PL',
-    numberSystem: 'international',
-    dateFormat: 'DD.MM.YYYY',
-    unitSystem: 'metric',
-    popularCalculators: ['salary-calculator', 'loan-calculator', 'mortgage-calculator'],
-  },
-
-  // 23. Brazil
-  BR: {
-    code: 'BR',
-    slug: 'brazil',
-    name: 'Brazil',
-    nativeName: 'Brasil',
-    flag: '🇧🇷',
-    currency: 'USD',
-    currencySymbol: '$',
-    locale: 'pt-BR',
-    numberSystem: 'international',
-    dateFormat: 'DD/MM/YYYY',
-    unitSystem: 'metric',
-    popularCalculators: ['compound-interest-calculator', 'loan-calculator', 'salary-calculator'],
-  },
-
-  // 24. Mexico
+  // 17. Mexico
   MX: {
     code: 'MX',
     slug: 'mexico',
@@ -715,23 +603,7 @@ export const COUNTRIES: Record<string, CountryConfig> = {
     popularCalculators: ['salary-calculator', 'loan-calculator', 'mortgage-calculator'],
   },
 
-  // 25. South Korea
-  KR: {
-    code: 'KR',
-    slug: 'south-korea',
-    name: 'South Korea',
-    nativeName: '대한민국',
-    flag: '🇰🇷',
-    currency: 'USD',
-    currencySymbol: '$',
-    locale: 'ko-KR',
-    numberSystem: 'international',
-    dateFormat: 'YYYY. MM. DD.',
-    unitSystem: 'metric',
-    popularCalculators: ['compound-interest-calculator', 'salary-calculator', 'bmi-calculator'],
-  },
-
-  // 26. Colombia
+  // 18. Colombia
   CO: {
     code: 'CO',
     slug: 'colombia',
@@ -749,58 +621,27 @@ export const COUNTRIES: Record<string, CountryConfig> = {
   },
 };
 
-// Supplementary global country index allowing clean scale to global nations
-const SUPPLEMENTARY_NATIONS: Array<Pick<CountryConfig, 'code' | 'slug' | 'name' | 'flag' | 'currency' | 'currencySymbol' | 'locale' | 'unitSystem'>> = [
-  { code: 'AT', slug: 'austria', name: 'Austria', flag: '🇦🇹', currency: 'EUR', currencySymbol: '€', locale: 'de-AT', unitSystem: 'metric' },
-  { code: 'BE', slug: 'belgium', name: 'Belgium', flag: '🇧🇪', currency: 'EUR', currencySymbol: '€', locale: 'nl-BE', unitSystem: 'metric' },
-  { code: 'PT', slug: 'portugal', name: 'Portugal', flag: '🇵🇹', currency: 'EUR', currencySymbol: '€', locale: 'pt-PT', unitSystem: 'metric' },
-  { code: 'FI', slug: 'finland', name: 'Finland', flag: '🇫🇮', currency: 'EUR', currencySymbol: '€', locale: 'fi-FI', unitSystem: 'metric' },
-  { code: 'GR', slug: 'greece', name: 'Greece', flag: '🇬🇷', currency: 'EUR', currencySymbol: '€', locale: 'el-GR', unitSystem: 'metric' },
-  { code: 'CZ', slug: 'czech-republic', name: 'Czech Republic', flag: '🇨🇿', currency: 'EUR', currencySymbol: '€', locale: 'cs-CZ', unitSystem: 'metric' },
-  { code: 'HU', slug: 'hungary', name: 'Hungary', flag: '🇭🇺', currency: 'EUR', currencySymbol: '€', locale: 'hu-HU', unitSystem: 'metric' },
-  { code: 'RO', slug: 'romania', name: 'Romania', flag: '🇷🇴', currency: 'EUR', currencySymbol: '€', locale: 'ro-RO', unitSystem: 'metric' },
-  { code: 'TR', slug: 'turkey', name: 'Turkey', flag: '🇹🇷', currency: 'USD', currencySymbol: '$', locale: 'tr-TR', unitSystem: 'metric' },
-  { code: 'MY', slug: 'malaysia', name: 'Malaysia', flag: '🇲🇾', currency: 'USD', currencySymbol: '$', locale: 'en-MY', unitSystem: 'metric' },
-  { code: 'PH', slug: 'philippines', name: 'Philippines', flag: '🇵🇭', currency: 'USD', currencySymbol: '$', locale: 'en-PH', unitSystem: 'metric' },
-  { code: 'ID', slug: 'indonesia', name: 'Indonesia', flag: '🇮🇩', currency: 'USD', currencySymbol: '$', locale: 'id-ID', unitSystem: 'metric' },
-  { code: 'TH', slug: 'thailand', name: 'Thailand', flag: '🇹🇭', currency: 'USD', currencySymbol: '$', locale: 'th-TH', unitSystem: 'metric' },
-  { code: 'VN', slug: 'vietnam', name: 'Vietnam', flag: '🇻🇳', currency: 'USD', currencySymbol: '$', locale: 'vi-VN', unitSystem: 'metric' },
-  { code: 'EG', slug: 'egypt', name: 'Egypt', flag: '🇪🇬', currency: 'USD', currencySymbol: '$', locale: 'ar-EG', unitSystem: 'metric' },
-  { code: 'NG', slug: 'nigeria', name: 'Nigeria', flag: '🇳🇬', currency: 'USD', currencySymbol: '$', locale: 'en-NG', unitSystem: 'metric' },
-  { code: 'KE', slug: 'kenya', name: 'Kenya', flag: '🇰🇪', currency: 'USD', currencySymbol: '$', locale: 'en-KE', unitSystem: 'metric' },
-  { code: 'CL', slug: 'chile', name: 'Chile', flag: '🇨🇱', currency: 'USD', currencySymbol: '$', locale: 'es-CL', unitSystem: 'metric' },
-  { code: 'CO', slug: 'colombia', name: 'Colombia', flag: '🇨🇴', currency: 'USD', currencySymbol: '$', locale: 'es-CO', unitSystem: 'metric' },
-  { code: 'AR', slug: 'argentina', name: 'Argentina', flag: '🇦🇷', currency: 'USD', currencySymbol: '$', locale: 'es-AR', unitSystem: 'metric' },
-  { code: 'QA', slug: 'qatar', name: 'Qatar', flag: '🇶🇦', currency: 'USD', currencySymbol: '$', locale: 'ar-QA', unitSystem: 'metric' },
-  { code: 'KW', slug: 'kuwait', name: 'Kuwait', flag: '🇰🇼', currency: 'USD', currencySymbol: '$', locale: 'ar-KW', unitSystem: 'metric' },
-  { code: 'OM', slug: 'oman', name: 'Oman', flag: '🇴🇲', currency: 'USD', currencySymbol: '$', locale: 'ar-OM', unitSystem: 'metric' },
-  { code: 'BH', slug: 'bahrain', name: 'Bahrain', flag: '🇧🇭', currency: 'USD', currencySymbol: '$', locale: 'ar-BH', unitSystem: 'metric' },
-  { code: 'IL', slug: 'israel', name: 'Israel', flag: '🇮🇱', currency: 'USD', currencySymbol: '$', locale: 'he-IL', unitSystem: 'metric' },
-  { code: 'HK', slug: 'hong-kong', name: 'Hong Kong', flag: '🇭🇰', currency: 'USD', currencySymbol: '$', locale: 'zh-HK', unitSystem: 'metric' },
-  { code: 'TW', slug: 'taiwan', name: 'Taiwan', flag: '🇹🇼', currency: 'USD', currencySymbol: '$', locale: 'zh-TW', unitSystem: 'metric' },
-];
-
-// Hydrate supplementary nations into master COUNTRIES map
-for (const n of SUPPLEMENTARY_NATIONS) {
-  if (!COUNTRIES[n.code]) {
-    COUNTRIES[n.code] = {
-      code: n.code,
-      slug: n.slug,
-      name: n.name,
-      nativeName: n.name,
-      flag: n.flag,
-      flagUrl: `/flags/${n.code.toLowerCase()}.svg`,
-      currency: n.currency,
-      currencySymbol: n.currencySymbol,
-      locale: n.locale,
-      numberSystem: 'international',
-      dateFormat: 'DD/MM/YYYY',
-      unitSystem: n.unitSystem,
-      isPopular: false,
-      popularCalculators: ['compound-interest-calculator', 'mortgage-calculator', 'loan-calculator', 'percentage-calculator'],
-    };
-  }
-}
+// Exact 18 Supported Country Slugs in UI Display Order
+export const SUPPORTED_COUNTRY_SLUGS = [
+  'india',
+  'united-states',
+  'united-kingdom',
+  'canada',
+  'australia',
+  'united-arab-emirates',
+  'germany',
+  'france',
+  'singapore',
+  'ireland',
+  'netherlands',
+  'new-zealand',
+  'saudi-arabia',
+  'switzerland',
+  'south-africa',
+  'spain',
+  'mexico',
+  'colombia',
+] as const;
 
 // Ensure every country in COUNTRIES has flagUrl set
 for (const country of Object.values(COUNTRIES)) {
@@ -825,13 +666,12 @@ export function getCountryFlagUrl(countryOrCode?: CountryConfig | string | null)
   return `/flags/${str}.svg`;
 }
 
-export const COUNTRY_LIST: CountryConfig[] = Object.values(COUNTRIES).sort((a, b) =>
-  a.name.localeCompare(b.name)
-);
+// Ordered list strictly adhering to the 18 supported countries
+export const COUNTRY_LIST: CountryConfig[] = SUPPORTED_COUNTRY_SLUGS
+  .map((slug) => Object.values(COUNTRIES).find((c) => c.slug === slug))
+  .filter(Boolean) as CountryConfig[];
 
-export const POPULAR_COUNTRIES: CountryConfig[] = Object.values(COUNTRIES).filter(
-  (c) => c.isPopular
-);
+export const POPULAR_COUNTRIES: CountryConfig[] = COUNTRY_LIST;
 
 export function getCountryByCode(code?: string | null): CountryConfig {
   if (!code) return COUNTRIES.US;

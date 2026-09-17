@@ -3,6 +3,7 @@
 const currentYear = new Date().getFullYear();
 const pathname = Astro.url.pathname;
 const isFrench = pathname.includes('/countries/france') || pathname.startsWith('/fr/') || Astro.currentLocale === 'fr';
+const isLove = pathname.startsWith('/love');
 
 const companyLinks = [
   { name: isFrench ? 'À propos' : 'About Us', href: '/about/', icon: '👥' },
@@ -14,9 +15,9 @@ const legalLinks = [
   { name: isFrench ? 'Politique de confidentialité' : 'Privacy Policy', href: '/privacy-policy/', icon: '🛡️' },
 ];
 
-const guidesTitle = isFrench ? 'Guides Pratiques France' : 'Guides';
-const guidesHref = isFrench ? '/countries/france/guides/' : '/guides/';
-const guidesAria = isFrench ? 'Consulter les guides pratiques pour la France' : 'Browse All Guides';
+const guidesTitle = isLove ? 'Love Guides' : isFrench ? 'Guides Pratiques France' : 'Guides';
+const guidesHref = isLove ? '/love/guides/' : isFrench ? '/countries/france/guides/' : '/guides/';
+const guidesAria = isLove ? 'Explore Love & Compatibility Guides' : isFrench ? 'Consulter les guides pratiques pour la France' : 'Browse All Guides';
 const statementText = isFrench
   ? 'Conçu pour une précision mathématique rigoureuse, une latence zéro et une confidentialité totale côté client.'
   : 'Engineered for Mathematical Accuracy, Zero Latency & Complete Client-Side Privacy.';

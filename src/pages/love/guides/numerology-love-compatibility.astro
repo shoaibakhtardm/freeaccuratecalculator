@@ -1,0 +1,169 @@
+---
+// File: src/pages/love/guides/numerology-love-compatibility.astro
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/common/Breadcrumbs.astro';
+import RomanticBackground from '../../../components/love/RomanticBackground.astro';
+
+const siteOrigin = 'https://freeaccuratecalculator.com';
+const canonicalUrl = `${siteOrigin}/love/guides/numerology-love-compatibility/`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Numerology Love Numbers: Find Your Life Path Compatibility",
+  "description": "Calculate your Life Path Number (1 to 9 & Master Numbers 11, 22, 33) and decode relationship compatibility.",
+  "author": {
+    "@type": "Organization",
+    "name": "Free Accurate Calculator"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Free Accurate Calculator",
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${siteOrigin}/favicon.svg`
+    }
+  },
+  "mainEntityOfPage": canonicalUrl
+};
+
+const lifePaths = [
+  { num: '1', title: 'The Leader', matches: '3, 5, 7', challenge: '1, 8', trait: 'Ambitious, independent, pioneering' },
+  { num: '2', title: 'The Peacemaker', matches: '2, 4, 8', challenge: '5, 7', trait: 'Empathetic, diplomatic, gentle' },
+  { num: '3', title: 'The Communicator', matches: '1, 3, 6, 9', challenge: '4, 8', trait: 'Expressive, witty, optimistic' },
+  { num: '4', title: 'The Builder', matches: '2, 4, 8', challenge: '3, 5', trait: 'Steadfast, loyal, organized' },
+  { num: '5', title: 'The Adventurer', matches: '1, 5, 7', challenge: '2, 4', trait: 'Spontaneous, freedom-loving, curious' },
+  { num: '6', title: 'The Nurturer', matches: '3, 6, 9', challenge: '5, 7', trait: 'Devoted, loving, family-oriented' },
+  { num: '7', title: 'The Seeker', matches: '1, 5, 7', challenge: '2, 6', trait: 'Intellectual, spiritual, intuitive' },
+  { num: '8', title: 'The Powerhouse', matches: '2, 4, 8', challenge: '1, 9', trait: 'Goal-driven, protective, successful' },
+  { num: '9', title: 'The Humanitarian', matches: '3, 6, 9', challenge: '4, 8', trait: 'Compassionate, generous, idealistic' }
+];
+---
+
+<Layout
+  title="Numerology Love Numbers: Life Path Compatibility (2026)"
+  description="Master numerology compatibility with our comprehensive Life Path love guide. Calculate your number (1-9 & Master numbers 11/22/33) and find your ideal match."
+  keywords="numerology compatibility, numerology love numbers, life path compatibility, numerology match chart, relationship numerology"
+  canonicalUrl={canonicalUrl}
+  ogTitle="Numerology Love Numbers: Life Path Compatibility"
+  ogDescription="Decode your Life Path number and discover your ideal numerological romance matches."
+  jsonLd={jsonLd}
+>
+  <RomanticBackground />
+
+  <article class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+    <Breadcrumbs
+      items={[
+        { label: 'Love Calculators', href: '/love/' },
+        { label: 'Guides', href: '/love/guides/' },
+        { label: 'Numerology Love Numbers' }
+      ]}
+    />
+
+    <header class="space-y-4 border-b border-rose-200/60 dark:border-rose-900/60 pb-8">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-xs font-bold uppercase tracking-wider">
+        <span>🔢 Numerological Dynamics • 33,000 Monthly Searches</span>
+      </div>
+      <h1 class="font-serif text-3xl sm:text-5xl font-black text-slate-900 dark:text-white leading-tight">
+        Numerology Love Numbers: <span class="bg-gradient-to-r from-indigo-600 via-purple-500 to-rose-500 bg-clip-text text-transparent">Find Your Life Path Compatibility</span>
+      </h1>
+      <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
+        Your Life Path Number reveals the core blueprint of your emotional temperament, communication style, and long-term partnership needs.
+      </p>
+    </header>
+
+    <div class="prose prose-rose dark:prose-invert max-w-none text-sm sm:text-base space-y-8 text-slate-700 dark:text-slate-300 leading-relaxed">
+      
+      <!-- Section 1: How to Calculate Life Path -->
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+          1. How to Calculate Your Life Path Number
+        </h2>
+        <p>
+          Add each component of your birth date (Month, Day, Year) and reduce down to a single digit (1 to 9), unless you reach Master Numbers 11, 22, or 33:
+        </p>
+        <div class="p-4 rounded-2xl bg-indigo-50/70 dark:bg-slate-900/80 border border-indigo-200 dark:border-indigo-800 font-mono text-xs">
+          <strong>Example:</strong> Born October 28, 1995<br/>
+          Month: 10 → 1+0 = <strong>1</strong><br/>
+          Day: 28 → 2+8 = 10 → 1+0 = <strong>1</strong><br/>
+          Year: 1995 → 1+9+9+5 = 24 → 2+4 = <strong>6</strong><br/>
+          Sum: 1 + 1 + 6 = <strong>Life Path 8</strong>
+        </div>
+      </section>
+
+      <!-- Section 2: Complete Life Path Love Profiles -->
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+          2. Complete Life Path 1–9 Compatibility Profiles
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 not-prose my-6">
+          {lifePaths.map((lp) => (
+            <div class="p-4 rounded-2xl border border-indigo-200/80 dark:border-indigo-900/60 bg-white/80 dark:bg-slate-900/80 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-50 dark:bg-indigo-950 font-bold text-indigo-600 dark:text-indigo-400">
+                  {lp.num}
+                </span>
+                <span class="text-xs font-bold text-slate-900 dark:text-white">
+                  {lp.title}
+                </span>
+              </div>
+              <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                {lp.trait}
+              </p>
+              <div class="text-[11px] space-y-1 pt-1 border-t border-slate-100 dark:border-slate-800">
+                <div class="text-emerald-700 dark:text-emerald-300 font-semibold">
+                  ✨ Matches: {lp.matches}
+                </div>
+                <div class="text-rose-700 dark:text-rose-300 font-semibold">
+                  ⚡ Friction: {lp.challenge}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Section 3: Master Numbers 11, 22, 33 -->
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+          3. Master Numbers (11, 22, 33) in Relationships
+        </h2>
+        <p>
+          Master Numbers carry heightened intuitive and karmic vibrations:
+        </p>
+        <ul class="list-disc pl-5 space-y-2">
+          <li><strong>Master Number 11 (The Spiritual Intuitive):</strong> High psychic empathy, deeply attuned to subtle emotional currents. Pairs best with 2, 4, and 6.</li>
+          <li><strong>Master Number 22 (The Master Builder):</strong> Visionary ambition grounded in practical discipline. Pairs best with 4, 8, and 11.</li>
+          <li><strong>Master Number 33 (The Master Teacher):</strong> Universal cosmic compassion and healing devotion. Pairs best with 3, 6, 9.</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Related Interactive Calculator CTA -->
+    <div class="mt-10 p-6 rounded-3xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800 space-y-4">
+      <h3 class="font-serif text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
+        Calculate your Numerology match:
+      </h3>
+      <div class="flex flex-wrap gap-3">
+        <a
+          href="/love/numerology-love-calculator/"
+          class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-bold text-xs sm:text-sm shadow hover:bg-indigo-500 transition"
+        >
+          🔢 Numerology Love Calculator
+        </a>
+        <a
+          href="/love/birth-date-love-compatibility/"
+          class="px-5 py-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs sm:text-sm shadow hover:bg-rose-500 transition"
+        >
+          🎂 Birth Date Love Match
+        </a>
+        <a
+          href="/love/guides/"
+          class="px-5 py-2.5 rounded-xl border border-indigo-300 dark:border-indigo-700 font-bold text-xs sm:text-sm text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/40 transition"
+        >
+          ← Back to All Guides
+        </a>
+      </div>
+    </div>
+  </article>
+</Layout>

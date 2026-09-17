@@ -6,36 +6,95 @@ import RomanticBackground from '../../../components/love/RomanticBackground.astr
 
 const guides = [
   {
-    title: "How Love Calculators Work: Science, Algorithms & Gematria",
-    slug: "how-love-calculator-works",
-    description: "An in-depth look at phonetic acoustic resonance, Pythagorean numerology matrices, and statistical romance matching.",
+    title: "How Love Calculators Work: The Science Behind Compatibility",
+    href: "/love/guides/how-love-calculator-works/",
+    keyword: "how does love calculator work",
+    volume: "8,100/mo",
+    description: "Discover the mathematical gematria, acoustic phonetic frequencies, astrological ephemeris, and psychometric models that power romantic compatibility algorithms.",
     icon: "🔬",
-    readTime: "6 min read",
-    tag: "Algorithm Deep Dive"
+    readTime: "12 min read",
+    tag: "Science & Algorithms",
+    badgeColor: "rose"
   },
   {
-    title: "Zodiac Compatibility Guide: Elemental Synergy & Astrological Aspects",
-    slug: "zodiac-compatibility-guide",
-    description: "Understand Fire, Earth, Air, and Water harmonies, Trine angles, and synastry planetary interactions.",
+    title: "Zodiac Compatibility Guide: All 12 Signs in Love",
+    href: "/love/guides/zodiac-compatibility/",
+    keyword: "zodiac sign compatibility",
+    volume: "45,000/mo",
+    description: "Explore the comprehensive sign-by-sign compatibility matrix for all 12 Western Zodiac signs. Decode Fire, Earth, Air, and Water synergies, and planetary synastry aspects.",
     icon: "✨",
-    readTime: "8 min read",
-    tag: "Astrology"
+    readTime: "18 min read",
+    tag: "Astrological Synastry",
+    badgeColor: "purple"
   },
   {
-    title: "Numerology Love Meanings: Life Path Numbers & Soul Urge Bonds",
-    slug: "numerology-love-meanings",
-    description: "Calculate life path vibrations (1 to 9, master 11/22/33) and decode your karmic relationship blueprint.",
-    icon: "🔢",
-    readTime: "7 min read",
-    tag: "Numerology"
+    title: "Kundli Matching Explained: Vedic Astrology for Marriage",
+    href: "/love/guides/kundli-matching-explained/",
+    keyword: "kundli matching online",
+    volume: "368,000/mo",
+    description: "Understand the ancient Vedic Ashtakoota 36 Guna Milan system, Manglik Dosha implications, and astrological remedies for lasting marital harmony.",
+    icon: "💍",
+    readTime: "16 min read",
+    tag: "Vedic Matchmaking",
+    badgeColor: "amber"
   },
   {
-    title: "11 Twin Flame Signs: Soulmate vs Twin Flame Connection Stages",
-    slug: "twin-flame-signs",
-    description: "Recognize the unmistakable energetic triggers, runner-chaser dynamics, and cosmic twin flame reunion stages.",
+    title: "Twin Flame vs Soulmate: What's the Difference?",
+    href: "/love/guides/twin-flame-vs-soulmate/",
+    keyword: "twin flame signs",
+    volume: "74,000/mo",
+    description: "Recognize the distinct psychological and energetic differences between karmic partners, soulmates, and mirror twin flame connections across all 8 journey stages.",
     icon: "🔥",
+    readTime: "14 min read",
+    tag: "Spiritual Bonds",
+    badgeColor: "red"
+  },
+  {
+    title: "FLAMES Game: History, Rules & How to Play",
+    href: "/love/guides/flames-game-rules/",
+    keyword: "flames game online",
+    volume: "250,000/mo",
+    description: "A complete guide to the classic FLAMES algorithm (Friends, Lovers, Affection, Marriage, Enemy, Siblings), character cancellation math, and cultural history.",
+    icon: "🕹️",
+    readTime: "8 min read",
+    tag: "Nostalgic Games",
+    badgeColor: "pink"
+  },
+  {
+    title: "Numerology Love Numbers: Find Your Life Path Compatibility",
+    href: "/love/guides/numerology-love-compatibility/",
+    keyword: "numerology compatibility",
+    volume: "33,000/mo",
+    description: "Calculate your single-digit Life Path Number (1–9) and Master Numbers (11, 22, 33) to decode natural harmony, neutral bonds, and growth friction in relationships.",
+    icon: "🔢",
+    readTime: "11 min read",
+    tag: "Numerology",
+    badgeColor: "indigo"
+  }
+];
+
+const blogs = [
+  {
+    title: "10 Proven Love Compatibility Tips for Long-Lasting Relationships",
+    href: "/love/blog/love-compatibility-tips/",
+    keyword: "love compatibility tips",
+    volume: "18,000/mo",
+    description: "Evidence-based relationship strategies, Gottman emotional attunement habits, and love language alignment frameworks to elevate your romantic compatibility.",
+    icon: "💡",
     readTime: "9 min read",
-    tag: "Spiritual Romance"
+    tag: "Relationship Science",
+    badgeColor: "rose"
+  },
+  {
+    title: "How Each Zodiac Sign Behaves When Truly in Love",
+    href: "/love/blog/zodiac-signs-in-love/",
+    keyword: "zodiac signs in love",
+    volume: "60,000/mo",
+    description: "Decode secret romantic devotion markers, subconscious vulnerability triggers, and emotional attachment styles across all 12 astrological signs.",
+    icon: "🌟",
+    readTime: "10 min read",
+    tag: "Astrological Romance",
+    badgeColor: "amber"
   }
 ];
 
@@ -46,23 +105,23 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "name": "Love & Compatibility Guides — Free Accurate Calculator",
-  "description": "Comprehensive guides on love calculator algorithms, astrology synastry, numerology, and twin flame connections.",
+  "description": "Comprehensive guides on love calculator algorithms, astrology synastry, Vedic Kundli matching, twin flames, FLAMES rules, and numerology life paths.",
   "url": canonicalUrl
 };
 ---
 
 <Layout
-  title="Love Compatibility Guides & Relationship Science (2026)"
-  description="Master the science behind love compatibility. Read expert guides on love algorithms, zodiac synastry, numerology life paths, and twin flame signs."
-  keywords="love calculator guide, zodiac compatibility guide, numerology love meanings, twin flame signs, relationship science"
+  title="Love & Compatibility Guides — Free Accurate Calculator"
+  description="Master the art of romantic compatibility with expert guides on love algorithms, zodiac sign synastry, Vedic Kundli matching, twin flame signs, FLAMES, and numerology."
+  keywords="love calculator guide, zodiac sign compatibility guide, kundli matching online guide, twin flame signs, flames game rules, numerology compatibility"
   canonicalUrl={canonicalUrl}
-  ogTitle="Love Compatibility Guides & Relationship Science"
-  ogDescription="Explore deep-dive guides on romantic algorithms, zodiac synastry, and numerological relationship bonds."
+  ogTitle="Love & Compatibility Guides"
+  ogDescription="Master romantic compatibility with expert guides covering astrology, algorithms, Kundli, numerology, and relationship tips."
   jsonLd={jsonLd}
 >
   <RomanticBackground />
 
-  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
     <Breadcrumbs
       items={[
         { label: 'Love Calculators', href: '/love/' },
@@ -70,57 +129,141 @@ const jsonLd = {
       ]}
     />
 
+    <!-- Header Section (Exact H1 & Subtitle structure) -->
     <header class="text-center space-y-4 max-w-3xl mx-auto">
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-rose-300 dark:border-rose-700 bg-rose-500/10 text-rose-600 dark:text-rose-300 text-xs font-bold uppercase tracking-wider">
-        <span>📚 Knowledge Hub</span>
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-rose-300 dark:border-rose-700 bg-rose-500/10 text-rose-600 dark:text-rose-300 text-xs font-bold uppercase tracking-wider select-none">
+        <span>📚 Comprehensive Knowledge Vault</span>
       </div>
       <h1 class="font-serif text-3xl sm:text-5xl font-black text-slate-900 dark:text-white leading-tight">
         Love &amp; Compatibility <span class="bg-gradient-to-r from-red-600 via-rose-500 to-pink-500 bg-clip-text text-transparent">Guides</span>
       </h1>
-      <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
-        Explore the mathematical, astrological, and psychological foundations that power romantic synergy.
+      <p class="subtitle font-sans text-slate-600 dark:text-slate-300 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto">
+        Master the art of romantic compatibility with expert guides covering mathematical acoustics, Vedic matchmaking, astrological synastry, and spiritual twin flame dynamics.
       </p>
     </header>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-      {guides.map((guide) => (
-        <a
-          href={`/love/guides/${guide.slug}/`}
-          class="group relative p-6 rounded-2xl border border-rose-200/80 dark:border-rose-800/80 bg-white/70 dark:bg-slate-900/70 backdrop-blur-md hover:border-rose-400 dark:hover:border-rose-600 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl space-y-4 flex flex-col justify-between"
-        >
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-3xl p-2.5 rounded-xl bg-rose-100 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800/60 group-hover:scale-110 transition-transform">
-                {guide.icon}
-              </span>
-              <span class="text-[11px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/40 px-2.5 py-1 rounded-full border border-rose-200 dark:border-rose-800">
-                {guide.tag}
-              </span>
+    <!-- 1. Featured Scientific & Astrological Guides -->
+    <section class="space-y-6">
+      <div class="flex items-center gap-2.5 border-b border-rose-200/80 dark:border-rose-900/60 pb-3">
+        <span class="text-xl">📖</span>
+        <h2 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+          Comprehensive Compatibility Guides
+        </h2>
+      </div>
+
+      <div class="guides-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        {guides.map((guide) => (
+          <article class="guide-card group relative p-6 rounded-3xl border border-rose-200/80 dark:border-rose-900/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl hover:border-rose-400 dark:hover:border-rose-600 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col justify-between space-y-5">
+            <div class="space-y-3.5">
+              <!-- Icon & Badges -->
+              <div class="flex items-center justify-between">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-2xl shadow-xs group-hover:scale-110 transition-transform">
+                  {guide.icon}
+                </div>
+                <div class="flex flex-col items-end gap-1">
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 px-2.5 py-0.5 rounded-full border border-rose-200/80 dark:border-rose-800/80">
+                    {guide.tag}
+                  </span>
+                  <span class="text-[9px] font-mono font-semibold text-slate-500 dark:text-slate-400">
+                    🔍 {guide.volume}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Title & Description -->
+              <h3 class="font-serif text-lg sm:text-xl font-bold text-slate-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors leading-snug">
+                {guide.title}
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed">
+                {guide.description}
+              </p>
             </div>
-            <h2 class="font-serif text-lg sm:text-xl font-bold text-slate-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors leading-snug">
-              {guide.title}
-            </h2>
-            <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 line-clamp-2 leading-relaxed">
-              {guide.description}
-            </p>
-          </div>
 
-          <div class="pt-3 border-t border-rose-100 dark:border-rose-900/40 flex items-center justify-between text-xs font-semibold text-rose-600 dark:text-rose-400">
-            <span>{guide.readTime}</span>
-            <span class="group-hover:translate-x-1 transition-transform">Read Guide →</span>
-          </div>
+            <!-- Card Footer CTA -->
+            <div class="pt-4 border-t border-rose-100 dark:border-rose-900/40 flex items-center justify-between">
+              <span class="read-time text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                <span>⏱️</span>
+                <span>{guide.readTime}</span>
+              </span>
+              <a
+                href={guide.href}
+                class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-600 dark:text-rose-400 group-hover:text-red-600 dark:group-hover:text-red-300 group-hover:translate-x-1 transition-all"
+              >
+                <span>Read Guide</span>
+                <span>→</span>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- 2. Relationship Blog & Expert Insights Section -->
+    <section class="space-y-6">
+      <div class="flex items-center gap-2.5 border-b border-rose-200/80 dark:border-rose-900/60 pb-3">
+        <span class="text-xl">✍️</span>
+        <h2 class="font-serif text-xl sm:text-2xl font-bold text-slate-900 dark:text-white">
+          Love &amp; Relationship Blog Articles
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+        {blogs.map((blog) => (
+          <article class="group relative p-6 rounded-3xl border border-rose-200/80 dark:border-rose-900/60 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl hover:border-rose-400 dark:hover:border-rose-600 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl flex flex-col justify-between space-y-5">
+            <div class="space-y-3.5">
+              <div class="flex items-center justify-between">
+                <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-rose-50 dark:bg-rose-950/60 border border-rose-200 dark:border-rose-800 text-2xl shadow-xs group-hover:scale-110 transition-transform">
+                  {blog.icon}
+                </div>
+                <div class="flex flex-col items-end gap-1">
+                  <span class="text-[10px] font-bold uppercase tracking-wider text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 px-2.5 py-0.5 rounded-full border border-rose-200/80 dark:border-rose-800/80">
+                    {blog.tag}
+                  </span>
+                  <span class="text-[9px] font-mono font-semibold text-slate-500 dark:text-slate-400">
+                    🔍 {blog.volume}
+                  </span>
+                </div>
+              </div>
+
+              <h3 class="font-serif text-lg sm:text-xl font-bold text-slate-900 dark:text-white group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors leading-snug">
+                {blog.title}
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 line-clamp-3 leading-relaxed">
+                {blog.description}
+              </p>
+            </div>
+
+            <div class="pt-4 border-t border-rose-100 dark:border-rose-900/40 flex items-center justify-between">
+              <span class="read-time text-xs font-semibold text-slate-500 dark:text-slate-400 flex items-center gap-1">
+                <span>⏱️</span>
+                <span>{blog.readTime}</span>
+              </span>
+              <a
+                href={blog.href}
+                class="inline-flex items-center gap-1.5 text-xs font-bold text-rose-600 dark:text-rose-400 group-hover:text-red-600 dark:group-hover:text-red-300 group-hover:translate-x-1 transition-all"
+              >
+                <span>Read Article</span>
+                <span>→</span>
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Hub Link Callout -->
+    <div class="text-center pt-8 space-y-3">
+      <h3 class="font-serif text-lg font-bold text-slate-900 dark:text-white">
+        Looking for instant compatibility calculations?
+      </h3>
+      <div class="flex flex-wrap justify-center gap-3">
+        <a
+          href="/love/"
+          class="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-xl hover:scale-105 transition-all"
+        >
+          <span>💖 Explore All 21 Free Love Calculators</span>
         </a>
-      ))}
-    </div>
-
-    <!-- Back to Hub Callout -->
-    <div class="text-center pt-8">
-      <a
-        href="/love/"
-        class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-red-600 via-rose-600 to-pink-600 text-white font-bold text-sm shadow-md hover:shadow-lg hover:scale-105 transition-all"
-      >
-        <span>💖 Try All 21 Love Calculators</span>
-      </a>
+      </div>
     </div>
   </div>
 </Layout>

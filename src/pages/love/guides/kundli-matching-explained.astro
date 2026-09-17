@@ -1,0 +1,173 @@
+---
+// File: src/pages/love/guides/kundli-matching-explained.astro
+import Layout from '../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../components/common/Breadcrumbs.astro';
+import RomanticBackground from '../../../components/love/RomanticBackground.astro';
+
+const siteOrigin = 'https://freeaccuratecalculator.com';
+const canonicalUrl = `${siteOrigin}/love/guides/kundli-matching-explained/`;
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "Kundli Matching Explained: Vedic Astrology for Marriage & 36 Guna Milan",
+  "description": "Understand Ashtakoota Guna Milan, the 8 Kootas, 36 compatibility points, Manglik Dosha, and Vedic marriage matchmaking.",
+  "author": {
+    "@type": "Organization",
+    "name": "Free Accurate Calculator"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Free Accurate Calculator",
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${siteOrigin}/favicon.svg`
+    }
+  },
+  "mainEntityOfPage": canonicalUrl
+};
+
+const kootas = [
+  { name: '1. Varna Koota', points: '1 Point', domain: 'Spiritual Ego & Work Compatibility', desc: 'Measures spiritual refinement, professional inclinations, and mutual respect.' },
+  { name: '2. Vashya Koota', points: '2 Points', domain: 'Mutual Magnetism & Emotional Dominance', desc: 'Assesses the magnetic attraction and natural balance of power between husband and wife.' },
+  { name: '3. Tara Koota', points: '3 Points', domain: 'Destiny, Health & Longevity Harmony', desc: 'Analyzes birth star (Nakshatra) relationships to predict auspicious prosperity and health.' },
+  { name: '4. Yoni Koota', points: '4 Points', domain: 'Biological & Intimate Vitality', desc: 'Symbolized by animal archetypes, evaluates physical and sensual compatibility.' },
+  { name: '5. Graha Maitri', points: '5 Points', domain: 'Mental Rapport & Friendship', desc: 'Examines planetary friendship between Moon signs to ensure effortless communication.' },
+  { name: '6. Gana Koota', points: '6 Points', domain: 'Temperament & Psychological Temper', desc: 'Classifies souls into Deva (Divine), Manushya (Human), and Rakshasa (Intense/Fiery).' },
+  { name: '7. Bhakoot Koota', points: '7 Points', domain: 'Family Prosperity & Emotional Growth', desc: 'Evaluates relative zodiac positions (avoiding 6-8 and 9-5 challenges) for lasting family wealth.' },
+  { name: '8. Nadi Koota', points: '8 Points', domain: 'Genetic Lineage, Health & Progeny', desc: 'The most weighted factor (Aadi, Madhya, Antya Nadi) ensuring genetic vitality and progeny.' }
+];
+---
+
+<Layout
+  title="Kundli Matching Explained: Vedic Astrology for Marriage (2026)"
+  description="Master Kundli matching online with our in-depth Vedic marriage guide. Understand Ashtakoota 36 Guna Milan, Manglik Dosha, Nadi Dosha, and remedies."
+  keywords="kundli matching online, kundli matching explained, guna milan for marriage, 36 gunas vedic astrology, ashtakoot kundli match"
+  canonicalUrl={canonicalUrl}
+  ogTitle="Kundli Matching Explained: Vedic Astrology for Marriage"
+  ogDescription="A deep-dive guide to 36 Gunas, 8 Kootas, and Manglik Dosha in Vedic matchmaking."
+  jsonLd={jsonLd}
+>
+  <RomanticBackground />
+
+  <article class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+    <Breadcrumbs
+      items={[
+        { label: 'Love Calculators', href: '/love/' },
+        { label: 'Guides', href: '/love/guides/' },
+        { label: 'Kundli Matching Explained' }
+      ]}
+    />
+
+    <header class="space-y-4 border-b border-rose-200/60 dark:border-rose-900/60 pb-8">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 text-xs font-bold uppercase tracking-wider">
+        <span>💍 Vedic Matchmaking • 368,000 Monthly Searches</span>
+      </div>
+      <h1 class="font-serif text-3xl sm:text-5xl font-black text-slate-900 dark:text-white leading-tight">
+        Kundli Matching Explained: <span class="bg-gradient-to-r from-amber-600 via-rose-500 to-red-500 bg-clip-text text-transparent">Vedic Astrology for Marriage</span>
+      </h1>
+      <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed">
+        For thousands of years, Vedic astrology (Jyotish) has utilized <strong>Kundli Matching (Kundali Milan)</strong> to evaluate marital harmony, spiritual synergy, financial prosperity, and generational vitality before marriage.
+      </p>
+    </header>
+
+    <div class="prose prose-rose dark:prose-invert max-w-none text-sm sm:text-base space-y-8 text-slate-700 dark:text-slate-300 leading-relaxed">
+      
+      <!-- Section 1: The Ashtakoota 36 Guna Milan System -->
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+          1. The Ashtakoota 36 Guna Milan System
+        </h2>
+        <p>
+          The word <em>Ashtakoota</em> translates from Sanskrit to "Eight Aspects." Each aspect (Koota) is assigned a specific point value ranging from 1 to 8, totaling <strong>36 Gunas</strong>:
+        </p>
+
+        <div class="space-y-3 not-prose my-6">
+          {kootas.map((k) => (
+            <div class="p-4 rounded-2xl border border-amber-200/80 dark:border-amber-800/60 bg-white/80 dark:bg-slate-900/80 space-y-1">
+              <div class="flex items-center justify-between">
+                <h3 class="font-bold text-sm sm:text-base text-slate-900 dark:text-white">
+                  {k.name}
+                </h3>
+                <span class="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/60 px-2.5 py-0.5 rounded-full border border-amber-200 dark:border-amber-800">
+                  {k.points}
+                </span>
+              </div>
+              <p class="text-xs font-semibold text-amber-700 dark:text-amber-300">
+                Domain: {k.domain}
+              </p>
+              <p class="text-xs text-slate-600 dark:text-slate-300">
+                {k.desc}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Section 2: Guna Milan Score Thresholds -->
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+          2. Score Interpretation Thresholds
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 not-prose my-4">
+          <div class="p-4 rounded-2xl border border-red-200 dark:border-red-800 bg-red-50/50 dark:bg-slate-900/70">
+            <span class="text-xs font-bold uppercase text-red-600 dark:text-red-400">Below 18 Points</span>
+            <h4 class="font-bold text-base text-slate-900 dark:text-white mt-1">Inauspicious Match</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-2">Indicates potential friction in temperament, family stability, or genetic harmony. Astrological remedies advised.</p>
+          </div>
+          <div class="p-4 rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-slate-900/70">
+            <span class="text-xs font-bold uppercase text-amber-600 dark:text-amber-400">18 to 24 Points</span>
+            <h4 class="font-bold text-base text-slate-900 dark:text-white mt-1">Acceptable Match</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-2">A solid baseline for marriage with balanced communication and mutual life growth.</p>
+          </div>
+          <div class="p-4 rounded-2xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-slate-900/70">
+            <span class="text-xs font-bold uppercase text-emerald-600 dark:text-emerald-400">25 to 36 Points</span>
+            <h4 class="font-bold text-base text-slate-900 dark:text-white mt-1">Exceptionally Auspicious</h4>
+            <p class="text-xs text-slate-600 dark:text-slate-300 mt-2">Indicates supreme mental, physical, spiritual, and generational harmony.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Section 3: Manglik Dosha (Kuja Dosha) Analysis -->
+      <section class="space-y-4">
+        <h2 class="font-serif text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+          3. Understanding Manglik Dosha (Kuja Dosha)
+        </h2>
+        <p>
+          Manglik Dosha occurs when Mars (Mangal) is situated in the 1st, 2nd, 4th, 7th, 8th, or 12th house of a birth chart. In Vedic tradition, this creates intense fiery energy that requires careful alignment:
+        </p>
+        <ul class="list-disc pl-5 space-y-2">
+          <li><strong>Anshik (Partial) Manglik:</strong> Minor Mars influence that naturally dissipates after age 28.</li>
+          <li><strong>Poorna (Complete) Manglik:</strong> Highly energized Mars placement best balanced when both partners share Manglik alignment (canceling the Dosha).</li>
+        </ul>
+      </section>
+    </div>
+
+    <!-- Related Interactive Calculator CTA -->
+    <div class="mt-10 p-6 rounded-3xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 space-y-4">
+      <h3 class="font-serif text-lg sm:text-xl font-bold text-slate-900 dark:text-white">
+        Calculate your Vedic marriage compatibility score:
+      </h3>
+      <div class="flex flex-wrap gap-3">
+        <a
+          href="/love/kundli-matching/"
+          class="px-5 py-2.5 rounded-xl bg-amber-600 text-white font-bold text-xs sm:text-sm shadow hover:bg-amber-500 transition"
+        >
+          💍 Marriage &amp; Kundli Calculator
+        </a>
+        <a
+          href="/love/wedding-date-predictor-calculator/"
+          class="px-5 py-2.5 rounded-xl bg-rose-600 text-white font-bold text-xs sm:text-sm shadow hover:bg-rose-500 transition"
+        >
+          💒 Wedding Date Predictor
+        </a>
+        <a
+          href="/love/guides/"
+          class="px-5 py-2.5 rounded-xl border border-amber-300 dark:border-amber-700 font-bold text-xs sm:text-sm text-amber-700 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/40 transition"
+        >
+          ← Back to All Guides
+        </a>
+      </div>
+    </div>
+  </article>
+</Layout>

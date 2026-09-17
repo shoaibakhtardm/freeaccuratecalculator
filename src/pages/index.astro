@@ -7,7 +7,7 @@ import { POPULAR_COUNTRIES } from '../data/countries';
 import { CATEGORY_ITEMS } from '../data/categories';
 import OrphanRescueLinks from '../components/SEO/OrphanRescueLinks.astro';
 
-const TOP_20_COUNTRIES = POPULAR_COUNTRIES.slice(0, 20).map((c) => ({
+const FEATURED_COUNTRIES = POPULAR_COUNTRIES.map((c) => ({
   name: c.name,
   flagUrl: c.flagUrl,
   emoji: c.flag,
@@ -166,9 +166,9 @@ const POPULAR_CALCULATORS = [
       </h2>
     </div>
 
-    <!-- 20 High CPM Countries in 3-Column Grid Layout (Top Emoji, Bottom Clean Text) -->
+    <!-- 18 Supported Countries in 3-Column Grid Layout (Top Emoji, Bottom Clean Text) -->
     <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
-      {TOP_20_COUNTRIES.map((item) => (
+      {FEATURED_COUNTRIES.map((item) => (
         <a
           href={item.href}
           title={`Explore ${item.name} Calculators`}

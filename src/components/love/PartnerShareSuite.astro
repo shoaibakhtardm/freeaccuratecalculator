@@ -47,39 +47,51 @@ const { calculatorName, calculatorSlug } = Astro.props;
     </span>
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
     <!-- WhatsApp Share Button -->
     <button
       type="button"
       id="whatsapp-share-btn"
-      class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 cursor-pointer"
+      class="w-full flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 cursor-pointer"
     >
       <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24">
         <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/>
       </svg>
-      <span>Share via WhatsApp</span>
+      <span>WhatsApp</span>
+    </button>
+
+    <!-- Twitter / X Share Button -->
+    <button
+      type="button"
+      id="twitter-share-btn"
+      class="w-full flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 cursor-pointer"
+    >
+      <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+      <span>Twitter / X</span>
     </button>
 
     <!-- Copy Personalized Link Button -->
     <button
       type="button"
       id="copy-partner-link-btn"
-      class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 cursor-pointer"
+      class="w-full flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold shadow-md hover:shadow-lg transition-all duration-300 active:scale-95 cursor-pointer"
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
       </svg>
-      <span id="copy-partner-link-text">Copy Couple Link</span>
+      <span id="copy-partner-link-text">Couple Link</span>
     </button>
 
     <!-- Generate Story Card Button -->
     <button
       type="button"
       id="open-story-card-btn"
-      class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-900 dark:bg-white hover:opacity-90 text-white dark:text-slate-900 text-xs font-bold shadow-md transition-all duration-300 active:scale-95 cursor-pointer"
+      class="w-full flex items-center justify-center gap-1.5 py-3 px-3 rounded-xl bg-purple-700 hover:bg-purple-600 text-white text-xs font-bold shadow-md transition-all duration-300 active:scale-95 cursor-pointer"
     >
       <span>📸</span>
-      <span>Couple Story Card</span>
+      <span>Story Card</span>
     </button>
   </div>
 </div>
@@ -186,9 +198,25 @@ const { calculatorName, calculatorSlug } = Astro.props;
     // 3. WhatsApp Direct Share
     const whatsappBtn = document.getElementById('whatsapp-share-btn');
     whatsappBtn?.addEventListener('click', () => {
-      const { textMessage } = getShareData();
-      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(textMessage)}`;
+      const { p1Val, p2Val, personalizedUrl } = getShareData();
+      const scoreNum = document.getElementById('dedicated-score-num');
+      const score = scoreNum && scoreNum.textContent !== '0%' ? scoreNum.textContent : '98%';
+      const text = p1Val && p2Val
+        ? `🔮 I just discovered our love compatibility is ${score}! Try it yourself: ${personalizedUrl}`
+        : `🔮 Calculate your true love compatibility instantly on Free Accurate Calculator! ${personalizedUrl}`;
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
       window.open(whatsappUrl, '_blank');
+    });
+
+    // 3b. Twitter / X Direct Share
+    const twitterBtn = document.getElementById('twitter-share-btn');
+    twitterBtn?.addEventListener('click', () => {
+      const { personalizedUrl } = getShareData();
+      const scoreNum = document.getElementById('dedicated-score-num');
+      const score = scoreNum && scoreNum.textContent !== '0%' ? scoreNum.textContent : '98%';
+      const text = `Just used the ${calculatorName} and got ${score} compatibility! 🌟 #LoveCalculator #Compatibility #Astrology`;
+      const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(personalizedUrl)}`;
+      window.open(tweetUrl, '_blank');
     });
 
     // 4. Copy Couple Link
