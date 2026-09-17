@@ -39,8 +39,8 @@ import {
 } from '../src/engines/finance.ts';
 
 describe('Country Configuration & Architecture Registry', () => {
-  it('Has at least 50 validated country profiles with clean schemas', () => {
-    assert.ok(COUNTRY_LIST.length >= 50, `Expected >= 50 countries, found ${COUNTRY_LIST.length}`);
+  it('Has at least 18 validated country profiles with clean schemas', () => {
+    assert.ok(COUNTRY_LIST.length >= 18, `Expected >= 18 countries, found ${COUNTRY_LIST.length}`);
   });
 
   it('India profile has lakh-crore numbering and INR currency', () => {

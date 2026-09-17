@@ -144,13 +144,13 @@ test('Competitive Upgrades — Clipboard 1-Click Copy Feature Verification', () 
 });
 
 test('Competitive Upgrades — Dark Mode & WCAG Contrast Verification', () => {
-  const themeTogglePath = path.join(projectRoot, 'src', 'components', 'common', 'ThemeToggle.astro');
+  const themeTogglePath = path.join(projectRoot, 'src', 'components', 'ThemeToggle.astro');
   assert.ok(fs.existsSync(themeTogglePath), 'ThemeToggle.astro must exist');
   const toggleContent = fs.readFileSync(themeTogglePath, 'utf8');
 
   // Verify ThemeToggle accessibility and event emission
-  assert.ok(toggleContent.includes('id="theme-toggle"'), 'Theme toggle button must exist');
-  assert.ok(toggleContent.includes("toggleBtn.setAttribute('aria-label'"), 'Must dynamically update aria-label for screen readers');
+  assert.ok(toggleContent.includes('id={id}') || toggleContent.includes('id="theme-toggle"'), 'Theme toggle button must exist');
+  assert.ok(toggleContent.includes("btn.setAttribute('aria-label'") || toggleContent.includes("toggleBtn.setAttribute('aria-label'"), 'Must dynamically update aria-label for screen readers');
   assert.ok(toggleContent.includes("new CustomEvent('themechange'"), 'Must broadcast themechange event for dynamic components');
 
   // Verify global CSS dark mode and WCAG contrast definitions
