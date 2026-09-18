@@ -53,6 +53,79 @@ const organizationSchema = {
   description: hpStrings.seo.websiteDesc,
 };
 
+const faqSchema = hpStrings.faqSection?.items?.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: hpStrings.faqSection.items.map((item) => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: item.answer,
+        },
+      })),
+    }
+  : null;
+
+const allSchemas = [websiteSchema, organizationSchema, faqSchema].filter(Boolean);
+
+const isFrenchLocale = currentLocale === 'fr';
+
+const FEATURED_GUIDES = isFrenchLocale
+  ? [
+      {
+        title: 'Comprendre et Calculer les Intérêts Composés',
+        desc: 'Guide exhaustif de la formule mathématique des intérêts composés avec exemples concrets et calendrier d’amortissement.',
+        href: '/fr/guides/how-compound-interest-works/',
+        tag: 'Finance & Épargne',
+        readTime: '6 min',
+        icon: '📈',
+      },
+      {
+        title: 'Calculer les Pourcentages avec Précision',
+        desc: 'Méthodes pas-à-pas pour les remises commerciales, hausses de prix, marges et taux de variation sans erreur.',
+        href: '/fr/guides/how-to-calculate-percentages-accurately/',
+        tag: 'Mathématiques',
+        readTime: '4 min',
+        icon: '📐',
+      },
+    ]
+  : [
+      {
+        title: 'How to Calculate Home Loan EMI: Step-by-Step Formula & Analysis',
+        desc: 'Demystifying the reducing balance loan equation, interest components, and pre-payment acceleration strategies.',
+        href: '/guides/how-to-calculate-home-loan-emi/',
+        tag: 'Mortgage & Loans',
+        readTime: '7 min',
+        icon: '🏠',
+      },
+      {
+        title: 'How to Calculate SIP Returns: The Ultimate Wealth Compounding Guide',
+        desc: 'Learn the exact mathematical formulas for SIP, step-up contributions, and long-term inflation-adjusted returns.',
+        href: '/guides/how-to-calculate-sip-returns/',
+        tag: 'Investing & SIP',
+        readTime: '8 min',
+        icon: '📈',
+      },
+      {
+        title: 'Understanding Body Mass Index (BMI): Clinical Standards & Limitations',
+        desc: 'The science behind the Quetelet formula, WHO category cutoffs, and why BMI must be paired with body fat analysis.',
+        href: '/guides/understand-body-mass-index-bmi/',
+        tag: 'Health & Science',
+        readTime: '6 min',
+        icon: '🩺',
+      },
+      {
+        title: 'Compound Interest Demystified: The Exponential Wealth Engine',
+        desc: 'A rigorous mathematical breakdown of continuous compounding, frequency tiers, and Rule of 72 approximations.',
+        href: '/guides/how-compound-interest-works/',
+        tag: 'Personal Finance',
+        readTime: '9 min',
+        icon: '⚡',
+      },
+    ];
+
 const RAW_POPULAR_CALCULATORS = [
   // 1. Finance: EMI / Mortgage
   { key: 'emi-calculator', icon: '🏦', href: '/finance/emi-calculator/' },
@@ -107,7 +180,7 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
 <Layout
   title={hpStrings.seo.title}
   description={hpStrings.seo.description}
-  jsonLd={[websiteSchema, organizationSchema]}
+  jsonLd={allSchemas}
   lang={currentLocale}
 >
   <!-- [STARTUP HERO SECTION]: Silicon Valley Precision Layout -->
@@ -379,21 +452,155 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
     </div>
   </section>
 
+  <!-- How Calculators Work Section (Methodology & Mathematical Transparency) -->
+  {hpStrings.howItWorksSection && (
+    <section class="mt-12 mb-4 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto px-1">
+      <div class="text-center space-y-2 mb-8">
+        <span class="font-outfit text-xs font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+          {hpStrings.howItWorksSection.eyebrow}
+        </span>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight font-outfit">
+          {hpStrings.howItWorksSection.heading}
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl mx-auto">
+          {hpStrings.howItWorksSection.desc}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 w-full">
+        <!-- Step 1 -->
+        <div class="group rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-5 sm:p-6 shadow-sm dark:shadow-xl backdrop-blur-xl flex flex-col space-y-2 text-center items-center transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 font-bold font-mono text-sm border border-blue-200/60 dark:border-blue-800/60">
+            01
+          </div>
+          <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit">
+            {hpStrings.howItWorksSection.step1Title}
+          </h3>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            {hpStrings.howItWorksSection.step1Desc}
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="group rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-5 sm:p-6 shadow-sm dark:shadow-xl backdrop-blur-xl flex flex-col space-y-2 text-center items-center transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 font-bold font-mono text-sm border border-emerald-200/60 dark:border-emerald-800/60">
+            02
+          </div>
+          <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit">
+            {hpStrings.howItWorksSection.step2Title}
+          </h3>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            {hpStrings.howItWorksSection.step2Desc}
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="group rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-5 sm:p-6 shadow-sm dark:shadow-xl backdrop-blur-xl flex flex-col space-y-2 text-center items-center transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5">
+          <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-purple-50 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 font-bold font-mono text-sm border border-purple-200/60 dark:border-purple-800/60">
+            03
+          </div>
+          <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit">
+            {hpStrings.howItWorksSection.step3Title}
+          </h3>
+          <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+            {hpStrings.howItWorksSection.step3Desc}
+          </p>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Featured Educational Guides Section -->
+  {hpStrings.guidesSection && (
+    <section class="mt-12 mb-4 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto px-1">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 pb-2 border-b border-slate-200/80 dark:border-slate-800/80">
+        <div>
+          <span class="font-outfit text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+            {hpStrings.guidesSection.eyebrow}
+          </span>
+          <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white font-outfit mt-1">
+            {hpStrings.guidesSection.heading}
+          </h2>
+          <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 max-w-xl">
+            {hpStrings.guidesSection.desc}
+          </p>
+        </div>
+        <a
+          href={isFrenchLocale ? '/fr/guides/' : '/guides/'}
+          class="mt-3 sm:mt-0 inline-flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline shrink-0"
+        >
+          <span>{hpStrings.guidesSection.viewAll}</span>
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full">
+        {FEATURED_GUIDES.map((guide) => (
+          <a
+            href={guide.href}
+            class="group rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 p-4 sm:p-5 flex flex-col justify-between space-y-3 shadow-2xs transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 hover:border-indigo-500/50 dark:hover:border-indigo-400/50"
+          >
+            <div class="space-y-2">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="font-semibold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-2 py-0.5 rounded-full border border-indigo-200/60 dark:border-indigo-800/60 flex items-center gap-1">
+                  <span>{guide.icon}</span>
+                  <span>{guide.tag}</span>
+                </span>
+                <span class="text-slate-400 dark:text-slate-500 font-mono">
+                  {guide.readTime}
+                </span>
+              </div>
+              <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-snug">
+                {guide.title}
+              </h3>
+              <p class="text-[11px] sm:text-xs text-slate-600 dark:text-slate-300 leading-relaxed line-clamp-2">
+                {guide.desc}
+              </p>
+            </div>
+            <span class="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-0.5 transition-transform pt-1">
+              <span>{isFrenchLocale ? 'Lire le guide' : 'Read Guide'}</span>
+              <span>→</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Frequently Asked Questions Section (Schema FAQPage Connected) -->
+  {hpStrings.faqSection?.items?.length && (
+    <section class="mt-12 mb-8 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto px-1">
+      <div class="text-center space-y-2 mb-8">
+        <span class="font-outfit text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+          {hpStrings.faqSection.eyebrow}
+        </span>
+        <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight font-outfit">
+          {hpStrings.faqSection.heading}
+        </h2>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl mx-auto">
+          {hpStrings.faqSection.desc}
+        </p>
+      </div>
+
+      <div class="rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-4 sm:p-6 md:p-8 shadow-sm dark:shadow-xl backdrop-blur-xl divide-y divide-slate-200/80 dark:divide-slate-800/80">
+        {hpStrings.faqSection.items.map((faq, index) => (
+          <details class="group py-4 first:pt-0 last:pb-0" open={index === 0}>
+            <summary class="flex min-h-[44px] items-center justify-between cursor-pointer list-none text-xs sm:text-sm md:text-base font-bold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors focus:outline-none">
+              <span class="pr-3 text-balance">{faq.question}</span>
+              <span class="ml-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 text-slate-400 group-open:rotate-180 transition-transform duration-200">
+                <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div class="mt-2.5 pr-6 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              <p>{faq.answer}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    </section>
+  )}
+
   <!-- High-Value Regional & Specialized Deep Calculator Index (3-Grid Layout) -->
   <OrphanRescueLinks limit={6} locale={currentLocale} />
 </Layout>
-
-<script is:inline>
-  (function () {
-    const filterButtons = document.querySelectorAll('.category-filter-btn');
-
-    filterButtons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const cat = btn.getAttribute('data-category');
-        if (cat) {
-          window.location.href = `/${cat}/`;
-        }
-      });
-    });
-  })();
-</script>

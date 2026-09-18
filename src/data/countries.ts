@@ -44,7 +44,7 @@ export interface CountryConfig {
   name: string;
   nativeName: string;
   flag: string;
-  flagUrl: string;
+  flagUrl?: string;
   currency: string;
   currencySymbol: string;
   locale: string;

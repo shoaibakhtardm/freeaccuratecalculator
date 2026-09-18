@@ -76,6 +76,29 @@ export interface HomepageStrings {
     subtext: string;
     exploreAll: string;
   };
+  howItWorksSection?: {
+    eyebrow: string;
+    heading: string;
+    desc: string;
+    step1Title: string;
+    step1Desc: string;
+    step2Title: string;
+    step2Desc: string;
+    step3Title: string;
+    step3Desc: string;
+  };
+  guidesSection?: {
+    eyebrow: string;
+    heading: string;
+    desc: string;
+    viewAll: string;
+  };
+  faqSection?: {
+    eyebrow: string;
+    heading: string;
+    desc: string;
+    items: Array<{ question: string; answer: string }>;
+  };
   footer: {
     brandDesc: string;
     cloudflareVerified: string;
@@ -105,16 +128,16 @@ export const HOMEPAGE_TRANSLATIONS: Record<SupportedLocale, HomepageStrings> = {
       websiteDesc: 'Fast, mathematically verified online calculators for finance, health, math, and everyday utility.',
     },
     hero: {
-      pillBadge: 'International Edition 2.0',
+      pillBadge: '100% Free • Verified Precision • 100+ Online Tools',
       h1Line1: 'Calculations Done Right.',
-      h1Highlight: 'Fast, Accurate & Clean.',
-      subtitle: 'High-precision mathematical calculators with zero clutter, verified formulas, and instant edge calculation. Engineered for global finance, health, and science.',
-      metric1Value: '⚡ 0ms Cold Start',
-      metric1Label: 'Edge Prerendered',
-      metric2Value: '🎯 IEEE-754',
-      metric2Label: 'Verified Precision',
+      h1Highlight: 'Fast, Accurate & 100% Free.',
+      subtitle: 'Instant, verified online calculators for personal finance, mortgage, tax, health, math, and everyday decisions. No sign-up, zero ads clutter, 100% private client-side computing.',
+      metric1Value: '⚡ 100+ Online Tools',
+      metric1Label: 'Free & Instant',
+      metric2Value: '🎯 Verified Math',
+      metric2Label: 'Formula Transparent',
       metric3Value: '🔒 100% Private',
-      metric3Label: 'Local Computation',
+      metric3Label: 'No Data Stored',
     },
     search: {
       placeholder: 'Search 📈 SIP Calculator...',
@@ -153,7 +176,7 @@ export const HOMEPAGE_TRANSLATIONS: Record<SupportedLocale, HomepageStrings> = {
       ],
     },
     categoriesSection: {
-      heading: 'Categories',
+      heading: 'Calculator Categories',
       domainsCount: '21 Domains',
       categories: {
         finance: 'Finance',
@@ -255,6 +278,54 @@ export const HOMEPAGE_TRANSLATIONS: Record<SupportedLocale, HomepageStrings> = {
       heading: 'Popular Regional & Specialized Financial Calculators',
       subtext: 'Mathematically verified, localized calculation tools calibrated for country-specific tax codes, currencies, and regulatory standards.',
       exploreAll: 'Explore All Countries',
+    },
+    howItWorksSection: {
+      eyebrow: 'Methodology & Standards',
+      heading: 'How Our Calculators Work',
+      desc: 'Engineered for complete mathematical transparency, deterministic precision, and total user privacy.',
+      step1Title: '1. Standardized Formulas',
+      step1Desc: 'Every calculator implements validated mathematical formulations, official 2026 statutory tax slabs, and recognized clinical/financial algorithms.',
+      step2Title: '2. 100% Client-Side Privacy',
+      step2Desc: 'Calculations execute entirely inside your browser. No financial amounts, salary details, or personal figures are ever uploaded or transmitted.',
+      step3Title: '3. Step-by-Step Transparency',
+      step3Desc: 'We display the mathematical formulas, variable definitions, and step-by-step worked examples behind every single numerical result.',
+    },
+    guidesSection: {
+      eyebrow: 'Knowledge Base',
+      heading: 'Featured Financial & Mathematical Guides',
+      desc: 'In-depth mathematical breakdowns, personal finance strategies, and step-by-step decision frameworks.',
+      viewAll: 'View All In-Depth Guides →',
+    },
+    faqSection: {
+      eyebrow: 'Got Questions?',
+      heading: 'Frequently Asked Questions',
+      desc: 'Clear, direct answers about our calculation accuracy, data privacy, and usage.',
+      items: [
+        {
+          question: 'Are the calculators on Free Accurate Calculator really 100% free?',
+          answer: 'Yes, completely free. There are no subscriptions, no paywalls, no hidden fees, and no sign-up or email registration required to access any tool or download calculation reports.'
+        },
+        {
+          question: 'How accurate are the financial, tax, and loan calculations?',
+          answer: 'All calculators use verified mathematical closed-form equations, official jurisdiction rules (including updated 2026 tax brackets for India, US, UK, Australia, France, etc.), and double-verified rounding algorithms to ensure audit-grade precision.'
+        },
+        {
+          question: 'Is my personal or financial data saved or tracked?',
+          answer: 'No. All calculations are executed 100% client-side inside your own web browser. Your numbers, salary figures, and personal inputs are never uploaded to any database, analytics server, or third party.'
+        },
+        {
+          question: 'Can I use these calculators on smartphones and tablets?',
+          answer: 'Yes. Every calculator is designed to be fully mobile-responsive with optimized touch targets, adaptive keyboards for numeric entry, and instant results on iOS, Android, and desktop screens.'
+        },
+        {
+          question: 'How do I download or print a calculation summary?',
+          answer: 'Every calculator provides a 1-click PDF download and print report generator that creates a clean, professional, presentation-ready summary of your inputs, results, and amortization or breakdown tables.'
+        },
+        {
+          question: 'How do I switch currencies or country-specific tax rules?',
+          answer: 'Use the global currency selector in the header or explore the Country-Specific Calculators section on the homepage to switch between 18 supported global economies with tailored currencies and tax systems.'
+        }
+      ]
     },
     footer: {
       brandDesc: 'Industrial-grade, client-side verified mathematical calculators with instant edge performance, zero lag, and strict local privacy.',
@@ -599,6 +670,54 @@ export const HOMEPAGE_TRANSLATIONS: Record<SupportedLocale, HomepageStrings> = {
       heading: 'Simulateurs Régionaux & Spécialisés',
       subtext: 'Outils de calcul vérifiés et calibrés pour les normes fiscales, devises et réglementations en vigueur.',
       exploreAll: 'Explorer Tous les Pays',
+    },
+    howItWorksSection: {
+      eyebrow: 'Méthodologie & Rigueur',
+      heading: 'Comment Fonctionnent Nos Calculateurs',
+      desc: 'Conçus pour une transparence mathématique totale, une précision déterministe et une confidentialité absolue.',
+      step1Title: '1. Formules Officielles & Validées',
+      step1Desc: 'Chaque simulateur intègre des équations mathématiques certifiées, les barèmes fiscaux 2026 actualisés et les normes légales en vigueur.',
+      step2Title: '2. Confidentialité 100% Locale',
+      step2Desc: 'Les calculs s’exécutent exclusivement dans votre navigateur. Aucun montant, salaire ou donnée personnelle ne quitte votre appareil.',
+      step3Title: '3. Transparence Étape par Étape',
+      step3Desc: 'Chaque résultat est accompagné de sa formule, des variables détaillées, d’exemples concrets et d’un export PDF gratuit.',
+    },
+    guidesSection: {
+      eyebrow: 'Ressources & Guides',
+      heading: 'Guides Pratiques & Notions Clés',
+      desc: 'Analyses approfondies, explications des barèmes et méthodes concrètes de calcul.',
+      viewAll: 'Tous les Guides Pratiques →',
+    },
+    faqSection: {
+      eyebrow: 'Questions Fréquentes',
+      heading: 'Foire Aux Questions',
+      desc: 'Toutes les réponses sur la précision, la confidentialité et l’utilisation de nos outils.',
+      items: [
+        {
+          question: 'Les calculateurs sont-ils réellement 100% gratuits ?',
+          answer: 'Oui, l’accès est totalement libre et gratuit. Aucun abonnement, aucune inscription et aucune adresse e-mail ne sont nécessaires.'
+        },
+        {
+          question: 'Quelle est la fiabilité des calculs fiscaux et financiers ?',
+          answer: 'Nos outils appliquent scrupuleusement les barèmes officiels 2026 (DGFiP, HCSF, barème kilométrique, impôt sur le revenu) et des formules vérifiées.'
+        },
+        {
+          question: 'Mes données personnelles ou financières sont-elles conservées ?',
+          answer: 'Non. Tous les calculs s’effectuent en local dans votre navigateur. Aucune donnée n’est enregistrée sur nos serveurs ni partagée.'
+        },
+        {
+          question: 'Puis-je utiliser ces outils sur smartphone et tablette ?',
+          answer: 'Oui, l’interface est entièrement optimisée pour mobile avec des touches ergonomiques et un affichage instantané.'
+        },
+        {
+          question: 'Comment exporter ou imprimer mon résultat de calcul ?',
+          answer: 'Chaque simulateur dispose d’un bouton d’export PDF en un clic pour générer un bilan clair et imprimable.'
+        },
+        {
+          question: 'Comment changer de pays ou de devise ?',
+          answer: 'Vous pouvez utiliser le sélecteur de devise en haut de page ou naviguer via la section pays pour accéder aux outils adaptés à chaque juridiction.'
+        }
+      ]
     },
     footer: {
       brandDesc: 'Calculateurs mathématiques industriels avec calcul instantané sur le poste client, sans latence et en toute confidentialité.',

@@ -1,5 +1,5 @@
 // src/i18n/config.ts
-import type { SupportedLocale, LocaleConfig } from '../types/i18n.ts';
+import type { LocaleConfig } from '../types/i18n.ts';
 
 export type Direction = 'ltr' | 'rtl';
 
