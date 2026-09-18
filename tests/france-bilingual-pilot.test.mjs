@@ -167,11 +167,11 @@ describe('France Bilingual URL-Level Pilot Architecture', () => {
       if (!fs.existsSync(fullPath)) continue;
       const html = fs.readFileSync(fullPath, 'utf-8');
 
-      // Check hreflang fr-FR
+      // Check hreflang fr (previously fr-FR — changed to fr for facSetActiveLanguage compatibility)
       assert.match(
         html,
-        new RegExp(`<link[^>]*hreflang=["']fr-FR["'][^>]*href=["']${route.hreflangFr}["']`, 'i'),
-        `Expected hreflang="fr-FR" pointing to ${route.hreflangFr} in ${route.file}`
+        new RegExp(`<link[^>]*hreflang=["']fr["'][^>]*href=["']${route.hreflangFr}["']`, 'i'),
+        `Expected hreflang="fr" pointing to ${route.hreflangFr} in ${route.file}`
       );
 
       // Check hreflang en
@@ -267,6 +267,60 @@ describe('France Bilingual URL-Level Pilot Architecture', () => {
     assert.strictEqual(foundFr, true, 'Sitemaps must include https://freeaccuratecalculator.com/countries/france/fr/');
     assert.strictEqual(foundEn, true, 'Sitemaps must include https://freeaccuratecalculator.com/countries/france/en/');
     assert.strictEqual(foundLegacy, false, 'Sitemaps must NOT include legacy https://freeaccuratecalculator.com/countries/france/');
+  });
+
+  it('Consolidated legacy routes (finance, guides, percentage-calculator) do NOT exist as HTML in dist/client', () => {
+    const legacyRoutes = [
+      'countries/france/finance/index.html',
+      'countries/france/guides/index.html',
+      'countries/france/percentage-calculator/index.html',
+      'countries/france/guides/assurance-emprunteur-loi-lemoine/index.html',
+      'countries/france/guides/bareme-impot-revenu-2026/index.html',
+      'countries/france/guides/taxe-amenagement-baremes-2026/index.html',
+    ];
+    for (const route of legacyRoutes) {
+      const fullPath = path.join(distClientDir, route);
+      assert.strictEqual(
+        fs.existsSync(fullPath),
+        false,
+        `Consolidated legacy file ${route} must NOT exist in production build`
+      );
+    }
+  });
+
+  it('All 10 Notaire City SEO pages exist and compile cleanly in dist/client', () => {
+    const cities = ['paris', 'marseille', 'lyon', 'toulouse', 'nice', 'nantes', 'montpellier', 'strasbourg', 'bordeaux', 'lille'];
+    for (const city of cities) {
+      const fullPath = path.join(distClientDir, `countries/france/frais-notaire/${city}/index.html`);
+      assert.strictEqual(
+        fs.existsSync(fullPath),
+        true,
+        `Notaire city page for ${city} must exist in dist/client`
+      );
+    }
+  });
+
+  it('All 10 custom France interactive calculators exist and compile cleanly in dist/client', () => {
+    const tools = [
+      'capacite-emprunt-hcsf',
+      'frais-de-notaire',
+      'frais-reels-abattement',
+      'indemnite-licenciement',
+      'indemnites-kilometriques',
+      'simulateur-apl',
+      'simulateur-lmnp-reel-micro-bic',
+      'simulateur-ptz',
+      'simulateur-salaire-brut-net',
+      'taxe-amenagement',
+    ];
+    for (const tool of tools) {
+      const fullPath = path.join(distClientDir, `countries/france/${tool}/index.html`);
+      assert.strictEqual(
+        fs.existsSync(fullPath),
+        true,
+        `Custom France tool ${tool} must exist in dist/client`
+      );
+    }
   });
 
   it('Non-France countries remain 100% functional and unregressed', () => {

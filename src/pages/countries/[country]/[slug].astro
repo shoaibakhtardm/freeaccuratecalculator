@@ -58,26 +58,26 @@ export async function getStaticPaths() {
         },
       });
 
-      // Global country aliases
-      if (calc.id === 'loan-calculator') {
+      // Global country aliases — only add if not already a direct popular calc (avoids duplicate route conflicts)
+      if (calc.id === 'loan-calculator' && !popularSet.has('emi-calculator')) {
         paths.push({
           params: { country: country.slug, slug: 'emi-calculator' },
           props: { type: 'calculator', country, calc },
         });
       }
-      if (calc.id === 'salary-calculator') {
+      if (calc.id === 'salary-calculator' && !popularSet.has('income-tax-calculator') && !popularSet.has('salary-calculator')) {
         paths.push({
           params: { country: country.slug, slug: 'income-tax-calculator' },
           props: { type: 'calculator', country, calc },
         });
       }
-      if (calc.id === 'sales-tax-calculator') {
+      if (calc.id === 'sales-tax-calculator' && !popularSet.has('vat-calculator')) {
         paths.push({
           params: { country: country.slug, slug: 'vat-calculator' },
           props: { type: 'calculator', country, calc },
         });
       }
-      if (country.slug === 'united-kingdom' && calc.id === 'property-tax-calculator') {
+      if (country.slug === 'united-kingdom' && calc.id === 'property-tax-calculator' && !popularSet.has('stamp-duty-calculator')) {
         paths.push({
           params: { country: 'united-kingdom', slug: 'stamp-duty-calculator' },
           props: { type: 'calculator', country, calc },

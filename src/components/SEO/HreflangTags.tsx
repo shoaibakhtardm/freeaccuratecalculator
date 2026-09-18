@@ -155,7 +155,7 @@ export function computeHreflangTags(
     return {
       canonicalUrl,
       hreflangLinks: [
-        { lang: 'fr-FR', href: `${origin}${frPath}` },
+        { lang: 'fr', href: `${origin}${frPath}` },
         { lang: 'en', href: `${origin}${enPath}` },
         { lang: 'x-default', href: `${origin}${frPath}` },
       ],
@@ -168,7 +168,7 @@ export function computeHreflangTags(
     return {
       canonicalUrl,
       hreflangLinks: [
-        { lang: 'fr-FR', href: `${origin}${frPath}` },
+        { lang: 'fr', href: `${origin}${frPath}` },
         { lang: 'en', href: `${origin}${enPath}` },
         { lang: 'x-default', href: `${origin}${frPath}` },
       ],

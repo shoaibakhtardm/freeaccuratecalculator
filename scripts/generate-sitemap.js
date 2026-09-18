@@ -296,12 +296,4 @@ if (fs.existsSync(distClientDir)) {
 }
 console.log(`✅ Maintained canonical sitemap.xml fallback with ${allUrls.length} total URLs.`);
 
-// 9. Sync rss.xml between dist/client and public
-const distRss = path.join(distClientDir, 'rss.xml');
-const publicRss = path.join(publicDir, 'rss.xml');
-if (fs.existsSync(distRss)) {
-  fs.copyFileSync(distRss, publicRss);
-} else if (fs.existsSync(publicRss) && fs.existsSync(distClientDir)) {
-  fs.copyFileSync(publicRss, distRss);
-}
 

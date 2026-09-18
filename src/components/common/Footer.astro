@@ -43,7 +43,7 @@ const legalLinks = [
 ];
 
 const guidesTitle = isLove ? 'Love Guides' : isFrance ? 'Guides Pratiques France' : hpStrings.footer.guides;
-const guidesHref = isLove ? '/love/guides/' : isFrance ? '/countries/france/guides/' : '/guides/';
+const guidesHref = isLove ? '/love/guides/' : isFrance ? (pathname.startsWith('/countries/france/en') ? '/countries/france/en/guides/' : '/countries/france/fr/guides/') : '/guides/';
 const guidesAria = isLove ? 'Explore Love & Compatibility Guides' : isFrance ? 'Consulter les guides pratiques pour la France' : `${hpStrings.footer.guides}`;
 ---
 

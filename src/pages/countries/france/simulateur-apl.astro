@@ -1,4 +1,4 @@
-p---
+---
 // src/pages/countries/france/simulateur-apl.astro
 import Layout from '../../../layouts/Layout.astro';
 import ThemeToggle from '../../../components/ThemeToggle.astro';
@@ -31,8 +31,8 @@ const jsonLd = {
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://freeaccuratecalculator.com/' },
         { '@type': 'ListItem', position: 2, name: 'Pays', item: 'https://freeaccuratecalculator.com/countries/' },
-        { '@type': 'ListItem', position: 3, name: 'France', item: 'https://freeaccuratecalculator.com/countries/france/' },
-        { '@type': 'ListItem', position: 4, name: 'Immobilier', item: 'https://freeaccuratecalculator.com/countries/france/real-estate/' },
+        { '@type': 'ListItem', position: 3, name: 'France', item: 'https://freeaccuratecalculator.com/countries/france/fr/' },
+        { '@type': 'ListItem', position: 4, name: 'Immobilier', item: 'https://freeaccuratecalculator.com/countries/france/fr/real-estate/' },
         { '@type': 'ListItem', position: 5, name: 'Simulateur APL', item: 'https://freeaccuratecalculator.com/countries/france/simulateur-apl/' },
       ],
     },
@@ -49,26 +49,18 @@ const jsonLd = {
         },
         {
           '@type': 'Question',
-          name: "Quel est le seuil minimum de versement de l'APL ?",
+          name: "Quelles sont les zones APL 2026 ?",
           acceptedAnswer: {
             '@type': 'Answer',
-            text: "Conformément à la réglementation de la Caisse d'Allocations Familiales (CAF), si le montant calculé de votre aide au logement est inférieur à 15 € par mois, l'APL n'est pas versée.",
+            text: "Zone 1 : Île-de-France (Paris et communes limitrophes). Zone 2 : Grandes agglomérations de plus de 100 000 habitants et Corse. Zone 3 : Reste du territoire métropolitain.",
           },
         },
         {
           '@type': 'Question',
-          name: "Un étudiant peut-il toucher l'APL en colocation ou en meublé ?",
+          name: "Mes données personnelles sont-elles conservées ?",
           acceptedAnswer: {
             '@type': 'Answer',
-            text: "Oui, les étudiants, locataires de meublés, résidents en cité U ou colocataires peuvent prétendre à l'APL. En colocation, le loyer pris en compte est divisé par le nombre de colocataires inscrits sur le bail.",
-          },
-        },
-        {
-          '@type': 'Question',
-          name: "Mes données personnelles sont-elles transmises à la CAF ou enregistrées ?",
-          acceptedAnswer: {
-            '@type': 'Answer',
-            text: "Non. Ce simulateur fonctionne à 100% dans votre navigateur web local. Aucune donnée n'est collectée, enregistrée ou envoyée vers un serveur.",
+            text: "Non. Ce simulateur fonctionne à 100% dans votre navigateur. Aucun revenu ni montant de loyer n'est transmis à un serveur.",
           },
         },
       ],
@@ -92,9 +84,9 @@ const jsonLd = {
       <span>/</span>
       <a href="/countries/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Pays</a>
       <span>/</span>
-      <a href="/countries/france/" class="hover:text-indigo-600 dark:hover:text-indigo-400">France</a>
+      <a href="/countries/france/fr/" class="hover:text-indigo-600 dark:hover:text-indigo-400">France</a>
       <span>/</span>
-      <a href="/countries/france/real-estate/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Immobilier</a>
+      <a href="/countries/france/fr/real-estate/" class="hover:text-indigo-600 dark:hover:text-indigo-400">Immobilier</a>
       <span>/</span>
       <span class="text-slate-800 dark:text-slate-200 font-semibold">Simulateur APL</span>
     </nav>

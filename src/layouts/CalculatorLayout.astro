@@ -26,6 +26,11 @@ interface Props {
   jsonLd?: Record<string, any> | Array<Record<string, any>>;
   faqs?: Array<{ question: string; answer: string }>;
   lang?: string;
+  /** Explicit canonical URL (overrides auto-computed) */
+  canonical?: string;
+  /** France bilingual hreflang alternates (informational) */
+  hreflangFr?: string;
+  hreflangEn?: string;
 }
 
 const {
@@ -39,12 +44,16 @@ const {
   jsonLd,
   faqs,
   lang,
+  canonical: canonicalProp,
+  hreflangFr: _hreflangFr,
+  hreflangEn: _hreflangEn,
 } = Astro.props;
 
 const siteOrigin = 'https://freeaccuratecalculator.com';
 const pathname = Astro.url.pathname;
 const normalizedPathname = pathname.endsWith('/') ? pathname : `${pathname}/`;
-const canonicalUrl = `${siteOrigin}${normalizedPathname}`;
+// Use explicit canonical if provided, otherwise auto-compute from URL
+const canonicalUrl = canonicalProp || `${siteOrigin}${normalizedPathname}`;
 
 // Map internal category to standard Schema.org ApplicationCategory
 let appCategory = 'UtilityApplication';

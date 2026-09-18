@@ -22,6 +22,8 @@ interface Props {
   metaDescription?: string;
   keywords?: string;
   canonicalUrl?: string;
+  /** Alias for canonicalUrl — accepted from France bilingual pages */
+  canonical?: string;
   image?: string;
   ogTitle?: string;
   ogDescription?: string;
@@ -34,6 +36,10 @@ interface Props {
   lang?: string;
   locale?: SupportedLocale;
   bingVerification?: string;
+  /** France bilingual hreflang overrides (informational — Layout auto-computes from URL) */
+  hreflangFr?: string;
+  hreflangEn?: string;
+  ogLocale?: string;
 }
 
 const siteOrigin = 'https://freeaccuratecalculator.com';
@@ -45,7 +51,8 @@ const {
   description,
   metaDescription,
   keywords,
-  canonicalUrl = `${siteOrigin}${normalizedPathname}`,
+  canonicalUrl: canonicalUrlProp,
+  canonical: canonicalAlias,
   image = `${siteOrigin}/og-image.svg`,
   ogTitle,
   ogDescription,
@@ -58,7 +65,13 @@ const {
   lang,
   locale,
   bingVerification,
+  hreflangFr: _hreflangFr,
+  hreflangEn: _hreflangEn,
+  ogLocale: ogLocaleOverride,
 } = Astro.props;
+
+// Resolve canonical: explicit canonicalUrl prop takes priority, then canonical alias, then auto-computed
+const canonicalUrl = canonicalUrlProp || canonicalAlias || `${siteOrigin}${normalizedPathname}`;
 
 const bingVerificationCode = bingVerification || (import.meta.env.PUBLIC_BING_SITE_VERIFICATION as string | undefined);
 
@@ -136,7 +149,7 @@ const ogLocaleMap: Record<string, string> = {
   ja: 'ja_JP',
   hi: 'hi_IN',
 };
-const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
+const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
 ---
 
 <!doctype html>
@@ -564,6 +577,19 @@ const ogLocale = ogLocaleMap[currentLocale] || 'en_US';
               const targetPath = target === 'en' ? '/' : `/${target}/`;
               window.location.href = targetPath + window.location.search;
               return;
+            }
+
+            // Explicit France bilingual route handling: /countries/france/[lang]/...
+            if (currentPath.includes('/countries/france/fr/') || currentPath.includes('/countries/france/en/')) {
+              const fromLang = currentPath.includes('/countries/france/fr/') ? 'fr' : 'en';
+              if (target === 'fr' || target === 'en') {
+                const targetPath = currentPath.replace(
+                  `/countries/france/${fromLang}/`,
+                  `/countries/france/${target}/`
+                );
+                window.location.href = targetPath + window.location.search;
+                return;
+              }
             }
 
             // Check if this page has an explicit hreflang alternate URL for the selected language

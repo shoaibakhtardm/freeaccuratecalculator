@@ -18,24 +18,56 @@
 # Generic calculators removed from France pages redirected to relevant French tools
 /countries/france                       /countries/france/fr/        301
 /countries/france/                      /countries/france/fr/        301
-/countries/france/age-calculator            /countries/france/retirement-calculator/    301
-/countries/france/calorie-calculator        /countries/france/health/                   301
-/countries/france/bmi-calculator            /countries/france/health/                   301
-/countries/france/date-calculator           /countries/france/everyday/                 301
+/countries/france/finance               /countries/france/fr/finance/ 301
+/countries/france/finance/              /countries/france/fr/finance/ 301
+/countries/france/guides                /countries/france/fr/guides/ 301
+/countries/france/guides/               /countries/france/fr/guides/ 301
+/countries/france/guides/*              /countries/france/fr/guides/:splat 301
+
+# 12 Standalone France Guide Articles to Canonical Bilingual Routes
+/countries/france/guides/assurance-emprunteur-loi-lemoine      /countries/france/fr/guides/assurance-emprunteur-loi-lemoine/      301
+/countries/france/guides/assurance-emprunteur-loi-lemoine/     /countries/france/fr/guides/assurance-emprunteur-loi-lemoine/      301
+/countries/france/guides/bareme-impot-revenu-2026              /countries/france/fr/guides/bareme-impot-revenu-2026/              301
+/countries/france/guides/bareme-impot-revenu-2026/             /countries/france/fr/guides/bareme-impot-revenu-2026/              301
+/countries/france/guides/bareme-kilometrique-dgfip-2026         /countries/france/fr/guides/bareme-kilometrique-dgfip-2026/         301
+/countries/france/guides/bareme-kilometrique-dgfip-2026/        /countries/france/fr/guides/bareme-kilometrique-dgfip-2026/         301
+/countries/france/guides/calcul-tva-france-taux-formules       /countries/france/fr/guides/calcul-tva-france-taux-formules/       301
+/countries/france/guides/calcul-tva-france-taux-formules/      /countries/france/fr/guides/calcul-tva-france-taux-formules/       301
+/countries/france/guides/conversion-salaire-brut-en-net-france /countries/france/fr/guides/conversion-salaire-brut-en-net-france/ 301
+/countries/france/guides/conversion-salaire-brut-en-net-france/ /countries/france/fr/guides/conversion-salaire-brut-en-net-france/ 301
+/countries/france/guides/frais-reels-vs-abattement-10          /countries/france/fr/guides/frais-reels-vs-abattement-10/          301
+/countries/france/guides/frais-reels-vs-abattement-10/         /countries/france/fr/guides/frais-reels-vs-abattement-10/          301
+/countries/france/guides/indemnite-legale-licenciement-code-travail /countries/france/fr/guides/indemnite-legale-licenciement-code-travail/ 301
+/countries/france/guides/indemnite-legale-licenciement-code-travail/ /countries/france/fr/guides/indemnite-legale-licenciement-code-travail/ 301
+/countries/france/guides/interets-composes-epargne-france      /countries/france/fr/guides/interets-composes-epargne-france/      301
+/countries/france/guides/interets-composes-epargne-france/     /countries/france/fr/guides/interets-composes-epargne-france/      301
+/countries/france/guides/pret-immobilier-normes-hcsf-2026      /countries/france/fr/guides/pret-immobilier-normes-hcsf-2026/      301
+/countries/france/guides/pret-immobilier-normes-hcsf-2026/     /countries/france/fr/guides/pret-immobilier-normes-hcsf-2026/      301
+/countries/france/guides/reforme-retraite-france-64-ans        /countries/france/fr/guides/reforme-retraite-france-64-ans/        301
+/countries/france/guides/reforme-retraite-france-64-ans/       /countries/france/fr/guides/reforme-retraite-france-64-ans/        301
+/countries/france/guides/simulateur-apl-baremes-caf-2026       /countries/france/fr/guides/simulateur-apl-baremes-caf-2026/       301
+/countries/france/guides/simulateur-apl-baremes-caf-2026/      /countries/france/fr/guides/simulateur-apl-baremes-caf-2026/       301
+/countries/france/guides/taxe-amenagement-baremes-2026         /countries/france/fr/guides/taxe-amenagement-baremes-2026/         301
+/countries/france/guides/taxe-amenagement-baremes-2026/        /countries/france/fr/guides/taxe-amenagement-baremes-2026/         301
+
+/countries/france/age-calculator            /countries/france/fr/guides/reforme-retraite-france-64-ans/ 301
+/countries/france/calorie-calculator        /countries/france/fr/health/calorie-calculator/            301
+/countries/france/bmi-calculator            /countries/france/fr/health/body-fat-calculator/           301
+/countries/france/date-calculator           /countries/france/fr/everyday/date-calculator/            301
 
 # French slug redirects
-/calculateur-age                            /countries/france/retirement-calculator/    301
-/calculateur-calories                       /countries/france/health/                   301
-/calculateur-imc                            /countries/france/health/                   301
-/calculateur-dates                          /countries/france/everyday/                 301
+/calculateur-age                            /countries/france/fr/guides/reforme-retraite-france-64-ans/ 301
+/calculateur-calories                       /countries/france/fr/health/calorie-calculator/            301
+/calculateur-imc                            /countries/france/fr/health/body-fat-calculator/           301
+/calculateur-dates                          /countries/france/fr/everyday/date-calculator/            301
 
 # Aliases for French calculators
 /countries/france/apl-simulator             /countries/france/simulateur-apl/           301
 /countries/france/severance-calculator      /countries/france/indemnite-licenciement/   301
 /countries/france/real-expenses-calculator  /countries/france/frais-reels-abattement/   301
 /countries/france/mileage-allowance-calculator /countries/france/indemnites-kilometriques/ 301
-/countries/france/math/percentage-calculator   /fr/math/percentage-calculator/          301
-/countries/france/percentage-calculator        /fr/math/percentage-calculator/          301
+/countries/france/math/percentage-calculator   /countries/france/fr/math/percentage-calculator/ 301
+/countries/france/percentage-calculator        /countries/france/fr/math/percentage-calculator/ 301
 /countries/france/finance/simulateur-apl        /countries/france/simulateur-apl/        301
 /countries/france/finance/indemnite-licenciement /countries/france/indemnite-licenciement/ 301
 /countries/france/finance/frais-reels-abattement /countries/france/frais-reels-abattement/ 301
