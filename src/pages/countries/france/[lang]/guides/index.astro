@@ -2,7 +2,7 @@
 // src/pages/countries/france/[lang]/guides/index.astro
 import Layout from '../../../../../layouts/Layout.astro';
 import ThemeToggle from '../../../../../components/ThemeToggle.astro';
-import { FRANCE_GUIDE_CATEGORIES, FRANCE_GUIDES } from '../../../../../data/france-guides';
+import { FRANCE_GUIDE_CATEGORIES, getFranceGuides } from '../../../../../data/france-guides';
 
 export function getStaticPaths() {
   return [
@@ -14,6 +14,7 @@ export function getStaticPaths() {
 const { lang } = Astro.params;
 const isFr = lang === 'fr';
 const currentLocale = isFr ? 'fr' : 'en';
+const guides = getFranceGuides(currentLocale);
 
 const pageTitle = isFr
   ? "Guides Pratiques France 2026 | Fiscalité, Salaires, Prêts & Droit Social"
@@ -114,7 +115,7 @@ const jsonLd = [
     <section class="py-12 px-4 sm:px-6 lg:px-8">
       <div class="mx-auto max-w-7xl">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {FRANCE_GUIDES.map((guide) => (
+          {guides.map((guide) => (
             <a
               href={`/countries/france/${currentLocale}/guides/${guide.slug}/`}
               class="group relative flex flex-col justify-between rounded-2xl border border-slate-800 bg-slate-900/60 p-6 transition-all duration-200 hover:-translate-y-1 hover:border-indigo-500/50 hover:bg-slate-900 hover:shadow-xl hover:shadow-indigo-500/10"

@@ -156,7 +156,7 @@ export const FRANCE_GUIDES: FranceGuide[] = [
     keywords: "impôt sur le revenu 2026, barème impôt 2026, calcul impôt sur le revenu, tranches imposition France, prélèvement à la source, déclaration revenus 2026, optimisation fiscale, réduction impôt, crédit d'impôt, quotient familial",
     calculator: {
       label: "Simulateur d'Impôt sur le Revenu",
-      href: "/countries/france/income-tax-calculator/",
+      href: "/countries/france/fr/finance/income-tax-calculator/",
       badge: "Simulateur Officiel",
     },
     relatedGuideSlugs: ['frais-reels-vs-abattement-10', 'bareme-kilometrique-dgfip-2026', 'simulateur-salaire-brut-net-2026'],
@@ -182,7 +182,7 @@ export const FRANCE_GUIDES: FranceGuide[] = [
             </tbody>
           </table>
         </div>
-        <p class="text-sm pt-1">Simulez votre impôt exact en quelques clics avec notre <a href="/countries/france/income-tax-calculator/" class="text-indigo-600 dark:text-indigo-400 font-semibold underline">Calculateur d'Impôt France</a>.</p>`,
+        <p class="text-sm pt-1">Simulez votre impôt exact en quelques clics avec notre <a href="/countries/france/fr/finance/income-tax-calculator/" class="text-indigo-600 dark:text-indigo-400 font-semibold underline">Calculateur d'Impôt France</a>.</p>`,
       },
       {
         heading: "2. Comment Calculer Votre Impôt sur le Revenu (Méthode Étape par Étape)",
@@ -633,7 +633,7 @@ export const FRANCE_GUIDES: FranceGuide[] = [
     keywords: "calcul tva france 2026, calculateur tva hors taxe ttc, taux tva 20 10 5.5 2.1, formule extraction tva, franchise en base tva auto entrepreneur, déclaration ca3 ca12 bercy",
     calculator: {
       label: "Calculateur de TVA France",
-      href: "/countries/france/vat-calculator/",
+      href: "/countries/france/fr/finance/sales-tax-calculator/",
       badge: "Tous Taux Français Inclus",
     },
     relatedGuideSlugs: ['conversion-salaire-brut-en-net-france', 'bareme-impot-revenu-2026'],
@@ -658,7 +658,7 @@ export const FRANCE_GUIDES: FranceGuide[] = [
             </tbody>
           </table>
         </div>
-        <p class="text-sm">Effectuez tous vos calculs instantanément avec notre <a href="/countries/france/vat-calculator/" class="text-indigo-600 dark:text-indigo-400 font-semibold underline">Calculateur de TVA France</a>.</p>`,
+        <p class="text-sm">Effectuez tous vos calculs instantanément avec notre <a href="/countries/france/fr/finance/sales-tax-calculator/" class="text-indigo-600 dark:text-indigo-400 font-semibold underline">Calculateur de TVA France</a>.</p>`,
       },
       {
         heading: "2. Formules Mathématiques : Passage HT / TTC et Extraction",
@@ -940,7 +940,7 @@ export const FRANCE_GUIDES: FranceGuide[] = [
     keywords: "calcul interets composes france 2026 livret a pea, interets composes epargne, livret a lep ldds, pea assurance vie flat tax capitalisation",
     calculator: {
       label: "Calculateur d'Intérêts Composés",
-      href: "/countries/france/compound-interest-calculator/",
+      href: "/countries/france/fr/finance/compound-interest-calculator/",
       badge: "Projection Graphique",
     },
     relatedGuideSlugs: ['reforme-retraite-france-64-ans', 'bareme-impot-revenu-2026'],
@@ -956,7 +956,7 @@ export const FRANCE_GUIDES: FranceGuide[] = [
           • t = Durée du placement en années<br>
           • PMT = Épargne mensuelle ou annuelle récurrente
         </div>
-        <p class="text-sm">Visualisez la courbe exponentielle de vos économies avec notre <a href="/countries/france/compound-interest-calculator/" class="text-indigo-600 dark:text-indigo-400 font-semibold underline">Calculateur d'Intérêts Composés</a>.</p>`,
+        <p class="text-sm">Visualisez la courbe exponentielle de vos économies avec notre <a href="/countries/france/fr/finance/compound-interest-calculator/" class="text-indigo-600 dark:text-indigo-400 font-semibold underline">Calculateur d'Intérêts Composés</a>.</p>`,
       },
       {
         heading: "2. Comparatif de Rendement sur 15 Ans : Livrets Réglementés vs PEA",
@@ -1019,7 +1019,7 @@ export const FRANCE_GUIDES: FranceGuide[] = [
     keywords: "calcul retraite france 2026, age legal retraite 64 ans, 172 trimestres cnav, pension taux plein 67 ans, formule sam 25 meilleures annees, decote surcote retraite, agirc arrco points",
     calculator: {
       label: "Simulateur de Retraite France",
-      href: "/countries/france/retirement-calculator/",
+      href: "/countries/france/fr/finance/retirement-calculator/",
       badge: "Régime Général & Complémentaire",
     },
     relatedGuideSlugs: ['interets-composes-epargne-france', 'conversion-salaire-brut-en-net-france'],
@@ -1037,7 +1037,7 @@ export const FRANCE_GUIDES: FranceGuide[] = [
             <p class="text-slate-600 dark:text-slate-300">Justifier de <strong>172 trimestres cotisés ou assimilés</strong> (soit 43 années complètes de cotisations).</p>
           </div>
         </div>
-        <p class="text-sm">Calculez l'âge précis de votre départ avec notre <a href="/countries/france/retirement-calculator/" class="text-indigo-600 dark:text-indigo-400 font-semibold underline">Simulateur de Retraite France</a>.</p>`,
+        <p class="text-sm">Calculez l'âge précis de votre départ avec notre <a href="/countries/france/fr/finance/retirement-calculator/" class="text-indigo-600 dark:text-indigo-400 font-semibold underline">Simulateur de Retraite France</a>.</p>`,
       },
       {
         heading: "2. Formule de Calcul de la Pension de Base (CNAV)",
@@ -1370,20 +1370,32 @@ export const FRANCE_GUIDES: FranceGuide[] = [
   },
 ];
 
-export function getGuideBySlug(slug: string): FranceGuide | undefined {
-  return FRANCE_GUIDES.find((g) => g.slug === slug || g.id === slug);
+import { FRANCE_GUIDES_EN } from './france-guides-en.ts';
+
+export const FRANCE_GUIDES_FR = FRANCE_GUIDES;
+export { FRANCE_GUIDES_EN };
+
+export function getFranceGuides(lang: 'fr' | 'en' = 'fr'): FranceGuide[] {
+  return lang === 'en' ? FRANCE_GUIDES_EN : FRANCE_GUIDES_FR;
 }
 
-export function getGuidesByCategory(categorySlug: string): FranceGuide[] {
-  return FRANCE_GUIDES.filter((g) => g.categorySlug === categorySlug || g.category === categorySlug);
+export function getGuideBySlug(slug: string, lang: 'fr' | 'en' = 'fr'): FranceGuide | undefined {
+  const pool = getFranceGuides(lang);
+  return pool.find((g) => g.slug === slug || g.id === slug);
 }
 
-export function getRelatedGuides(guide: FranceGuide): FranceGuide[] {
+export function getGuidesByCategory(categorySlug: string, lang: 'fr' | 'en' = 'fr'): FranceGuide[] {
+  const pool = getFranceGuides(lang);
+  return pool.filter((g) => g.categorySlug === categorySlug || g.category === categorySlug);
+}
+
+export function getRelatedGuides(guide: FranceGuide, lang?: 'fr' | 'en'): FranceGuide[] {
+  const effectiveLang: 'fr' | 'en' = lang || (guide.calculator?.href?.includes('/countries/france/en/') ? 'en' : 'fr');
   if (guide.relatedGuideSlugs && guide.relatedGuideSlugs.length > 0) {
     const directMatches = guide.relatedGuideSlugs
-      .map((s) => getGuideBySlug(s))
+      .map((s) => getGuideBySlug(s, effectiveLang))
       .filter((g): g is FranceGuide => Boolean(g));
     if (directMatches.length > 0) return directMatches;
   }
-  return getGuidesByCategory(guide.categorySlug).filter((g) => g.slug !== guide.slug).slice(0, 3);
+  return getGuidesByCategory(guide.categorySlug, effectiveLang).filter((g) => g.slug !== guide.slug).slice(0, 3);
 }

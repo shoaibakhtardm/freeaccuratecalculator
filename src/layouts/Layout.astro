@@ -697,6 +697,24 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
           "Rechercher 🔄 Convertisseur d'Unités..."
         ];
 
+        const ENGLISH_FRANCE_PROMPTS = [
+          "Search France calculators (e.g. mortgage, tax, VAT, salary)...",
+          "Search 💶 French VAT Calculator (20% & 5.5%)...",
+          "Search 💼 Gross to Net Salary France...",
+          "Search 🏢 French Mortgage & HCSF Simulator...",
+          "Search 🏛️ French Income Tax Calculator 2026...",
+          "Search 🛡️ Loan Insurance Simulator...",
+          "Search 🏡 French APL Housing Benefit...",
+          "Search ⚖️ Severance Pay France...",
+          "Search 🚗 Mileage Allowance Scale...",
+          "Search 📊 Actual Expenses vs 10% Flat Allowance...",
+          "Search 📈 Compound Interest Calculator...",
+          "Search 🏖️ French Retirement Calculator...",
+          "Search 💰 Rental Yield Calculator...",
+          "Search 📉 Inflation Calculator...",
+          "Search 🔄 Unit Converter..."
+        ];
+
         function initSearchTypewriter(wrapper) {
           if (wrapper.closest('.fac-autocomplete-container') || 
               wrapper.__facTypewriterInit || 
@@ -704,10 +722,14 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
               wrapper.dataset.customTypewriter === 'true') return;
           wrapper.__facTypewriterInit = true;
 
-          const isFr = (document.documentElement.lang || '').startsWith('fr') || 
-                       window.location.pathname.startsWith('/countries/france') || 
-                       window.location.pathname.startsWith('/fr/');
-          const activePrompts = isFr ? FRENCH_PROMPTS : UNIVERSAL_PROMPTS;
+          const isFranceEn = window.location.pathname.includes('/countries/france/en/');
+          const isFr = !isFranceEn && (
+            (document.documentElement.lang || '').startsWith('fr') || 
+            window.location.pathname.includes('/countries/france/fr/') || 
+            (window.location.pathname.startsWith('/countries/france') && !isFranceEn) || 
+            window.location.pathname.startsWith('/fr/')
+          );
+          const activePrompts = isFr ? FRENCH_PROMPTS : (isFranceEn ? ENGLISH_FRANCE_PROMPTS : UNIVERSAL_PROMPTS);
 
           const textEl = wrapper.querySelector('.fac-typewriter-text');
           const container = wrapper.querySelector('.fac-typewriter-container');

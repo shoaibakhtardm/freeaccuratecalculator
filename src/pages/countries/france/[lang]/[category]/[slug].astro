@@ -40,19 +40,6 @@ export function getStaticPaths() {
         props: { calc },
       });
     }
-
-    // Explicit pilot math percentage calculator
-    const percentageCalc = CALCULATORS.find((c) => c.id === 'percentage-calculator');
-    if (percentageCalc) {
-      paths.push({
-        params: {
-          lang,
-          category: 'math',
-          slug: 'percentage-calculator',
-        },
-        props: { calc: percentageCalc },
-      });
-    }
   }
 
   return paths;

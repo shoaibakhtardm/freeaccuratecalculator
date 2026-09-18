@@ -263,7 +263,7 @@ const workedSteps = [
             prefix="$"
             initialValue={0.00875}
             decimals={5}
-            secondary="Single Inference Call"
+            secondaryText="Single Inference Call"
             accent="cyan"
           />
           <ResultDisplay
@@ -272,7 +272,7 @@ const workedSteps = [
             prefix="$"
             initialValue={8.75}
             decimals={2}
-            secondary="1,000 Inferences"
+            secondaryText="1,000 Inferences"
             accent="link"
           />
           <ResultDisplay
@@ -281,7 +281,7 @@ const workedSteps = [
             prefix="$"
             initialValue={8.75}
             decimals={2}
-            secondary="Based on Daily Volume"
+            secondaryText="Based on Daily Volume"
             accent="violet"
           />
           <ResultDisplay
@@ -290,8 +290,8 @@ const workedSteps = [
             prefix="$"
             initialValue={262.5}
             decimals={2}
-            secondary="30 Days Compounded"
-            accent="amber"
+            secondaryText="30 Days Compounded"
+            accent="violet"
           />
         </div>
       </div>
@@ -368,7 +368,7 @@ const workedSteps = [
 
   <FormulaSection
     title="LLM API Pricing Formula"
-    expression="\text{Total Cost} = \left[ \left(\frac{T_{\text{in}}}{10^6} \times P_{\text{in}}\right) + \left(\frac{T_{\text{out}}}{10^6} \times P_{\text{out}}\right) \right] \times N_{\text{requests}}"
+    formula="\text{Total Cost} = \left[ \left(\frac{T_{\text{in}}}{10^6} \times P_{\text{in}}\right) + \left(\frac{T_{\text{out}}}{10^6} \times P_{\text{out}}\right) \right] \times N_{\text{requests}}"
     explanation="Token charges scale per 1 Million (1,000,000) tokens. Providers sum input prompt token ingestion with output token completion generation."
     variables={formulaVariables}
   />
@@ -529,12 +529,12 @@ const workedSteps = [
       if (e) {
         e.preventDefault();
         e.stopPropagation();
-        if (typeof (e as any).stopImmediatePropagation === 'function') {
-          (e as any).stopImmediatePropagation();
+        if (typeof e.stopImmediatePropagation === 'function') {
+          e.stopImmediatePropagation();
         }
       }
-      if (typeof (window as any).generateAndDownloadPDF === 'function') {
-        (window as any).generateAndDownloadPDF();
+      if (typeof window.generateAndDownloadPDF === 'function') {
+        window.generateAndDownloadPDF();
       } else {
         window.print();
       }

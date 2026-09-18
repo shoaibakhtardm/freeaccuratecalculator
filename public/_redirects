@@ -66,8 +66,8 @@
 /countries/france/severance-calculator      /countries/france/indemnite-licenciement/   301
 /countries/france/real-expenses-calculator  /countries/france/frais-reels-abattement/   301
 /countries/france/mileage-allowance-calculator /countries/france/indemnites-kilometriques/ 301
-/countries/france/math/percentage-calculator   /countries/france/fr/math/percentage-calculator/ 301
-/countries/france/percentage-calculator        /countries/france/fr/math/percentage-calculator/ 301
+/countries/france/math/percentage-calculator   /fr/math/percentage-calculator/ 301
+/countries/france/percentage-calculator        /fr/math/percentage-calculator/ 301
 /countries/france/finance/simulateur-apl        /countries/france/simulateur-apl/        301
 /countries/france/finance/indemnite-licenciement /countries/france/indemnite-licenciement/ 301
 /countries/france/finance/frais-reels-abattement /countries/france/frais-reels-abattement/ 301
@@ -93,3 +93,17 @@
 /countries/france/frais-notaire-strasbourg      /countries/france/frais-notaire/strasbourg/ 301
 /countries/france/frais-notaire-bordeaux        /countries/france/frais-notaire/bordeaux/   301
 /countries/france/frais-notaire-lille           /countries/france/frais-notaire/lille/      301
+
+# France VAT / Tax / Legacy Aliases
+/countries/france/vat-calculator                  /countries/france/fr/finance/sales-tax-calculator/ 301
+/countries/france/vat-calculator/                 /countries/france/fr/finance/sales-tax-calculator/ 301
+/countries/france/fr/finance/vat-calculator       /countries/france/fr/finance/sales-tax-calculator/ 301
+/countries/france/fr/finance/vat-calculator/      /countries/france/fr/finance/sales-tax-calculator/ 301
+/countries/france/en/finance/vat-calculator       /countries/france/en/finance/sales-tax-calculator/ 301
+/countries/france/en/finance/vat-calculator/      /countries/france/en/finance/sales-tax-calculator/ 301
+/countries/france/income-tax-calculator           /countries/france/fr/finance/income-tax-calculator/ 301
+/countries/france/income-tax-calculator/          /countries/france/fr/finance/income-tax-calculator/ 301
+/countries/france/compound-interest-calculator    /countries/france/fr/finance/compound-interest-calculator/ 301
+/countries/france/compound-interest-calculator/   /countries/france/fr/finance/compound-interest-calculator/ 301
+/countries/france/retirement-calculator           /countries/france/fr/finance/retirement-calculator/ 301
+/countries/france/retirement-calculator/          /countries/france/fr/finance/retirement-calculator/ 301

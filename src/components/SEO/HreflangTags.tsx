@@ -175,6 +175,17 @@ export function computeHreflangTags(
     };
   }
 
+  // 3.6. Specialized French Regulatory Calculators & Notaire Pages (French Only)
+  if (normalized.startsWith('/countries/france/')) {
+    return {
+      canonicalUrl,
+      hreflangLinks: [
+        { lang: 'fr', href: `${origin}${normalized}` },
+        { lang: 'x-default', href: `${origin}${normalized}` },
+      ],
+    };
+  }
+
   // 4. Verified Multi-Language Programmatic Registry
   const matchedConfig = MULTILANG_ROUTES_REGISTRY[basePath];
   if (matchedConfig) {

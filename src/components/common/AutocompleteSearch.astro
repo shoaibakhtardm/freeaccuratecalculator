@@ -24,21 +24,55 @@ const {
   isFrench: propIsFrench,
 } = Astro.props;
 
-const currentLocale = (propLocale || Astro.currentLocale || 'en').toLowerCase();
+const isFranceEn = Astro.url.pathname.includes('/countries/france/en/');
+const computedLocale = propLocale || (isFranceEn ? 'en' : (Astro.url.pathname.includes('/countries/france/fr/') ? 'fr' : (Astro.currentLocale || 'en')));
+const currentLocale = computedLocale.toLowerCase();
 const hpStrings = getHomepageStrings(currentLocale);
 
-const isFrancePage = Astro.url.pathname.startsWith('/countries/france') || 
-                     Astro.url.pathname.startsWith('/fr/');
 const isFrench = propIsFrench ?? (
-  country?.slug === 'france' || 
-  isFrancePage ||
-  currentLocale === 'fr'
+  !isFranceEn && (
+    (country?.slug === 'france' && currentLocale !== 'en') ||
+    Astro.url.pathname.includes('/countries/france/fr/') ||
+    (Astro.url.pathname.startsWith('/countries/france/') && !isFranceEn) ||
+    Astro.url.pathname.startsWith('/fr/') ||
+    currentLocale === 'fr'
+  )
 );
 
 const effectivePlaceholder = placeholder ?? hpStrings.search.placeholder;
 
-// Prepare localized dataset if country is provided
-const dataset: SearchCalculatorItem[] = country
+// Prepare localized dataset if country or France page is provided
+const isFranceRoute = country?.slug === 'france' || Astro.url.pathname.startsWith('/countries/france');
+const franceLocale = Astro.url.pathname.includes('/countries/france/en/') ? 'en' : 'fr';
+
+const SPECIALIZED_FRANCE_SLUGS = new Set([
+  'capacite-emprunt-hcsf',
+  'frais-de-notaire',
+  'frais-reels-abattement',
+  'indemnite-licenciement',
+  'indemnites-kilometriques',
+  'simulateur-apl',
+  'simulateur-lmnp-reel-micro-bic',
+  'simulateur-ptz',
+  'simulateur-salaire-brut-net',
+  'taxe-amenagement',
+]);
+
+const dataset: SearchCalculatorItem[] = isFranceRoute
+  ? SEARCHABLE_CALCULATORS.map((calc) => {
+      let href = calc.href;
+      if (SPECIALIZED_FRANCE_SLUGS.has(calc.slug)) {
+        href = `/countries/france/${calc.slug}/`;
+      } else {
+        // Standard France calculator route under approved architecture
+        href = `/countries/france/${franceLocale}/${calc.category}/${calc.slug}/`;
+      }
+      return {
+        ...calc,
+        href,
+      };
+    })
+  : country
   ? SEARCHABLE_CALCULATORS.map((calc) => {
       const isCountryCalc = country.popularCalculators.includes(calc.slug);
       return {

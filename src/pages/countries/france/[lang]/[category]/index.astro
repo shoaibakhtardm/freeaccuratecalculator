@@ -50,8 +50,141 @@ const pageDescription = isFr
   ? `Accédez à toutes les calculatrices de ${categoryName.toLowerCase()} adaptées à la France. Outils gratuits, conformes aux barèmes 2026, calcul instantané en Euros (€).`
   : `Explore all ${categoryName.toLowerCase()} calculators tailored to France. Free, 100% private tools adhering to 2026 statutory standards in Euros (€).`;
 
-// Filter calculators belonging to this category for France
-const categoryCalculators = CALCULATORS.filter((c) => c.category === category).map((calc) => {
+// Non-applicable, regional, or unlocalized calculator IDs excluded from France
+const EXCLUDED_CALCS = new Set([
+  '401k-calculator',
+  'roth-ira-calculator',
+  'ppf-calculator',
+  'epf-calculator',
+  'gratuity-calculator',
+  'age-calculator',
+  'calorie-calculator',
+  'bmi-calculator',
+  'date-calculator',
+  'percentage-calculator',
+]);
+
+// Specialized France regulatory calculators mapped to their authoritative categories
+const SPECIALIZED_BY_CATEGORY: Record<string, Array<{
+  id: string;
+  nameFr: string;
+  nameEn: string;
+  descFr: string;
+  descEn: string;
+  icon: string;
+  badge: string;
+  href: string;
+}>> = {
+  finance: [
+    {
+      id: 'simulateur-salaire-brut-net',
+      nameFr: 'Simulateur Salaire Brut en Net 2026',
+      nameEn: 'Gross to Net Salary Simulator France 2026',
+      descFr: 'Conversion officielle salaire brut en net 2026 (Cadre & Non-Cadre, cotisations sociales URSSAF).',
+      descEn: 'Statutory 2026 French gross-to-net salary calculator (Executive & Non-Executive URSSAF deductions).',
+      icon: '💼',
+      badge: 'URSSAF 2026',
+      href: '/countries/france/simulateur-salaire-brut-net/',
+    },
+    {
+      id: 'frais-reels-abattement',
+      nameFr: 'Simulateur Frais Réels vs Abattement 10%',
+      nameEn: 'Actual Expenses vs 10% Flat Tax Allowance',
+      descFr: 'Optimisez votre déclaration de revenus : comparez la déduction forfaitaire de 10% et les frais réels.',
+      descEn: 'Optimize French income tax: compare the 10% standard deduction vs actual itemized business expenses.',
+      icon: '📑',
+      badge: 'Fiscalité 2026',
+      href: '/countries/france/frais-reels-abattement/',
+    },
+    {
+      id: 'indemnites-kilometriques',
+      nameFr: "Calculateur d'Indemnités Kilométriques 2026",
+      nameEn: 'Mileage Allowance Calculator France 2026',
+      descFr: 'Barème officiel DGFiP pour frais de déplacement professionnel en auto, moto ou vélo.',
+      descEn: 'Official DGFiP statutory mileage reimbursement brackets for cars, motorcycles, and bikes.',
+      icon: '🚗',
+      badge: 'Barème DGFiP',
+      href: '/countries/france/indemnites-kilometriques/',
+    },
+    {
+      id: 'indemnite-licenciement',
+      nameFr: "Simulateur d'Indemnité de Licenciement",
+      nameEn: 'Severance Pay Calculator France',
+      descFr: "Calcul de l'indemnité légale de licenciement selon l'ancienneté et le Code du travail.",
+      descEn: 'Calculate statutory severance pay under the French Labour Code based on tenure and salary.',
+      icon: '⚖️',
+      badge: 'Code du Travail',
+      href: '/countries/france/indemnite-licenciement/',
+    },
+  ],
+  'real-estate': [
+    {
+      id: 'frais-de-notaire',
+      nameFr: 'Calculateur Frais de Notaire 2026',
+      nameEn: 'Notary Fees Calculator France 2026',
+      descFr: 'Calcul précis des droits de mutation (DMTO), émoluments réglementés et déduction mobilier.',
+      descEn: 'Precise calculation of transfer taxes (DMTO), statutory notary fees, and furniture deduction.',
+      icon: '📜',
+      badge: 'DMTO 2026',
+      href: '/countries/france/frais-de-notaire/',
+    },
+    {
+      id: 'capacite-emprunt-hcsf',
+      nameFr: "Simulateur Capacité d'Emprunt HCSF",
+      nameEn: 'HCSF Borrowing Capacity Simulator',
+      descFr: "Estimez votre capacité d'emprunt selon les normes impératives HCSF (taux d'effort max 35%).",
+      descEn: 'Calculate maximum mortgage capacity adhering strictly to HCSF 35% debt-to-income standards.',
+      icon: '🏦',
+      badge: 'Norme HCSF',
+      href: '/countries/france/capacite-emprunt-hcsf/',
+    },
+    {
+      id: 'simulateur-ptz',
+      nameFr: 'Simulateur Prêt à Taux Zéro (PTZ 2026)',
+      nameEn: 'Zero-Interest Loan (PTZ) Simulator',
+      descFr: 'Test d’éligibilité PTZ 2026 selon zones (A, B1, B2, C), composition du foyer et plafonds.',
+      descEn: '2026 French interest-free property loan (PTZ) eligibility and ceiling calculation.',
+      icon: '🏠',
+      badge: 'PTZ 2026',
+      href: '/countries/france/simulateur-ptz/',
+    },
+    {
+      id: 'simulateur-lmnp-reel-micro-bic',
+      nameFr: 'Simulateur LMNP : Réel vs Micro-BIC',
+      nameEn: 'LMNP Rental Tax Simulator: Actual vs Micro-BIC',
+      descFr: 'Comparez le régime réel avec amortissements et le micro-BIC (abattement 50%) pour loueur meublé.',
+      descEn: 'Compare French furnished rental taxation regimes: Actual depreciation vs Micro-BIC 50% allowance.',
+      icon: '🔑',
+      badge: 'Fiscalité LMNP',
+      href: '/countries/france/simulateur-lmnp-reel-micro-bic/',
+    },
+    {
+      id: 'taxe-amenagement',
+      nameFr: "Simulateur Taxe d'Aménagement 2026",
+      nameEn: 'France Development Tax Calculator 2026',
+      descFr: "Calcul de la taxe d'aménagement pour piscine, extension ou maison individuelle.",
+      descEn: 'Calculate statutory development taxes for swimming pools, extensions, and house construction.',
+      icon: '🏗️',
+      badge: 'Barème 2026',
+      href: '/countries/france/taxe-amenagement/',
+    },
+    {
+      id: 'simulateur-apl',
+      nameFr: 'Simulateur APL 2026 (Aide au Logement)',
+      nameEn: 'APL Housing Benefit Simulator 2026',
+      descFr: 'Estimation gratuite de vos allocations logement CAF selon barèmes et zones 2026.',
+      descEn: 'Estimate CAF housing allowance benefits based on 2026 French statutory zones.',
+      icon: '💶',
+      badge: 'Barème CAF',
+      href: '/countries/france/simulateur-apl/',
+    },
+  ],
+};
+
+// Filter standard calculators belonging to this category for France (excluding non-applicable)
+const standardCalculators = CALCULATORS.filter(
+  (c) => c.category === category && !EXCLUDED_CALCS.has(c.id)
+).map((calc) => {
   const frData = FRANCE_CALCULATORS_DATA[calc.id] || null;
   const frTool = frToolNames[calc.id] || null;
 
@@ -72,6 +205,17 @@ const categoryCalculators = CALCULATORS.filter((c) => c.category === category).m
     href: `/countries/france/${currentLocale}/${category}/${calc.id}/`,
   };
 });
+
+const specializedCalculators = (SPECIALIZED_BY_CATEGORY[category] || []).map((spec) => ({
+  id: spec.id,
+  name: isFr ? spec.nameFr : spec.nameEn,
+  desc: isFr ? spec.descFr : spec.descEn,
+  icon: spec.icon,
+  badge: spec.badge,
+  href: spec.href,
+}));
+
+const categoryCalculators = [...specializedCalculators, ...standardCalculators];
 
 const jsonLd = [
   {

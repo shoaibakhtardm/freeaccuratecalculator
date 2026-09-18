@@ -48,13 +48,15 @@ const isFranceEnglish = isFranceRoute && pathname.includes('/countries/france/en
         <button
           type="button"
           id="fac-france-lang-toggle"
-          class="group relative flex items-center justify-between gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-white/85 dark:bg-slate-900/85 hover:bg-slate-50 dark:hover:bg-slate-800/90 hover:border-indigo-500/40 dark:hover:border-indigo-400/40 shadow-xs hover:shadow-md hover:shadow-indigo-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:focus-visible:ring-indigo-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-950 min-h-[44px] sm:min-h-[38px] h-11 sm:h-9 cursor-pointer transition-all duration-300 select-none text-xs font-semibold"
-          aria-label={isFranceEnglish ? "Passer en Français" : "Switch to English"}
+          class="group relative flex items-center justify-between gap-1.5 sm:gap-2 px-2.5 sm:px-3 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-white/90 dark:bg-slate-900/90 hover:bg-slate-50 dark:hover:bg-slate-800/90 hover:border-indigo-500/40 dark:hover:border-indigo-400/40 shadow-xs hover:shadow-md hover:shadow-indigo-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:focus-visible:ring-indigo-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-950 min-h-[44px] sm:min-h-[38px] h-11 sm:h-9 cursor-pointer transition-all duration-300 select-none text-xs font-semibold"
+          aria-label={isFranceEnglish ? "Switch to French (Passer en Français)" : "Switch to English (Passer en Anglais)"}
+          data-current-lang={isFranceEnglish ? "en" : "fr"}
         >
           <span
             id="header-lang-fr"
+            aria-current={!isFranceEnglish ? "true" : undefined}
             class={!isFranceEnglish
-              ? "inline-flex items-center gap-1 font-bold text-indigo-600 dark:text-indigo-400 transition-colors"
+              ? "inline-flex items-center gap-1 font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-1.5 py-0.5 rounded-md transition-colors"
               : "inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"}
           >
             <span class="text-sm">🇫🇷</span>
@@ -63,8 +65,9 @@ const isFranceEnglish = isFranceRoute && pathname.includes('/countries/france/en
           <span class="text-slate-300 dark:text-slate-600 select-none">|</span>
           <span
             id="header-lang-en"
+            aria-current={isFranceEnglish ? "true" : undefined}
             class={isFranceEnglish
-              ? "inline-flex items-center gap-1 font-bold text-indigo-600 dark:text-indigo-400 transition-colors"
+              ? "inline-flex items-center gap-1 font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 px-1.5 py-0.5 rounded-md transition-colors"
               : "inline-flex items-center gap-1 font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors"}
           >
             <span class="text-sm">🇬🇧</span>
@@ -93,17 +96,30 @@ const isFranceEnglish = isFranceRoute && pathname.includes('/countries/france/en
     if (toggleBtn) {
       toggleBtn.addEventListener('click', function () {
         const path = window.location.pathname;
-        let target = '/countries/france/fr/';
+        const currentLang = toggleBtn.getAttribute('data-current-lang') || (path.includes('/countries/france/en/') ? 'en' : 'fr');
+        const targetLang = currentLang === 'en' ? 'fr' : 'en';
 
+        // 1. Check if page has explicit reciprocal hreflang alternate tag
+        const alternateTag = document.querySelector(`link[rel="alternate"][hreflang="${targetLang}"]`);
+        if (alternateTag && alternateTag.href) {
+          try {
+            const parsed = new URL(alternateTag.href);
+            window.location.href = parsed.pathname + window.location.search + window.location.hash;
+            return;
+          } catch (_) {}
+        }
+
+        // 2. Deterministic URL mapping
+        let target = `/countries/france/${targetLang}/`;
         if (path.includes('/countries/france/fr/')) {
           target = path.replace('/countries/france/fr/', '/countries/france/en/');
         } else if (path.includes('/countries/france/en/')) {
           target = path.replace('/countries/france/en/', '/countries/france/fr/');
         } else if (path === '/countries/france' || path === '/countries/france/') {
-          target = '/countries/france/en/';
+          target = `/countries/france/${targetLang}/`;
         } else if (path.startsWith('/countries/france/')) {
-          // Legacy child route without language prefix
-          target = path.replace('/countries/france/', '/countries/france/en/');
+          // French specialized tool or Notaire page without direct English equivalent
+          target = '/countries/france/en/';
         }
 
         window.location.href = target + window.location.search + window.location.hash;

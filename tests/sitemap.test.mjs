@@ -33,15 +33,16 @@ test('Categorized Sitemap and Discovery Audit', async (t) => {
     }
   });
 
-  await t.test('sitemap.xml contains valid urlset and all core routes', () => {
+  await t.test('sitemap.xml is authoritative master sitemap index and child sitemaps contain all core routes', () => {
     const sitemapPath = path.join(PUBLIC_DIR, 'sitemap.xml');
     const content = fs.readFileSync(sitemapPath, 'utf-8');
 
-    assert.match(content, /<urlset/, 'Must have <urlset> root tag');
-    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/<\/loc>/);
-    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/math\/percentage-calculator\/<\/loc>/);
-    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/finance\/emi-calculator\/<\/loc>/);
-    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/health\/bmi-calculator\/<\/loc>/);
+    assert.match(content, /<sitemapindex/, 'Must have <sitemapindex> root tag');
+    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/sitemap-main\.xml<\/loc>/);
+    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/sitemap-finance\.xml<\/loc>/);
+    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/sitemap-countries-1\.xml<\/loc>/);
+    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/sitemap-math\.xml<\/loc>/);
+    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/sitemap-health\.xml<\/loc>/);
 
     // Dev preview and API excluded
     assert.doesNotMatch(content, /\/dev-preview\//);
@@ -50,11 +51,15 @@ test('Categorized Sitemap and Discovery Audit', async (t) => {
     // Verify dynamic ISO 8601 lastmod format
     assert.match(content, /<lastmod>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z<\/lastmod>/, 'Must have ISO 8601 timestamps');
 
-    // Verify SEO prioritization rules
-    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>daily<\/changefreq>\s*<priority>1\.0<\/priority>/);
-    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/finance\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>weekly<\/changefreq>\s*<priority>0\.8<\/priority>/);
-    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/math\/percentage-calculator\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>weekly<\/changefreq>\s*<priority>0\.7<\/priority>/);
-    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/about\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>monthly<\/changefreq>\s*<priority>0\.5<\/priority>/);
+    // Verify child sitemaps contain core routes with proper formatting and no tag concatenation
+    const mainContent = fs.readFileSync(path.join(PUBLIC_DIR, 'sitemap-main.xml'), 'utf-8');
+    const financeContent = fs.readFileSync(path.join(PUBLIC_DIR, 'sitemap-finance.xml'), 'utf-8');
+    const mathContent = fs.readFileSync(path.join(PUBLIC_DIR, 'sitemap-math.xml'), 'utf-8');
+
+    assert.match(mainContent, /<loc>https:\/\/freeaccuratecalculator\.com\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>daily<\/changefreq>\s*<priority>1\.0<\/priority>/);
+    assert.match(financeContent, /<loc>https:\/\/freeaccuratecalculator\.com\/finance\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>weekly<\/changefreq>\s*<priority>0\.8<\/priority>/);
+    assert.match(mathContent, /<loc>https:\/\/freeaccuratecalculator\.com\/math\/percentage-calculator\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>weekly<\/changefreq>\s*<priority>0\.7<\/priority>/);
+    assert.match(mainContent, /<loc>https:\/\/freeaccuratecalculator\.com\/about\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>monthly<\/changefreq>\s*<priority>0\.5<\/priority>/);
   });
 
   await t.test('robots.txt points strictly to sitemap index files and blocks AI bots', () => {

@@ -13,6 +13,7 @@ const currentLocale = (propLocale || Astro.currentLocale || 'en').toLowerCase();
 const hpStrings = getHomepageStrings(currentLocale);
 
 const isFrance = pathname.includes('/countries/france') || pathname.startsWith('/fr/') || currentLocale === 'fr';
+const isFranceEn = isFrance && (pathname.startsWith('/countries/france/en') || (pathname.includes('/countries/france') && currentLocale === 'en'));
 const isLove = pathname.startsWith('/love');
 
 const statements: Record<string, string> = {
@@ -42,9 +43,9 @@ const legalLinks = [
   { name: hpStrings.footer.privacy, href: '/privacy-policy/', icon: '🛡️' },
 ];
 
-const guidesTitle = isLove ? 'Love Guides' : isFrance ? 'Guides Pratiques France' : hpStrings.footer.guides;
-const guidesHref = isLove ? '/love/guides/' : isFrance ? (pathname.startsWith('/countries/france/en') ? '/countries/france/en/guides/' : '/countries/france/fr/guides/') : '/guides/';
-const guidesAria = isLove ? 'Explore Love & Compatibility Guides' : isFrance ? 'Consulter les guides pratiques pour la France' : `${hpStrings.footer.guides}`;
+const guidesTitle = isLove ? 'Love Guides' : isFrance ? 'Guides' : hpStrings.footer.guides;
+const guidesHref = isLove ? '/love/guides/' : isFrance ? (isFranceEn ? '/countries/france/en/guides/' : '/countries/france/fr/guides/') : '/guides/';
+const guidesAria = isLove ? 'Explore Love & Compatibility Guides' : isFrance ? 'Guides' : `${hpStrings.footer.guides}`;
 ---
 
 <footer class="mt-6 sm:mt-8 border-t border-hairline bg-canvas transition-colors">

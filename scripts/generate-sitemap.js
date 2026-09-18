@@ -1,13 +1,14 @@
 // scripts/generate-sitemap.js
 import fs from 'node:fs';
 import path from 'node:path';
+import { execSync } from 'node:child_process';
 
 const SITE_URL = process.env.BASE_URL || 'https://freeaccuratecalculator.com';
 const distClientDir = path.resolve('dist/client');
 const publicDir = path.resolve('public');
 const MAX_URLS_PER_SITEMAP = 500;
 
-// Ensure target directory exists
+// Ensure target directories exist
 if (!fs.existsSync(publicDir)) {
   fs.mkdirSync(publicDir, { recursive: true });
 }
@@ -23,7 +24,7 @@ function getAllHtmlRoutes(dir, baseDir = dir) {
     if (entry.isDirectory()) {
       routes = routes.concat(getAllHtmlRoutes(fullPath, baseDir));
     } else if (entry.isFile() && entry.name.endsWith('.html')) {
-      let relPath = path.relative(baseDir, fullPath).replace(/\\/g, '/');
+      let relPath = path.relative(baseDir, fullPath).split(path.sep).join('/');
       let routePath = '/';
       if (relPath === 'index.html') {
         routePath = '/';
@@ -59,40 +60,28 @@ if (fs.existsSync(redirectsFilePath)) {
   }
 }
 
-// 3. Determine URL list
-let allUrls = [];
-const publicSitemapXml = path.join(publicDir, 'sitemap.xml');
-const distSitemap0 = path.join(distClientDir, 'sitemap-0.xml');
-const distSitemapXml = path.join(distClientDir, 'sitemap.xml');
+// 3. Determine URL list from dist/client HTML output
+let allUrls = getAllHtmlRoutes(distClientDir);
 
-const sourceXmlPath = fs.existsSync(distSitemap0)
-  ? distSitemap0
-  : fs.existsSync(distSitemapXml)
-    ? distSitemapXml
-    : fs.existsSync(publicSitemapXml)
-      ? publicSitemapXml
-      : null;
-
-if (sourceXmlPath) {
-  const content = fs.readFileSync(sourceXmlPath, 'utf-8');
-  const locMatches = [...content.matchAll(/<loc>(https?:\/\/[^<]+)<\/loc>/g)];
-  allUrls = locMatches.map((m) => {
-    try {
-      return new URL(m[1]).pathname;
-    } catch {
-      return m[1];
-    }
-  });
+// Fallback: If dist/client is empty (e.g. running standalone before build), load from public/
+if (allUrls.length === 0) {
+  const publicIndex = path.join(publicDir, 'sitemap-index.xml');
+  const publicUnified = path.join(publicDir, 'sitemap.xml');
+  const targetXml = fs.existsSync(publicUnified) ? publicUnified : fs.existsSync(publicIndex) ? publicIndex : null;
+  if (targetXml) {
+    const content = fs.readFileSync(targetXml, 'utf-8');
+    const locMatches = [...content.matchAll(/<loc>(https?:\/\/[^<]+)<\/loc>/g)];
+    allUrls = locMatches.map((m) => {
+      try {
+        return new URL(m[1]).pathname;
+      } catch {
+        return m[1];
+      }
+    });
+  }
 }
 
-// Merge with dist/client HTML routes if present
-const discoveredRoutes = getAllHtmlRoutes(distClientDir);
-if (discoveredRoutes.length > 0) {
-  const set = new Set([...allUrls, ...discoveredRoutes]);
-  allUrls = Array.from(set);
-}
-
-// Filter out excluded, redirecting, or error routes
+// Filter out excluded, redirecting, or non-canonical routes
 allUrls = allUrls.filter((route) => {
   if (!route) return false;
   const normalized = route.endsWith('/') ? route : `${route}/`;
@@ -122,12 +111,103 @@ allUrls = allUrls.filter((route) => {
   return true;
 });
 
-// Remove duplicates and sort
+// Remove duplicates and sort deterministically
 allUrls = Array.from(new Set(allUrls)).sort();
 
-console.log(`🔍 Total verified 200 OK URLs to partition: ${allUrls.length}`);
+console.log(`🔍 Total verified 200 OK canonical routes to partition: ${allUrls.length}`);
 
-// 4. Category partition configuration
+// 4. Genuine Git lastmod resolver with in-memory caching
+const gitCache = new Map();
+
+function resolveSourceFileForRoute(route) {
+  const cleanRoute = route.replace(/^\/|\/$/g, '');
+  if (!cleanRoute) return 'src/pages/index.astro';
+
+  const parts = cleanRoute.split('/');
+
+  // Direct page match
+  const directAstro = path.join('src/pages', cleanRoute + '.astro');
+  if (fs.existsSync(directAstro)) return directAstro;
+
+  const directIndexAstro = path.join('src/pages', cleanRoute, 'index.astro');
+  if (fs.existsSync(directIndexAstro)) return directIndexAstro;
+
+  // Guides
+  if (parts[0] === 'guides' && parts.length > 1) {
+    const guideMd = path.join('src/content/guides', parts[1] + '.md');
+    if (fs.existsSync(guideMd)) return guideMd;
+    return 'src/pages/guides/[slug].astro';
+  }
+
+  // France custom paths
+  if (cleanRoute.startsWith('countries/france/')) {
+    if (cleanRoute.includes('/guides/')) return 'src/data/france-guides.ts';
+    const frAstro = path.join('src/pages', cleanRoute + '.astro');
+    if (fs.existsSync(frAstro)) return frAstro;
+    return 'src/pages/countries/france/[lang]/[category]/[slug].astro';
+  }
+
+  // Country paths
+  if (parts[0] === 'countries' && parts.length >= 2) {
+    if (parts.length === 2) return 'src/pages/countries/[country]/index.astro';
+    if (parts.length === 3) return 'src/pages/countries/[country]/[slug].astro';
+    if (parts.length === 4) return 'src/pages/countries/[country]/[category]/[slug].astro';
+  }
+
+  // Locales
+  const locales = ['es', 'fr', 'de', 'ar', 'nl', 'pt', 'it', 'ru', 'ja', 'hi', 'zh'];
+  if (locales.includes(parts[0])) {
+    const subRoute = parts.slice(1).join('/');
+    if (!subRoute) {
+      const directLocale = path.join('src/pages', parts[0], 'index.astro');
+      if (fs.existsSync(directLocale)) return directLocale;
+      return 'src/pages/[locale].astro';
+    }
+    const subAstro = path.join('src/pages', parts[0], subRoute + '.astro');
+    if (fs.existsSync(subAstro)) return subAstro;
+    return 'src/pages/[locale].astro';
+  }
+
+  return 'src/pages/index.astro';
+}
+
+function getGitLastMod(file) {
+  if (gitCache.has(file)) return gitCache.get(file);
+  try {
+    const out = execSync(`git log -1 --format=%cI -- "${file}"`, { encoding: 'utf8' }).trim();
+    if (out) {
+      const iso = new Date(out).toISOString();
+      gitCache.set(file, iso);
+      return iso;
+    }
+  } catch {}
+
+  try {
+    const stat = fs.statSync(file);
+    const iso = stat.mtime.toISOString();
+    gitCache.set(file, iso);
+    return iso;
+  } catch {
+    const fallback = '2026-09-17T00:00:00.000Z';
+    gitCache.set(file, fallback);
+    return fallback;
+  }
+}
+
+// 5. XML character escaping
+function escapeXml(unsafe) {
+  return unsafe.replace(/[<>&'"]/g, (c) => {
+    switch (c) {
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '&': return '&amp;';
+      case '\'': return '&apos;';
+      case '"': return '&quot;';
+    }
+  });
+}
+
+// 6. Category partition configuration
 const I18N_LOCALES = new Set(['es', 'fr', 'de', 'ar', 'nl', 'pt', 'it', 'ru', 'ja', 'hi', 'zh']);
 const BUSINESS_CATS = new Set(['business', 'insurance', 'legal', 'real-estate', 'marketing']);
 const SCIENCE_CATS = new Set(['physics', 'chemistry', 'biology', 'ecology', 'technology', 'automotive', 'converter', 'construction', 'statistics']);
@@ -168,7 +248,7 @@ for (const route of allUrls) {
   categorizedRoutes[cat].push(route);
 }
 
-// 5. Build XML helpers
+// 7. Metadata prioritization helpers
 function getPriorityAndChangeFreq(route) {
   if (route === '/' || /^\/(en|es|fr|de|ar|nl|pt|it|ru|ja|hi|zh)\/?$/.test(route)) {
     return { priority: '1.0', changefreq: 'daily' };
@@ -185,15 +265,17 @@ function getPriorityAndChangeFreq(route) {
   return { priority: '0.5', changefreq: 'monthly' };
 }
 
-const nowIso = new Date().toISOString();
-
+// 8. Generate URLset XML with strict formatting (each element on its own line)
 function generateUrlsetXml(routes) {
   const entries = routes.map((route) => {
-    const loc = `${SITE_URL}${route.startsWith('/') ? route : '/' + route}${route !== '/' && !route.endsWith('/') ? '/' : ''}`;
+    const rawLoc = `${SITE_URL}${route.startsWith('/') ? route : '/' + route}${route !== '/' && !route.endsWith('/') ? '/' : ''}`;
+    const loc = escapeXml(rawLoc);
+    const sourceFile = resolveSourceFileForRoute(route);
+    const lastmod = getGitLastMod(sourceFile);
     const { priority, changefreq } = getPriorityAndChangeFreq(route);
     return `  <url>
     <loc>${loc}</loc>
-    <lastmod>${nowIso}</lastmod>
+    <lastmod>${lastmod}</lastmod>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
   </url>`;
@@ -207,7 +289,7 @@ ${entries.join('\n')}
 `;
 }
 
-// 6. Generate and write chunked sitemaps (strict max 500 URLs per file)
+// 9. Generate and write chunked child sitemaps (strict max 500 URLs per file)
 const generatedSitemaps = [];
 
 // Clean up any existing sitemap-*.xml files in public and dist/client
@@ -235,10 +317,14 @@ for (const [category, routes] of Object.entries(categorizedRoutes)) {
       fs.writeFileSync(path.join(distClientDir, sitemapFilename), xmlContent, 'utf-8');
     }
 
+    const childLastmods = routes.map((r) => getGitLastMod(resolveSourceFileForRoute(r)));
+    const maxLastmod = childLastmods.sort().reverse()[0] || '2026-09-17T00:00:00.000Z';
+
     generatedSitemaps.push({
       filename: sitemapFilename,
       count: routes.length,
       loc: `${SITE_URL}/${sitemapFilename}`,
+      lastmod: maxLastmod,
     });
 
     console.log(`  📁 Generated ${sitemapFilename}: ${routes.length} URLs (<= 500 cap)`);
@@ -255,10 +341,14 @@ for (const [category, routes] of Object.entries(categorizedRoutes)) {
         fs.writeFileSync(path.join(distClientDir, sitemapFilename), xmlContent, 'utf-8');
       }
 
+      const childLastmods = chunkRoutes.map((r) => getGitLastMod(resolveSourceFileForRoute(r)));
+      const maxLastmod = childLastmods.sort().reverse()[0] || '2026-09-17T00:00:00.000Z';
+
       generatedSitemaps.push({
         filename: sitemapFilename,
         count: chunkRoutes.length,
         loc: `${SITE_URL}/${sitemapFilename}`,
+        lastmod: maxLastmod,
       });
 
       console.log(`  📁 Generated chunk ${sitemapFilename}: ${chunkRoutes.length} URLs (<= 500 cap)`);
@@ -266,10 +356,10 @@ for (const [category, routes] of Object.entries(categorizedRoutes)) {
   }
 }
 
-// 7. Generate Master Sitemap Index (both sitemap_index.xml and sitemap-index.xml)
+// 10. Generate Master Sitemap Index
 const sitemapIndexEntries = generatedSitemaps.map((sm) => `  <sitemap>
-    <loc>${sm.loc}</loc>
-    <lastmod>${nowIso}</lastmod>
+    <loc>${escapeXml(sm.loc)}</loc>
+    <lastmod>${sm.lastmod}</lastmod>
   </sitemap>`).join('\n');
 
 const sitemapIndexXml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -278,22 +368,12 @@ ${sitemapIndexEntries}
 </sitemapindex>
 `;
 
-// Write both sitemap_index.xml and sitemap-index.xml
-const indexFilenames = ['sitemap_index.xml', 'sitemap-index.xml'];
+// Write authoritative sitemap.xml, sitemap_index.xml, and sitemap-index.xml
+const indexFilenames = ['sitemap.xml', 'sitemap_index.xml', 'sitemap-index.xml'];
 for (const filename of indexFilenames) {
   fs.writeFileSync(path.join(publicDir, filename), sitemapIndexXml, 'utf-8');
   if (fs.existsSync(distClientDir)) {
     fs.writeFileSync(path.join(distClientDir, filename), sitemapIndexXml, 'utf-8');
   }
 }
-console.log(`✅ Generated sitemap_index.xml & sitemap-index.xml referencing ${generatedSitemaps.length} chunked sitemaps (all <= 500 URLs).`);
-
-// 8. Also write unified sitemap.xml fallback
-const fullUnifiedXml = generateUrlsetXml(allUrls);
-fs.writeFileSync(path.join(publicDir, 'sitemap.xml'), fullUnifiedXml, 'utf-8');
-if (fs.existsSync(distClientDir)) {
-  fs.writeFileSync(path.join(distClientDir, 'sitemap.xml'), fullUnifiedXml, 'utf-8');
-}
-console.log(`✅ Maintained canonical sitemap.xml fallback with ${allUrls.length} total URLs.`);
-
-
+console.log(`✅ Master sitemap index written to sitemap.xml, sitemap_index.xml & sitemap-index.xml referencing ${generatedSitemaps.length} chunked sitemaps.`);

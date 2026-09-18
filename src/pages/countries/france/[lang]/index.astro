@@ -1,8 +1,6 @@
 ---
 // src/pages/countries/france/[lang]/index.astro
 import Layout from '../../../../layouts/Layout.astro';
-import ThemeToggle from '../../../../components/ThemeToggle.astro';
-import { getCountryBySlug } from '../../../../data/countries';
 import { CATEGORY_ITEMS } from '../../../../data/categories';
 import { getHomepageStrings } from '../../../../i18n/homepageDict';
 
@@ -17,9 +15,7 @@ const { lang } = Astro.params;
 const isFr = lang === 'fr';
 const currentLocale = isFr ? 'fr' : 'en';
 
-const country = getCountryBySlug('france')!;
 const hpFr = getHomepageStrings('fr');
-const hpEn = getHomepageStrings('en');
 
 // Canonical & Hreflang Metadata
 const pageTitle = isFr
@@ -33,6 +29,76 @@ const pageDescription = isFr
 const pageCanonical = `https://freeaccuratecalculator.com/countries/france/${currentLocale}/`;
 const frUrl = 'https://freeaccuratecalculator.com/countries/france/fr/';
 const enUrl = 'https://freeaccuratecalculator.com/countries/france/en/';
+
+const faqs = isFr
+  ? [
+      {
+        '@type': 'Question',
+        name: 'Ces simulateurs sont-ils conformes aux barèmes fiscaux français 2026 ?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: "Oui. Nos simulateurs intègrent les barèmes officiels 2026 : tranches de l'impôt sur le revenu (DGFIP), cotisations sociales (URSSAF), droits de mutation des notaires (DMTO) et critères d'octroi de crédit du HCSF (taux d'effort maximal de 35%).",
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Comment sont formatés les montants et les devises ?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: "Tous les calculs sont configurés par défaut en euros (€) et utilisent l'espace insécable comme séparateur de milliers conformément aux normes typographiques françaises (ex. 1 000 000 €).",
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Mes données personnelles ou financières sont-elles collectées ?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: "Non. Tous les calculs s'exécutent exclusivement en mémoire locale dans votre navigateur (client-side). Aucune donnée financière, fiche de paie ou simulation d'emprunt n'est transmise ni enregistrée sur nos serveurs.",
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Les simulateurs sont-ils entièrement gratuits ?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Oui. L’ensemble des calculateurs et simulateurs pour la France sont en accès libre et illimité, sans abonnement, sans création de compte et sans mur payant.',
+        },
+      },
+    ]
+  : [
+      {
+        '@type': 'Question',
+        name: 'Are these calculators compliant with official 2026 French statutory rules?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes. Our calculators integrate statutory 2026 French regulations: progressive income tax brackets (DGFIP), URSSAF social security contributions, notary acquisition costs (DMTO), and HCSF mortgage lending debt ratio limits (35% maximum).',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'How are currencies and amounts formatted?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'All calculations are configured in Euros (€) using statutory French currency formatting and precision math engines.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is personal or financial data collected or transmitted?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'No. All calculations run strictly client-side in your local browser memory. Zero financial inputs, payroll data, or loan simulations are saved or transmitted to external servers.',
+        },
+      },
+      {
+        '@type': 'Question',
+        name: 'Are all French calculators free to use?',
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: 'Yes. Every tool is 100% free with unlimited access, zero registration, and zero paywalls.',
+        },
+      },
+    ];
 
 const jsonLd = [
   {
@@ -77,75 +143,7 @@ const jsonLd = [
   {
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: isFr
-      ? [
-          {
-            '@type': 'Question',
-            name: 'Ces simulateurs sont-ils conformes aux barèmes fiscaux français 2026 ?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: "Oui. Nos simulateurs intègrent les barèmes officiels 2026 : tranches de l'impôt sur le revenu (DGFIP), cotisations sociales (URSSAF), droits de mutation des notaires (DMTO) et critères d'octroi de crédit du HCSF (taux d'effort maximal de 35%).",
-            },
-          },
-          {
-            '@type': 'Question',
-            name: 'Comment sont formatés les montants et les devises ?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: "Tous les calculs sont configurés par défaut en euros (€) et utilisent l'espace insécable comme séparateur de milliers conformément aux normes typographiques françaises (ex. 1 000 000 €).",
-            },
-          },
-          {
-            '@type': 'Question',
-            name: 'Mes données personnelles ou financières sont-elles collectées ?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: "Non. Tous les calculs s'exécutent exclusivement en mémoire locale dans votre navigateur (client-side). Aucune donnée financière, fiche de paie ou simulation d'emprunt n'est transmise ni enregistrée sur nos serveurs.",
-            },
-          },
-          {
-            '@type': 'Question',
-            name: 'Les simulateurs sont-ils entièrement gratuits ?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'Oui. L’ensemble des calculateurs et simulateurs pour la France sont en accès libre et illimité, sans abonnement, sans création de compte et sans mur payant.',
-            },
-          },
-        ]
-      : [
-          {
-            '@type': 'Question',
-            name: 'Are these calculators compliant with official 2026 French statutory rules?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'Yes. Our calculators integrate statutory 2026 French regulations: progressive income tax brackets (DGFIP), URSSAF social security contributions, notary acquisition costs (DMTO), and HCSF mortgage lending debt ratio limits (35% maximum).',
-            },
-          },
-          {
-            '@type': 'Question',
-            name: 'How are currencies and amounts formatted?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'All calculations are configured in Euros (€) using statutory French currency formatting and precision math engines.',
-            },
-          },
-          {
-            '@type': 'Question',
-            name: 'Is personal or financial data collected or transmitted?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'No. All calculations run strictly client-side in your local browser memory. Zero financial inputs, payroll data, or loan simulations are saved or transmitted to external servers.',
-            },
-          },
-          {
-            '@type': 'Question',
-            name: 'Are all French calculators free to use?',
-            acceptedAnswer: {
-              '@type': 'Answer',
-              text: 'Yes. Every tool is 100% free with unlimited access, zero registration, and zero paywalls.',
-            },
-          },
-        ],
+    mainEntity: faqs,
   },
 ];
 
@@ -363,7 +361,7 @@ const POPULAR_CALCULATORS = [
           {isFr ? 'Foire Aux Questions (FAQ) — France 2026' : 'Frequently Asked Questions (FAQ) — France 2026'}
         </h2>
         <div class="space-y-4">
-          {jsonLd[2].mainEntity.map((faq: any) => (
+          {faqs.map((faq) => (
             <div class="rounded-xl border border-slate-800 bg-slate-900/50 p-5">
               <h3 class="text-sm sm:text-base font-bold text-white mb-2">{faq.name}</h3>
               <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">{faq.acceptedAnswer.text}</p>

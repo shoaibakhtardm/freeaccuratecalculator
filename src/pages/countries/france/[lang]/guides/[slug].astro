@@ -2,19 +2,23 @@
 // src/pages/countries/france/[lang]/guides/[slug].astro
 import Layout from '../../../../../layouts/Layout.astro';
 import ThemeToggle from '../../../../../components/ThemeToggle.astro';
-import { FRANCE_GUIDES, getRelatedGuides, type FranceGuide } from '../../../../../data/france-guides';
+import { FRANCE_GUIDES_FR, FRANCE_GUIDES_EN, getRelatedGuides, type FranceGuide } from '../../../../../data/france-guides';
 
 export function getStaticPaths() {
-  const languages = ['fr', 'en'];
   const paths: Array<{ params: { lang: string; slug: string }; props: { guide: FranceGuide } }> = [];
 
-  for (const lang of languages) {
-    for (const guide of FRANCE_GUIDES) {
-      paths.push({
-        params: { lang, slug: guide.slug },
-        props: { guide },
-      });
-    }
+  for (const guide of FRANCE_GUIDES_FR) {
+    paths.push({
+      params: { lang: 'fr', slug: guide.slug },
+      props: { guide },
+    });
+  }
+
+  for (const guide of FRANCE_GUIDES_EN) {
+    paths.push({
+      params: { lang: 'en', slug: guide.slug },
+      props: { guide },
+    });
   }
 
   return paths;
@@ -32,14 +36,14 @@ const currentLocale = isFr ? 'fr' : 'en';
 
 const pageTitle = isFr
   ? (guide.metaTitle ? `${guide.metaTitle} | FAC` : `${guide.title} | Guide France 2026`)
-  : (guide.metaTitle ? `${guide.metaTitle} (English) | FAC` : `${guide.title} | France Guide 2026`);
+  : (guide.metaTitle ? `${guide.metaTitle} | FAC` : `${guide.title} | France Guide 2026`);
 
 const pageDescription = guide.metaDescription || guide.summary;
 const pageCanonical = `https://freeaccuratecalculator.com/countries/france/${currentLocale}/guides/${guide.slug}/`;
 const frUrl = `https://freeaccuratecalculator.com/countries/france/fr/guides/${guide.slug}/`;
 const enUrl = `https://freeaccuratecalculator.com/countries/france/en/guides/${guide.slug}/`;
 
-const relatedGuides = getRelatedGuides(guide);
+const relatedGuides = getRelatedGuides(guide, currentLocale);
 
 // JSON-LD Structured Data
 const jsonLdGraph: any[] = [
@@ -183,9 +187,7 @@ const jsonLd = {
             </span>
             <span>{section.heading}</span>
           </h2>
-          <div class="text-sm sm:text-base text-slate-300 leading-relaxed whitespace-pre-line">
-            {section.content}
-          </div>
+          <div class="text-sm sm:text-base text-slate-300 leading-relaxed whitespace-pre-line" set:html={section.content} />
         </section>
       ))}
     </div>

@@ -499,12 +499,12 @@ const relatedCalculators = [
       if (e) {
         e.preventDefault();
         e.stopPropagation();
-        if (typeof (e as any).stopImmediatePropagation === 'function') {
-          (e as any).stopImmediatePropagation();
+        if (typeof e.stopImmediatePropagation === 'function') {
+          e.stopImmediatePropagation();
         }
       }
-      if (typeof (window as any).generateAndDownloadPDF === 'function') {
-        (window as any).generateAndDownloadPDF();
+      if (typeof window.generateAndDownloadPDF === 'function') {
+        window.generateAndDownloadPDF();
       } else {
         window.print();
       }

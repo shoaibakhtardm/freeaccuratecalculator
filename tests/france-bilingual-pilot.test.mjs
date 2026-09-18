@@ -122,6 +122,44 @@ describe('France Bilingual URL-Level Pilot Architecture', () => {
       hreflangEn: 'https://freeaccuratecalculator.com/countries/france/en/finance/salary-calculator/',
       h1Expect: 'France Salary Calculator (Gross to Net)',
     },
+    // Guides Hub
+    {
+      url: '/countries/france/fr/guides/',
+      file: 'countries/france/fr/guides/index.html',
+      lang: 'fr',
+      canonical: 'https://freeaccuratecalculator.com/countries/france/fr/guides/',
+      hreflangFr: 'https://freeaccuratecalculator.com/countries/france/fr/guides/',
+      hreflangEn: 'https://freeaccuratecalculator.com/countries/france/en/guides/',
+      h1Expect: 'Guides Pratiques France 2026',
+    },
+    {
+      url: '/countries/france/en/guides/',
+      file: 'countries/france/en/guides/index.html',
+      lang: 'en',
+      canonical: 'https://freeaccuratecalculator.com/countries/france/en/guides/',
+      hreflangFr: 'https://freeaccuratecalculator.com/countries/france/fr/guides/',
+      hreflangEn: 'https://freeaccuratecalculator.com/countries/france/en/guides/',
+      h1Expect: 'Practical France Guides 2026',
+    },
+    // Guide Article: Income Tax Slabs
+    {
+      url: '/countries/france/fr/guides/bareme-impot-revenu-2026/',
+      file: 'countries/france/fr/guides/bareme-impot-revenu-2026/index.html',
+      lang: 'fr',
+      canonical: 'https://freeaccuratecalculator.com/countries/france/fr/guides/bareme-impot-revenu-2026/',
+      hreflangFr: 'https://freeaccuratecalculator.com/countries/france/fr/guides/bareme-impot-revenu-2026/',
+      hreflangEn: 'https://freeaccuratecalculator.com/countries/france/en/guides/bareme-impot-revenu-2026/',
+      h1Expect: 'Impôt sur le Revenu 2026',
+    },
+    {
+      url: '/countries/france/en/guides/bareme-impot-revenu-2026/',
+      file: 'countries/france/en/guides/bareme-impot-revenu-2026/index.html',
+      lang: 'en',
+      canonical: 'https://freeaccuratecalculator.com/countries/france/en/guides/bareme-impot-revenu-2026/',
+      hreflangFr: 'https://freeaccuratecalculator.com/countries/france/fr/guides/bareme-impot-revenu-2026/',
+      hreflangEn: 'https://freeaccuratecalculator.com/countries/france/en/guides/bareme-impot-revenu-2026/',
+      h1Expect: 'French Income Tax 2026',
+    },
   ];
 
   it('All pilot routes are compiled into dist/client as valid HTML documents', () => {
