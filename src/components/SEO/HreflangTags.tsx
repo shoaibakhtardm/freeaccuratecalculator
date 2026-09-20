@@ -148,44 +148,6 @@ export function computeHreflangTags(
     return { canonicalUrl, hreflangLinks: links };
   }
 
-  // 3.5. France Dedicated Bilingual URL Architecture (/countries/france/fr/* and /countries/france/en/*)
-  if (normalized.startsWith('/countries/france/fr/')) {
-    const frPath = normalized;
-    const enPath = normalized.replace('/countries/france/fr/', '/countries/france/en/');
-    return {
-      canonicalUrl,
-      hreflangLinks: [
-        { lang: 'fr', href: `${origin}${frPath}` },
-        { lang: 'en', href: `${origin}${enPath}` },
-        { lang: 'x-default', href: `${origin}${frPath}` },
-      ],
-    };
-  }
-
-  if (normalized.startsWith('/countries/france/en/')) {
-    const enPath = normalized;
-    const frPath = normalized.replace('/countries/france/en/', '/countries/france/fr/');
-    return {
-      canonicalUrl,
-      hreflangLinks: [
-        { lang: 'fr', href: `${origin}${frPath}` },
-        { lang: 'en', href: `${origin}${enPath}` },
-        { lang: 'x-default', href: `${origin}${frPath}` },
-      ],
-    };
-  }
-
-  // 3.6. Specialized French Regulatory Calculators & Notaire Pages (French Only)
-  if (normalized.startsWith('/countries/france/')) {
-    return {
-      canonicalUrl,
-      hreflangLinks: [
-        { lang: 'fr', href: `${origin}${normalized}` },
-        { lang: 'x-default', href: `${origin}${normalized}` },
-      ],
-    };
-  }
-
   // 4. Verified Multi-Language Programmatic Registry
   const matchedConfig = MULTILANG_ROUTES_REGISTRY[basePath];
   if (matchedConfig) {

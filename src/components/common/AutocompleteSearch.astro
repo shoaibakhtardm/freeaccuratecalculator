@@ -1,7 +1,6 @@
 ---
 // src/components/common/AutocompleteSearch.astro
 import { SEARCHABLE_CALCULATORS, type SearchCalculatorItem } from '../../data/searchDatabase';
-import type { CountryConfig } from '../../data/countries';
 import { getHomepageStrings } from '../../i18n/homepageDict';
 
 interface Props {
@@ -9,7 +8,6 @@ interface Props {
   placeholder?: string;
   categoryFilter?: string;
   className?: string;
-  country?: CountryConfig;
   locale?: string;
   isFrench?: boolean;
 }
@@ -19,68 +17,19 @@ const {
   placeholder,
   categoryFilter,
   className = '',
-  country,
   locale: propLocale,
   isFrench: propIsFrench,
 } = Astro.props;
 
-const isFranceEn = Astro.url.pathname.includes('/countries/france/en/');
-const computedLocale = propLocale || (isFranceEn ? 'en' : (Astro.url.pathname.includes('/countries/france/fr/') ? 'fr' : (Astro.currentLocale || 'en')));
+const computedLocale = propLocale || Astro.currentLocale || 'en';
 const currentLocale = computedLocale.toLowerCase();
 const hpStrings = getHomepageStrings(currentLocale);
 
-const isFrench = propIsFrench ?? (
-  !isFranceEn && (
-    (country?.slug === 'france' && currentLocale !== 'en') ||
-    Astro.url.pathname.includes('/countries/france/fr/') ||
-    (Astro.url.pathname.startsWith('/countries/france/') && !isFranceEn) ||
-    Astro.url.pathname.startsWith('/fr/') ||
-    currentLocale === 'fr'
-  )
-);
+const isFrench = propIsFrench ?? currentLocale === 'fr';
 
 const effectivePlaceholder = placeholder ?? hpStrings.search.placeholder;
 
-// Prepare localized dataset if country or France page is provided
-const isFranceRoute = country?.slug === 'france' || Astro.url.pathname.startsWith('/countries/france');
-const franceLocale = Astro.url.pathname.includes('/countries/france/en/') ? 'en' : 'fr';
-
-const SPECIALIZED_FRANCE_SLUGS = new Set([
-  'capacite-emprunt-hcsf',
-  'frais-de-notaire',
-  'frais-reels-abattement',
-  'indemnite-licenciement',
-  'indemnites-kilometriques',
-  'simulateur-apl',
-  'simulateur-lmnp-reel-micro-bic',
-  'simulateur-ptz',
-  'simulateur-salaire-brut-net',
-  'taxe-amenagement',
-]);
-
-const dataset: SearchCalculatorItem[] = isFranceRoute
-  ? SEARCHABLE_CALCULATORS.map((calc) => {
-      let href = calc.href;
-      if (SPECIALIZED_FRANCE_SLUGS.has(calc.slug)) {
-        href = `/countries/france/${calc.slug}/`;
-      } else {
-        // Standard France calculator route under approved architecture
-        href = `/countries/france/${franceLocale}/${calc.category}/${calc.slug}/`;
-      }
-      return {
-        ...calc,
-        href,
-      };
-    })
-  : country
-  ? SEARCHABLE_CALCULATORS.map((calc) => {
-      const isCountryCalc = country.popularCalculators.includes(calc.slug);
-      return {
-        ...calc,
-        href: isCountryCalc ? `/countries/${country.slug}/${calc.slug}/` : calc.href,
-      };
-    })
-  : SEARCHABLE_CALCULATORS;
+const dataset: SearchCalculatorItem[] = SEARCHABLE_CALCULATORS;
 
 const searchDataJson = JSON.stringify(dataset);
 const searchI18nJson = JSON.stringify(hpStrings.search);

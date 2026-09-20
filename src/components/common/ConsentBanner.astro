@@ -1,7 +1,7 @@
 ---
 // src/components/common/ConsentBanner.astro
 const pathname = Astro.url.pathname;
-const isFrench = pathname.includes('/countries/france') || pathname.startsWith('/fr') || (Astro.currentLocale === 'fr');
+const isFrench = pathname.startsWith('/fr') || (Astro.currentLocale === 'fr');
 ---
 
 <div
@@ -65,7 +65,7 @@ const isFrench = pathname.includes('/countries/france') || pathname.startsWith('
     // Check client-side language if on France page or French lang
     const path = window.location.pathname;
     const docLang = document.documentElement.lang || '';
-    const isFr = path.includes('/countries/france') || path.startsWith('/fr') || docLang.startsWith('fr');
+    const isFr = path.startsWith('/fr') || docLang.startsWith('fr');
 
     if (isFr && titleEl && descEl) {
       titleEl.textContent = 'Confidentialité & Cookies';

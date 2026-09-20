@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { className = '', isFrench: propIsFrench } = Astro.props;
-const isFrench = propIsFrench ?? (Astro.url.pathname.includes('/countries/france/') || Astro.url.pathname.startsWith('/fr/'));
+const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
 ---
 
 <button

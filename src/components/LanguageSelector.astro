@@ -23,9 +23,7 @@ const languages = ALL_SUPPORTED_LOCALES.map((code) => ({
 }));
 
 const activeLang = languages.find((l) => l.code === currentLocale) || languages[0];
-const isFranceFrRoute = Astro.url.pathname.includes('/countries/france/fr/');
-const isFranceEnRoute = Astro.url.pathname.includes('/countries/france/en/');
-const isFrench = currentLocale === 'fr' || isFranceFrRoute || Astro.url.pathname.startsWith('/fr/');
+const isFrench = currentLocale === 'fr' || Astro.url.pathname.startsWith('/fr/');
 ---
 
 <div class={`fac-lang-wrapper relative inline-flex items-center notranslate shrink-0 ${className}`}>

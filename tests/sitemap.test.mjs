@@ -40,7 +40,6 @@ test('Categorized Sitemap and Discovery Audit', async (t) => {
     assert.match(content, /<sitemapindex/, 'Must have <sitemapindex> root tag');
     assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/sitemap-main\.xml<\/loc>/);
     assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/sitemap-finance\.xml<\/loc>/);
-    assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/sitemap-countries-1\.xml<\/loc>/);
     assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/sitemap-math\.xml<\/loc>/);
     assert.match(content, /<loc>https:\/\/freeaccuratecalculator\.com\/sitemap-health\.xml<\/loc>/);
 
@@ -58,7 +57,8 @@ test('Categorized Sitemap and Discovery Audit', async (t) => {
 
     assert.match(mainContent, /<loc>https:\/\/freeaccuratecalculator\.com\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>daily<\/changefreq>\s*<priority>1\.0<\/priority>/);
     assert.match(financeContent, /<loc>https:\/\/freeaccuratecalculator\.com\/finance\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>weekly<\/changefreq>\s*<priority>0\.8<\/priority>/);
-    assert.match(mathContent, /<loc>https:\/\/freeaccuratecalculator\.com\/math\/percentage-calculator\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>weekly<\/changefreq>\s*<priority>0\.7<\/priority>/);
+    const percentageSitemap = `${mainContent}${mathContent}`;
+    assert.match(percentageSitemap, /<loc>https:\/\/freeaccuratecalculator\.com\/(?:math\/)?percentage-calculator\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>weekly<\/changefreq>\s*<priority>0\.7<\/priority>/);
     assert.match(mainContent, /<loc>https:\/\/freeaccuratecalculator\.com\/about\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>monthly<\/changefreq>\s*<priority>0\.5<\/priority>/);
   });
 

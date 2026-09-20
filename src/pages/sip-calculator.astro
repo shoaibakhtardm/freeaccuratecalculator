@@ -1,14 +1,14 @@
 ---
 // src/pages/finance/sip-calculator.astro
-import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
-import FormulaSection from '../../components/calculator/FormulaSection.astro';
-import WorkedExample from '../../components/calculator/WorkedExample.astro';
-import FAQSection from '../../components/calculator/FAQSection.astro';
-import HistoryDrawer from '../../components/calculator/HistoryDrawer.astro';
-import SocialProof from '../../components/SocialProof.astro';
-import CalculatorComparison from '../../components/CalculatorComparison.astro';
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
+import FormulaSection from '../components/calculator/FormulaSection.astro';
+import WorkedExample from '../components/calculator/WorkedExample.astro';
+import FAQSection from '../components/calculator/FAQSection.astro';
+import HistoryDrawer from '../components/calculator/HistoryDrawer.astro';
+import SocialProof from '../components/SocialProof.astro';
+import CalculatorComparison from '../components/CalculatorComparison.astro';
 
-import { faqDatabase } from '../../data/faqDatabase';
+import { faqDatabase } from '../data/faqDatabase';
 
 const faqs = faqDatabase['sip-calculator'];
 
@@ -1215,7 +1215,7 @@ const schema = {
 </CalculatorLayout>
 
 <script>
-  import { calculateSIP, calculateStepUpSIP, type ContributionTiming } from '../../engines/investment';
+  import { calculateSIP, calculateStepUpSIP, type ContributionTiming } from '../engines/investment';
 
   // Calculator Modes: 'regular' (Monthly Deposit -> Corpus) or 'goal' (Target Corpus -> Monthly SIP)
   type CalculatorMode = 'regular' | 'goal';
@@ -1526,7 +1526,7 @@ const schema = {
     let maturityCorpus = 0;
     let investedCapital = 0;
     let wealthGain = 0;
-    let yearlyBreakdown: import('../../engines/investment').SIPYearlyBreakdown[] = [];
+    let yearlyBreakdown: import('../engines/investment').SIPYearlyBreakdown[] = [];
 
     const months = Math.round(years * 12);
     const i = rate / 12 / 100;
@@ -1750,7 +1750,7 @@ const schema = {
     updatePrintMetadata(monthlyDeposit, rate, years, timing, investedCapital, wealthGain, maturityCorpus, multiplier, stepUpPercent);
   }
 
-  function renderSchedule(breakdown: import('../../engines/investment').SIPYearlyBreakdown[], monthlyDeposit: number) {
+  function renderSchedule(breakdown: import('../engines/investment').SIPYearlyBreakdown[], monthlyDeposit: number) {
     let screenHtml = '';
     let printHtml = '';
 

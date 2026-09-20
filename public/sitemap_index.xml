@@ -2,23 +2,15 @@
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <sitemap>
     <loc>https://freeaccuratecalculator.com/sitemap-finance.xml</loc>
-    <lastmod>2026-09-17T22:30:00.000Z</lastmod>
-  </sitemap>
-  <sitemap>
-    <loc>https://freeaccuratecalculator.com/sitemap-countries-1.xml</loc>
-    <lastmod>2026-09-18T06:35:26.000Z</lastmod>
-  </sitemap>
-  <sitemap>
-    <loc>https://freeaccuratecalculator.com/sitemap-countries-2.xml</loc>
-    <lastmod>2026-09-18T06:35:26.000Z</lastmod>
+    <lastmod>2026-09-17T15:37:47.000Z</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://freeaccuratecalculator.com/sitemap-math.xml</loc>
-    <lastmod>2026-09-17T22:30:00.000Z</lastmod>
+    <lastmod>2026-09-17T15:37:47.000Z</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://freeaccuratecalculator.com/sitemap-health.xml</loc>
-    <lastmod>2026-09-17T22:30:00.000Z</lastmod>
+    <lastmod>2026-09-17T15:37:47.000Z</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://freeaccuratecalculator.com/sitemap-business.xml</loc>
@@ -26,7 +18,7 @@
   </sitemap>
   <sitemap>
     <loc>https://freeaccuratecalculator.com/sitemap-science.xml</loc>
-    <lastmod>2026-09-17T22:30:00.000Z</lastmod>
+    <lastmod>2026-09-17T15:37:47.000Z</lastmod>
   </sitemap>
   <sitemap>
     <loc>https://freeaccuratecalculator.com/sitemap-everyday.xml</loc>
@@ -42,6 +34,6 @@
   </sitemap>
   <sitemap>
     <loc>https://freeaccuratecalculator.com/sitemap-main.xml</loc>
-    <lastmod>2026-09-17T15:37:47.000Z</lastmod>
+    <lastmod>2026-09-20T08:55:00.000Z</lastmod>
   </sitemap>
 </sitemapindex>

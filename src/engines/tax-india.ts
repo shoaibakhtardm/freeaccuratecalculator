@@ -3,7 +3,7 @@ import {
   INDIA_TAX_CONFIG_2026,
   type TaxBracketConfig,
   type SurchargeTier,
-} from '../data/countries.ts';
+} from '../data/tax-config.ts';
 
 export interface IndiaIncomeTaxInput {
   annualSalary: number;

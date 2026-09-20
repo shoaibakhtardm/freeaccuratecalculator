@@ -14,10 +14,40 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://freeaccuratecalculator.com/age-calculator/</loc>
+    <lastmod>2026-09-20T08:55:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freeaccuratecalculator.com/ai-token-cost-calculator/</loc>
+    <lastmod>2026-09-20T08:55:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freeaccuratecalculator.com/bmi-calculator/</loc>
+    <lastmod>2026-09-20T08:55:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://freeaccuratecalculator.com/contact/</loc>
     <lastmod>2026-09-08T11:17:25.000Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://freeaccuratecalculator.com/emi-calculator/</loc>
+    <lastmod>2026-09-20T08:55:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freeaccuratecalculator.com/income-tax-calculator/</loc>
+    <lastmod>2026-09-20T08:55:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://freeaccuratecalculator.com/love/</loc>
@@ -278,10 +308,22 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://freeaccuratecalculator.com/percentage-calculator/</loc>
+    <lastmod>2026-09-20T08:55:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://freeaccuratecalculator.com/privacy-policy/</loc>
     <lastmod>2026-09-08T11:17:25.000Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://freeaccuratecalculator.com/sip-calculator/</loc>
+    <lastmod>2026-09-20T08:55:00.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://freeaccuratecalculator.com/terms-of-use/</loc>

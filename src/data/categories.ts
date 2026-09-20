@@ -1,6 +1,5 @@
 // src/data/categories.ts
-import type { CountryConfig } from './countries';
-import { CALCULATORS, type CategoryId } from './calculatorRegistry';
+import type { CategoryId } from './calculatorRegistry';
 
 export interface CategoryItem {
   id: CategoryId;
@@ -34,21 +33,6 @@ export const CATEGORY_ITEMS: readonly CategoryItem[] = [
   { id: 'converter', name: 'Converter', icon: '🔄' },
   { id: 'love', name: 'Love', icon: '❤️' },
 ] as const;
-
-/**
- * Returns available categories for a country.
- * Filters out any category that does not have at least one verified calculator in the registry,
- * preventing thin or empty pages while providing rich topical architecture.
- */
-export function getCountryCategories(country?: CountryConfig): CategoryItem[] {
-  if (!country) return [...CATEGORY_ITEMS];
-
-  // Verify that every returned category has active, verified calculators
-  return CATEGORY_ITEMS.filter((cat) => {
-    const hasCalculators = CALCULATORS.some((c) => c.category === cat.id);
-    return hasCalculators;
-  });
-}
 
 /**
  * Helper to retrieve a single category item by its ID

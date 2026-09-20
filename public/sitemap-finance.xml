@@ -32,12 +32,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://freeaccuratecalculator.com/finance/emi-calculator/</loc>
-    <lastmod>2026-09-17T22:30:00.000Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://freeaccuratecalculator.com/finance/epf-calculator/</loc>
     <lastmod>2026-09-17T15:37:47.000Z</lastmod>
     <changefreq>weekly</changefreq>
@@ -52,12 +46,6 @@
   <url>
     <loc>https://freeaccuratecalculator.com/finance/gratuity-calculator/</loc>
     <lastmod>2026-09-17T15:37:47.000Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://freeaccuratecalculator.com/finance/income-tax-calculator/</loc>
-    <lastmod>2026-09-17T22:30:00.000Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -178,12 +166,6 @@
   <url>
     <loc>https://freeaccuratecalculator.com/finance/simple-interest-calculator/</loc>
     <lastmod>2026-09-17T15:37:47.000Z</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://freeaccuratecalculator.com/finance/sip-calculator/</loc>
-    <lastmod>2026-09-17T22:30:00.000Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

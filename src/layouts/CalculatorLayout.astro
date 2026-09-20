@@ -102,8 +102,7 @@ if (faqSchema) {
 }
 
 const combinedSchemas = [softwareAppSchema, ...extraSchemas];
-const isFranceEn = Astro.url.pathname.includes('/countries/france/en/');
-const isFrench = !isFranceEn && (lang?.startsWith('fr') || Astro.url.pathname.includes('/countries/france/fr/') || (Astro.url.pathname.startsWith('/countries/france/') && !isFranceEn) || Astro.url.pathname.startsWith('/fr/'));
+const isFrench = lang?.startsWith('fr') || Astro.url.pathname.startsWith('/fr/');
 ---
 
 <Layout

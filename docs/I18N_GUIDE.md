@@ -56,7 +56,7 @@ Create `src/i18n/locales/zh.json` containing the 58 keys (copying from `en.json`
 }
 ```
 
-### Step 4: Map Country Codes in `src/utils/countryLanguageMap.ts`
+### Step 4: Use the locale map in `src/i18n/localeConfig.ts`
 Map the corresponding ISO country codes:
 ```typescript
 // In COUNTRY_TO_LANGUAGE:

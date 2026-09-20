@@ -1,15 +1,15 @@
 ---
 // src/pages/finance/emi-calculator.astro
-import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
-import ResultDisplay from '../../components/calculator/ResultDisplay.astro';
-import FormulaSection from '../../components/calculator/FormulaSection.astro';
-import WorkedExample from '../../components/calculator/WorkedExample.astro';
-import FAQSection from '../../components/calculator/FAQSection.astro';
-import HistoryDrawer from '../../components/calculator/HistoryDrawer.astro';
-import SocialProof from '../../components/SocialProof.astro';
-import CalculatorComparison from '../../components/CalculatorComparison.astro';
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
+import ResultDisplay from '../components/calculator/ResultDisplay.astro';
+import FormulaSection from '../components/calculator/FormulaSection.astro';
+import WorkedExample from '../components/calculator/WorkedExample.astro';
+import FAQSection from '../components/calculator/FAQSection.astro';
+import HistoryDrawer from '../components/calculator/HistoryDrawer.astro';
+import SocialProof from '../components/SocialProof.astro';
+import CalculatorComparison from '../components/CalculatorComparison.astro';
 
-import { faqDatabase } from '../../data/faqDatabase';
+import { faqDatabase } from '../data/faqDatabase';
 
 const faqs = faqDatabase['emi-calculator'] || [
   {

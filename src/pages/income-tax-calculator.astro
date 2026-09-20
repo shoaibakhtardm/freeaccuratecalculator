@@ -1,12 +1,12 @@
 ---
 // src/pages/finance/income-tax-calculator.astro
-import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
-import ResultDisplay from '../../components/calculator/ResultDisplay.astro';
-import FormulaSection from '../../components/calculator/FormulaSection.astro';
-import WorkedExample from '../../components/calculator/WorkedExample.astro';
-import FAQSection from '../../components/calculator/FAQSection.astro';
-import HistoryDrawer from '../../components/calculator/HistoryDrawer.astro';
-import { INDIA_TAX_CONFIG_2026, US_TAX_CONFIG_2026 } from '../../data/countries';
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
+import ResultDisplay from '../components/calculator/ResultDisplay.astro';
+import FormulaSection from '../components/calculator/FormulaSection.astro';
+import WorkedExample from '../components/calculator/WorkedExample.astro';
+import FAQSection from '../components/calculator/FAQSection.astro';
+import HistoryDrawer from '../components/calculator/HistoryDrawer.astro';
+import { INDIA_TAX_CONFIG_2026, US_TAX_CONFIG_2026 } from '../data/tax-config';
 
 const faqs = [
   {
@@ -433,13 +433,16 @@ const formulaVariables = [
 </CalculatorLayout>
 
 <script>
-  import { calculateIndiaIncomeTax } from '../../engines/tax-india';
-  import { calculateUSIncomeTax } from '../../engines/tax-us';
-  import { promptCurrencyConversion, convertCurrency } from '../../utils/currency';
-  import { getCountryByCode } from '../../data/countries';
+  import { calculateIndiaIncomeTax } from '../engines/tax-india';
+  import { calculateUSIncomeTax } from '../engines/tax-us';
+  import { promptCurrencyConversion, convertCurrency } from '../utils/currency';
 
   let currentCountryCode = 'IN';
   let currentCurrencyCode = 'INR';
+  const taxJurisdictions = {
+    IN: { currency: 'INR', currencySymbol: '₹' },
+    US: { currency: 'USD', currencySymbol: '$' },
+  };
 
   const countrySelect = document.getElementById('tax-country-select') as HTMLSelectElement;
   const currencySelect = document.getElementById('tax-currency-select') as HTMLSelectElement;
@@ -487,7 +490,7 @@ const formulaVariables = [
   }
 
   function handleCountrySwitch(newCode: string) {
-    const targetCountry = getCountryByCode(newCode);
+    const targetCountry = taxJurisdictions[newCode as keyof typeof taxJurisdictions] || taxJurisdictions.IN;
     const prevCurrency = currentCurrencyCode;
     const nextCurrency = targetCountry.currency;
 
@@ -543,8 +546,8 @@ const formulaVariables = [
 
   function recalculate() {
     const gross = Math.max(0, parseFloat(grossInput?.value || '0') || 0);
-    const country = getCountryByCode(currentCountryCode);
-    const sym = country.currencySymbol;
+    const jurisdiction = taxJurisdictions[currentCountryCode as keyof typeof taxJurisdictions] || taxJurisdictions.IN;
+    const sym = jurisdiction.currencySymbol;
 
     if (grossDisplay) {
       grossDisplay.textContent = `${sym} ${gross.toLocaleString()}`;

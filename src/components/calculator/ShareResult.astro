@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { calculatorTitle, isFrench: propIsFrench } = Astro.props;
-const isFrench = propIsFrench ?? (Astro.url.pathname.includes('/countries/france/') || Astro.url.pathname.startsWith('/fr/'));
+const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
 ---
 
 <div class="rounded-xl border border-hairline bg-canvas p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-whisper">
@@ -76,7 +76,7 @@ const isFrench = propIsFrench ?? (Astro.url.pathname.includes('/countries/france
   document.getElementById('copy-link-btn')?.addEventListener('click', function () {
     navigator.clipboard.writeText(window.location.href);
     const label = document.getElementById('copy-btn-text');
-    const isFr = this.getAttribute('data-is-french') === 'true' || window.location.pathname.includes('/countries/france/');
+    const isFr = this.getAttribute('data-is-french') === 'true' || window.location.pathname.startsWith('/fr/');
     if (label) {
       label.textContent = isFr ? 'Copié !' : 'Copied!';
       setTimeout(() => {

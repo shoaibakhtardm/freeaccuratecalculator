@@ -3,8 +3,6 @@
 import Layout from '../../layouts/Layout.astro';
 import Breadcrumbs from '../common/Breadcrumbs.astro';
 import CategoriesSection from '../CategoriesSection.astro';
-import OrphanRescueLinks from '../SEO/OrphanRescueLinks.astro';
-import type { CountryConfig } from '../../data/countries';
 
 export interface DirectoryToolItem {
   id: string;
@@ -15,7 +13,6 @@ export interface DirectoryToolItem {
   category?: string;
   badge: string;
   icon?: string;
-  flagUrl?: string;
   subNiche?: string;
 }
 
@@ -31,7 +28,6 @@ export interface FAQItem {
 }
 
 export interface Props {
-  country?: CountryConfig;
   categoryId?: string;
   isFrench?: boolean;
   showCategories?: boolean;
@@ -42,13 +38,11 @@ export interface Props {
   breadcrumbs: Array<{ label: string; href?: string }>;
   pillBadgeText: string;
   pillIcon?: string;
-  pillFlagUrl?: string;
   headline: string;
   headlineHighlight: string;
   subheadlineText: string;
   directoryTitle: string;
   directoryIcon?: string;
-  directoryFlagUrl?: string;
   backLink: { label: string; href: string };
   searchPlaceholder?: string;
   tools: DirectoryToolItem[];
@@ -65,7 +59,6 @@ export interface Props {
 }
 
 const {
-  country,
   categoryId,
   isFrench: isFrenchProp,
   showCategories = true,
@@ -76,13 +69,11 @@ const {
   breadcrumbs,
   pillBadgeText,
   pillIcon,
-  pillFlagUrl,
   headline,
   headlineHighlight,
   subheadlineText,
   directoryTitle,
   directoryIcon = '🧮',
-  directoryFlagUrl,
   backLink,
   searchPlaceholder: searchPlaceholderProp,
   tools,
@@ -98,12 +89,7 @@ const {
   headlineGradientDark = 'dark:from-blue-400 dark:via-indigo-300 dark:to-purple-300',
 } = Astro.props;
 
-const isFrench = isFrenchProp ?? (
-  country?.slug === 'france' || 
-  Astro.url.pathname.startsWith('/countries/france') || 
-  Astro.url.pathname.startsWith('/fr/') || 
-  Astro.currentLocale === 'fr'
-);
+const isFrench = isFrenchProp ?? (Astro.url.pathname.startsWith('/fr/') || Astro.currentLocale === 'fr');
 const defaultSearchPlaceholder = isFrench 
   ? "Rechercher (ex: prêt, TVA, salaire, impôt, retraite, amortissement)" 
   : 'Search calculators...';
@@ -144,12 +130,7 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          {pillFlagUrl && (
-            <span class="inline-flex h-3.5 w-5 shrink-0 items-center justify-center rounded-[2px] overflow-hidden border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
-              <img src={pillFlagUrl} alt="" class="w-full h-full object-cover" loading="lazy" decoding="async" width="20" height="14" />
-            </span>
-          )}
-          {!pillFlagUrl && pillIcon && <span class="text-xs">{pillIcon}</span>}
+          {pillIcon && <span class="text-xs">{pillIcon}</span>}
           <span class="font-outfit text-[11px] sm:text-xs font-bold tracking-wider uppercase text-slate-700 dark:text-slate-200">
             {pillBadgeText}
           </span>
@@ -177,13 +158,7 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
       <!-- Section Header without numbers & Back Link -->
       <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-3">
         <div class="flex items-center gap-2">
-          {directoryFlagUrl ? (
-            <span class="flex h-5 w-7 shrink-0 items-center justify-center rounded-[2px] overflow-hidden border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
-              <img src={directoryFlagUrl} alt="" class="w-full h-full object-cover" loading="lazy" decoding="async" width="28" height="20" />
-            </span>
-          ) : (
-            <span class="text-xl">{directoryIcon}</span>
-          )}
+          <span class="text-xl">{directoryIcon}</span>
           <h2 class="font-outfit text-sm sm:text-base md:text-lg font-black uppercase tracking-[0.15em] text-slate-900 dark:text-white">
             {directoryTitle}
           </h2>
@@ -307,13 +282,7 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
           >
             <!-- Top Icon Emblem -->
             <div class="flex h-8 w-8 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-base sm:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/40 transition-transform">
-              {calc.flagUrl ? (
-                <span class="flex h-5 w-7 shrink-0 items-center justify-center rounded-[2px] overflow-hidden border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
-                  <img src={calc.flagUrl} alt="" class="w-full h-full object-cover" loading="lazy" decoding="async" width="28" height="20" />
-                </span>
-              ) : (
-                calc.icon || '🧮'
-              )}
+              {calc.icon || '🧮'}
             </div>
 
             <!-- Title: Separated prefix and name with proper flex column spacing -->
@@ -354,9 +323,9 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
     </section>
     )}
 
-    <!-- Categories Section (Exact Homepage Style, Scoped to Country, with Embedded Live Spotlight Search) -->
-    {country && showCategories && (
-      <CategoriesSection country={country} showSearch={false} />
+    <!-- Categories Section -->
+    {showCategories && (
+    <CategoriesSection showSearch={false} />
     )}
 
     <!-- Educational & Domain Value Section -->
@@ -419,12 +388,6 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
       </div>
     </section>
 
-    <!-- Contextual Zero-CLS Regional Internal Linking Grid -->
-    <OrphanRescueLinks
-      currentCategory={country ? undefined : (breadcrumbs[0]?.label || '').toLowerCase()}
-      currentCountry={country?.name}
-      limit={8}
-    />
   </div>
 </Layout>
 
@@ -497,7 +460,7 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
     }
 
     const path = window.location.pathname;
-    const isFr = path.startsWith('/countries/france') || path.startsWith('/fr/') || (document.documentElement.lang || '').startsWith('fr');
+    const isFr = path.startsWith('/fr/') || (document.documentElement.lang || '').startsWith('fr');
 
     if (noResults) {
       noResults.style.display = 'none';

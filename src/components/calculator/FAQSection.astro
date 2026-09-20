@@ -12,7 +12,7 @@ interface Props {
 }
 
 const { faqs = [], title, isFrench: propIsFrench } = Astro.props;
-const isFrench = propIsFrench ?? (Astro.url.pathname.includes('/countries/france/') || Astro.url.pathname.startsWith('/fr/'));
+const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
 const resolvedTitle = title || (isFrench ? 'Questions Fréquentes' : 'Frequently Asked Questions');
 
 const hasFaqs = Array.isArray(faqs) && faqs.length > 0;

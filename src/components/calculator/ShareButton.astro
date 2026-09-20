@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { className = '', isFrench: propIsFrench } = Astro.props;
-const isFrench = propIsFrench ?? (Astro.url.pathname.includes('/countries/france/') || Astro.url.pathname.startsWith('/fr/'));
+const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
 ---
 
 <button
@@ -29,7 +29,7 @@ const isFrench = propIsFrench ?? (Astro.url.pathname.includes('/countries/france
     const text = document.getElementById('fac-share-text');
     if (!btn || !text) return;
 
-    const isFr = btn.getAttribute('data-is-french') === 'true' || window.location.pathname.includes('/countries/france/');
+    const isFr = btn.getAttribute('data-is-french') === 'true' || window.location.pathname.startsWith('/fr/');
 
     btn.addEventListener('click', async () => {
       // Trigger url state sync if defined by active calculator

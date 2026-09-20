@@ -1,7 +1,7 @@
 ---
 // src/components/common/LocaleDetectionToast.astro
 const pathname = Astro.url.pathname;
-const isFrench = pathname.includes('/countries/france') || pathname.startsWith('/fr') || (Astro.currentLocale === 'fr');
+const isFrench = pathname.startsWith('/fr') || (Astro.currentLocale === 'fr');
 ---
 
 <div
@@ -81,7 +81,7 @@ const isFrench = pathname.includes('/countries/france') || pathname.startsWith('
 
     const path = window.location.pathname;
     const docLang = document.documentElement.lang || '';
-    const isFrPage = path.includes('/countries/france') || path.startsWith('/fr') || docLang.startsWith('fr');
+    const isFrPage = path.startsWith('/fr') || docLang.startsWith('fr');
 
     const switchBtn = document.getElementById('fac-toast-switch-btn');
     const dismissBtn = document.getElementById('fac-toast-dismiss-btn');

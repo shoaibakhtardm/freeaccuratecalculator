@@ -12,10 +12,9 @@ interface Props {
 
 const { items, isFrench: propIsFrench } = Astro.props;
 
-const isFranceEn = Astro.url.pathname.includes('/countries/france/en/');
-const isFrench = propIsFrench ?? (!isFranceEn && (Astro.url.pathname.includes('/countries/france/fr/') || (Astro.url.pathname.startsWith('/countries/france/') && !isFranceEn) || Astro.url.pathname.startsWith('/fr/')));
+const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
 const homeText = isFrench ? 'Accueil' : 'Home';
-const homeHref = isFrench ? (Astro.url.pathname.startsWith('/countries/france/') ? '/countries/france/fr/' : '/fr/') : (isFranceEn ? '/countries/france/en/' : '/');
+const homeHref = isFrench ? '/fr/' : '/';
 
 const siteOrigin = 'https://freeaccuratecalculator.com';
 const currentPath = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;

@@ -2,7 +2,7 @@
 import {
   US_TAX_CONFIG_2026,
   type TaxBracketConfig,
-} from '../data/countries.ts';
+} from '../data/tax-config.ts';
 
 export interface USIncomeTaxInput {
   grossAnnualIncome: number;

@@ -30,7 +30,7 @@ const {
   isFrench: propIsFrench,
 } = Astro.props;
 
-const isFrench = propIsFrench ?? (Astro.url.pathname.includes('/countries/france/') || Astro.url.pathname.startsWith('/fr/'));
+const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
 
 let resolvedTitle = userTitle || (isFrench ? 'Exemple de Calcul Pas-à-Pas' : 'Step-by-Step Worked Example');
 let resolvedScenario = userScenario || '';

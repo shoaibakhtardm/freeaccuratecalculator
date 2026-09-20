@@ -6,7 +6,6 @@ import Header from '../components/common/Header.astro';
 import Footer from '../components/common/Footer.astro';
 import ConsentBanner from '../components/common/ConsentBanner.astro';
 import Toast from '../components/common/Toast.astro';
-import LanguageCountryModal from '../components/LanguageCountryModal.astro';
 import LocaleDetectionToast from '../components/common/LocaleDetectionToast.astro';
 import LocalizedCalculatorBridge from '../components/calculator/LocalizedCalculatorBridge.astro';
 import { EXCHANGE_RATE_SNAPSHOT } from '../data/exchangeRates';
@@ -433,56 +432,14 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
             currentCode = urlCurr;
             localStorage.setItem('fac_currency', currentCode);
           } else {
-            // Check country route context (/countries/[country-slug]/...)
-            const countryMatch = window.location.pathname.match(/\/countries\/([a-z0-9-]+)/i);
-            const countrySlug = countryMatch ? countryMatch[1].toLowerCase() : null;
-            const countryCurrencyMap = {
-              'united-states': 'USD',
-              'united-kingdom': 'GBP',
-              'india': 'INR',
-              'canada': 'CAD',
-              'australia': 'AUD',
-              'germany': 'EUR',
-              'france': 'EUR',
-              'japan': 'JPY',
-              'singapore': 'SGD',
-              'united-arab-emirates': 'AED',
-              'saudi-arabia': 'SAR',
-              'switzerland': 'CHF',
-              'new-zealand': 'NZD',
-              'south-africa': 'ZAR',
-              'spain': 'EUR',
-              'italy': 'EUR',
-              'netherlands': 'EUR',
-              'ireland': 'EUR',
-              'austria': 'EUR',
-              'belgium': 'EUR',
-              'portugal': 'EUR',
-              'finland': 'EUR',
-              'greece': 'EUR',
-              'denmark': 'EUR',
-              'sweden': 'EUR',
-              'norway': 'EUR',
-              'poland': 'EUR',
-              'czech-republic': 'EUR',
-              'hungary': 'EUR',
-              'romania': 'EUR',
-              'brazil': 'USD',
-              'mexico': 'USD',
-            };
-            if (countrySlug && countryCurrencyMap[countrySlug] && currencyMap[countryCurrencyMap[countrySlug]]) {
-              currentCode = countryCurrencyMap[countrySlug];
-              localStorage.setItem('fac_currency', currentCode);
+            // 2. Check localStorage
+            const stored = (localStorage.getItem('fac_currency') || '').toUpperCase();
+            if (stored && currencyMap[stored]) {
+              currentCode = stored;
             } else {
-              // 2. Check localStorage
-              const stored = (localStorage.getItem('fac_currency') || '').toUpperCase();
-              if (stored && currencyMap[stored]) {
-                currentCode = stored;
-              } else {
-                // 3. Browser locale detection
-                currentCode = detect();
-                localStorage.setItem('fac_currency', currentCode);
-              }
+              // 3. Browser locale detection
+              currentCode = detect();
+              localStorage.setItem('fac_currency', currentCode);
             }
           }
 
@@ -548,9 +505,6 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
           if (pathMatch) {
             savedLocale = pathMatch[1].toLowerCase();
             localStorage.setItem('fac_locale', savedLocale);
-          } else if (window.location.pathname.startsWith('/countries/france')) {
-            const franceLang = (localStorage.getItem('fac_france_lang') || 'fr').toLowerCase();
-            savedLocale = franceLang === 'en' ? 'en' : 'fr';
           }
           if (!savedLocale) savedLocale = 'en';
           window.__facLanguage = savedLocale;
@@ -577,19 +531,6 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
               const targetPath = target === 'en' ? '/' : `/${target}/`;
               window.location.href = targetPath + window.location.search;
               return;
-            }
-
-            // Explicit France bilingual route handling: /countries/france/[lang]/...
-            if (currentPath.includes('/countries/france/fr/') || currentPath.includes('/countries/france/en/')) {
-              const fromLang = currentPath.includes('/countries/france/fr/') ? 'fr' : 'en';
-              if (target === 'fr' || target === 'en') {
-                const targetPath = currentPath.replace(
-                  `/countries/france/${fromLang}/`,
-                  `/countries/france/${target}/`
-                );
-                window.location.href = targetPath + window.location.search;
-                return;
-              }
             }
 
             // Check if this page has an explicit hreflang alternate URL for the selected language
@@ -629,7 +570,6 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
     </slot>
     <ConsentBanner />
     <Toast />
-    <LanguageCountryModal />
     <LocaleDetectionToast />
     <LocalizedCalculatorBridge locale={currentLocale as any} />
 
@@ -697,24 +637,6 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
           "Rechercher 🔄 Convertisseur d'Unités..."
         ];
 
-        const ENGLISH_FRANCE_PROMPTS = [
-          "Search France calculators (e.g. mortgage, tax, VAT, salary)...",
-          "Search 💶 French VAT Calculator (20% & 5.5%)...",
-          "Search 💼 Gross to Net Salary France...",
-          "Search 🏢 French Mortgage & HCSF Simulator...",
-          "Search 🏛️ French Income Tax Calculator 2026...",
-          "Search 🛡️ Loan Insurance Simulator...",
-          "Search 🏡 French APL Housing Benefit...",
-          "Search ⚖️ Severance Pay France...",
-          "Search 🚗 Mileage Allowance Scale...",
-          "Search 📊 Actual Expenses vs 10% Flat Allowance...",
-          "Search 📈 Compound Interest Calculator...",
-          "Search 🏖️ French Retirement Calculator...",
-          "Search 💰 Rental Yield Calculator...",
-          "Search 📉 Inflation Calculator...",
-          "Search 🔄 Unit Converter..."
-        ];
-
         function initSearchTypewriter(wrapper) {
           if (wrapper.closest('.fac-autocomplete-container') || 
               wrapper.__facTypewriterInit || 
@@ -722,14 +644,8 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
               wrapper.dataset.customTypewriter === 'true') return;
           wrapper.__facTypewriterInit = true;
 
-          const isFranceEn = window.location.pathname.includes('/countries/france/en/');
-          const isFr = !isFranceEn && (
-            (document.documentElement.lang || '').startsWith('fr') || 
-            window.location.pathname.includes('/countries/france/fr/') || 
-            (window.location.pathname.startsWith('/countries/france') && !isFranceEn) || 
-            window.location.pathname.startsWith('/fr/')
-          );
-          const activePrompts = isFr ? FRENCH_PROMPTS : (isFranceEn ? ENGLISH_FRANCE_PROMPTS : UNIVERSAL_PROMPTS);
+          const isFr = (document.documentElement.lang || '').startsWith('fr') || window.location.pathname.startsWith('/fr/');
+          const activePrompts = isFr ? FRENCH_PROMPTS : UNIVERSAL_PROMPTS;
 
           const textEl = wrapper.querySelector('.fac-typewriter-text');
           const container = wrapper.querySelector('.fac-typewriter-container');

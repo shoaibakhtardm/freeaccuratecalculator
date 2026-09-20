@@ -3,8 +3,6 @@
 import Layout from '../../layouts/Layout.astro';
 import AutocompleteSearch from '../common/AutocompleteSearch.astro';
 import CategoriesSection from '../CategoriesSection.astro';
-import OrphanRescueLinks from '../SEO/OrphanRescueLinks.astro';
-import { POPULAR_COUNTRIES } from '../../data/countries';
 import { getHomepageStrings } from '../../i18n/homepageDict';
 import type { SupportedLocale } from '../../types/i18n';
 
@@ -15,14 +13,6 @@ interface Props {
 const { locale: propLocale } = Astro.props;
 const currentLocale = (propLocale || Astro.currentLocale || 'en').toLowerCase() as SupportedLocale;
 const hpStrings = getHomepageStrings(currentLocale);
-
-const FEATURED_COUNTRIES = POPULAR_COUNTRIES.map((c) => ({
-  slug: c.slug,
-  name: hpStrings.regionsSection.countries[c.slug] || c.name,
-  flagUrl: c.flagUrl,
-  emoji: c.flag,
-  href: c.slug === 'france' ? '/countries/france/fr/' : `/countries/${c.slug}/`,
-}));
 
 const websiteOrigin = 'https://freeaccuratecalculator.com';
 const pageUrl = currentLocale === 'en' ? `${websiteOrigin}/` : `${websiteOrigin}/${currentLocale}/`;
@@ -241,8 +231,6 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
         </div>
       </div>
 
-      <!-- 6. 3-by-3 Category Navigation Grid ("tin tin karke" - UI/UX Designer Scaled Edition) -->
-      <CategoriesSection locale={currentLocale} />
     </div>
   </section>
 
@@ -283,50 +271,8 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
     </div>
   </section>
 
-  <!-- Country-Wise Calculators Section (3-Column Grid Layout) -->
-  <section
-    aria-label={hpStrings.regionsSection.heading}
-    class="my-10 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-3 sm:p-5 md:p-6 shadow-sm dark:shadow-xl backdrop-blur-xl box-border text-center transition-all duration-300"
-  >
-    <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-3 sm:pb-3.5 mb-3.5 sm:mb-4 px-1">
-      <div class="flex items-center gap-2">
-        <span class="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <h2 class="font-outfit text-xs sm:text-sm font-black uppercase tracking-[0.2em] text-slate-900 dark:text-white flex items-center gap-2">
-          <span class="text-base sm:text-lg">🌍</span>
-          <span>{hpStrings.regionsSection.heading}</span>
-        </h2>
-      </div>
-      <span class="text-[11px] font-mono text-slate-500 dark:text-slate-400 font-semibold bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-full border border-slate-200/80 dark:border-slate-700/80">
-        {FEATURED_COUNTRIES.length} {hpStrings.regionsSection.economiesCount.replace(/^\d+\s*/, '') || 'Economies'}
-      </span>
-    </div>
-
-    <!-- 18 Supported Countries in 3-Column Grid Layout (Top Flag, Bottom Clean Text) -->
-    <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
-      {FEATURED_COUNTRIES.map((item) => (
-        <a
-          href={item.href}
-          title={`${hpStrings.regionsSection.heading}: ${item.name}`}
-          class="group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[72px] sm:min-h-[82px] md:min-h-[90px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/90 hover:border-indigo-500/60 dark:hover:border-indigo-400/60 p-2 sm:p-2.5 md:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-lg hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 active:scale-[0.97]"
-        >
-          <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 overflow-hidden shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-950/30 transition-all mb-1 sm:mb-1.5 p-1.5">
-            <img
-              src={item.flagUrl}
-              alt={`${item.name} flag`}
-              class="w-full h-full object-cover rounded-[3px] shadow-2xs"
-              loading="lazy"
-              decoding="async"
-              width="32"
-              height="24"
-            />
-          </span>
-          <span class="w-full text-center font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-[10px] sm:text-xs md:text-sm leading-[1.15] break-words line-clamp-2 px-0.5">
-            {item.name}
-          </span>
-        </a>
-      ))}
-    </div>
-  </section>
+  <!-- Categories Section -->
+  <CategoriesSection locale={currentLocale} />
 
   <!-- About Us Section (Tech Startup Style, 6-Pillar 3-Grid Full Width Architecture) -->
   <section class="mt-12 mb-4 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto px-1">
@@ -602,5 +548,4 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
   )}
 
   <!-- High-Value Regional & Specialized Deep Calculator Index (3-Grid Layout) -->
-  <OrphanRescueLinks limit={6} locale={currentLocale} />
 </Layout>

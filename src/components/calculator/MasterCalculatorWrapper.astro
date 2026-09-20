@@ -13,8 +13,6 @@ interface Props {
   defaultCurrency?: string;
   defaultSymbol?: string;
   defaultIsIndian?: boolean;
-  countryFlagUrl?: string;
-  countryName?: string;
   isFrench?: boolean;
 }
 
@@ -24,12 +22,10 @@ const {
   defaultCurrency = 'USD',
   defaultSymbol = '$',
   defaultIsIndian = false,
-  countryFlagUrl,
-  countryName,
   isFrench: propIsFrench,
 } = Astro.props;
 
-const isFrench = propIsFrench ?? (Astro.url.pathname.includes('/countries/france/') || Astro.url.pathname.startsWith('/fr/'));
+const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
 
 // Format formula variables
 const frSymbolMap: Record<string, string> = {
@@ -180,25 +176,11 @@ const isCurrencyCalculator =
       <!-- Header Meta Bar (Silent Currency - No announcement badge) -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4">
         <div class="flex items-center gap-2.5">
-          {countryFlagUrl ? (
-            <span class="flex h-7 w-10 shrink-0 items-center justify-center rounded-[3px] overflow-hidden border border-slate-200/80 dark:border-slate-700/80 shadow-2xs">
-              <img
-                src={countryFlagUrl}
-                alt={countryName ? `${countryName} flag` : 'National flag'}
-                class="w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
-                width="40"
-                height="28"
-              />
-            </span>
-          ) : (
-            <span class="inline-flex items-center justify-center p-2 rounded-xl bg-link/10 text-link border border-link/20">
+          <span class="inline-flex items-center justify-center p-2 rounded-xl bg-link/10 text-link border border-link/20">
               <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
               </svg>
-            </span>
-          )}
+          </span>
           <div>
             <h2 class="text-base sm:text-lg font-bold font-mono text-ink tracking-tight">{calc.name}</h2>
             <div class="flex items-center gap-2 text-[11px] font-mono text-mute">
@@ -567,7 +549,7 @@ const isCurrencyCalculator =
 <!-- Client Calculation & Silent Currency Controller -->
 <script is:inline define:vars={{ slug: calc.slug, calcName: calc.name, initCurrCode: defaultCurrency, initCurrSym: defaultSymbol, initIsIndian: defaultIsIndian, isCurrCalc: isCurrencyCalculator, isFrench }}>
   (function () {
-    const isFrenchMode = isFrench || (typeof window !== 'undefined' && (window.location.pathname.includes('/countries/france/') || window.location.pathname.startsWith('/fr/')));
+    const isFrenchMode = isFrench || (typeof window !== 'undefined' && window.location.pathname.startsWith('/fr/'));
 
     // Silent Currency Resolution
     let currentCurrencyCode = typeof window.facGetActiveCurrency === 'function'

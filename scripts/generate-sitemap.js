@@ -8,6 +8,11 @@ const distClientDir = path.resolve('dist/client');
 const publicDir = path.resolve('public');
 const MAX_URLS_PER_SITEMAP = 500;
 
+for (const staleSitemap of ['sitemap-countries-1.xml', 'sitemap-countries-2.xml']) {
+  const stalePath = path.join(publicDir, staleSitemap);
+  if (fs.existsSync(stalePath)) fs.unlinkSync(stalePath);
+}
+
 // Ensure target directories exist
 if (!fs.existsSync(publicDir)) {
   fs.mkdirSync(publicDir, { recursive: true });
@@ -139,21 +144,6 @@ function resolveSourceFileForRoute(route) {
     return 'src/pages/guides/[slug].astro';
   }
 
-  // France custom paths
-  if (cleanRoute.startsWith('countries/france/')) {
-    if (cleanRoute.includes('/guides/')) return 'src/data/france-guides.ts';
-    const frAstro = path.join('src/pages', cleanRoute + '.astro');
-    if (fs.existsSync(frAstro)) return frAstro;
-    return 'src/pages/countries/france/[lang]/[category]/[slug].astro';
-  }
-
-  // Country paths
-  if (parts[0] === 'countries' && parts.length >= 2) {
-    if (parts.length === 2) return 'src/pages/countries/[country]/index.astro';
-    if (parts.length === 3) return 'src/pages/countries/[country]/[slug].astro';
-    if (parts.length === 4) return 'src/pages/countries/[country]/[category]/[slug].astro';
-  }
-
   // Locales
   const locales = ['es', 'fr', 'de', 'ar', 'nl', 'pt', 'it', 'ru', 'ja', 'hi', 'zh'];
   if (locales.includes(parts[0])) {
@@ -259,7 +249,7 @@ function getPriorityAndChangeFreq(route) {
   if (route.includes('-calculator') || route.includes('/sip/')) {
     return { priority: '0.7', changefreq: 'weekly' };
   }
-  if (route.startsWith('/guides/') || route.startsWith('/countries/france/guides/')) {
+  if (route.startsWith('/guides/')) {
     return { priority: '0.6', changefreq: 'weekly' };
   }
   return { priority: '0.5', changefreq: 'monthly' };
