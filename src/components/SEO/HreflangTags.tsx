@@ -41,16 +41,16 @@ const DEFAULT_ORIGIN = 'https://freeaccuratecalculator.com';
  */
 export const MULTILANG_ROUTES_REGISTRY: Record<string, Partial<Record<SupportedLocale, string>>> = {
   // Percentage Calculator
-  '/math/percentage-calculator/': {
-    en: '/math/percentage-calculator/',
-    es: '/es/math/percentage-calculator/',
-    fr: '/fr/math/percentage-calculator/',
-    hi: '/hi/math/percentage-calculator/',
+  '/percentage-calculator/': {
+    en: '/percentage-calculator/',
+    es: '/es/percentage-calculator/',
+    fr: '/fr/percentage-calculator/',
+    hi: '/hi/percentage-calculator/',
   },
   // EMI Calculator
-  '/finance/emi-calculator/': {
-    en: '/finance/emi-calculator/',
-    hi: '/hi/finance/emi-calculator/',
+  '/emi-calculator/': {
+    en: '/emi-calculator/',
+    hi: '/hi/emi-calculator/',
   },
   // Guides Hub
   '/guides/': {

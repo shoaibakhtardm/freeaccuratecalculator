@@ -11,7 +11,7 @@ category: "health"
 tags: ["calorie-counter", "bmr", "tdee", "weight-loss", "nutrition-math"]
 targetCalculator:
   name: "Calorie Calculator"
-  href: "/health/calorie-calculator/"
+  href: "/calorie-calculator/"
   description: "Calculate BMR, TDEE, and daily caloric targets for fat loss, maintenance, or muscle gain."
 relatedCalculators: ["bmi-calculator", "body-fat-calculator", "ideal-weight-calculator"]
 faqs:
@@ -32,7 +32,7 @@ Whether your goal is rapid fat loss, lean muscle hypertrophy, or maintaining you
 In this guide, we break down **how to calculate your daily calorie requirements**, explain the biological differences between BMR and TDEE, and provide the exact mathematical blueprint for sustainable body recomposition.
 
 > **Calculate Your Calories Instantly:**  
-> Use our free [Calorie Calculator](/health/calorie-calculator/) to find your exact maintenance calories and custom fat-loss targets.
+> Use our free [Calorie Calculator](/calorie-calculator/) to find your exact maintenance calories and custom fat-loss targets.
 
 ---
 
@@ -100,4 +100,4 @@ This individual can consume **~2,740 calories daily** without gaining or losing 
 * **Aggressive Fat Loss (1.5 lbs / week):** $2,740 - 750 = \mathbf{1,990\text{ calories/day}}$
 * **Lean Muscle Bulk:** $2,740 + 300 = \mathbf{3,040\text{ calories/day}}$
 
-Calculate your personalized macro and calorie targets on our [Calorie Calculator](/health/calorie-calculator/).
+Calculate your personalized macro and calorie targets on our [Calorie Calculator](/calorie-calculator/).

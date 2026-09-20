@@ -11,7 +11,7 @@ category: "finance"
 tags: ["retirement", "fire-movement", "4-percent-rule", "pension", "wealth-preservation"]
 targetCalculator:
   name: "Retirement Calculator"
-  href: "/finance/retirement-calculator/"
+  href: "/retirement-calculator/"
   description: "Calculate target retirement savings, safe monthly withdrawals, and required monthly contributions."
 relatedCalculators: ["sip-calculator", "compound-interest-calculator", "inflation-calculator"]
 faqs:
@@ -34,7 +34,7 @@ For decades, traditional financial planning relied on vague rules of thumb like 
 In this guide, we break down **how to calculate your retirement number**, dissect the famous 4% rule, and model the real impact of inflation and healthcare costs.
 
 > **Calculate Your Exact Target:**  
-> Use our free [Retirement Calculator](/finance/retirement-calculator/) to discover your personalized retirement age, required savings rate, and portfolio sustainability.
+> Use our free [Retirement Calculator](/retirement-calculator/) to discover your personalized retirement age, required savings rate, and portfolio sustainability.
 
 ---
 
@@ -95,4 +95,4 @@ The table below demonstrates required monthly contributions to reach a $1,500,00
 
 *Takeaway:* Waiting 10 years (from age 25 to 35) more than doubles your required monthly savings!
 
-Calculate your custom retirement milestones on our [Retirement Calculator](/finance/retirement-calculator/).
+Calculate your custom retirement milestones on our [Retirement Calculator](/retirement-calculator/).

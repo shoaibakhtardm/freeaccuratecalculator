@@ -11,7 +11,7 @@ category: "construction"
 tags: ["construction", "home-renovation", "paint-calculation", "concrete-volume", "square-footage", "budgeting", "contractor-tips"]
 targetCalculator:
   name: "Paint Coverage Estimator"
-  href: "/construction/paint-calculator/"
+  href: "/paint-calculator/"
   description: "Room ke dimensions ke hisaab se required paint liters/gallons aur coats accurately estimate karein."
 relatedCalculators: ["concrete-calculator", "square-footage-calculator", "brick-calculator"]
 faqs:
@@ -32,7 +32,7 @@ Construction aur renovation mein paisa bachane ka sabse aasan tarika hai: **Pre-
 Is guide mein hum seekhenge ki kamron ka exact Square Footage kaise nikalein, Paint ke kitne dappe (liters) lagenge, aur Concrete slab/foundation ka volume kaise calculate karein.
 
 > **Instant Project Material Sizing:**  
-> Apne project ke liye hamare free [Square Footage Calculator](/construction/square-footage-calculator/), [Paint Coverage Estimator](/construction/paint-calculator/) aur [Concrete Calculator](/construction/concrete-calculator/) ka istemal karein.
+> Apne project ke liye hamare free [Square Footage Calculator](/square-footage-calculator/), [Paint Coverage Estimator](/paint-calculator/) aur [Concrete Calculator](/concrete-calculator/) ka istemal karein.
 
 ---
 
@@ -100,7 +100,7 @@ $$\text{Cubic Feet} = 20 \times 15 \times 0.4167 = \mathbf{125\text{ CFT}}$$
 $$1\text{ Cubic Yard} = 27\text{ Cubic Feet}$$
 $$\text{Cubic Yards} = \frac{125}{27} \approx \mathbf{4.63\text{ Cubic Yards}}$$
 
-Aap hamare [Concrete Calculator](/construction/concrete-calculator/) par instant slab, footing aur column cement bags calculate kar sakte hain.
+Aap hamare [Concrete Calculator](/concrete-calculator/) par instant slab, footing aur column cement bags calculate kar sakte hain.
 
 ---
 
@@ -127,7 +127,7 @@ Aap hamare [Concrete Calculator](/construction/concrete-calculator/) par instant
 
 Home renovation stress-free tabhi banti hai jab aap andaze ke bajaye scientific measurement par kaam karte hain. Material khareedne se pehle apne saare kamron ke dimensions note karein aur hamare precision calculators se verify karein.
 
-* 👉 **[Paint Coverage Estimator se required paint liters nikalein](/construction/paint-calculator/)**
-* 👉 **[Concrete Calculator par slab aur cement mix estimate karein](/construction/concrete-calculator/)**
-* 👉 **[Square Footage Calculator se accurate room area nikalein](/construction/square-footage-calculator/)**
-* 👉 **[Deewar ke liye Brick & Mortar Calculator check karein](/construction/brick-calculator/)**
+* 👉 **[Paint Coverage Estimator se required paint liters nikalein](/paint-calculator/)**
+* 👉 **[Concrete Calculator par slab aur cement mix estimate karein](/concrete-calculator/)**
+* 👉 **[Square Footage Calculator se accurate room area nikalein](/square-footage-calculator/)**
+* 👉 **[Deewar ke liye Brick & Mortar Calculator check karein](/brick-calculator/)**

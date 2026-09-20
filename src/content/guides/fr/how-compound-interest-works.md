@@ -24,7 +24,7 @@ Les intérêts composés constituent le moteur mathématique fondamental de l'é
 En termes mathématiques, l'intérêt simple suit une trajectoire linéaire, tandis que l'intérêt composé obéit à une dynamique géométrique ou exponentielle.
 
 > **Calculez vos rendements dès maintenant :**  
-> Utilisez notre [Calculateur d'Intérêts Composés](/finance/compound-interest-calculator/) pour simuler votre capital futur, vos versements cumulés et vos intérêts générés.
+> Utilisez notre [Calculateur d'Intérêts Composés](/compound-interest-calculator/) pour simuler votre capital futur, vos versements cumulés et vos intérêts générés.
 
 ---
 

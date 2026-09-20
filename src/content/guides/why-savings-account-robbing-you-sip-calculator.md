@@ -12,7 +12,7 @@ tags: ["sip", "mutual-funds", "wealth-creation", "inflation", "compounding", "fi
 lang: "en"
 targetCalculator:
   name: "SIP & Investment Calculator"
-  href: "/finance/sip-calculator/"
+  href: "/sip-calculator/"
   description: "Calculate your mutual fund compounding, total returns, and wealth accumulation."
 relatedCalculators: ["sip-calculator", "step-up-sip-calculator", "emi-calculator"]
 faqs:
@@ -216,7 +216,7 @@ A quality **mutual fund sip calculator** shifts your mindset from deprivation to
 * **It eliminates market anxiety.** You stop checking financial news channels with dread. You begin viewing market corrections for what they truly are: seasonal clearance sales for disciplined wealth builders.
 * **It transforms time into an ally.** Instead of fearing inflation, you partner with productive enterprise, technology, and economic growth.
 
-Before leaving your numbers to chance, test your personal scenarios on our free [SIP & Investment Calculator](/finance/sip-calculator/) to see your exact compounding horizon in high definition.
+Before leaving your numbers to chance, test your personal scenarios on our free [SIP & Investment Calculator](/sip-calculator/) to see your exact compounding horizon in high definition.
 
 ---
 
@@ -250,7 +250,7 @@ Rohan learned that lesson the hard way in a car showroom. You don’t have to.
 Take control of your financial trajectory today:
 1. Stop leaving long-term wealth parked in a low-yield savings account.
 2. Choose a manageable, automated monthly sum that fits your current budget.
-3. Test your personal numbers on our free [SIP Calculator](/finance/sip-calculator/).
-4. Explore our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/) to see what happens when your investments grow alongside your salary.
+3. Test your personal numbers on our free [SIP Calculator](/sip-calculator/).
+4. Explore our [Step-Up SIP Calculator](/step-up-sip-calculator/) to see what happens when your investments grow alongside your salary.
 
 Your money has the potential to work around the clock while you rest, travel, and spend time with the people you love. Give it the tools to get to work, start today, and let compounding build the future you deserve.

@@ -12,7 +12,7 @@ tags: ["bmi", "body-fat", "body-composition", "fitness", "health-metrics", "navy
 lang: "en"
 targetCalculator:
   name: "BMI Calculator"
-  href: "/health/bmi-calculator/"
+  href: "/bmi-calculator/"
   description: "Check your Body Mass Index and healthy weight bracket with verified formulas."
 relatedCalculators: ["bmi-calculator", "calorie-calculator"]
 faqs:
@@ -161,11 +161,11 @@ Think of standard BMI as the rough outer frame of a house, while body fat percen
 
 Here is how to combine them intelligently:
 
-1. **Calculate Your Baseline:** Check our free [BMI Calculator](/health/bmi-calculator/) to see your starting demographic bracket.
+1. **Calculate Your Baseline:** Check our free [BMI Calculator](/bmi-calculator/) to see your starting demographic bracket.
 2. **Take Your Waist-to-Height Ratio:** Divide your waist circumference by your height in inches or centimeters. 
    * A ratio under **0.50** generally indicates healthy visceral fat levels, regardless of what the scale says.
    * A ratio over **0.55** suggests elevated abdominal fat that warrants a closer look with your doctor.
-3. **Plug Into a Body Fat Estimator:** Use the Navy Method tape measurements to estimate your lean mass. You can then take that lean mass figure and enter it into our [Calorie & TDEE Calculator](/health/calorie-calculator/) to get an ultra-precise daily energy target based on actual muscle mass.
+3. **Plug Into a Body Fat Estimator:** Use the Navy Method tape measurements to estimate your lean mass. You can then take that lean mass figure and enter it into our [Calorie & TDEE Calculator](/calorie-calculator/) to get an ultra-precise daily energy target based on actual muscle mass.
 4. **Compare Your Story:** If your BMI is 27 (traditionally labeled overweight), but your waist-to-height ratio is 0.44 and your body fat is 14%, you are simply athletic. Stop stressing over the weight chart.
 
 ---

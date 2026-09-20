@@ -11,7 +11,7 @@ category: "ecology"
 tags: ["ecology", "sustainability", "carbon-footprint", "solar-energy", "eco-friendly", "green-living", "renewable-energy"]
 targetCalculator:
   name: "Carbon Footprint Calculator"
-  href: "/ecology/carbon-footprint-calculator/"
+  href: "/carbon-footprint-calculator/"
   description: "Apne electricity bills, vehicle travel aur lifestyle habits se annual CO2 emissions calculate karein."
 relatedCalculators: ["solar-energy-calculator", "water-conservation-calculator", "compost-ratio-calculator"]
 faqs:
@@ -32,7 +32,7 @@ Lekin sach ye hai ki climate crisis hamare chhote-chhote daily choices ka aggreg
 Acche kadam uthane se pehle ye samajhna zaroori hai ki hamara vyaktigat impact kitna hai aur kaise eco-friendly kadam utha kar hum planet ko bachane ke sath-sath apne **lakhon rupaye ke electricity aur fuel bills** bhi bacha sakte hain.
 
 > **Apna Environmental Impact Check Karein:**  
-> Apne household emissions aur rooftop solar potential ka accurate hisaab lagane ke liye hamara free [Carbon Footprint Calculator](/ecology/carbon-footprint-calculator/) aur [Solar Panel Energy Tool](/ecology/solar-energy-calculator/) explore karein.
+> Apne household emissions aur rooftop solar potential ka accurate hisaab lagane ke liye hamara free [Carbon Footprint Calculator](/carbon-footprint-calculator/) aur [Solar Panel Energy Tool](/solar-energy-calculator/) explore karein.
 
 ---
 
@@ -68,7 +68,7 @@ $$\text{Total CO}_2\text{e (kg/year)} = \sum (\text{Activity Data} \times \text{
 - Food & waste baseline: $\mathbf{\approx 1,500\text{ kg CO}_2}$
 - **Total Household Emission = 7,586 kg = ~7.6 Metric Tons CO2e / year!**
 
-Hamare [Carbon Footprint Calculator](/ecology/carbon-footprint-calculator/) par apna exact lifestyle daal kar personal breakdown dekhein.
+Hamare [Carbon Footprint Calculator](/carbon-footprint-calculator/) par apna exact lifestyle daal kar personal breakdown dekhein.
 
 ---
 
@@ -90,7 +90,7 @@ $$\text{Required kW} = \frac{350}{30 \times 4.5 \times 0.8} = \frac{350}{108} \a
 - **Payback Period:** Sirf 4 se 5 saal! Iske baad agle 20 saal tak **100% Free Green Electricity**.
 - **Carbon Abated:** ~3.4 tons $\text{CO}_2$ per year saved (Lifetime: 85 tons $\text{CO}_2$ offset!).
 
-Aap hamare [Solar Panel Energy Tool](/ecology/solar-energy-calculator/) par apna bill daal kar exact payback period aur panel count dekh sakte hain.
+Aap hamare [Solar Panel Energy Tool](/solar-energy-calculator/) par apna bill daal kar exact payback period aur panel count dekh sakte hain.
 
 ---
 
@@ -98,8 +98,8 @@ Aap hamare [Solar Panel Energy Tool](/ecology/solar-energy-calculator/) par apna
 
 1. **5-Star Inverter Appliances & Phantom Load:** 3-star non-inverter AC ke mukable 5-star inverter AC saal mein 400-600 units kam consume karta hai. TV, microwave aur chargers ko plug se switch-off karein taaki standby vampire power drain na ho.
 2. **Shift to Active / Public Transit:** Hafthe mein 2 din metro, bus ya carpooling karne se monthly fuel kharcha aur 40 kg $\text{CO}_2$ emission turant kam hota hai.
-3. **Smart Water Conservation:** Aerator taps lagane se paani ka flow 50% kam hota hai bina pressure gire. Water pumping overhead bills mein bhari bachat hoti hai. Hamara [Water Conservation Tool](/ecology/water-conservation-calculator/) dekhein.
-4. **Kitchen Waste Composting:** Geela kachra (sabzi chilke, fruit peels) landfill mein jakar Methane gas banata hai jo $\text{CO}_2$ se 28 guna zyada harmful hai. Ghar par organic pot composting karein using our [Composting C:N Ratio Tool](/ecology/compost-ratio-calculator/).
+3. **Smart Water Conservation:** Aerator taps lagane se paani ka flow 50% kam hota hai bina pressure gire. Water pumping overhead bills mein bhari bachat hoti hai. Hamara [Water Conservation Tool](/water-conservation-calculator/) dekhein.
+4. **Kitchen Waste Composting:** Geela kachra (sabzi chilke, fruit peels) landfill mein jakar Methane gas banata hai jo $\text{CO}_2$ se 28 guna zyada harmful hai. Ghar par organic pot composting karein using our [Composting C:N Ratio Tool](/compost-ratio-calculator/).
 5. **Ditch Single-Use Plastics:** Cloth bag aur stainless steel water bottle carry karein. Single-use plastic production petroleum energy heavy process hai.
 
 ---
@@ -108,7 +108,7 @@ Aap hamare [Solar Panel Energy Tool](/ecology/solar-energy-calculator/) par apna
 
 Sustainability ka matlab koi bada balidan dena nahi hai; ye resource efficiency aur intelligent planning ka naam hai. Ek eco-friendly lifestyle apnane se vatavaran toh saaf hota hi hai, aapke bank account mein bhi har mahine hazaron rupaye ki bachat hoti hai.
 
-* 👉 **[Carbon Footprint Calculator se apna annual emission check karein](/ecology/carbon-footprint-calculator/)**
-* 👉 **[Solar Panel Energy Tool se rooftop solar savings calculate karein](/ecology/solar-energy-calculator/)**
-* 👉 **[Water Conservation Tool se daily water saving targets nikalein](/ecology/water-conservation-calculator/)**
-* 👉 **[Composting C:N Ratio Tool se organic waste management plan karein](/ecology/compost-ratio-calculator/)**
+* 👉 **[Carbon Footprint Calculator se apna annual emission check karein](/carbon-footprint-calculator/)**
+* 👉 **[Solar Panel Energy Tool se rooftop solar savings calculate karein](/solar-energy-calculator/)**
+* 👉 **[Water Conservation Tool se daily water saving targets nikalein](/water-conservation-calculator/)**
+* 👉 **[Composting C:N Ratio Tool se organic waste management plan karein](/compost-ratio-calculator/)**

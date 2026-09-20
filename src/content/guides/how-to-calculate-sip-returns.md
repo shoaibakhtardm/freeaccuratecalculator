@@ -11,7 +11,7 @@ category: "finance"
 tags: ["sip", "mutual-funds", "investing", "compound-interest", "wealth-building"]
 targetCalculator:
   name: "SIP Calculator"
-  href: "/finance/sip-calculator/"
+  href: "/sip-calculator/"
   description: "Calculate expected maturity corpus, invested capital, and wealth gain with flexible contribution timing."
 relatedCalculators: ["compound-interest-calculator", "emi-calculator", "investment-calculator"]
 faqs:
@@ -32,7 +32,7 @@ Systematic Investment Plans (SIPs) are widely considered the most effective weal
 In this definitive guide, we explore **how to calculate SIP returns**, the core compounding formulas behind the numbers, real-world step-by-step examples, and how to harness rupee-cost averaging to grow long-term wealth.
 
 > **Interactive Companion Tool:**  
-> Jump straight to our verified [SIP Calculator](/finance/sip-calculator/) to model your monthly investments with real-time currency conversion and custom contribution timing.
+> Jump straight to our verified [SIP Calculator](/sip-calculator/) to model your monthly investments with real-time currency conversion and custom contribution timing.
 
 ---
 
@@ -113,4 +113,4 @@ $$FV = 10,000 \times 230.038689 \times (1 + 0.01) \approx ₹2,323,391$$
 3. **Resist Stopping During Market Crashes:** Bear markets are when SIPs do their best work because you acquire units at steep discounts.
 4. **Select Broad-Market Index Funds:** Avoid high-expense actively managed funds that fail to beat their benchmark after fees.
 
-Model your personalized projections directly on our [SIP Calculator](/finance/sip-calculator/) today.
+Model your personalized projections directly on our [SIP Calculator](/sip-calculator/) today.

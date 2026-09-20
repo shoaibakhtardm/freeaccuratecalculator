@@ -8,7 +8,7 @@ tags: ["percentage", "math", "formulas", "accuracy"]
 lang: "en"
 targetCalculator:
   name: "Percentage Calculator"
-  href: "/math/percentage-calculator/"
+  href: "/percentage-calculator/"
   description: "Calculate percentage increases, percentage differences, fractions to percentages, and reverse percentages instantly."
 relatedCalculators: ["percentage-calculator", "emi-calculator"]
 faqs:
@@ -52,4 +52,4 @@ Notice that if that same portfolio subsequently drops by 20%, it returns exactly
 
 - Always verify the baseline denominator ($Y$) before dividing.
 - Never add raw percentage changes across different base periods without compounding.
-- Use our [Percentage Calculator](/math/percentage-calculator/) for instant mathematical calculations.
+- Use our [Percentage Calculator](/percentage-calculator/) for instant mathematical calculations.

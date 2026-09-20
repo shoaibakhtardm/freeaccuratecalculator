@@ -11,7 +11,7 @@ category: "everyday"
 tags: ["students", "gpa-calculator", "academic-goals", "study-schedule", "college", "cgpa-to-gpa", "career-planning"]
 targetCalculator:
   name: "GPA Calculator"
-  href: "/everyday/gpa-calculator/"
+  href: "/gpa-calculator/"
   description: "Apne semester subjects, credit hours aur letter grades daal kar weighted GPA instantly calculate karein."
 relatedCalculators: ["grade-calculator", "age-calculator", "date-calculator"]
 faqs:
@@ -32,7 +32,7 @@ Zyadatar students ko ye pata hi nahi hota ki har subject ka unke final scorecard
 Agar aap Foreign Universities (MS/MBA) ke liye target kar rahe hain, campus placements ke shortlisting criteria ko beat karna chahte hain, ya apna academic comeback plan kar rahe hain, toh ye guide aapke liye hai.
 
 > **Apna Target GPA Calculate Karein:**  
-> Apne semester marks aur credit points analyze karne ke liye hamara free [GPA Calculator](/everyday/gpa-calculator/) aur [Grade Calculator](/everyday/grade-calculator/) use karein.
+> Apne semester marks aur credit points analyze karne ke liye hamara free [GPA Calculator](/gpa-calculator/) aur [Grade Calculator](/grade-calculator/) use karein.
 
 ---
 
@@ -93,7 +93,7 @@ Aap is reverse formula se required target nikal sakte hain:
 
 $$\text{Required Target GPA} = \frac{(\text{Desired Final CGPA} \times \text{Total Program Credits}) - (\text{Current CGPA} \times \text{Completed Credits})}{\text{Remaining Credits}}$$
 
-Aap hamare [GPA Calculator](/everyday/gpa-calculator/) mein apne past credits aur remaining subjects daal kar required target grades instantly check kar sakte hain.
+Aap hamare [GPA Calculator](/gpa-calculator/) mein apne past credits aur remaining subjects daal kar required target grades instantly check kar sakte hain.
 
 ---
 
@@ -101,7 +101,7 @@ Aap hamare [GPA Calculator](/everyday/gpa-calculator/) mein apne past credits au
 
 - **The Credit-to-Study Hour Rule:** General college rule ke mutabiq, har 1 lecture credit ke liye hafthe mein **1.5 se 2 ghante** self-study dedicate karni chahiye (e.g., 4-credit course = 6 to 8 hours/week study).
 - **Spaced Repetition & Active Recall:** Exam se ek raat pehle cramming karne ke bajaye har topic ko 3 din, 7 din aur 21 din ke intervals par revise karein.
-- **Academic Timeline & Date Planning:** Semester exam dates, assignment submission deadlines aur competitive exams ke beech ka time interval check karne ke liye hamara [Date Calculator](/everyday/date-calculator/) use karein aur backward timeline banayein.
+- **Academic Timeline & Date Planning:** Semester exam dates, assignment submission deadlines aur competitive exams ke beech ka time interval check karne ke liye hamara [Date Calculator](/date-calculator/) use karein aur backward timeline banayein.
 - **Past Year Papers (PYQs):** Har subject ke pichle 5 saal ke question papers solve karein. 60% exam patterns repeat hote hain.
 
 ---
@@ -110,7 +110,7 @@ Aap hamare [GPA Calculator](/everyday/gpa-calculator/) mein apne past credits au
 
 Grades aapki intelligence define nahi karte, lekin wo aapki discipline aur strategic planning zaroor reflect karte hain. Semester ke shuruat mein hi apna target score decide karein aur monitor karein.
 
-* 👉 **[GPA Calculator se apna semester aur cumulative score nikalein](/everyday/gpa-calculator/)**
-* 👉 **[Grade Calculator par target exam marks evaluate karein](/everyday/grade-calculator/)**
-* 👉 **[Date Calculator se study timelines aur exam intervals plan karein](/everyday/date-calculator/)**
-* 👉 **[Age Calculator se eligibility aur competitive exams dates check karein](/everyday/age-calculator/)**
+* 👉 **[GPA Calculator se apna semester aur cumulative score nikalein](/gpa-calculator/)**
+* 👉 **[Grade Calculator par target exam marks evaluate karein](/grade-calculator/)**
+* 👉 **[Date Calculator se study timelines aur exam intervals plan karein](/date-calculator/)**
+* 👉 **[Age Calculator se eligibility aur competitive exams dates check karein](/age-calculator/)**

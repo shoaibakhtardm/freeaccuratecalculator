@@ -12,7 +12,7 @@ tags: ["emi-calculator", "hdfc-emi", "sbi-emi", "bankbazaar", "mortgage-comparis
 lang: "en"
 targetCalculator:
   name: "EMI Calculator"
-  href: "/finance/emi-calculator/"
+  href: "/emi-calculator/"
   description: "Calculate unbiased, apples-to-apples loan amortizations across all lenders."
 relatedCalculators: ["emi-calculator", "sip-calculator", "percentage-calculator"]
 faqs:
@@ -175,7 +175,7 @@ An agnostic calculation engine possesses three defining qualities:
 +--------------------------------------------------------------------------+
 ```
 
-When you use our independent [EMI Calculator](/finance/emi-calculator/), you bypass the marketing noise completely. 
+When you use our independent [EMI Calculator](/emi-calculator/), you bypass the marketing noise completely. 
 
 You enter the raw variables—principal, rate, tenure, and processing fees—and receive an untainted, mathematical breakdown that applies equally whether your lender is SBI, HDFC, ICICI, or Wells Fargo.
 
@@ -188,7 +188,7 @@ Let's look at how two borrowers cut through institutional confusion to save real
 ### Scenario A: Rohan’s Refinance Breakthrough
 Remember Rohan and his three-tab nightmare? 
 
-Instead of trusting the conflicting quotes, Rohan used our unbiased [EMI Calculator](/finance/emi-calculator/) to standardize the comparison.
+Instead of trusting the conflicting quotes, Rohan used our unbiased [EMI Calculator](/emi-calculator/) to standardize the comparison.
 
 He discovered:
 * **SBI’s Quote:** 8.55% interest, but carried a ₹10,000 administrative fee and an eight-week processing backlog.
@@ -252,6 +252,6 @@ Your family’s financial future, however, is not a sales lead:
 * Beware of free portals that hold calculations hostage behind phone number paywalls.
 * If evaluating international loans, ensure you are accounting for local property taxes, insurance, and escrow fees.
 
-Take control of your loan evaluations with our free, client-side [EMI Calculator](/finance/emi-calculator/). 
+Take control of your loan evaluations with our free, client-side [EMI Calculator](/emi-calculator/). 
 
 Run your numbers with complete privacy, compare lenders on an honest playing field, and make your borrowing decisions with total mathematical clarity.

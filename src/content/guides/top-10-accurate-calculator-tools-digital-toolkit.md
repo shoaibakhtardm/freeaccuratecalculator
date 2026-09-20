@@ -12,7 +12,7 @@ tags: ["calculator-tools", "productivity", "digital-toolkit", "financial-tools",
 lang: "en"
 targetCalculator:
   name: "Percentage Calculator"
-  href: "/math/percentage-calculator/"
+  href: "/percentage-calculator/"
   description: "Calculate accurate percentage differences, discounts, and margins instantly."
 relatedCalculators: ["percentage-calculator", "emi-calculator", "bmi-calculator"]
 faqs:
@@ -91,22 +91,22 @@ Here are the ten most reliable calculation engines you should have at your finge
 
 ### 1. The Precision Percentage Engine
 * **Why You Need It:** Percentage math sounds simple until you need to calculate a reverse discount, determine percentage increase across quarters, or figure out profit margins versus markups.
-* **The Go-To Tool:** Our free [Percentage Calculator](/math/percentage-calculator/).
+* **The Go-To Tool:** Our free [Percentage Calculator](/percentage-calculator/).
 * **What Makes It Superior:** It bypasses standard calculator confusion by providing clear, distinct calculation modules: *"What is X% of Y?"*, *"X is what percent of Y?"*, and *"Percentage increase/decrease from X to Y"*. It eliminates misaligned parentheses and displays instantaneous results without page reloads.
 
 ### 2. The Loan Amortization & EMI Engine
 * **Why You Need It:** When you take out a car loan, personal loan, or home mortgage, the bank’s monthly payment quote tells you only part of the story. You need to see how much of your hard-earned money goes toward actual principal reduction versus pure bank interest profit.
-* **The Go-To Tool:** Our client-side [EMI Calculator](/finance/emi-calculator/).
+* **The Go-To Tool:** Our client-side [EMI Calculator](/emi-calculator/).
 * **What Makes It Superior:** It calculates complete month-by-month amortization schedules, showing you the exact tipping point where your payments begin knocking down principal faster than interest. You can test prepayment scenarios to see how paying an extra $100 a month shaves years off your debt.
 
 ### 3. The Metabolic TDEE & BMR Engine
 * **Why You Need It:** Most fitness apps either starve you on 1,200 calories or give you inflated numbers that lead to weight gain. Having an objective metabolic calculator gives you an honest starting point for body recomposition.
-* **The Go-To Tool:** Our clinical [Calorie & TDEE Calculator](/health/calorie-calculator/).
+* **The Go-To Tool:** Our clinical [Calorie & TDEE Calculator](/calorie-calculator/).
 * **What Makes It Superior:** As documented in our [TDEE & BMR Guide](/guides/the-truth-about-tdee-bmr-calculators/), it relies on the clinically validated Mifflin-St Jeor equation and allows you to calibrate activity levels realistically, preventing the common pitfalls of generic fitness dropdowns.
 
 ### 4. The Body Composition & BMI Screener
 * **Why You Need It:** While traditional scale weight is an incomplete health metric, tracking your demographic baseline alongside waist measurements offers valuable preventative health insight.
-* **The Go-To Tool:** Our verified [BMI Calculator](/health/bmi-calculator/).
+* **The Go-To Tool:** Our verified [BMI Calculator](/bmi-calculator/).
 * **What Makes It Superior:** It contextualizes standard World Health Organization brackets with nuanced guidelines, integrating seamlessly with our [Body Fat & BMI Guide](/guides/beyond-the-scale-bmi-body-fat-calculator/) to help you look beyond the scale at real physical composition.
 
 ### 5. The Fractional Trade & Carpentry Converter
@@ -148,7 +148,7 @@ Let’s see how having an accurate digital toolkit pays dividends in everyday si
 ### Scenario A: Brian’s Mortgage Refinance Negotiation
 Brian was offered a 30-year fixed refinance loan at 6.25% with $3,500 in closing costs, down from his current 7.1% rate. The loan officer told him, *"You'll save $180 a month, it's a total no-brainer!"*
 
-Instead of signing blindly, Brian pulled up our [EMI Calculator](/finance/emi-calculator/). 
+Instead of signing blindly, Brian pulled up our [EMI Calculator](/emi-calculator/). 
 
 He calculated his break-even horizon:
 $$\text{Break-Even} = \frac{\$3,500 \text{ Closing Costs}}{\$180 \text{ Monthly Savings}} \approx 19.4 \text{ Months}$$
@@ -163,7 +163,7 @@ $$\$4,200 \times 1.35 = \$5,670$$
 
 She didn't realize that adding a 35% *markup* yields an actual profit *margin* of only **25.9%**! 
 
-Using our [Percentage Calculator](/math/percentage-calculator/), Claire calculated true profit margin:
+Using our [Percentage Calculator](/percentage-calculator/), Claire calculated true profit margin:
 $$\text{Price} = \frac{\text{Cost}}{1 - \text{Margin}} = \frac{\$4,200}{1 - 0.35} = \$6,461.54$$
 
 That single distinction protected nearly $800 of profit on a single client contract.
@@ -171,7 +171,7 @@ That single distinction protected nearly $800 of profit on a single client contr
 ### Scenario C: David’s Fitness Plateaus
 David spent six months stuck at 210 pounds, despite logging his food in a commercial fitness app that set his calorie goal at 1,750 calories. He was constantly cheating on weekends because he was starving.
 
-When he used our [Calorie & TDEE Calculator](/health/calorie-calculator/) and paired it with the principles in our [Scooby Lifters Guide](/guides/advanced-fitness-math-scooby-accurate-calculator-lifters/), he discovered his true maintenance burn was 2,600 calories. 
+When he used our [Calorie & TDEE Calculator](/calorie-calculator/) and paired it with the principles in our [Scooby Lifters Guide](/guides/advanced-fitness-math-scooby-accurate-calculator-lifters/), he discovered his true maintenance burn was 2,600 calories. 
 
 The generic app’s extreme 850-calorie deficit was causing his weekend bingeing. 
 
@@ -185,7 +185,7 @@ Having access to great tools only helps if you can reach them when you need them
 
 Here is how to set up your workflow:
 
-1. **Create a "Daily Math" Browser Bookmark Folder:** Place your top three most-used tools (like our [Percentage Calculator](/math/percentage-calculator/), [EMI Calculator](/finance/emi-calculator/), and [Calorie Calculator](/health/calorie-calculator/)) on your browser's top bookmark bar for one-click access.
+1. **Create a "Daily Math" Browser Bookmark Folder:** Place your top three most-used tools (like our [Percentage Calculator](/percentage-calculator/), [EMI Calculator](/emi-calculator/), and [Calorie Calculator](/calorie-calculator/)) on your browser's top bookmark bar for one-click access.
 2. **Add Client-Side Web Apps to Your Phone's Home Screen:** On iOS or Android, tap "Share" and select "Add to Home Screen." Because our calculators run client-side, they launch instantly like native apps without needing an app store download.
 3. **Audit Your Apps Once a Year:** Delete bloated, ad-heavy calculator apps that demand subscriptions or drain your battery in the background.
 

@@ -12,7 +12,7 @@ tags: ["ai", "llm", "deepseek", "openai", "token-cost", "api-pricing"]
 lang: "en"
 targetCalculator:
   name: "AI Prompt & Token Cost Calculator"
-  href: "/technology/ai-token-cost-calculator/"
+  href: "/ai-token-cost-calculator/"
   badge: "Live Benchmark"
   description: "Test prompt tokens, output limits, and KV cache discounts across 9 frontier AI models."
 relatedCalculators: ["developer-sprint-velocity-calculator", "engineer-project-cost-calculator"]
@@ -30,7 +30,7 @@ The explosion of competitive frontier AI models in 2025 and 2026 has transformed
 In this breakdown, we examine the pricing structures of OpenAI, Anthropic, DeepSeek, and Google Cloud, explaining how token billing works and how to design cost-effective production AI pipelines.
 
 > **Benchmark Your Workload:**  
-> Use our free [AI Prompt & Token Cost Calculator](/technology/ai-token-cost-calculator/) to simulate your exact monthly API bill with real-time prompt caching discounts.
+> Use our free [AI Prompt & Token Cost Calculator](/ai-token-cost-calculator/) to simulate your exact monthly API bill with real-time prompt caching discounts.
 
 ---
 

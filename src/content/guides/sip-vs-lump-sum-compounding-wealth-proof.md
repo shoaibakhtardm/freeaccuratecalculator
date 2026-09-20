@@ -12,7 +12,7 @@ tags: ["sip", "lumpsum", "mutual-funds", "investing", "wealth-growth", "compound
 lang: "en"
 targetCalculator:
   name: "SIP & Investment Calculator"
-  href: "/finance/sip-calculator/"
+  href: "/sip-calculator/"
   badge: "AMFI Certified"
   description: "Simulate monthly installments, annual step-up percentages, and lump sum comparison."
 relatedCalculators: ["compound-interest-calculator", "emi-calculator"]
@@ -30,7 +30,7 @@ One of the most enduring debates in personal finance is whether an investor with
 While financial advisors frequently recommend SIP for psychological comfort, empirical market data tells a nuanced story. In this research guide, we break down the exact mathematics, historical probabilities, and real-world scenarios comparing both approaches over 10 to 20-year horizons.
 
 > **Model Your Portfolio:**  
-> Test your own numbers on our free [SIP & Investment Calculator](/finance/sip-calculator/) with interactive compounding curves and inflation adjustments.
+> Test your own numbers on our free [SIP & Investment Calculator](/sip-calculator/) with interactive compounding curves and inflation adjustments.
 
 ---
 

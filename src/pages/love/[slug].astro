@@ -8,39 +8,7 @@ import PartnerShareSuite from '../../components/love/PartnerShareSuite.astro';
 import { LOVE_CALCULATORS, type LoveCalculatorItem } from '../../data/loveCalculators';
 
 export async function getStaticPaths() {
-  const paths: Array<{ params: { slug: string }; props: { calc: LoveCalculatorItem } }> = [];
-
-  LOVE_CALCULATORS.forEach((calc) => {
-    // Primary slug
-    paths.push({
-      params: { slug: calc.slug },
-      props: { calc },
-    });
-
-    // Alias mapping for SEO URL variations
-    const aliasMap: Record<string, string[]> = {
-      'love-calculator-by-name': ['love-calculator'],
-      'marriage-compatibility-calculator': ['kundli-matching'],
-      'zodiac-love-compatibility-calculator': ['zodiac-compatibility', 'love-compatibility-calculator'],
-      'ai-love-calculator': ['ai-love-predictor'],
-      'true-love-calculator-by-names': ['true-love-calculator'],
-      'crush-love-test-calculator': ['crush-love-test'],
-      'birth-date-love-compatibility': ['birth-date-compatibility'],
-      'relationship-compatibility-test': ['relationship-counter'],
-    };
-
-    const aliases = aliasMap[calc.slug];
-    if (aliases) {
-      aliases.forEach((alias) => {
-        paths.push({
-          params: { slug: alias },
-          props: { calc },
-        });
-      });
-    }
-  });
-
-  return paths;
+  return [];
 }
 
 interface Props {
@@ -51,7 +19,7 @@ const { calc } = Astro.props;
 const currentSlug = Astro.params.slug || calc.slug;
 
 const siteOrigin = 'https://freeaccuratecalculator.com';
-const canonicalUrl = `${siteOrigin}/love/${currentSlug}/`;
+const canonicalUrl = `${siteOrigin}/${currentSlug}/`;
 
 // Find 3 other related love calculators
 const relatedCalculators = LOVE_CALCULATORS.filter((c) => c.slug !== calc.slug).slice(0, 3);
@@ -433,7 +401,7 @@ const loveLanguages = [
           <div class="space-y-3">
             {relatedCalculators.map((rel) => (
               <a
-                href={`/love/${rel.slug}/`}
+                href={`/${rel.slug}/`}
                 class="group flex items-center gap-3 p-3 rounded-2xl border border-slate-200/60 dark:border-slate-800/60 bg-slate-50/50 dark:bg-slate-800/50 hover:border-rose-500/50 hover:bg-rose-50/30 dark:hover:bg-rose-950/30 transition-all"
               >
                 <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-lg shadow-2xs group-hover:scale-105 transition-transform">

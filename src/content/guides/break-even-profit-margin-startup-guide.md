@@ -11,7 +11,7 @@ category: "business"
 tags: ["startup", "break-even", "profit-margin", "business-plan", "unit-economics", "pricing", "financial-modeling"]
 targetCalculator:
   name: "Break-Even Analysis"
-  href: "/business/break-even-calculator/"
+  href: "/break-even-calculator/"
   description: "Janiye kitne units bechne ya kitna revenue generate karne par aapka business zero-loss level tak pahunchega."
 relatedCalculators: ["profit-margin-calculator", "roi-calculator", "business-valuation-calculator"]
 faqs:
@@ -34,7 +34,7 @@ Agar aap koi naya business, D2C brand, SaaS app ya coaching service launch kar r
 Is guide mein hum startup unit economics ko decode karenge aur practical mathematical formulas ke sath dekhenge.
 
 > **Apna Business Validate Karein:**  
-> Apne startup ka volume target janne ke liye hamara free [Break-Even Analysis Calculator](/business/break-even-calculator/) aur [Profit Margin Calculator](/finance/profit-margin-calculator/) try karein.
+> Apne startup ka volume target janne ke liye hamara free [Break-Even Analysis Calculator](/break-even-calculator/) aur [Profit Margin Calculator](/profit-margin-calculator/) try karein.
 
 ---
 
@@ -136,6 +136,6 @@ Apna startup shuru karne se pehle ye teen stress-tests zaroor karein:
 
 Great businesses creative ideas se shuru hote hain, lekin survive solid mathematics par karte hain. Product develop karne se pehle apna break-even aur margin profile clear rakhein.
 
-* 👉 **[Break-Even Analysis Calculator par apna BEP target nikalein](/business/break-even-calculator/)**
-* 👉 **[Profit Margin Calculator par Gross aur Net margins verify karein](/finance/profit-margin-calculator/)**
-* 👉 **[Return on Investment ke liye ROI Calculator check karein](/business/roi-calculator/)**
+* 👉 **[Break-Even Analysis Calculator par apna BEP target nikalein](/break-even-calculator/)**
+* 👉 **[Profit Margin Calculator par Gross aur Net margins verify karein](/profit-margin-calculator/)**
+* 👉 **[Return on Investment ke liye ROI Calculator check karein](/roi-calculator/)**

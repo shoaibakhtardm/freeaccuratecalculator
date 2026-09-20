@@ -11,7 +11,7 @@ category: "finance"
 tags: ["emi", "home-loan", "mortgage", "amortization", "debt-management"]
 targetCalculator:
   name: "EMI Calculator"
-  href: "/finance/emi-calculator/"
+  href: "/emi-calculator/"
   description: "Calculate monthly installments, interest breakdown, and explore custom prepayment scenarios."
 relatedCalculators: ["mortgage-calculator", "auto-loan-calculator", "loan-calculator"]
 faqs:
@@ -32,7 +32,7 @@ Buying a home is one of the most significant financial commitments you will make
 In this comprehensive guide, we dissect the exact mathematical formula behind Equated Monthly Installments (EMI), explain how to read amortization schedules, and demonstrate how simple prepayment hacks can save you years of debt.
 
 > **Calculate Instantly:**  
-> Use our free [EMI Calculator](/finance/emi-calculator/) to generate a full month-by-month amortization schedule with prepayment simulation.
+> Use our free [EMI Calculator](/emi-calculator/) to generate a full month-by-month amortization schedule with prepayment simulation.
 
 ---
 
@@ -111,4 +111,4 @@ Because interest compounds against remaining principal, prepaying capital direct
 2. **Annual 5% Prepayment:** Using an annual bonus or tax refund to prepay 5% of the principal balance each year can reduce your loan duration by nearly 50%.
 3. **Switching to Bi-Weekly Payments:** Paying half your monthly EMI every two weeks yields 26 half-payments (13 full payments per year), effortlessly accelerating principal reduction.
 
-Test your own numbers on our interactive [EMI Calculator](/finance/emi-calculator/) to discover your optimal repayment schedule.
+Test your own numbers on our interactive [EMI Calculator](/emi-calculator/) to discover your optimal repayment schedule.

@@ -93,8 +93,8 @@ export function useTranslations(lang: string = DEFAULT_LOCALE) {
 
 /**
  * Returns a localized path for a given route and target locale.
- * - For defaultLocale ('en'): strips locale prefix -> /finance/emi-calculator/
- * - For non-default: prefixes target locale -> /es/finance/emi-calculator/
+ * - For defaultLocale ('en'): strips locale prefix -> /emi-calculator/
+ * - For non-default: prefixes target locale -> /es/emi-calculator/
  */
 export function getLocalizedPath(pathname: string, targetLocale: string = DEFAULT_LOCALE): string {
   const activeLocale = isValidLocale(targetLocale) ? targetLocale : DEFAULT_LOCALE;

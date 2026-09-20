@@ -11,7 +11,7 @@ category: "finance"
 tags: ["ppf", "tax-free", "india-savings", "fixed-income", "government-schemes"]
 targetCalculator:
   name: "PPF Calculator"
-  href: "/finance/ppf-calculator/"
+  href: "/ppf-calculator/"
   description: "Calculate PPF maturity amount, total interest earned, and 5-year extension blocks with annual deposit schedules."
 relatedCalculators: ["sip-calculator", "compound-interest-calculator", "income-tax-calculator"]
 faqs:
@@ -32,7 +32,7 @@ The Public Provident Fund (PPF) remains one of India's most beloved risk-free, s
 In this guide, we break down **how to calculate PPF returns**, explain the lucrative "Exempt-Exempt-Exempt" (EEE) status, and share the critical deposit-timing rule that boosts your interest every single year.
 
 > **Calculate Your PPF Maturity:**  
-> Use our free [PPF Calculator](/finance/ppf-calculator/) to calculate your 15-year maturity corpus and model 5-year extensions.
+> Use our free [PPF Calculator](/ppf-calculator/) to calculate your 15-year maturity corpus and model 5-year extensions.
 
 ---
 
@@ -84,4 +84,4 @@ The PPF rules explicitly state that interest is computed on the **lowest balance
 
 *Rule of Thumb:* Always execute your PPF transfer between **April 1st and April 5th** for maximum annual interest.
 
-Model your 15-year maturity and 5-year extensions on our [PPF Calculator](/finance/ppf-calculator/).
+Model your 15-year maturity and 5-year extensions on our [PPF Calculator](/ppf-calculator/).

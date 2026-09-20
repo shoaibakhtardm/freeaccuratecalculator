@@ -11,7 +11,7 @@ category: "finance"
 tags: ["amortization", "loan", "debt", "mortgage-schedule", "interest-savings"]
 targetCalculator:
   name: "Loan Calculator"
-  href: "/finance/loan-calculator/"
+  href: "/loan-calculator/"
   description: "Generate complete year-by-year and month-by-month loan amortization tables with custom prepayment schedules."
 relatedCalculators: ["emi-calculator", "mortgage-calculator", "auto-loan-calculator"]
 faqs:
@@ -32,7 +32,7 @@ When you borrow money for a car, an education, or a home, your monthly statement
 Understanding **how to read a loan amortization schedule** is the key to unlocking massive interest savings and eliminating debt years ahead of schedule.
 
 > **Generate Your Table:**  
-> Use our free [Loan Calculator](/finance/loan-calculator/) to generate a full month-by-month amortization schedule for personal, auto, or business loans.
+> Use our free [Loan Calculator](/loan-calculator/) to generate a full month-by-month amortization schedule for personal, auto, or business loans.
 
 ---
 
@@ -89,4 +89,4 @@ When you pay more than your required monthly installment, 100% of the surplus is
   * Time to Debt-Free: **24 Years and 2 Months**
 * *The Result:* Paying $150 extra saved **$76,374 in cash** and eliminated nearly 6 years of debt!
 
-Generate your exact schedule and simulate extra payments on our [Loan Calculator](/finance/loan-calculator/).
+Generate your exact schedule and simulate extra payments on our [Loan Calculator](/loan-calculator/).

@@ -12,7 +12,7 @@ tags: ["sip-calculator", "excel-sip-calculator", "mf-sip-calculator", "cloud-fin
 lang: "en"
 targetCalculator:
   name: "SIP & Investment Calculator"
-  href: "/finance/sip-calculator/"
+  href: "/sip-calculator/"
   description: "Experience our zero-download, client-side dynamic SIP compounding engine."
 relatedCalculators: ["sip-calculator", "step-up-sip-calculator", "emi-calculator"]
 faqs:
@@ -152,7 +152,7 @@ Trying to pinch, zoom, and scroll horizontally across 240 rows of an Excel sprea
 
 Modern web architecture solves this through responsive client-side design. 
 
-An advanced web engine like our [SIP & Investment Calculator](/finance/sip-calculator/) formats itself gracefully to any display, giving you touch-friendly sliders, clean interactive pie charts, and instant clarity on the go.
+An advanced web engine like our [SIP & Investment Calculator](/sip-calculator/) formats itself gracefully to any display, giving you touch-friendly sliders, clean interactive pie charts, and instant clarity on the go.
 
 ### 2. Zero Installation, 100% Privacy
 Ten years ago, web apps were slow and required constant server roundtrips. 
@@ -183,9 +183,9 @@ It transforms a passive calculation into an **interactive flight simulator for y
 ```
 
 Instead of modifying cell ranges and fixing broken formulas, you can run multi-dimensional stress tests in seconds:
-* Toggle your annual step-up from 5% to 10% on our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/) and watch your 25-year projection double in real time.
+* Toggle your annual step-up from 5% to 10% on our [Step-Up SIP Calculator](/step-up-sip-calculator/) and watch your 25-year projection double in real time.
 * Flip on the inflation deflator to see the unvarnished purchasing power of your money.
-* Compare an equity SIP against an auto loan or mortgage on our [EMI Calculator](/finance/emi-calculator/) to see the real opportunity cost of debt.
+* Compare an equity SIP against an auto loan or mortgage on our [EMI Calculator](/emi-calculator/) to see the real opportunity cost of debt.
 
 You are no longer maintaining a fragile spreadsheet. You are architecting your financial independence with live, frictionless intelligence.
 
@@ -206,7 +206,7 @@ The formulas quietly broke, multiplying his monthly returns instead of compoundi
 
 Dev spent six months believing he was on track to accumulate ₹4 Crores by age 48. 
 
-When he finally audited his numbers using our verified [SIP Calculator](/finance/sip-calculator/), he discovered his actual projected trajectory was **₹2.6 Crores**—a shortfall of nearly ₹1.4 Crores caused by a single broken Excel reference.
+When he finally audited his numbers using our verified [SIP Calculator](/sip-calculator/), he discovered his actual projected trajectory was **₹2.6 Crores**—a shortfall of nearly ₹1.4 Crores caused by a single broken Excel reference.
 
 ### Scenario B: Priya’s Frictionless Clarity
 Priya is a freelance architect. Her income fluctuates throughout the year, with occasional project bonuses and varying monthly cash flow. 
@@ -249,4 +249,4 @@ However, the world of wealth creation has evolved:
 
 Ditch the clunky downloads and embrace modern clarity today. 
 
-Explore our free [SIP & Investment Calculator](/finance/sip-calculator/) and our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/), and experience the power of institutional-grade wealth planning right inside your web browser.
+Explore our free [SIP & Investment Calculator](/sip-calculator/) and our [Step-Up SIP Calculator](/step-up-sip-calculator/), and experience the power of institutional-grade wealth planning right inside your web browser.

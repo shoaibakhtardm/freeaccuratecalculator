@@ -24,7 +24,7 @@ El interés compuesto es el motor matemático fundamental de la acumulación de 
 En términos matemáticos, el interés simple genera un crecimiento lineal, mientras que el interés compuesto genera un crecimiento exponencial (geométrico).
 
 > **¿Desea simular su propio escenario financiero?**  
-> Utilice nuestra [Calculadora de Interés Compuesto](/finance/compound-interest-calculator/) para proyectar el valor futuro, el total aportado y los intereses generados.
+> Utilice nuestra [Calculadora de Interés Compuesto](/compound-interest-calculator/) para proyectar el valor futuro, el total aportado y los intereses generados.
 
 ---
 

@@ -33,7 +33,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "everyday",
     "categoryName": "Everyday",
     "icon": "☀️",
-    "href": "/everyday/age-calculator/",
+    "href": "/age-calculator/",
     "keywords": [
       "dob",
       "date of birth",
@@ -49,7 +49,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "legal",
     "categoryName": "Legal",
     "icon": "⚖️",
-    "href": "/legal/alimony-calculator/",
+    "href": "/alimony-calculator/",
     "keywords": []
   },
   {
@@ -58,7 +58,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "insurance",
     "categoryName": "Insurance",
     "icon": "🛡️",
-    "href": "/insurance/annuity-payout-calculator/",
+    "href": "/annuity-payout-calculator/",
     "keywords": []
   },
   {
@@ -67,7 +67,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "insurance",
     "categoryName": "Insurance",
     "icon": "🛡️",
-    "href": "/insurance/auto-insurance-calculator/",
+    "href": "/auto-insurance-calculator/",
     "keywords": []
   },
   {
@@ -76,7 +76,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "finance",
     "categoryName": "Finance",
     "icon": "💰",
-    "href": "/finance/auto-loan-calculator/",
+    "href": "/auto-loan-calculator/",
     "keywords": [
       "car loan",
       "vehicle loan",
@@ -90,7 +90,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "biology",
     "categoryName": "Biology",
     "icon": "🧬",
-    "href": "/biology/bacterial-growth-calculator/",
+    "href": "/bacterial-growth-calculator/",
     "keywords": []
   },
   {
@@ -99,7 +99,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "food",
     "categoryName": "Food",
     "icon": "🍎",
-    "href": "/food/bakers-percentage-calculator/",
+    "href": "/bakers-percentage-calculator/",
     "keywords": []
   },
   {
@@ -108,7 +108,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "technology",
     "categoryName": "Technology",
     "icon": "💻",
-    "href": "/technology/bandwidth-calculator/",
+    "href": "/bandwidth-calculator/",
     "keywords": []
   },
   {
@@ -117,7 +117,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "health",
     "categoryName": "Health",
     "icon": "🩺",
-    "href": "/health/bmi-calculator/",
+    "href": "/bmi-calculator/",
     "keywords": [
       "body mass index",
       "weight",
@@ -134,7 +134,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "health",
     "categoryName": "Health",
     "icon": "🩺",
-    "href": "/health/bmr-calculator/",
+    "href": "/bmr-calculator/",
     "keywords": []
   },
   {
@@ -143,7 +143,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "health",
     "categoryName": "Health",
     "icon": "🩺",
-    "href": "/health/body-fat-calculator/",
+    "href": "/body-fat-calculator/",
     "keywords": []
   },
   {
@@ -152,7 +152,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "business",
     "categoryName": "Business",
     "icon": "💼",
-    "href": "/business/break-even-calculator/",
+    "href": "/break-even-calculator/",
     "keywords": [
       "break even point",
       "bep",
@@ -166,7 +166,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "construction",
     "categoryName": "Construction",
     "icon": "🏗️",
-    "href": "/construction/brick-calculator/",
+    "href": "/brick-calculator/",
     "keywords": []
   },
   {
@@ -175,7 +175,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "business",
     "categoryName": "Business",
     "icon": "💼",
-    "href": "/business/business-valuation-calculator/",
+    "href": "/business-valuation-calculator/",
     "keywords": []
   },
   {
@@ -184,7 +184,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "health",
     "categoryName": "Health",
     "icon": "🩺",
-    "href": "/health/calorie-calculator/",
+    "href": "/calorie-calculator/",
     "keywords": [
       "calories",
       "tdee",
@@ -199,7 +199,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "food",
     "categoryName": "Food",
     "icon": "🍎",
-    "href": "/food/calorie-per-serving-calculator/",
+    "href": "/calorie-per-serving-calculator/",
     "keywords": []
   },
   {
@@ -208,7 +208,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "real-estate",
     "categoryName": "Real Estate",
     "icon": "🏢",
-    "href": "/real-estate/cap-rate-calculator/",
+    "href": "/cap-rate-calculator/",
     "keywords": []
   },
   {
@@ -217,7 +217,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "automotive",
     "categoryName": "Automotive",
     "icon": "🚗",
-    "href": "/automotive/car-depreciation-calculator/",
+    "href": "/car-depreciation-calculator/",
     "keywords": []
   },
   {
@@ -226,7 +226,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "ecology",
     "categoryName": "Ecology",
     "icon": "🌱",
-    "href": "/ecology/carbon-footprint-calculator/",
+    "href": "/carbon-footprint-calculator/",
     "keywords": []
   },
   {
@@ -235,7 +235,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "legal",
     "categoryName": "Legal",
     "icon": "⚖️",
-    "href": "/legal/child-support-calculator/",
+    "href": "/child-support-calculator/",
     "keywords": []
   },
   {
@@ -244,7 +244,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "ecology",
     "categoryName": "Ecology",
     "icon": "🌱",
-    "href": "/ecology/compost-ratio-calculator/",
+    "href": "/compost-ratio-calculator/",
     "keywords": []
   },
   {
@@ -253,7 +253,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "finance",
     "categoryName": "Finance",
     "icon": "💰",
-    "href": "/finance/compound-interest-calculator/",
+    "href": "/compound-interest-calculator/",
     "keywords": [
       "compound interest",
       "compounding",
@@ -269,7 +269,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "construction",
     "categoryName": "Construction",
     "icon": "🏗️",
-    "href": "/construction/concrete-calculator/",
+    "href": "/concrete-calculator/",
     "keywords": []
   },
   {
@@ -278,7 +278,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "statistics",
     "categoryName": "Statistics",
     "icon": "📊",
-    "href": "/statistics/confidence-interval-calculator/",
+    "href": "/confidence-interval-calculator/",
     "keywords": []
   },
   {
@@ -287,7 +287,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "marketing",
     "categoryName": "Marketing",
     "icon": "📈",
-    "href": "/marketing/conversion-rate-calculator/",
+    "href": "/conversion-rate-calculator/",
     "keywords": []
   },
   {
@@ -296,7 +296,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "marketing",
     "categoryName": "Marketing",
     "icon": "📈",
-    "href": "/marketing/cac-calculator/",
+    "href": "/cac-calculator/",
     "keywords": []
   },
   {
@@ -305,7 +305,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "technology",
     "categoryName": "Technology",
     "icon": "💻",
-    "href": "/technology/data-transfer-calculator/",
+    "href": "/data-transfer-calculator/",
     "keywords": []
   },
   {
@@ -314,7 +314,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "everyday",
     "categoryName": "Everyday",
     "icon": "☀️",
-    "href": "/everyday/date-calculator/",
+    "href": "/date-calculator/",
     "keywords": []
   },
   {
@@ -347,7 +347,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "marketing",
     "categoryName": "Marketing",
     "icon": "📈",
-    "href": "/marketing/email-roi-calculator/",
+    "href": "/email-roi-calculator/",
     "keywords": []
   },
   {
@@ -356,7 +356,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "finance",
     "categoryName": "Finance",
     "icon": "💰",
-    "href": "/finance/emi-calculator/",
+    "href": "/emi-calculator/",
     "keywords": [
       "home loan",
       "car loan",
@@ -390,7 +390,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "math",
     "categoryName": "Math",
     "icon": "📐",
-    "href": "/math/fraction-calculator/",
+    "href": "/fraction-calculator/",
     "keywords": []
   },
   {
@@ -399,7 +399,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "automotive",
     "categoryName": "Automotive",
     "icon": "🚗",
-    "href": "/automotive/fuel-cost-calculator/",
+    "href": "/fuel-cost-calculator/",
     "keywords": []
   },
   {
@@ -408,7 +408,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "automotive",
     "categoryName": "Automotive",
     "icon": "🚗",
-    "href": "/automotive/mpg-calculator/",
+    "href": "/mpg-calculator/",
     "keywords": []
   },
   {
@@ -417,7 +417,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "sports",
     "categoryName": "Sports",
     "icon": "⚽",
-    "href": "/sports/golf-handicap-calculator/",
+    "href": "/golf-handicap-calculator/",
     "keywords": []
   },
   {
@@ -426,7 +426,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "everyday",
     "categoryName": "Everyday",
     "icon": "☀️",
-    "href": "/everyday/gpa-calculator/",
+    "href": "/gpa-calculator/",
     "keywords": []
   },
   {
@@ -453,7 +453,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "biology",
     "categoryName": "Biology",
     "icon": "🧬",
-    "href": "/biology/hardy-weinberg-calculator/",
+    "href": "/hardy-weinberg-calculator/",
     "keywords": []
   },
   {
@@ -462,7 +462,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "insurance",
     "categoryName": "Insurance",
     "icon": "🛡️",
-    "href": "/insurance/health-insurance-calculator/",
+    "href": "/health-insurance-calculator/",
     "keywords": [
       "health",
       "insurance",
@@ -493,7 +493,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "everyday",
     "categoryName": "Everyday",
     "icon": "☀️",
-    "href": "/everyday/hours-calculator/",
+    "href": "/hours-calculator/",
     "keywords": []
   },
   {
@@ -502,7 +502,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "health",
     "categoryName": "Health",
     "icon": "🩺",
-    "href": "/health/ideal-weight-calculator/",
+    "href": "/ideal-weight-calculator/",
     "keywords": []
   },
   {
@@ -511,7 +511,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "finance",
     "categoryName": "Finance",
     "icon": "💰",
-    "href": "/finance/income-tax-calculator/",
+    "href": "/income-tax-calculator/",
     "keywords": [
       "tax",
       "income tax",
@@ -548,7 +548,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "finance",
     "categoryName": "Finance",
     "icon": "💰",
-    "href": "/finance/interest-rate-calculator/",
+    "href": "/interest-rate-calculator/",
     "keywords": []
   },
   {
@@ -566,7 +566,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "physics",
     "categoryName": "Physics",
     "icon": "⚛️",
-    "href": "/physics/kinetic-energy-calculator/",
+    "href": "/kinetic-energy-calculator/",
     "keywords": []
   },
   {
@@ -575,7 +575,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "legal",
     "categoryName": "Legal",
     "icon": "⚖️",
-    "href": "/legal/legal-fee-calculator/",
+    "href": "/legal-fee-calculator/",
     "keywords": []
   },
   {
@@ -584,7 +584,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "converter",
     "categoryName": "Converter",
     "icon": "🔄",
-    "href": "/converter/length-converter/",
+    "href": "/length-converter/",
     "keywords": []
   },
   {
@@ -593,7 +593,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "finance",
     "categoryName": "Finance",
     "icon": "💰",
-    "href": "/finance/amortization-calculator/",
+    "href": "/amortization-calculator/",
     "keywords": []
   },
   {
@@ -602,7 +602,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "finance",
     "categoryName": "Finance",
     "icon": "💰",
-    "href": "/finance/loan-calculator/",
+    "href": "/loan-calculator/",
     "keywords": []
   },
   {
@@ -611,7 +611,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "finance",
     "categoryName": "Finance",
     "icon": "💰",
-    "href": "/finance/lumpsum-calculator/",
+    "href": "/lumpsum-calculator/",
     "keywords": []
   },
   {
@@ -620,7 +620,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "food",
     "categoryName": "Food",
     "icon": "🍎",
-    "href": "/food/macronutrient-calculator/",
+    "href": "/macronutrient-calculator/",
     "keywords": []
   },
   {
@@ -629,7 +629,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "chemistry",
     "categoryName": "Chemistry",
     "icon": "🧪",
-    "href": "/chemistry/molar-mass-calculator/",
+    "href": "/molar-mass-calculator/",
     "keywords": []
   },
   {
@@ -638,7 +638,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "biology",
     "categoryName": "Biology",
     "icon": "🧬",
-    "href": "/biology/molecular-weight-calculator/",
+    "href": "/molecular-weight-calculator/",
     "keywords": []
   },
   {
@@ -647,7 +647,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "finance",
     "categoryName": "Finance",
     "icon": "💰",
-    "href": "/finance/mortgage-calculator/",
+    "href": "/mortgage-calculator/",
     "keywords": [
       "home loan",
       "housing loan",
@@ -662,7 +662,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "physics",
     "categoryName": "Physics",
     "icon": "⚛️",
-    "href": "/physics/ohms-law-calculator/",
+    "href": "/ohms-law-calculator/",
     "keywords": []
   },
   {
@@ -671,7 +671,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "sports",
     "categoryName": "Sports",
     "icon": "⚽",
-    "href": "/sports/one-rep-max-calculator/",
+    "href": "/one-rep-max-calculator/",
     "keywords": []
   },
   {
@@ -680,7 +680,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "construction",
     "categoryName": "Construction",
     "icon": "🏗️",
-    "href": "/construction/paint-calculator/",
+    "href": "/paint-calculator/",
     "keywords": []
   },
   {
@@ -689,7 +689,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "technology",
     "categoryName": "Technology",
     "icon": "💻",
-    "href": "/technology/password-generator/",
+    "href": "/password-generator/",
     "keywords": []
   },
   {
@@ -698,7 +698,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "finance",
     "categoryName": "Finance",
     "icon": "💰",
-    "href": "/finance/payment-calculator/",
+    "href": "/payment-calculator/",
     "keywords": []
   },
   {
@@ -707,7 +707,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "math",
     "categoryName": "Math",
     "icon": "📐",
-    "href": "/math/percentage-calculator/",
+    "href": "/percentage-calculator/",
     "keywords": [
       "percent",
       "discount",
@@ -723,7 +723,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "chemistry",
     "categoryName": "Chemistry",
     "icon": "🧪",
-    "href": "/chemistry/ph-calculator/",
+    "href": "/ph-calculator/",
     "keywords": []
   },
   {
@@ -759,7 +759,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "statistics",
     "categoryName": "Statistics",
     "icon": "📊",
-    "href": "/statistics/probability-calculator/",
+    "href": "/probability-calculator/",
     "keywords": []
   },
   {
@@ -768,7 +768,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "finance",
     "categoryName": "Finance",
     "icon": "💰",
-    "href": "/finance/profit-margin-calculator/",
+    "href": "/profit-margin-calculator/",
     "keywords": [
       "profit",
       "markup",
@@ -783,7 +783,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "physics",
     "categoryName": "Physics",
     "icon": "⚛️",
-    "href": "/physics/projectile-motion-calculator/",
+    "href": "/projectile-motion-calculator/",
     "keywords": []
   },
   {
@@ -792,7 +792,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "real-estate",
     "categoryName": "Real Estate",
     "icon": "🏢",
-    "href": "/real-estate/property-tax-calculator/",
+    "href": "/property-tax-calculator/",
     "keywords": []
   },
   {
@@ -801,7 +801,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "biology",
     "categoryName": "Biology",
     "icon": "🧬",
-    "href": "/biology/punnett-square-calculator/",
+    "href": "/punnett-square-calculator/",
     "keywords": []
   },
   {
@@ -810,7 +810,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "math",
     "categoryName": "Math",
     "icon": "📐",
-    "href": "/math/random-number-generator/",
+    "href": "/random-number-generator/",
     "keywords": []
   },
   {
@@ -819,7 +819,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "food",
     "categoryName": "Food",
     "icon": "🍎",
-    "href": "/food/recipe-scaler-calculator/",
+    "href": "/recipe-scaler-calculator/",
     "keywords": []
   },
   {
@@ -828,7 +828,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "real-estate",
     "categoryName": "Real Estate",
     "icon": "🏢",
-    "href": "/real-estate/rental-yield-calculator/",
+    "href": "/rental-yield-calculator/",
     "keywords": []
   },
   {
@@ -861,7 +861,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "marketing",
     "categoryName": "Marketing",
     "icon": "📈",
-    "href": "/marketing/roas-calculator/",
+    "href": "/roas-calculator/",
     "keywords": []
   },
   {
@@ -870,7 +870,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "business",
     "categoryName": "Business",
     "icon": "💼",
-    "href": "/business/roi-calculator/",
+    "href": "/roi-calculator/",
     "keywords": []
   },
   {
@@ -892,7 +892,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "health",
     "categoryName": "Health",
     "icon": "🩺",
-    "href": "/health/pace-calculator/",
+    "href": "/pace-calculator/",
     "keywords": []
   },
   {
@@ -924,7 +924,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "statistics",
     "categoryName": "Statistics",
     "icon": "📊",
-    "href": "/statistics/sample-size-calculator/",
+    "href": "/sample-size-calculator/",
     "keywords": []
   },
   {
@@ -933,7 +933,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "math",
     "categoryName": "Math",
     "icon": "📐",
-    "href": "/math/scientific-calculator/",
+    "href": "/scientific-calculator/",
     "keywords": [
       "scientific",
       "calculator",
@@ -950,7 +950,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "legal",
     "categoryName": "Legal",
     "icon": "⚖️",
-    "href": "/legal/settlement-value-calculator/",
+    "href": "/settlement-value-calculator/",
     "keywords": []
   },
   {
@@ -959,7 +959,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "finance",
     "categoryName": "Finance",
     "icon": "💰",
-    "href": "/finance/simple-interest-calculator/",
+    "href": "/simple-interest-calculator/",
     "keywords": [
       "simple interest",
       "apr",
@@ -973,7 +973,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "finance",
     "categoryName": "Finance",
     "icon": "💰",
-    "href": "/finance/sip-calculator/",
+    "href": "/sip-calculator/",
     "keywords": [
       "sip",
       "mutual fund",
@@ -988,7 +988,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "ecology",
     "categoryName": "Ecology",
     "icon": "🌱",
-    "href": "/ecology/solar-energy-calculator/",
+    "href": "/solar-energy-calculator/",
     "keywords": []
   },
   {
@@ -997,7 +997,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "chemistry",
     "categoryName": "Chemistry",
     "icon": "🧪",
-    "href": "/chemistry/solution-dilution-calculator/",
+    "href": "/solution-dilution-calculator/",
     "keywords": []
   },
   {
@@ -1006,7 +1006,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "construction",
     "categoryName": "Construction",
     "icon": "🏗️",
-    "href": "/construction/square-footage-calculator/",
+    "href": "/square-footage-calculator/",
     "keywords": []
   },
   {
@@ -1015,7 +1015,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "statistics",
     "categoryName": "Statistics",
     "icon": "📊",
-    "href": "/statistics/standard-deviation-calculator/",
+    "href": "/standard-deviation-calculator/",
     "keywords": []
   },
   {
@@ -1024,7 +1024,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "finance",
     "categoryName": "Finance",
     "icon": "💰",
-    "href": "/finance/step-up-sip-calculator/",
+    "href": "/step-up-sip-calculator/",
     "keywords": []
   },
   {
@@ -1033,7 +1033,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "chemistry",
     "categoryName": "Chemistry",
     "icon": "🧪",
-    "href": "/chemistry/stoichiometry-calculator/",
+    "href": "/stoichiometry-calculator/",
     "keywords": []
   },
   {
@@ -1042,7 +1042,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "technology",
     "categoryName": "Technology",
     "icon": "💻",
-    "href": "/technology/subnet-calculator/",
+    "href": "/subnet-calculator/",
     "keywords": []
   },
   {
@@ -1060,7 +1060,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "sports",
     "categoryName": "Sports",
     "icon": "⚽",
-    "href": "/sports/heart-rate-zone-calculator/",
+    "href": "/heart-rate-zone-calculator/",
     "keywords": []
   },
   {
@@ -1069,7 +1069,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "converter",
     "categoryName": "Converter",
     "icon": "🔄",
-    "href": "/converter/temperature-converter/",
+    "href": "/temperature-converter/",
     "keywords": []
   },
   {
@@ -1078,7 +1078,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "insurance",
     "categoryName": "Insurance",
     "icon": "🛡️",
-    "href": "/insurance/term-life-insurance-calculator/",
+    "href": "/term-life-insurance-calculator/",
     "keywords": []
   },
   {
@@ -1087,7 +1087,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "everyday",
     "categoryName": "Everyday",
     "icon": "☀️",
-    "href": "/everyday/time-calculator/",
+    "href": "/time-calculator/",
     "keywords": []
   },
   {
@@ -1096,7 +1096,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "math",
     "categoryName": "Math",
     "icon": "📐",
-    "href": "/math/triangle-calculator/",
+    "href": "/triangle-calculator/",
     "keywords": []
   },
   {
@@ -1120,7 +1120,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "converter",
     "categoryName": "Converter",
     "icon": "🔄",
-    "href": "/converter/conversion-calculator/",
+    "href": "/conversion-calculator/",
     "keywords": [
       "convert",
       "metric",
@@ -1135,7 +1135,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "physics",
     "categoryName": "Physics",
     "icon": "⚛️",
-    "href": "/physics/velocity-acceleration-calculator/",
+    "href": "/velocity-acceleration-calculator/",
     "keywords": []
   },
   {
@@ -1144,7 +1144,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "ecology",
     "categoryName": "Ecology",
     "icon": "🌱",
-    "href": "/ecology/water-conservation-calculator/",
+    "href": "/water-conservation-calculator/",
     "keywords": []
   },
   {
@@ -1153,7 +1153,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "converter",
     "categoryName": "Converter",
     "icon": "🔄",
-    "href": "/converter/weight-converter/",
+    "href": "/weight-converter/",
     "keywords": []
   },
   {

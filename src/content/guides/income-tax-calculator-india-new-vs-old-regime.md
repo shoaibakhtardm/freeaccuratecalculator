@@ -11,7 +11,7 @@ category: "finance"
 tags: ["income-tax", "tax-regime", "india-tax", "section-80c", "tax-planning"]
 targetCalculator:
   name: "Income Tax Calculator"
-  href: "/finance/income-tax-calculator/"
+  href: "/income-tax-calculator/"
   description: "Calculate your tax liability under both the New and Old Tax Regimes with full standard deduction and surcharge analysis."
 relatedCalculators: ["sip-calculator", "ppf-calculator", "emi-calculator"]
 faqs:
@@ -32,7 +32,7 @@ Navigating Indian income tax has become a strategic decision since the introduct
 Choosing the correct regime can save you anywhere from ₹20,000 to over ₹1,50,000 annually. In this guide, we break down **how to calculate income tax in India for 2026**, compare slab rates, and demonstrate the exact mathematical breakeven point.
 
 > **Compare Regimes Instantly:**  
-> Use our free [Income Tax Calculator](/finance/income-tax-calculator/) to test your salary, investments, and deductions side-by-side.
+> Use our free [Income Tax Calculator](/income-tax-calculator/) to test your salary, investments, and deductions side-by-side.
 
 ---
 
@@ -111,4 +111,4 @@ Let's evaluate a salaried professional earning **₹15,00,000 gross annual salar
 * **Total Tax Payable (with 4% cess): ₹1,37,800**
 * *Verdict:* Even with ₹3.75 Lakh in deductions, the **New Tax Regime saves ₹10,400**!
 
-Calculate your personalized tax liability on our dedicated [Income Tax Calculator](/finance/income-tax-calculator/).
+Calculate your personalized tax liability on our dedicated [Income Tax Calculator](/income-tax-calculator/).

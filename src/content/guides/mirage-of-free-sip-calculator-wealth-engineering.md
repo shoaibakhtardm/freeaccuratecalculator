@@ -12,7 +12,7 @@ tags: ["sip-calculator", "free-sip-calculator", "wealth-engineering", "inflation
 lang: "en"
 targetCalculator:
   name: "SIP & Investment Calculator"
-  href: "/finance/sip-calculator/"
+  href: "/sip-calculator/"
   description: "Experience our free, institutional-grade inflation & tax-adjusted SIP simulator."
 relatedCalculators: ["sip-calculator", "step-up-sip-calculator", "income-tax-calculator"]
 faqs:
@@ -120,7 +120,7 @@ Look at that bottom line: **₹42.4 Lakhs.**
 
 An investor who thought they were building a ₹1.5 Crore fortune actually accumulated the purchasing power of a modest apartment down payment. 
 
-If Sameer had known this on day one, he wouldn't have kept his monthly investment flat at ₹15,000. He would have used our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/) to escalate his savings by 10% each year, closing the gap before inflation could swallow his retirement.
+If Sameer had known this on day one, he wouldn't have kept his monthly investment flat at ₹15,000. He would have used our [Step-Up SIP Calculator](/step-up-sip-calculator/) to escalate his savings by 10% each year, closing the gap before inflation could swallow his retirement.
 
 A basic calculator keeps you complacent. A high-performance calculator gives you the constructive agitation you need to take action today.
 
@@ -214,7 +214,7 @@ A true wealth simulator empowers you to stress-test your strategy against real-w
 ### 1. The Micro-Step-Up Accelerator
 What happens if you increase your monthly contribution by just **₹2,000 a month** in Year 3? 
 
-On our interactive [SIP & Investment Calculator](/finance/sip-calculator/), you can watch how that single minor adjustment ripples across fifteen years, generating an extra **₹18 Lakhs in final maturity wealth.**
+On our interactive [SIP & Investment Calculator](/sip-calculator/), you can watch how that single minor adjustment ripples across fifteen years, generating an extra **₹18 Lakhs in final maturity wealth.**
 
 ### 2. The Sequence of Returns Reality
 In the real world, markets do not return a steady 12% every year. 
@@ -295,4 +295,4 @@ Do not plan your retirement with a rudimentary three-slider widget:
 
 Take control of your wealth trajectory today. 
 
-Explore our free, client-side [SIP & Investment Calculator](/finance/sip-calculator/) and our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/), run your numbers with unvarnished clarity, and engineer the financial masterpiece you deserve.
+Explore our free, client-side [SIP & Investment Calculator](/sip-calculator/) and our [Step-Up SIP Calculator](/step-up-sip-calculator/), run your numbers with unvarnished clarity, and engineer the financial masterpiece you deserve.

@@ -11,7 +11,7 @@ category: "health"
 tags: ["bmi", "health", "fitness", "weight-loss", "wellness"]
 targetCalculator:
   name: "BMI Calculator"
-  href: "/health/bmi-calculator/"
+  href: "/bmi-calculator/"
   description: "Check your exact Body Mass Index with metric and imperial units, healthy weight ranges, and category analysis."
 relatedCalculators: ["calorie-calculator", "body-fat-calculator", "ideal-weight-calculator"]
 faqs:
@@ -32,7 +32,7 @@ Body Mass Index (BMI) remains the world's most widely utilized medical screening
 In this guide, we break down **how to calculate BMI**, explain what the numbers mean for your longevity and metabolic health, and explore the crucial limitations every fitness enthusiast should understand.
 
 > **Instant Calculation:**  
-> Check your numbers in seconds with our [BMI Calculator](/health/bmi-calculator/) supporting both metric (cm/kg) and imperial (ft/lbs) measurements.
+> Check your numbers in seconds with our [BMI Calculator](/bmi-calculator/) supporting both metric (cm/kg) and imperial (ft/lbs) measurements.
 
 ---
 
@@ -100,4 +100,4 @@ To achieve an accurate picture of your physical health, combine your BMI result 
 * **Body Fat Percentage:** Measure using calipers, DEXA scans, or bioimpedance scales.
 * **Blood Biomarkers:** Annual checks of fasting glucose, HbA1c, and lipid panels.
 
-Calculate your exact score and healthy weight targets on our [BMI Calculator](/health/bmi-calculator/).
+Calculate your exact score and healthy weight targets on our [BMI Calculator](/bmi-calculator/).

@@ -11,7 +11,7 @@ describe('SEO & Accessibility: Dynamic Schema.org Generator', () => {
     const loanCalcInput = {
       name: 'Loan Calculator',
       description: 'Calculate monthly loan EMI payments, total interest payable, and amortization schedules.',
-      url: 'https://freeaccuratecalculator.com/finance/loan-calculator/',
+      url: 'https://freeaccuratecalculator.com/loan-calculator/',
       category: 'finance',
       lang: 'en',
     };
@@ -26,7 +26,7 @@ describe('SEO & Accessibility: Dynamic Schema.org Generator', () => {
     expect(schema.operatingSystem).toBe('All');
     expect(schema.offers.price).toBe('0.00');
     expect(schema.offers.priceCurrency).toBe('USD');
-    expect(schema.url).toBe('https://freeaccuratecalculator.com/finance/loan-calculator/');
+    expect(schema.url).toBe('https://freeaccuratecalculator.com/loan-calculator/');
   });
 
   it('generates valid FAQPage schema from questions and answers', () => {
@@ -62,7 +62,7 @@ describe('SEO & Accessibility: Dynamic Schema.org Generator', () => {
     const schemas = generateCalculatorSchemas({
       name: 'Loan Calculator',
       description: 'Loan amortization tool',
-      url: 'https://freeaccuratecalculator.com/finance/loan-calculator/',
+      url: 'https://freeaccuratecalculator.com/loan-calculator/',
       category: 'finance',
       faqs: [{ question: 'Q1', answer: 'A1' }],
     });

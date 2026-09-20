@@ -12,7 +12,7 @@ tags: ["pregnancy", "due-date", "conception", "ultrasound", "maternal-health", "
 lang: "en"
 targetCalculator:
   name: "Calorie & TDEE Calculator"
-  href: "/health/calorie-calculator/"
+  href: "/calorie-calculator/"
   description: "Track healthy nutrition, energy demands, and maternal wellness targets."
 relatedCalculators: ["calorie-calculator", "bmi-calculator"]
 faqs:
@@ -196,7 +196,7 @@ Pregnancy can be an emotional rollercoaster. Between morning nausea, changing ho
 Take a deep breath and keep these gentle reminders in your back pocket:
 
 * **Milestones are broad ranges, not pass/fail tests.** Some babies drop into the pelvis weeks early; others drop during active labor. Some mothers show early; others carry compactly until the third trimester.
-* **Support your body with nourishing fuel.** While calculating dates, remember that your body is constructing an entire human organ (the placenta) and growing brand new life. Use our [Calorie & TDEE Calculator](/health/calorie-calculator/) to understand your changing energy demands during each trimester, and check our [BMI Calculator](/health/bmi-calculator/) for general baseline awareness.
+* **Support your body with nourishing fuel.** While calculating dates, remember that your body is constructing an entire human organ (the placenta) and growing brand new life. Use our [Calorie & TDEE Calculator](/calorie-calculator/) to understand your changing energy demands during each trimester, and check our [BMI Calculator](/bmi-calculator/) for general baseline awareness.
 * **Your baby does not own a calendar.** Lungs mature, surfactant develops, and final fat deposits accumulate on your baby's individual biological schedule. Trust your clinical care team, advocate for your preferences, and allow yourself to rest.
 
 ---

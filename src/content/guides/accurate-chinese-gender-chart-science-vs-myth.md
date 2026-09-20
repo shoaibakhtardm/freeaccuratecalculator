@@ -264,7 +264,7 @@ There is absolute beauty in folklore. The Chinese gender chart has survived for 
 If you want to plug your numbers into the chart, do it! 
 * Laugh over the result with your partner.
 * Compare it against other folklore tests, like whether your wedding ring swings in circles over your belly or whether you are craving salty pretzels versus sweet strawberries.
-* Use our companion [Pregnancy & Due Date Guide](/guides/most-accurate-pregnancy-due-date-calculator/) to track your actual gestational timeline, and look into our [Calorie & TDEE Calculator](/health/calorie-calculator/) to keep your daily energy needs nourished as your pregnancy progresses.
+* Use our companion [Pregnancy & Due Date Guide](/guides/most-accurate-pregnancy-due-date-calculator/) to track your actual gestational timeline, and look into our [Calorie & TDEE Calculator](/calorie-calculator/) to keep your daily energy needs nourished as your pregnancy progresses.
 
 Just remember to keep one foot firmly grounded in reality. Enjoy the chart as a delightful party game, let the 50/50 odds play out as they will, and look forward to the moment you get to hold your healthy little human in your arms.
 

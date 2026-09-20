@@ -12,7 +12,7 @@ tags: ["life-expectancy", "longevity", "actuarial-science", "healthspan", "welln
 lang: "en"
 targetCalculator:
   name: "BMI Calculator"
-  href: "/health/bmi-calculator/"
+  href: "/bmi-calculator/"
   description: "Check your baseline body mass index and demographic health ranges."
 relatedCalculators: ["bmi-calculator", "calorie-calculator"]
 faqs:
@@ -176,7 +176,7 @@ A healthy diet matters, but sharing that meal with people who make you laugh mig
 ### 4. Metabolic Health and Nutrition
 Managing your daily caloric balance prevents fatty liver disease, vascular plaque accumulation, and chronic systemic inflammation. 
 
-You can use our [Calorie & TDEE Calculator](/health/calorie-calculator/) to find your personal maintenance baseline and avoid the chronic overeating that drives metabolic syndrome, while keeping track of your baseline with our [BMI Calculator](/health/bmi-calculator/).
+You can use our [Calorie & TDEE Calculator](/calorie-calculator/) to find your personal maintenance baseline and avoid the chronic overeating that drives metabolic syndrome, while keeping track of your baseline with our [BMI Calculator](/bmi-calculator/).
 
 ---
 

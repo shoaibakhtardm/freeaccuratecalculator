@@ -16,68 +16,10 @@ import FinanceCalculatorView from '../../components/calculator/FinanceCalculator
 import type { CalculatorEntity } from '../../types/calculator';
 
 export async function getStaticPaths() {
-  const programmaticList = getAllCalculators();
-  const dedicatedPages = new Set(['income-tax-calculator', 'sip-calculator', 'age-calculator', 'ai-token-cost-calculator', 'bmi-calculator', 'emi-calculator', 'percentage-calculator']);
-
-  // Map programmatic calculators (exclude love category which has dedicated /love/[slug].astro handler)
-  const routes = programmaticList
-    .filter((c) => c.category !== 'love' && !dedicatedPages.has(c.slug))
-    .map((calc) => ({
-      params: {
-        category: calc.category,
-        slug: calc.slug,
-      },
-      props: {
-        calc,
-      },
-    }));
-
-  // Also include remaining calculators from registry adapted to entity structure
-  const registrySlugs = new Set(programmaticList.map((p) => p.slug));
-  for (const regCalc of CALCULATORS) {
-    if (regCalc.category === 'love' || registrySlugs.has(regCalc.id) || dedicatedPages.has(regCalc.id)) continue;
-
-    const adaptedCalc: CalculatorEntity = {
-      slug: regCalc.id,
-      title: regCalc.title,
-      metaDescription: regCalc.description,
-      category: regCalc.category,
-      name: regCalc.name,
-      badge: regCalc.badge,
-      formula: regCalc.formula.expression,
-      formulaExplanation: regCalc.formula.explanation,
-      engineType: regCalc.category === 'finance' ? 'finance' : regCalc.category === 'health' ? 'health' : 'arithmetic',
-      resultLabel: regCalc.defaultResult.label,
-      resultPrefix: regCalc.defaultResult.prefix,
-      resultUnit: regCalc.defaultResult.suffix,
-      decimals: regCalc.defaultResult.decimals,
-      mathInputs: regCalc.inputs.map((inp) => ({
-        id: inp.id,
-        label: inp.label,
-        type: inp.type === 'select' ? 'select' : 'number',
-        defaultValue: inp.defaultValue,
-        min: inp.min,
-        max: inp.max,
-        step: inp.step,
-        unit: inp.unit,
-        options: inp.options,
-        helpText: inp.helpText,
-      })),
-      faqs: (getFaqsForCalculator(regCalc.id, regCalc.name).slice(0, 5) as [any, any, any, any, any]),
-    };
-
-    routes.push({
-      params: {
-        category: adaptedCalc.category,
-        slug: adaptedCalc.slug,
-      },
-      props: {
-        calc: adaptedCalc,
-      },
-    });
-  }
-
-  return routes;
+  // The site architecture is flattened to root-level calculator URLs. Category-prefixed calculator routes are
+  // intentionally retired and redirected via public/_redirects. This file keeps the old route pattern available
+  // only as an implementation stub to avoid accidental generation of legacy page destinations.
+  return [];
 }
 
 interface Props {
@@ -87,7 +29,7 @@ interface Props {
 const { calc } = Astro.props;
 
 const siteOrigin = 'https://freeaccuratecalculator.com';
-const canonicalUrl = `${siteOrigin}/${calc.category}/${calc.slug}/`;
+const canonicalUrl = `${siteOrigin}/${calc.slug}/`;
 
 // Internal Linking: 3 related calculators in same category
 const relatedCalculators = getRelatedCalculators(calc.category, calc.slug, 3);

@@ -11,7 +11,7 @@ category: "food"
 tags: ["food", "meal-prep", "recipe-scaler", "macronutrients", "nutrition", "healthy-eating", "culinary-math"]
 targetCalculator:
   name: "Recipe Scaler & Converter"
-  href: "/food/recipe-scaler-calculator/"
+  href: "/recipe-scaler-calculator/"
   description: "Kisi bhi recipe ke ingredients ko manchahe servings ya batch sizes ke hisaab se proportionally scale karein."
 relatedCalculators: ["macronutrient-calculator", "calorie-per-serving-calculator", "bakers-percentage-calculator"]
 faqs:
@@ -34,7 +34,7 @@ Meal prep mein do baaton ka balance hona bohot zaroori hai:
 Agar aap fitness enthusiast hain, busy professional hain, ya ghar ke liye smart cooking plan kar rahe hain, toh ye comprehensive guide aapke kitchen ko ek high-efficiency culinary powerhouse bana degi.
 
 > **Apna Kitchen Math Simplify Karein:**  
-> Apne dishes ko scale karne aur nutritional macros align karne ke liye hamara free [Recipe Scaler & Converter](/food/recipe-scaler-calculator/) aur [Macronutrient Ratio Tool](/food/macronutrient-calculator/) use karein.
+> Apne dishes ko scale karne aur nutritional macros align karne ke liye hamara free [Recipe Scaler & Converter](/recipe-scaler-calculator/) aur [Macronutrient Ratio Tool](/macronutrient-calculator/) use karein.
 
 ---
 
@@ -68,7 +68,7 @@ $$\text{Scaling Factor} = \frac{10}{2} = 5.0$$
 - **Baking Powder, Yeast & Salt:** Agar recipe 4x se zyada scale ho rahi hai, toh leavening agents aur salt ko 0.75× scaling factor se badhayein taaki dish khati ya over-salted na ho.
 - **Teekha Masala & Chili:** Spices ko gradually add karein aur taste test karte rahein.
 
-Aap directly hamare [Recipe Scaler & Converter](/food/recipe-scaler-calculator/) par cup, grams, ml aur ounces ka instant conversion kar sakte hain.
+Aap directly hamare [Recipe Scaler & Converter](/recipe-scaler-calculator/) par cup, grams, ml aur ounces ka instant conversion kar sakte hain.
 
 ---
 
@@ -89,7 +89,7 @@ Hamari daily calories teen primary macronutrients se aati hain:
 | **Keto / Low-Carb** | 25% | 5% | 70% | Ketosis metabolic adaptation |
 | **General Health & Longevity** | 25% | 50% | 25% | Balanced everyday lifestyle |
 
-Aap hamare [Macronutrient Ratio Tool](/food/macronutrient-calculator/) par apni daily target calories (jaise 1,800 kcal) daal kar exact Grams of Protein, Carbs aur Fats check kar sakte hain.
+Aap hamare [Macronutrient Ratio Tool](/macronutrient-calculator/) par apni daily target calories (jaise 1,800 kcal) daal kar exact Grams of Protein, Carbs aur Fats check kar sakte hain.
 
 ---
 
@@ -113,7 +113,7 @@ Hafte mein do baar (Sunday aur Wednesday) 90 minute ka batch cooking session aap
 - **Use an Oil Spray Bottle:** Ek chamach tel mein 120 calories hoti hain. Direct bottle se tel daalne par 30-40 ml tel chala jata hai. Oil spray use karne se per dish sirf 3-5 ml tel lagta hai, saving 300+ calories daily!
 - **Digital Kitchen Food Scale:** Andaza hamesha galat hota hai. 100g cooked dal vs 100g raw dal mein 3x calories ka fark hota hai. Food ko raw state mein weigh karein.
 - **Glass Airtight Containers (Pyrex/Borosil):** Plastic containers mein microplastics aur food smell absorb hoti hai. Glass containers microwave-safe hote hain aur freshness 4 din tak lock rehti hai.
-- **Calorie per Serving Calculation:** Pure pot ki total calories ko total containers se divide karein using our [Calorie per Serving Tool](/food/calorie-per-serving-calculator/).
+- **Calorie per Serving Calculation:** Pure pot ki total calories ko total containers se divide karein using our [Calorie per Serving Tool](/calorie-per-serving-calculator/).
 
 ---
 
@@ -121,7 +121,7 @@ Hafte mein do baar (Sunday aur Wednesday) 90 minute ka batch cooking session aap
 
 Fitness sirf gym mein nahi banti, wo kitchen mein scale hoti hai. Sahi ingredient ratios aur disciplined meal prep ke sath aap bina kisi boring diet ke apne dream physique tak pahunch sakte hain.
 
-* 👉 **[Recipe Scaler & Converter se ingredient measurements scale karein](/food/recipe-scaler-calculator/)**
-* 👉 **[Macronutrient Ratio Tool se Protein, Carb aur Fat grams nikalein](/food/macronutrient-calculator/)**
-* 👉 **[Calorie per Serving Tool se har meal ka nutritional breakdown dekhein](/food/calorie-per-serving-calculator/)**
-* 👉 **[Baking recipes ke liye Baker's Percentage Tool use karein](/food/bakers-percentage-calculator/)**
+* 👉 **[Recipe Scaler & Converter se ingredient measurements scale karein](/recipe-scaler-calculator/)**
+* 👉 **[Macronutrient Ratio Tool se Protein, Carb aur Fat grams nikalein](/macronutrient-calculator/)**
+* 👉 **[Calorie per Serving Tool se har meal ka nutritional breakdown dekhein](/calorie-per-serving-calculator/)**
+* 👉 **[Baking recipes ke liye Baker's Percentage Tool use karein](/bakers-percentage-calculator/)**

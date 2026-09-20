@@ -11,7 +11,7 @@ tags: ["compound-interest", "financial-mathematics", "annuity", "investing", "ap
 lang: "en"
 targetCalculator:
   name: "Compound Interest Calculator"
-  href: "/finance/compound-interest-calculator/"
+  href: "/compound-interest-calculator/"
   description: "Simulate compounding growth with custom compounding frequencies, regular monthly additions, and inflation adjustments."
 relatedCalculators: ["compound-interest-calculator", "simple-interest-calculator", "investment-calculator", "inflation-calculator"]
 faqs:
@@ -30,7 +30,7 @@ Compound interest is the fundamental mathematical engine driving wealth accumula
 In mathematical terms, simple interest generates linear growth, whereas compound interest generates exponential (geometric) growth. Over short periods, the difference appears modest; over multi-year and multi-decade investment horizons, compounding fundamentally transforms your ending balance.
 
 > **Want to calculate compound interest using your own numbers?**  
-> Use our [Compound Interest Calculator](/finance/compound-interest-calculator/) to instantly calculate future value, total contributions, and interest earned across daily, monthly, and annual compounding schedules.
+> Use our [Compound Interest Calculator](/compound-interest-calculator/) to instantly calculate future value, total contributions, and interest earned across daily, monthly, and annual compounding schedules.
 
 ---
 
@@ -140,7 +140,7 @@ The core distinction between simple and compound interest lies in how the calcul
 | **Primary Use Cases** | Short-term loans, auto loans, Treasury bills | High-yield savings, mortgages, retirement accounts |
 | **Long-Term Return** | Slower, predictable linear rate | Accelerating exponential curve |
 
-When evaluating short-term credit or fixed-term instruments, compare simple interest calculations with compound growth using our [Simple Interest Calculator](/finance/simple-interest-calculator/).
+When evaluating short-term credit or fixed-term instruments, compare simple interest calculations with compound growth using our [Simple Interest Calculator](/simple-interest-calculator/).
 
 ---
 
@@ -326,7 +326,7 @@ When modeling long-term projections or comparing lending products, avoid these c
 4. **Neglecting Contribution Timing:** Contributing $500 at the beginning of each month (annuity due) versus the end of each month (ordinary annuity) compounds for an additional month every cycle, generating thousands of dollars in extra interest over a multi-decade horizon.
 
 > **Ready to calculate your own scenario?**  
-> Use our [Compound Interest Calculator](/finance/compound-interest-calculator/) to test custom initial deposits, recurring contribution schedules, interest rates, and compounding frequencies.
+> Use our [Compound Interest Calculator](/compound-interest-calculator/) to test custom initial deposits, recurring contribution schedules, interest rates, and compounding frequencies.
 
 ---
 
@@ -350,8 +350,8 @@ The Rule of 72 is an approximation to estimate doubling time by dividing 72 by t
 
 Explore our other precision calculators to model personal finance, debt management, and investment returns:
 
-* **[Compound Interest Calculator](/finance/compound-interest-calculator/)**: Calculate compound growth with customizable frequencies and regular contributions.
-* **[Simple Interest Calculator](/finance/simple-interest-calculator/)**: Compare standard linear interest calculations against exponential compound growth.
+* **[Compound Interest Calculator](/compound-interest-calculator/)**: Calculate compound growth with customizable frequencies and regular contributions.
+* **[Simple Interest Calculator](/simple-interest-calculator/)**: Compare standard linear interest calculations against exponential compound growth.
 * **[Investment Calculator](/finance/investment-calculator/)**: Model long-term portfolio growth, expected returns, and compound annual growth rates (CAGR).
 * **[Inflation Calculator](/finance/inflation-calculator/)**: Measure how inflation erodes the purchasing power of money over time.
 

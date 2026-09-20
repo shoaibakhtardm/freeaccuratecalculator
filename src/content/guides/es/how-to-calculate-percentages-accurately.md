@@ -23,4 +23,4 @@ Donde $X$ es el numerador (la parte o valor observado) e $Y$ es el denominador (
 
 $$\text{Variación Porcentual} = \frac{\text{Valor Nuevo} - \text{Valor Original}}{|\text{Valor Original}|} \times 100$$
 
-* Pruebe nuestra [Calculadora de Porcentajes](/math/percentage-calculator/) para cálculos instantáneos.
+* Pruebe nuestra [Calculadora de Porcentajes](/percentage-calculator/) para cálculos instantáneos.

@@ -12,7 +12,7 @@ tags: ["sip-calculator", "excel-finance", "hdfc-sip", "sbi-sip", "groww-sip", "w
 lang: "en"
 targetCalculator:
   name: "SIP & Investment Calculator"
-  href: "/finance/sip-calculator/"
+  href: "/sip-calculator/"
   description: "Experience our client-side, all-in-one interactive SIP dashboard."
 relatedCalculators: ["sip-calculator", "step-up-sip-calculator", "emi-calculator"]
 faqs:
@@ -177,9 +177,9 @@ After spending three weekends maintaining his Excel workbook, Vikram found himse
 
 His advisor proposed adding a mid-cap fund with an estimated 14% return and a 7% step-up. Vikram didn't have his laptop with him. 
 
-He opened our mobile-optimized [SIP Calculator](/finance/sip-calculator/) on his phone. 
+He opened our mobile-optimized [SIP Calculator](/sip-calculator/) on his phone. 
 
-Within ten seconds, he plugged in the numbers, verified the projection, and cross-referenced the results with our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/). 
+Within ten seconds, he plugged in the numbers, verified the projection, and cross-referenced the results with our [Step-Up SIP Calculator](/step-up-sip-calculator/). 
 
 He got the exact precision of his home spreadsheet with the instantaneous speed of a world-class web app.
 
@@ -239,4 +239,4 @@ Don't settle for rigid three-slider bank widgets, and don't spend your weekends 
 
 Experience the difference of an engineering-grade dashboard today. 
 
-Explore our free [SIP & Investment Calculator](/finance/sip-calculator/) and our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/), and design your wealth with total clarity.
+Explore our free [SIP & Investment Calculator](/sip-calculator/) and our [Step-Up SIP Calculator](/step-up-sip-calculator/), and design your wealth with total clarity.

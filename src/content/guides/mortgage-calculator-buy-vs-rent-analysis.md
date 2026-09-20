@@ -11,7 +11,7 @@ category: "real-estate"
 tags: ["mortgage", "buy-vs-rent", "real-estate", "property-investment", "homeownership"]
 targetCalculator:
   name: "Mortgage Calculator"
-  href: "/finance/mortgage-calculator/"
+  href: "/mortgage-calculator/"
   description: "Calculate full monthly mortgage payments including PITI, PMI, amortization, and total cost of ownership."
 relatedCalculators: ["emi-calculator", "loan-calculator", "compound-interest-calculator"]
 faqs:
@@ -34,7 +34,7 @@ However, modern quantitative finance reveals a far more nuanced picture. In high
 In this guide, we conduct a rigorous **Buy vs. Rent analysis for 2026**, examine the true unrecoverable costs of real estate, and show you how to model your local market.
 
 > **Calculate Monthly Payments:**  
-> Use our free [Mortgage Calculator](/finance/mortgage-calculator/) to analyze your full monthly cost of ownership, including principal, interest, taxes, and insurance (PITI).
+> Use our free [Mortgage Calculator](/mortgage-calculator/) to analyze your full monthly cost of ownership, including principal, interest, taxes, and insurance (PITI).
 
 ---
 
@@ -85,4 +85,4 @@ Because purchasing a home involves 2–5% in buyer closing costs and selling inv
 
 A home must appreciate by at least 10% to 12% simply to cover the round-trip transaction frictional costs!
 
-Run your own local property numbers through our comprehensive [Mortgage Calculator](/finance/mortgage-calculator/) to discover your personalized breakeven timeline.
+Run your own local property numbers through our comprehensive [Mortgage Calculator](/mortgage-calculator/) to discover your personalized breakeven timeline.

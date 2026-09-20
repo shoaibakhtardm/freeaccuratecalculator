@@ -33,7 +33,7 @@ const COMPARISONS_BY_GUIDE: Record<string, ComparisonItem[]> = {
   'how-to-calculate-sip-returns': [
     {
       name: 'Systematic Investment Plan (SIP)',
-      slug: '/finance/sip-calculator/',
+      slug: '/sip-calculator/',
       description: 'Disciplined monthly installment investing with rupee-cost averaging.',
       pros: [
         'Averages market volatility through rupee-cost averaging',
@@ -48,7 +48,7 @@ const COMPARISONS_BY_GUIDE: Record<string, ComparisonItem[]> = {
     },
     {
       name: 'Lump Sum Investment',
-      slug: '/finance/compound-interest-calculator/',
+      slug: '/compound-interest-calculator/',
       description: 'Deploying total capital upfront into mutual funds or index funds.',
       pros: [
         'Full capital begins compounding on day one',
@@ -65,7 +65,7 @@ const COMPARISONS_BY_GUIDE: Record<string, ComparisonItem[]> = {
   'mortgage-calculator-buy-vs-rent-analysis': [
     {
       name: 'Homeownership (Mortgage)',
-      slug: '/finance/mortgage-calculator/',
+      slug: '/mortgage-calculator/',
       description: 'Buying residential property with an amortized mortgage loan.',
       pros: [
         'Forces monthly principal equity accumulation',
@@ -81,7 +81,7 @@ const COMPARISONS_BY_GUIDE: Record<string, ComparisonItem[]> = {
     },
     {
       name: 'Renting & Investing Difference',
-      slug: '/finance/compound-interest-calculator/',
+      slug: '/compound-interest-calculator/',
       description: 'Paying fixed shelter rent and investing down payment cash into index funds.',
       pros: [
         'Zero liabilities for property taxes, roofing, or major repairs',
@@ -99,7 +99,7 @@ const COMPARISONS_BY_GUIDE: Record<string, ComparisonItem[]> = {
   'income-tax-calculator-india-new-vs-old-regime': [
     {
       name: 'New Tax Regime (Sec 115BAC)',
-      slug: '/finance/income-tax-calculator/',
+      slug: '/income-tax-calculator/',
       description: 'Concessional tax slab rates with minimal documentation and zero deductions.',
       pros: [
         'Significantly lower tax slab rates across middle-income brackets',
@@ -114,7 +114,7 @@ const COMPARISONS_BY_GUIDE: Record<string, ComparisonItem[]> = {
     },
     {
       name: 'Old Tax Regime',
-      slug: '/finance/income-tax-calculator/',
+      slug: '/income-tax-calculator/',
       description: 'Higher tax slab rates balanced by extensive deductions and exemptions.',
       pros: [
         'Enables substantial deductions: Section 80C (₹1.5L), 80D (₹25k-₹1L), 80CCD(1B) (₹50k)',
@@ -175,7 +175,7 @@ const relatedCalcs = (post.data.relatedCalculators || [])
       return {
         id: 'compound-interest-calculator',
         name: 'Compound Interest Calculator',
-        href: '/finance/compound-interest-calculator/',
+        href: '/compound-interest-calculator/',
         description: 'Calculate compound growth with customizable frequencies and regular contributions.',
         badge: 'High-Demand',
       };
@@ -184,7 +184,7 @@ const relatedCalcs = (post.data.relatedCalculators || [])
       return {
         id: 'percentage-calculator',
         name: 'Percentage Calculator',
-        href: '/math/percentage-calculator/',
+        href: '/percentage-calculator/',
         description: 'Instant percentage calculation, difference, and change formulas.',
         badge: 'High-Demand',
       };
@@ -193,7 +193,7 @@ const relatedCalcs = (post.data.relatedCalculators || [])
       return {
         id: 'emi-calculator',
         name: 'EMI Calculator',
-        href: '/finance/emi-calculator/',
+        href: '/emi-calculator/',
         description: 'Monthly loan EMI calculator with amortization schedule.',
         badge: 'High-Demand',
       };
@@ -202,7 +202,7 @@ const relatedCalcs = (post.data.relatedCalculators || [])
       return {
         id: 'bmi-calculator',
         name: 'BMI Calculator',
-        href: '/health/bmi-calculator/',
+        href: '/bmi-calculator/',
         description: 'Body mass index calculator with WHO classification ranges.',
         badge: 'Validated',
       };
@@ -211,7 +211,7 @@ const relatedCalcs = (post.data.relatedCalculators || [])
       return {
         id: 'mortgage-calculator',
         name: 'Mortgage Calculator',
-        href: '/finance/mortgage-calculator/',
+        href: '/mortgage-calculator/',
         description: 'Monthly home mortgage payment with PITI breakdown and amortization schedule.',
         badge: 'Popular',
       };

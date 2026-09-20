@@ -11,7 +11,7 @@ category: "real-estate"
 tags: ["real-estate", "rental-yield", "cap-rate", "property-investment", "passive-income", "roi", "noi"]
 targetCalculator:
   name: "Rental Yield Calculator"
-  href: "/real-estate/rental-yield-calculator/"
+  href: "/rental-yield-calculator/"
   description: "Apni property ka gross aur net annual rental yield percentage calculate karein."
 relatedCalculators: ["cap-rate-calculator", "property-tax-calculator", "mortgage-calculator"]
 faqs:
@@ -34,7 +34,7 @@ Agar aap ek rental property khareed rahe hain ya commercial real estate mein inv
 Is guide mein hum samjhenge ki ye dono metrics kya hain, inka mathematical formula kya hai, aur ek profitable deal kaise identify karein.
 
 > **Apni Property ka Numbers Check Karein:**  
-> Apne project ki real profitability evaluate karne ke liye hamara free [Rental Yield Calculator](/real-estate/rental-yield-calculator/) aur [Cap Rate Calculator](/real-estate/cap-rate-calculator/) use karein.
+> Apne project ki real profitability evaluate karne ke liye hamara free [Rental Yield Calculator](/rental-yield-calculator/) aur [Cap Rate Calculator](/cap-rate-calculator/) use karein.
 
 ---
 
@@ -124,6 +124,6 @@ $$\text{NOI} = \text{Effective Gross Income} - \text{Operating Expenses}$$
 
 Real estate mein bada paisa tab banta hai jab aap khareedte waqt hi calculation sahi karte hain. Kisi broker ke verbal claims ke chakkar mein na padein; deal finalize karne se pehle calculator run karein.
 
-* 👉 **[Rental Yield Calculator par apni deal test karein](/real-estate/rental-yield-calculator/)**
-* 👉 **[Commercial Property ke liye Cap Rate Calculator use karein](/real-estate/cap-rate-calculator/)**
-* 👉 **[Property Tax aur Mortgage payments estimate karein](/real-estate/property-tax-calculator/)**
+* 👉 **[Rental Yield Calculator par apni deal test karein](/rental-yield-calculator/)**
+* 👉 **[Commercial Property ke liye Cap Rate Calculator use karein](/cap-rate-calculator/)**
+* 👉 **[Property Tax aur Mortgage payments estimate karein](/property-tax-calculator/)**

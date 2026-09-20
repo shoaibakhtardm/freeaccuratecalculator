@@ -12,7 +12,7 @@ tags: ["fractions", "carpentry-math", "precision", "tape-measure", "woodworking"
 lang: "en"
 targetCalculator:
   name: "Percentage Calculator"
-  href: "/math/percentage-calculator/"
+  href: "/percentage-calculator/"
   description: "Calculate exact fraction conversions, ratios, and percentage differences."
 relatedCalculators: ["percentage-calculator", "emi-calculator"]
 faqs:
@@ -225,7 +225,7 @@ Multiplying fractions by seven:
 
 Sarah knew that trying to scoop 26 separate quarter-cups would introduce human counting error. 
 
-She used our [Percentage Calculator](/math/percentage-calculator/) to convert the volume recipe into **Baker’s Percentages** based on weight in grams. 
+She used our [Percentage Calculator](/percentage-calculator/) to convert the volume recipe into **Baker’s Percentages** based on weight in grams. 
 
 By weighing her flour in a large mixing bowl (3,150 grams) and measuring salt (52 grams), she prepped all seven loaves in five minutes with zero counting confusion.
 
@@ -274,7 +274,7 @@ Numbers on a screen are pure theory. They can extend to infinite decimal places 
 But when you step into the real world—where wood has grain, saw blades have thickness, and tape measures have tick marks—you need practical tools that speak the language of craft:
 1. Master the decimal-to-sixteenths conversion trick ($D \times 16$).
 2. Always account for blade kerf before making your cuts.
-3. Use exact ratio tools like our [Percentage Calculator](/math/percentage-calculator/) when scaling recipes or materials.
+3. Use exact ratio tools like our [Percentage Calculator](/percentage-calculator/) when scaling recipes or materials.
 4. Remember: measure twice, leave your pencil line, and cut once with confidence.
 
 With the right math in your pocket, you can stop dreading decimals and build projects that fit cleanly every single time.

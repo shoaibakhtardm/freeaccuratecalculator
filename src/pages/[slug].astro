@@ -1,0 +1,161 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Breadcrumbs from '../components/common/Breadcrumbs.astro';
+import FinanceCalculatorView from '../components/calculator/FinanceCalculatorView.astro';
+import LoveCalculatorPage from './love/[slug].astro';
+import {
+  getAllCalculators,
+  getRelatedCalculators,
+  ALL_FRONTEND_CALCULATORS,
+} from '../data/calculators';
+import { CALCULATORS, CATEGORY_METADATA } from '../data/calculatorRegistry';
+import { getFaqsForCalculator } from '../data/faqDatabase';
+import { LOVE_CALCULATORS } from '../data/loveCalculators';
+import type { CalculatorEntity } from '../types/calculator';
+
+export function getStaticPaths() {
+  const dedicatedStaticSlugs = new Set([
+    'age-calculator',
+    'ai-token-cost-calculator',
+    'bmi-calculator',
+    'emi-calculator',
+    'income-tax-calculator',
+    'percentage-calculator',
+    'sip-calculator',
+  ]);
+
+  const rootCalculatorSlugs = new Set(
+    ALL_FRONTEND_CALCULATORS
+      .filter((calc) => calc.slug && !dedicatedStaticSlugs.has(calc.slug))
+      .map((calc) => calc.slug)
+  );
+
+  const paths = Array.from(rootCalculatorSlugs).map((slug) => {
+    const registryEntry = CALCULATORS.find((calculator) => calculator.id === slug);
+    const seeded = getAllCalculators().find((calculator) => calculator.slug === slug);
+    const calc: CalculatorEntity = seeded
+      ? seeded
+      : {
+          slug,
+          title: registryEntry?.title ?? slug.replace(/-/g, ' '),
+          metaDescription: registryEntry?.description ?? 'Free Accurate Calculator tool',
+          category: registryEntry?.category ?? 'general',
+          name: registryEntry?.name ?? slug.replace(/-/g, ' '),
+          badge: registryEntry?.badge ?? 'Verified',
+          formula: registryEntry?.formula?.expression ?? 'N/A',
+          formulaExplanation: registryEntry?.formula?.explanation ?? 'Calculator formula',
+          engineType: 'arithmetic',
+          resultLabel: registryEntry?.defaultResult?.label ?? 'Result',
+          resultPrefix: registryEntry?.defaultResult?.prefix ?? '',
+          resultUnit: registryEntry?.defaultResult?.suffix ?? '',
+          decimals: registryEntry?.defaultResult?.decimals ?? 2,
+          mathInputs: registryEntry?.inputs?.map((input) => ({
+            id: input.id,
+            label: input.label,
+            type: input.type === 'select' ? 'select' : 'number',
+            defaultValue: input.defaultValue,
+            min: input.min,
+            max: input.max,
+            step: input.step,
+            unit: input.unit,
+            options: input.options,
+            helpText: input.helpText,
+          })) ?? [],
+          faqs: getFaqsForCalculator(slug, registryEntry?.name ?? slug).slice(0, 5) as CalculatorEntity['faqs'],
+        };
+
+    return {
+      params: { slug },
+      props: { calc },
+    };
+  });
+
+  const loveAliases: Record<string, string[]> = {
+    'love-calculator-by-name': ['love-calculator'],
+    'marriage-compatibility-calculator': ['kundli-matching'],
+    'zodiac-love-compatibility-calculator': ['zodiac-compatibility', 'love-compatibility-calculator'],
+    'ai-love-calculator': ['ai-love-predictor'],
+    'true-love-calculator-by-names': ['true-love-calculator'],
+    'crush-love-test-calculator': ['crush-love-test'],
+    'birth-date-love-compatibility': ['birth-date-compatibility'],
+    'relationship-compatibility-test': ['relationship-counter'],
+  };
+
+  const lovePaths = LOVE_CALCULATORS.flatMap((loveCalc) => {
+    const slugs = [loveCalc.slug, ...(loveAliases[loveCalc.slug] || [])];
+    return slugs.map((slug) => ({
+      params: { slug },
+      props: { calc: loveCalc as unknown as CalculatorEntity, loveCalc },
+    }));
+  });
+
+  return [...paths, ...lovePaths];
+}
+
+const { calc, loveCalc } = Astro.props;
+const siteOrigin = 'https://freeaccuratecalculator.com';
+const canonicalUrl = `${siteOrigin}/${calc.slug}/`;
+const relatedCalculators = getRelatedCalculators(calc.category, calc.slug, 3);
+const catMeta = CATEGORY_METADATA.finance;
+const webAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': ['SoftwareApplication', 'WebApplication'],
+  name: calc.name,
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'All',
+  browserRequirements: 'Requires JavaScript. Requires HTML5.',
+  url: canonicalUrl,
+  inLanguage: 'en',
+  softwareVersion: '2026.1',
+  offers: { '@type': 'Offer', price: '0.00', priceCurrency: 'USD' },
+  author: { '@type': 'Organization', name: 'Free Accurate Calculator', url: `${siteOrigin}/` },
+  description: calc.metaDescription,
+};
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: calc.faqs.map((faq) => ({
+    '@type': 'Question',
+    name: faq.question,
+    acceptedAnswer: { '@type': 'Answer', text: faq.answer },
+  })),
+};
+---
+
+{loveCalc ? (
+  <LoveCalculatorPage calc={loveCalc} />
+) : (
+
+<Layout
+  title={calc.title}
+  description={calc.metaDescription}
+  canonicalUrl={canonicalUrl}
+  jsonLd={[webAppSchema, faqSchema]}
+>
+  <article class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-10" itemscope itemtype="https://schema.org/WebApplication">
+    <Breadcrumbs
+      items={[
+        { label: catMeta.name, href: '/finance/' },
+        { label: calc.name },
+      ]}
+    />
+
+    <header class="border-b border-hairline pb-6 space-y-3">
+      <div class="flex items-center gap-2">
+        <span class="mono-eyebrow text-link font-semibold uppercase tracking-wider text-xs">{catMeta.name}</span>
+        <span class="h-1 w-1 rounded-full bg-faint"></span>
+        <span class="text-[11px] font-mono text-mute">Programmatic pSEO Engine</span>
+        {calc.badge && (
+          <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-link/10 text-link border border-link/20">
+            {calc.badge}
+          </span>
+        )}
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-ink font-mono">{calc.name}</h1>
+      <p class="text-base text-body max-w-3xl leading-relaxed">{calc.metaDescription}</p>
+    </header>
+
+    <FinanceCalculatorView calc={calc} relatedCalculators={relatedCalculators} />
+  </article>
+</Layout>
+)}

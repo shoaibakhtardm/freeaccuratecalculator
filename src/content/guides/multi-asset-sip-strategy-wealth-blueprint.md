@@ -12,7 +12,7 @@ tags: ["multi-asset-sip", "barbell-strategy", "portfolio-allocation", "sip-calcu
 lang: "en"
 targetCalculator:
   name: "SIP & Investment Calculator"
-  href: "/finance/sip-calculator/"
+  href: "/sip-calculator/"
   description: "Model your core and satellite multi-asset systematic investment plans."
 relatedCalculators: ["sip-calculator", "step-up-sip-calculator", "percentage-calculator"]
 faqs:
@@ -117,7 +117,7 @@ Historically, diversified equity indices in expanding economies deliver **12% to
 ### Modeling Your Core with Modern Tools
 In the past, investors struggled to model multi-stage retirement goals using a static **mf sip calculator free download** file. 
 
-Today, you open our interactive [SIP & Investment Calculator](/finance/sip-calculator/) and dial in your baseline requirements:
+Today, you open our interactive [SIP & Investment Calculator](/sip-calculator/) and dial in your baseline requirements:
 * Suppose you determine that a dignified, comfortable retirement requires **₹3 Crores** in twenty years.
 * At a 12% expected annual return, a steady monthly investment of **₹30,000** will hit that ₹3 Crore target cleanly.
 
@@ -211,7 +211,7 @@ Rohit trusted a single volatile vehicle with his entire life, and the market pun
 ### Scenario B: Maya, The Barbell Conductor
 Maya earned the exact same income as Rohit. 
 
-She opened our [SIP Calculator](/finance/sip-calculator/) and set up an automated multi-asset plan:
+She opened our [SIP Calculator](/sip-calculator/) and set up an automated multi-asset plan:
 * **Core Mutual Funds (85%):** ₹25,000/month into low-cost index and flexi-cap funds.
 * **Satellite DCA (15%):** ₹4,500/month automated weekly into Bitcoin.
 
@@ -259,4 +259,4 @@ It is about conducting an orchestra where different instruments play their disti
 
 Take the guesswork out of multi-asset allocation today. 
 
-Explore our free [SIP & Investment Calculator](/finance/sip-calculator/), test your numbers with our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/), and engineer an unbreakable wealth blueprint that lets you thrive in any economic weather.
+Explore our free [SIP & Investment Calculator](/sip-calculator/), test your numbers with our [Step-Up SIP Calculator](/step-up-sip-calculator/), and engineer an unbreakable wealth blueprint that lets you thrive in any economic weather.

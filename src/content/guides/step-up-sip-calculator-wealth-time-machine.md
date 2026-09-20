@@ -12,7 +12,7 @@ tags: ["step-up-sip", "mutual-funds", "wealth-creation", "retirement-planning", 
 lang: "en"
 targetCalculator:
   name: "Step-Up SIP Calculator"
-  href: "/finance/step-up-sip-calculator/"
+  href: "/step-up-sip-calculator/"
   description: "Model annual contribution step-ups and project exponential multi-decade wealth."
 relatedCalculators: ["step-up-sip-calculator", "sip-calculator", "compound-interest-calculator"]
 faqs:
@@ -160,7 +160,7 @@ Your fresh contributions act like high-octane fuel poured directly onto a roarin
 
 ## How to Use a Step Up SIP Calculator: The Practical Playbook
 
-When you sit down to model your future on our interactive [Step-Up SIP Calculator](/finance/step-up-sip-calculator/), here is the step-by-step strategy to dial in realistic targets:
+When you sit down to model your future on our interactive [Step-Up SIP Calculator](/step-up-sip-calculator/), here is the step-by-step strategy to dial in realistic targets:
 
 ### Step 1: Choose Your Escalation Model
 Most modern tools offer two ways to increase your contributions:
@@ -260,9 +260,9 @@ The secret of elite wealth creation is surprisingly simple: **never let your inv
 Kabir worked for 25 years and retired comfortably. Aryan worked the same 25 years, activated a 10% annual step-up, and retired with generational financial freedom.
 
 Take five minutes today to run your own career numbers:
-1. Open our free [Step-Up SIP Calculator](/finance/step-up-sip-calculator/).
+1. Open our free [Step-Up SIP Calculator](/step-up-sip-calculator/).
 2. Compare a flat monthly investment against a 5% and 10% annual escalation.
-3. Cross-reference your results with our [SIP & Investment Calculator](/finance/sip-calculator/).
+3. Cross-reference your results with our [SIP & Investment Calculator](/sip-calculator/).
 4. Log into your investment account and turn on the "Annual Top-Up" toggle.
 
 Small, automated annual adjustments create life-changing long-term outcomes. Start your step-up today, and let compounding build the financial masterpiece you deserve.

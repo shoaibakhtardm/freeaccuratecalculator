@@ -12,7 +12,7 @@ tags: ["math", "calculator", "precision", "floating-point", "symbolic-math", "ar
 lang: "en"
 targetCalculator:
   name: "Percentage Calculator"
-  href: "/math/percentage-calculator/"
+  href: "/percentage-calculator/"
   description: "Execute precision financial, percentage change, and ratio calculations."
 relatedCalculators: ["percentage-calculator", "emi-calculator"]
 faqs:
@@ -209,7 +209,7 @@ Knowing the landscape allows you to choose the exact tool suited to your specifi
 | Use Case | Recommended Tool | Why It Fits |
 | :--- | :--- | :--- |
 | **Everyday Budgeting & Shopping** | Standard Smartphone Calculator | Fast, accessible, and more than accurate enough for basic sums. |
-| **Financial Percentages & Loans** | Dedicated [Percentage Calculator](/math/percentage-calculator/) | Prevents compound decimal drift in tax, interest, and mortgage amortizations. |
+| **Financial Percentages & Loans** | Dedicated [Percentage Calculator](/percentage-calculator/) | Prevents compound decimal drift in tax, interest, and mortgage amortizations. |
 | **High School & College STEM** | Casio fx-991EX or TI-84 Plus | Verified exam approval, internal guard digits, reliable trigonometric accuracy. |
 | **Engineering & Higher Calculus** | HP Prime or TI-Nspire CX II CAS | Symbolic engine handles derivatives, integrals, and matrix algebra without loss. |
 | **Scientific Research & Proofs** | Wolfram Alpha / Mathematica / Python | Arbitrary precision and symbolic algebra provide mathematically rigorous results. |
@@ -253,7 +253,7 @@ When you ask **what is the most accurate calculator**, the answer is not a singl
 
 The real answer is **understanding the right tool for the mathematical domain**:
 * For quick everyday math, your phone is more than enough.
-* For loans, taxes, and financial ratios, use dedicated tools like our [Percentage Calculator](/math/percentage-calculator/) and our [EMI Calculator](/finance/emi-calculator/) that protect against floating-point drift.
+* For loans, taxes, and financial ratios, use dedicated tools like our [Percentage Calculator](/percentage-calculator/) and our [EMI Calculator](/emi-calculator/) that protect against floating-point drift.
 * For advanced calculus, physics, and engineering proofs, rely on symbolic CAS tools and arbitrary-precision software that treat mathematics with exact symbolic fidelity.
 
 When you know how numbers are represented behind the glass, you stop being intimidated by technology. You can spot rounding errors before they cause problems, choose your tools with confidence, and make math work for you in the real world.

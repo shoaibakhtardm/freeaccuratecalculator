@@ -12,7 +12,7 @@ tags: ["btc-sip", "bitcoin-dca", "crypto-calculator", "coindcx-sip", "dollar-cos
 lang: "en"
 targetCalculator:
   name: "SIP & Investment Calculator"
-  href: "/finance/sip-calculator/"
+  href: "/sip-calculator/"
   description: "Model Dollar-Cost Averaging and compounding across volatile assets."
 relatedCalculators: ["sip-calculator", "percentage-calculator", "step-up-sip-calculator"]
 faqs:
@@ -249,10 +249,10 @@ He achieved this without checking charts, without timing candles, and without lo
 
 If you choose to incorporate digital assets into your wealth architecture, follow these non-negotiable guidelines:
 
-1. **Keep Crypto to 5%–10% of Your Net Worth:** Never gamble your primary livelihood. Ensure that the vast majority of your family’s foundational wealth compounds securely in diversified index and equity mutual funds via our [SIP & Investment Calculator](/finance/sip-calculator/).
+1. **Keep Crypto to 5%–10% of Your Net Worth:** Never gamble your primary livelihood. Ensure that the vast majority of your family’s foundational wealth compounds securely in diversified index and equity mutual funds via our [SIP & Investment Calculator](/sip-calculator/).
 2. **Commit to a Minimum 4-Year Horizon:** Bitcoin moves on four-year halving cycles. If you cannot leave your capital untouched for at least four years, do not start a crypto SIP.
 3. **Automate and Walk Away:** Use reputable exchanges or recurring purchase tools. Set your debit for a weekly or monthly cadence, and delete the price-checking widgets from your phone's home screen.
-4. **Plan for the 31.2% Tax Bite:** Keep clean records of your acquisition costs and calculate your net post-tax returns using our [Percentage Calculator](/math/percentage-calculator/) before executing exits.
+4. **Plan for the 31.2% Tax Bite:** Keep clean records of your acquisition costs and calculate your net post-tax returns using our [Percentage Calculator](/percentage-calculator/) before executing exits.
 
 ---
 
@@ -288,4 +288,4 @@ You do not have to join the chaos:
 
 Take the emotion out of digital assets today. 
 
-Explore our free [SIP & Investment Calculator](/finance/sip-calculator/), test your compounding horizons with our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/), and build an investment strategy that lets mathematics conquer volatility.
+Explore our free [SIP & Investment Calculator](/sip-calculator/), test your compounding horizons with our [Step-Up SIP Calculator](/step-up-sip-calculator/), and build an investment strategy that lets mathematics conquer volatility.

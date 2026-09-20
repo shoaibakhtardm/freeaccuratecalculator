@@ -8,11 +8,6 @@ const distClientDir = path.resolve('dist/client');
 const publicDir = path.resolve('public');
 const MAX_URLS_PER_SITEMAP = 500;
 
-for (const staleSitemap of ['sitemap-countries-1.xml', 'sitemap-countries-2.xml']) {
-  const stalePath = path.join(publicDir, staleSitemap);
-  if (fs.existsSync(stalePath)) fs.unlinkSync(stalePath);
-}
-
 // Ensure target directories exist
 if (!fs.existsSync(publicDir)) {
   fs.mkdirSync(publicDir, { recursive: true });
@@ -209,7 +204,6 @@ function categorizeRoute(pathname) {
 
   const first = segments[0];
   if (I18N_LOCALES.has(first)) return 'i18n';
-  if (first === 'countries') return 'countries';
   if (first === 'finance') return 'finance';
   if (first === 'math') return 'math';
   if (first === 'health') return 'health';
@@ -222,7 +216,6 @@ function categorizeRoute(pathname) {
 
 const categorizedRoutes = {
   finance: [],
-  countries: [],
   math: [],
   health: [],
   business: [],

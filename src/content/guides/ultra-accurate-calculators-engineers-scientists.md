@@ -12,7 +12,7 @@ tags: ["ultra-accurate-calculator", "high-precision", "engineering-math", "scien
 lang: "en"
 targetCalculator:
   name: "Percentage Calculator"
-  href: "/math/percentage-calculator/"
+  href: "/percentage-calculator/"
   description: "Execute precision ratio, percentage shift, and scientific relative change math."
 relatedCalculators: ["percentage-calculator", "emi-calculator"]
 faqs:
@@ -207,7 +207,7 @@ Depending on whether you are a high school student, a university engineering maj
 | **Undergraduate Engineering** | HP Prime or TI-Nspire CX II CAS | Built-in Computer Algebra Systems, RPN support, handles symbolic matrix algebra. |
 | **Robotics & Controls Engineers** | Python (`numpy` + `scipy` + `sympy`) | Industry-standard libraries, vectorization, exact symbolic equation verification. |
 | **Astrophysics & Deep Numerical Science** | C++ with MPFR / `mpmath` | Provably correct rounding, arbitrary decimal precision up to thousands of digits. |
-| **Quick Ratio & Scientific Scaling** | Our [Percentage Calculator](/math/percentage-calculator/) | Instant validation of relative change, fractional ratios, and error margins. |
+| **Quick Ratio & Scientific Scaling** | Our [Percentage Calculator](/percentage-calculator/) | Instant validation of relative change, fractional ratios, and error margins. |
 
 ---
 
@@ -251,6 +251,6 @@ Along the way, you discover a profound truth:
 * True accuracy is not about mindless decimal hoarding.
 * True accuracy is about understanding the boundaries of your tools, respecting error propagation, and knowing how to prevent numerical instability from corrupting your work.
 
-Whether you are calculating simple ratios with our [Percentage Calculator](/math/percentage-calculator/), working through stress equations on an HP Prime, or scripting multi-precision simulations in Python, treat every calculation with respect. 
+Whether you are calculating simple ratios with our [Percentage Calculator](/percentage-calculator/), working through stress equations on an HP Prime, or scripting multi-precision simulations in Python, treat every calculation with respect. 
 
 Master the math behind the machine, question your assumptions, and let precision serve the pursuit of genuine scientific discovery.

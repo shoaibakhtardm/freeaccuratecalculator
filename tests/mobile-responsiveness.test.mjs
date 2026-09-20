@@ -70,8 +70,8 @@ test('Mobile Responsiveness Verification — HTML & CSS Audit', async (t) => {
   });
 
   await t.test('Page layout containers enforce overflow-hidden to prevent horizontal scrolling', () => {
-    const countriesHtml = fs.readFileSync(path.join(distClient, 'countries/index.html'), 'utf-8');
-    assert.ok(countriesHtml.includes('overflow-hidden'), 'Countries container must enforce overflow-hidden');
+    const homepageHtml = fs.readFileSync(path.join(distClient, 'index.html'), 'utf-8');
+    assert.ok(homepageHtml.includes('overflow-hidden'), 'Page container must enforce overflow-hidden');
   });
 
   await t.test('Consent banner action buttons have 44px touch target on mobile', () => {

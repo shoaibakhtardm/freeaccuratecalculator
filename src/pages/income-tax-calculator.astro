@@ -32,10 +32,10 @@ const faqs = [
 ];
 
 const relatedCalculators = [
-  { title: 'Salary Calculator', href: '/finance/salary-calculator/' },
-  { title: 'EMI Calculator', href: '/finance/emi-calculator/' },
-  { title: 'SIP Calculator', href: '/finance/sip-calculator/', badge: 'Investment' },
-  { title: 'Compound Interest', href: '/finance/compound-interest-calculator/' },
+  { title: 'Salary Calculator', href: '/salary-calculator/' },
+  { title: 'EMI Calculator', href: '/emi-calculator/' },
+  { title: 'SIP Calculator', href: '/sip-calculator/', badge: 'Investment' },
+  { title: 'Compound Interest', href: '/compound-interest-calculator/' },
 ];
 
 const formulaVariables = [
@@ -743,7 +743,7 @@ const formulaVariables = [
       ['Monthly Take-Home', d.takehome],
       ['Effective Tax Rate', d.effRate],
       [],
-      ['Website', 'https://freeaccuratecalculator.com/finance/income-tax-calculator/'],
+      ['Website', 'https://freeaccuratecalculator.com/income-tax-calculator/'],
     ];
     const escapeCsv = (val: any) => `"${String(val ?? '').replace(/"/g, '""')}"`;
     const csvContent = '\uFEFF' + csvRows.map(row => row.map(escapeCsv).join(',')).join('\r\n');

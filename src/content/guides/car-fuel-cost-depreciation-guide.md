@@ -11,7 +11,7 @@ category: "automotive"
 tags: ["automotive", "car-buying", "fuel-cost", "car-depreciation", "auto-loan", "total-cost-of-ownership", "personal-finance"]
 targetCalculator:
   name: "Fuel Cost Calculator"
-  href: "/automotive/fuel-cost-calculator/"
+  href: "/fuel-cost-calculator/"
   description: "Apne daily commute aur monthly driving ke exact petrol/diesel/EV fuel expenses nikalein."
 relatedCalculators: ["car-depreciation-calculator", "auto-loan-calculator", "mpg-calculator"]
 faqs:
@@ -34,7 +34,7 @@ Car ownership ka asli sach uski **Total Cost of Ownership (TCO)** mein chupa hot
 Agar aap car lene ki planning kar rahe hain, toh ye guide aapko batayegi ki numbers ko kaise calculate karein taaki car aapke liye financial asset bane, bojh nahi.
 
 > **Apna True Cost Calculate Karein:**  
-> Apne daily commute aur car loan ka exact hisaab lagane ke liye hamara free [Fuel Cost Calculator](/automotive/fuel-cost-calculator/), [Car Depreciation Tool](/automotive/car-depreciation-calculator/) aur [Auto Loan Calculator](/finance/auto-loan-calculator/) check karein.
+> Apne daily commute aur car loan ka exact hisaab lagane ke liye hamara free [Fuel Cost Calculator](/fuel-cost-calculator/), [Car Depreciation Tool](/car-depreciation-calculator/) aur [Auto Loan Calculator](/auto-loan-calculator/) check karein.
 
 ---
 
@@ -58,7 +58,7 @@ Jahan $d$ annual depreciation rate hai (e.g., 0.15) aur $t$ saalon ki sankhya ha
 - 5 saal baad market resale value: ~₹5,40,000
 - **Total Loss in Depreciation: ₹6,60,000** (Lagbhag ₹1,10,000 har saal gayab!)
 
-Aap hamare [Car Depreciation Tool](/automotive/car-depreciation-calculator/) par brand, age aur mileage daal kar exact resale value dekh sakte hain.
+Aap hamare [Car Depreciation Tool](/car-depreciation-calculator/) par brand, age aur mileage daal kar exact resale value dekh sakte hain.
 
 ---
 
@@ -106,7 +106,7 @@ Car loan lete waqt "20/4/10 Rule" ko yaad rakhein:
 - **4 Years Maximum Tenure:** Loan tenure 4 saal se zyada na rakhein, warna gaadi ki market value uske loan balance se kam ho jayegi (Negative Equity trap).
 - **10% of Income:** Total car expenses (EMI + Fuel + Insurance) aapki monthly in-hand salary ke 10% se 15% se zyada nahi hone chahiye.
 
-Hamare [Auto Loan Calculator](/finance/auto-loan-calculator/) se verify karein ki aapki EMI aapke comfort zone mein hai ya nahi.
+Hamare [Auto Loan Calculator](/auto-loan-calculator/) se verify karein ki aapki EMI aapke comfort zone mein hai ya nahi.
 
 ---
 
@@ -123,6 +123,6 @@ Hamare [Auto Loan Calculator](/finance/auto-loan-calculator/) se verify karein k
 
 Car lena lifestyle upgrade hai, lekin accurate calculations ke bina ye financial stress ban sakti hai. Showroom jaane se pehle apne saare running costs evaluate karein.
 
-* 👉 **[Fuel Cost Calculator se monthly fuel expense nikalein](/automotive/fuel-cost-calculator/)**
-* 👉 **[Car Depreciation Tool se 5-saal ki resale value check karein](/automotive/car-depreciation-calculator/)**
-* 👉 **[Auto Loan Calculator se apni safe EMI plan karein](/finance/auto-loan-calculator/)**
+* 👉 **[Fuel Cost Calculator se monthly fuel expense nikalein](/fuel-cost-calculator/)**
+* 👉 **[Car Depreciation Tool se 5-saal ki resale value check karein](/car-depreciation-calculator/)**
+* 👉 **[Auto Loan Calculator se apni safe EMI plan karein](/auto-loan-calculator/)**

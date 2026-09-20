@@ -12,7 +12,7 @@ tags: ["sip", "inflation", "capital-gains-tax", "ltcg", "mutual-funds", "retirem
 lang: "en"
 targetCalculator:
   name: "SIP & Investment Calculator"
-  href: "/finance/sip-calculator/"
+  href: "/sip-calculator/"
   description: "Calculate inflation-adjusted real returns and net mutual fund maturity wealth."
 relatedCalculators: ["sip-calculator", "step-up-sip-calculator", "income-tax-calculator"]
 faqs:
@@ -202,10 +202,10 @@ Let's look at how factoring in tax and inflation transforms two real-world inves
 ### Scenario A: Priya’s Recalibrated Goal
 After her conversation with her uncle, Priya realized that her desired Goa retirement required **₹1.5 Crores in today's purchasing power**, not in nominal 2045 rupees.
 
-She plugged her goals into our interactive [SIP Calculator](/finance/sip-calculator/):
+She plugged her goals into our interactive [SIP Calculator](/sip-calculator/):
 * To have the equivalent of ₹1.5 Crores in 20 years at 6.5% inflation, her nominal target needed to be:
   $$\text{Future Target} = ₹1.5 \text{ Cr} \times (1 + 0.065)^{20} \approx \mathbf{₹5.28 \text{ Crores}}$$
-* Instead of keeping a flat ₹15,000 monthly SIP, Priya switched to our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/) and activated an **annual 10% step-up**.
+* Instead of keeping a flat ₹15,000 monthly SIP, Priya switched to our [Step-Up SIP Calculator](/step-up-sip-calculator/) and activated an **annual 10% step-up**.
 * By increasing her monthly contribution alongside her annual corporate salary raises, Priya closed the gap and put her real-world retirement back on track.
 
 ### Scenario B: Sameer, The Child Education Planner
@@ -269,4 +269,4 @@ When you look beyond gross numbers and plan for taxes and inflation:
 
 Don't let inflation quietly hollow out your dreams. 
 
-Open our free [SIP & Investment Calculator](/finance/sip-calculator/), test your numbers with our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/), and build an investment plan designed for real-world purchasing power today.
+Open our free [SIP & Investment Calculator](/sip-calculator/), test your numbers with our [Step-Up SIP Calculator](/step-up-sip-calculator/), and build an investment plan designed for real-world purchasing power today.

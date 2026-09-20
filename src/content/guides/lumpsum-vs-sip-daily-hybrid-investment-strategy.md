@@ -12,7 +12,7 @@ tags: ["lumpsum-sip", "daily-sip", "stp", "mutual-funds", "portfolio-strategy", 
 lang: "en"
 targetCalculator:
   name: "SIP & Investment Calculator"
-  href: "/finance/sip-calculator/"
+  href: "/sip-calculator/"
   description: "Compare lumpsum vs monthly SIP returns with our interactive strategy calculator."
 relatedCalculators: ["sip-calculator", "step-up-sip-calculator", "compound-interest-calculator"]
 faqs:
@@ -240,7 +240,7 @@ However, a daily SIP generates over 250 individual transaction entries per year,
 ### 3. How much should I invest in a mutual fund SIP every month?
 A dependable baseline is the **50-30-20 rule**: allocate 50% of your take-home pay to essential living needs, 30% to discretionary lifestyle wants, and at least **20% directly into automated investments**. 
 
-As your salary grows, using our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/) to increase your contributions by 10% annually will dramatically accelerate your path to financial freedom.
+As your salary grows, using our [Step-Up SIP Calculator](/step-up-sip-calculator/) to increase your contributions by 10% annually will dramatically accelerate your path to financial freedom.
 
 ---
 
@@ -254,6 +254,6 @@ Whether you are deploying a fresh year-end bonus or building wealth from your mo
 1. Don't let large cash sums sit idle in a low-yield savings account.
 2. Use a hybrid STP framework if a large lump-sum investment makes you anxious.
 3. Stick to clean, automated monthly schedules to avoid transaction chaos.
-4. Model your personalized numbers using our interactive [SIP & Investment Calculator](/finance/sip-calculator/).
+4. Model your personalized numbers using our interactive [SIP & Investment Calculator](/sip-calculator/).
 
 Take the emotion out of investing, let the math work quietly in the background, and build your wealth with confidence today.

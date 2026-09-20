@@ -11,7 +11,7 @@ category: "marketing"
 tags: ["marketing", "digital-marketing", "cac", "roas", "roi", "ad-spend", "growth", "performance-marketing"]
 targetCalculator:
   name: "ROAS Calculator"
-  href: "/marketing/roas-calculator/"
+  href: "/roas-calculator/"
   description: "Google Ads, Meta Ads aur Performance Marketing campaigns ka Return on Ad Spend evaluate karein."
 relatedCalculators: ["cac-calculator", "conversion-rate-calculator", "email-roi-calculator"]
 faqs:
@@ -36,7 +36,7 @@ Agar aap performance marketing campaigns chala rahe hain, agency hire kar rahe h
 Is guide mein hum marketing unit economics ke formulas ko breakdown karenge aur dekhenge ki har marketing rupee ko profit machine mein kaise convert kiya jata hai.
 
 > **Apna Campaign Performance Evaluate Karein:**  
-> Apne live campaigns ke numbers check karne ke liye hamara free [ROAS Calculator](/marketing/roas-calculator/) aur [Customer Acquisition Cost (CAC) Calculator](/marketing/cac-calculator/) use karein.
+> Apne live campaigns ke numbers check karne ke liye hamara free [ROAS Calculator](/roas-calculator/) aur [Customer Acquisition Cost (CAC) Calculator](/cac-calculator/) use karein.
 
 ---
 
@@ -103,7 +103,7 @@ $$\text{LTV} = \text{Average Order Value (AOV)} \times \text{Purchase Frequency 
 
 ## 4. CAC Kam Karne aur ROAS Boost Karne ke 4 Actionable Tactics
 
-1. **Conversion Rate Optimization (CRO):** Agar aapki landing page conversion rate 1.5% se badhkar 3.0% ho jati hai, toh bina ad spend badhaye aapka CAC aadha (**50% drop**) ho jata hai! Landing page speed aur checkout friction kam karein. Hamara [Conversion Rate Calculator](/marketing/conversion-rate-calculator/) test karein.
+1. **Conversion Rate Optimization (CRO):** Agar aapki landing page conversion rate 1.5% se badhkar 3.0% ho jati hai, toh bina ad spend badhaye aapka CAC aadha (**50% drop**) ho jata hai! Landing page speed aur checkout friction kam karein. Hamara [Conversion Rate Calculator](/conversion-rate-calculator/) test karein.
 2. **First-Party Creative Hooks:** Generic AI ya stock images wale ads fail ho rahe hain. User-Generated Content (UGC), real unboxing, customer reviews aur relatable problem-first hook videos CTR (Click-Through Rate) ko 2x badha dete hain.
 3. **Email & WhatsApp Automated Flows:** Pehli purchase ke baad Welcome series, abandoned cart recovery aur cross-sell flows set karein. Retention marketing se 0 CAC par extra revenue banta hai.
 4. **Offer Architecture (Bundles & Free Shipping Threshold):** Average Order Value (AOV) badhane ke liye "Buy 2 Get 1 Free" ya ₹999 se upar Free Shipping offer dein. High AOV hamesha ad auction mein uncompetitive bidding ko beat kar deta hai.
@@ -114,7 +114,7 @@ $$\text{LTV} = \text{Average Order Value (AOV)} \times \text{Purchase Frequency 
 
 Marketing koi andaza ya lottery nahi hai; ye cold, hard mathematics hai. Har campaign ka daily ROAS monitor karein, Blended CAC calculate karein, aur unprofitable ad sets ko bina hesitation pause karein.
 
-* 👉 **[ROAS Calculator se apne ad return ka ratio nikalein](/marketing/roas-calculator/)**
-* 👉 **[Customer Acquisition Cost (CAC) Calculator par apna blended CAC check karein](/marketing/cac-calculator/)**
-* 👉 **[Conversion Rate Calculator se website funnel optimize karein](/marketing/conversion-rate-calculator/)**
-* 👉 **[Email ROI Calculator se automated email campaigns evaluate karein](/marketing/email-roi-calculator/)**
+* 👉 **[ROAS Calculator se apne ad return ka ratio nikalein](/roas-calculator/)**
+* 👉 **[Customer Acquisition Cost (CAC) Calculator par apna blended CAC check karein](/cac-calculator/)**
+* 👉 **[Conversion Rate Calculator se website funnel optimize karein](/conversion-rate-calculator/)**
+* 👉 **[Email ROI Calculator se automated email campaigns evaluate karein](/email-roi-calculator/)**

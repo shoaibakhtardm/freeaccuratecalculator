@@ -23,4 +23,4 @@ Où $X$ désigne le numérateur (la fraction ou l'observation) et $Y$ désigne l
 
 $$\text{Taux de Variation} = \frac{\text{Nouvelle Valeur} - \text{Valeur Initiale}}{|\text{Valeur Initiale}|} \times 100$$
 
-* Utilisez notre [Calculateur de Pourcentage](/math/percentage-calculator/) pour des calculs instantanés.
+* Utilisez notre [Calculateur de Pourcentage](/percentage-calculator/) pour des calculs instantanés.

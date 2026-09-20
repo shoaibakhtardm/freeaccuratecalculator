@@ -7,129 +7,129 @@ import type { CalculatorEntity, CalculatorCatalogItem } from '../types/calculato
  */
 export const ALL_FRONTEND_CALCULATORS: CalculatorCatalogItem[] = [
   // Finance
-  { name: 'SIP & Investment Calculator', slug: 'sip-calculator', category: 'finance', href: '/finance/sip-calculator/' },
-  { name: 'EMI Calculator', slug: 'emi-calculator', category: 'finance', href: '/finance/emi-calculator/' },
-  { name: 'Mortgage Calculator', slug: 'mortgage-calculator', category: 'finance', href: '/finance/mortgage-calculator/' },
-  { name: 'Compound Interest Calculator', slug: 'compound-interest-calculator', category: 'finance', href: '/finance/compound-interest-calculator/' },
-  { name: 'Loan Amortization Calculator', slug: 'amortization-calculator', category: 'finance', href: '/finance/amortization-calculator/' },
-  { name: 'Auto Loan Calculator', slug: 'auto-loan-calculator', category: 'finance', href: '/finance/auto-loan-calculator/' },
-  { name: 'Profit Margin Calculator', slug: 'profit-margin-calculator', category: 'finance', href: '/finance/profit-margin-calculator/' },
+  { name: 'SIP & Investment Calculator', slug: 'sip-calculator', category: 'finance', href: '/sip-calculator/' },
+  { name: 'EMI Calculator', slug: 'emi-calculator', category: 'finance', href: '/emi-calculator/' },
+  { name: 'Mortgage Calculator', slug: 'mortgage-calculator', category: 'finance', href: '/mortgage-calculator/' },
+  { name: 'Compound Interest Calculator', slug: 'compound-interest-calculator', category: 'finance', href: '/compound-interest-calculator/' },
+  { name: 'Loan Amortization Calculator', slug: 'amortization-calculator', category: 'finance', href: '/amortization-calculator/' },
+  { name: 'Auto Loan Calculator', slug: 'auto-loan-calculator', category: 'finance', href: '/auto-loan-calculator/' },
+  { name: 'Profit Margin Calculator', slug: 'profit-margin-calculator', category: 'finance', href: '/profit-margin-calculator/' },
 
   // Insurance
-  { name: 'Term Life Insurance Calculator', slug: 'term-life-insurance-calculator', category: 'insurance', href: '/insurance/term-life-insurance-calculator/' },
-  { name: 'Health Insurance Calculator', slug: 'health-insurance-calculator', category: 'insurance', href: '/insurance/health-insurance-calculator/' },
-  { name: 'Auto Insurance Estimator', slug: 'auto-insurance-calculator', category: 'insurance', href: '/insurance/auto-insurance-calculator/' },
-  { name: 'Annuity Payout Calculator', slug: 'annuity-payout-calculator', category: 'insurance', href: '/insurance/annuity-payout-calculator/' },
+  { name: 'Term Life Insurance Calculator', slug: 'term-life-insurance-calculator', category: 'insurance', href: '/term-life-insurance-calculator/' },
+  { name: 'Health Insurance Calculator', slug: 'health-insurance-calculator', category: 'insurance', href: '/health-insurance-calculator/' },
+  { name: 'Auto Insurance Estimator', slug: 'auto-insurance-calculator', category: 'insurance', href: '/auto-insurance-calculator/' },
+  { name: 'Annuity Payout Calculator', slug: 'annuity-payout-calculator', category: 'insurance', href: '/annuity-payout-calculator/' },
 
   // Legal
-  { name: 'Child Support Calculator', slug: 'child-support-calculator', category: 'legal', href: '/legal/child-support-calculator/' },
-  { name: 'Alimony Calculator', slug: 'alimony-calculator', category: 'legal', href: '/legal/alimony-calculator/' },
-  { name: 'Settlement Value Calculator', slug: 'settlement-value-calculator', category: 'legal', href: '/legal/settlement-value-calculator/' },
-  { name: 'Legal Fee Calculator', slug: 'legal-fee-calculator', category: 'legal', href: '/legal/legal-fee-calculator/' },
+  { name: 'Child Support Calculator', slug: 'child-support-calculator', category: 'legal', href: '/child-support-calculator/' },
+  { name: 'Alimony Calculator', slug: 'alimony-calculator', category: 'legal', href: '/alimony-calculator/' },
+  { name: 'Settlement Value Calculator', slug: 'settlement-value-calculator', category: 'legal', href: '/settlement-value-calculator/' },
+  { name: 'Legal Fee Calculator', slug: 'legal-fee-calculator', category: 'legal', href: '/legal-fee-calculator/' },
 
   // Business
-  { name: 'Break-Even Calculator', slug: 'break-even-calculator', category: 'business', href: '/business/break-even-calculator/' },
-  { name: 'ROI Calculator', slug: 'roi-calculator', category: 'business', href: '/business/roi-calculator/' },
-  { name: 'Business Valuation Calculator', slug: 'business-valuation-calculator', category: 'business', href: '/business/business-valuation-calculator/' },
+  { name: 'Break-Even Calculator', slug: 'break-even-calculator', category: 'business', href: '/break-even-calculator/' },
+  { name: 'ROI Calculator', slug: 'roi-calculator', category: 'business', href: '/roi-calculator/' },
+  { name: 'Business Valuation Calculator', slug: 'business-valuation-calculator', category: 'business', href: '/business-valuation-calculator/' },
 
   // Construction
-  { name: 'Concrete Calculator', slug: 'concrete-calculator', category: 'construction', href: '/construction/concrete-calculator/' },
-  { name: 'Square Footage Calculator', slug: 'square-footage-calculator', category: 'construction', href: '/construction/square-footage-calculator/' },
-  { name: 'Paint Calculator', slug: 'paint-calculator', category: 'construction', href: '/construction/paint-calculator/' },
-  { name: 'Brick Calculator', slug: 'brick-calculator', category: 'construction', href: '/construction/brick-calculator/' },
+  { name: 'Concrete Calculator', slug: 'concrete-calculator', category: 'construction', href: '/concrete-calculator/' },
+  { name: 'Square Footage Calculator', slug: 'square-footage-calculator', category: 'construction', href: '/square-footage-calculator/' },
+  { name: 'Paint Calculator', slug: 'paint-calculator', category: 'construction', href: '/paint-calculator/' },
+  { name: 'Brick Calculator', slug: 'brick-calculator', category: 'construction', href: '/brick-calculator/' },
 
   // Real Estate
-  { name: 'Rental Yield Calculator', slug: 'rental-yield-calculator', category: 'real-estate', href: '/real-estate/rental-yield-calculator/' },
-  { name: 'Property Tax Calculator', slug: 'property-tax-calculator', category: 'real-estate', href: '/real-estate/property-tax-calculator/' },
-  { name: 'Cap Rate Calculator', slug: 'cap-rate-calculator', category: 'real-estate', href: '/real-estate/cap-rate-calculator/' },
+  { name: 'Rental Yield Calculator', slug: 'rental-yield-calculator', category: 'real-estate', href: '/rental-yield-calculator/' },
+  { name: 'Property Tax Calculator', slug: 'property-tax-calculator', category: 'real-estate', href: '/property-tax-calculator/' },
+  { name: 'Cap Rate Calculator', slug: 'cap-rate-calculator', category: 'real-estate', href: '/cap-rate-calculator/' },
 
   // Technology
-  { name: 'Subnet Calculator', slug: 'subnet-calculator', category: 'technology', href: '/technology/subnet-calculator/' },
-  { name: 'Password Generator', slug: 'password-generator', category: 'technology', href: '/technology/password-generator/' },
-  { name: 'Bandwidth Calculator', slug: 'bandwidth-calculator', category: 'technology', href: '/technology/bandwidth-calculator/' },
-  { name: 'Data Transfer Calculator', slug: 'data-transfer-calculator', category: 'technology', href: '/technology/data-transfer-calculator/' },
+  { name: 'Subnet Calculator', slug: 'subnet-calculator', category: 'technology', href: '/subnet-calculator/' },
+  { name: 'Password Generator', slug: 'password-generator', category: 'technology', href: '/password-generator/' },
+  { name: 'Bandwidth Calculator', slug: 'bandwidth-calculator', category: 'technology', href: '/bandwidth-calculator/' },
+  { name: 'Data Transfer Calculator', slug: 'data-transfer-calculator', category: 'technology', href: '/data-transfer-calculator/' },
 
   // Health
-  { name: 'Calorie Calculator', slug: 'calorie-calculator', category: 'health', href: '/health/calorie-calculator/' },
-  { name: 'BMI Calculator', slug: 'bmi-calculator', category: 'health', href: '/health/bmi-calculator/' },
-  { name: 'Body Fat Calculator', slug: 'body-fat-calculator', category: 'health', href: '/health/body-fat-calculator/' },
-  { name: 'BMR Calculator', slug: 'bmr-calculator', category: 'health', href: '/health/bmr-calculator/' },
-  { name: 'Ideal Weight Calculator', slug: 'ideal-weight-calculator', category: 'health', href: '/health/ideal-weight-calculator/' },
-  { name: 'Running Pace Calculator', slug: 'pace-calculator', category: 'health', href: '/health/pace-calculator/' },
+  { name: 'Calorie Calculator', slug: 'calorie-calculator', category: 'health', href: '/calorie-calculator/' },
+  { name: 'BMI Calculator', slug: 'bmi-calculator', category: 'health', href: '/bmi-calculator/' },
+  { name: 'Body Fat Calculator', slug: 'body-fat-calculator', category: 'health', href: '/body-fat-calculator/' },
+  { name: 'BMR Calculator', slug: 'bmr-calculator', category: 'health', href: '/bmr-calculator/' },
+  { name: 'Ideal Weight Calculator', slug: 'ideal-weight-calculator', category: 'health', href: '/ideal-weight-calculator/' },
+  { name: 'Running Pace Calculator', slug: 'pace-calculator', category: 'health', href: '/pace-calculator/' },
 
   // Statistics
-  { name: 'Standard Deviation Calculator', slug: 'standard-deviation-calculator', category: 'statistics', href: '/statistics/standard-deviation-calculator/' },
-  { name: 'Sample Size Calculator', slug: 'sample-size-calculator', category: 'statistics', href: '/statistics/sample-size-calculator/' },
-  { name: 'Probability Calculator', slug: 'probability-calculator', category: 'statistics', href: '/statistics/probability-calculator/' },
-  { name: 'Confidence Interval Calculator', slug: 'confidence-interval-calculator', category: 'statistics', href: '/statistics/confidence-interval-calculator/' },
+  { name: 'Standard Deviation Calculator', slug: 'standard-deviation-calculator', category: 'statistics', href: '/standard-deviation-calculator/' },
+  { name: 'Sample Size Calculator', slug: 'sample-size-calculator', category: 'statistics', href: '/sample-size-calculator/' },
+  { name: 'Probability Calculator', slug: 'probability-calculator', category: 'statistics', href: '/probability-calculator/' },
+  { name: 'Confidence Interval Calculator', slug: 'confidence-interval-calculator', category: 'statistics', href: '/confidence-interval-calculator/' },
 
   // Marketing
-  { name: 'Conversion Rate Calculator', slug: 'conversion-rate-calculator', category: 'marketing', href: '/marketing/conversion-rate-calculator/' },
-  { name: 'Customer Acquisition Cost (CAC)', slug: 'cac-calculator', category: 'marketing', href: '/marketing/cac-calculator/' },
-  { name: 'ROAS Calculator', slug: 'roas-calculator', category: 'marketing', href: '/marketing/roas-calculator/' },
-  { name: 'Email ROI Calculator', slug: 'email-roi-calculator', category: 'marketing', href: '/marketing/email-roi-calculator/' },
+  { name: 'Conversion Rate Calculator', slug: 'conversion-rate-calculator', category: 'marketing', href: '/conversion-rate-calculator/' },
+  { name: 'Customer Acquisition Cost (CAC)', slug: 'cac-calculator', category: 'marketing', href: '/cac-calculator/' },
+  { name: 'ROAS Calculator', slug: 'roas-calculator', category: 'marketing', href: '/roas-calculator/' },
+  { name: 'Email ROI Calculator', slug: 'email-roi-calculator', category: 'marketing', href: '/email-roi-calculator/' },
 
   // Math
-  { name: 'Percentage Calculator', slug: 'percentage-calculator', category: 'math', href: '/math/percentage-calculator/' },
-  { name: 'Scientific Calculator', slug: 'scientific-calculator', category: 'math', href: '/math/scientific-calculator/' },
-  { name: 'Fraction Calculator', slug: 'fraction-calculator', category: 'math', href: '/math/fraction-calculator/' },
-  { name: 'Triangle Calculator', slug: 'triangle-calculator', category: 'math', href: '/math/triangle-calculator/' },
-  { name: 'Random Number Generator', slug: 'random-number-generator', category: 'math', href: '/math/random-number-generator/' },
+  { name: 'Percentage Calculator', slug: 'percentage-calculator', category: 'math', href: '/percentage-calculator/' },
+  { name: 'Scientific Calculator', slug: 'scientific-calculator', category: 'math', href: '/scientific-calculator/' },
+  { name: 'Fraction Calculator', slug: 'fraction-calculator', category: 'math', href: '/fraction-calculator/' },
+  { name: 'Triangle Calculator', slug: 'triangle-calculator', category: 'math', href: '/triangle-calculator/' },
+  { name: 'Random Number Generator', slug: 'random-number-generator', category: 'math', href: '/random-number-generator/' },
 
   // Automotive
-  { name: 'Fuel Cost Calculator', slug: 'fuel-cost-calculator', category: 'automotive', href: '/automotive/fuel-cost-calculator/' },
-  { name: 'Gas Mileage (MPG) Calculator', slug: 'mpg-calculator', category: 'automotive', href: '/automotive/mpg-calculator/' },
-  { name: 'Car Depreciation Calculator', slug: 'car-depreciation-calculator', category: 'automotive', href: '/automotive/car-depreciation-calculator/' },
+  { name: 'Fuel Cost Calculator', slug: 'fuel-cost-calculator', category: 'automotive', href: '/fuel-cost-calculator/' },
+  { name: 'Gas Mileage (MPG) Calculator', slug: 'mpg-calculator', category: 'automotive', href: '/mpg-calculator/' },
+  { name: 'Car Depreciation Calculator', slug: 'car-depreciation-calculator', category: 'automotive', href: '/car-depreciation-calculator/' },
 
   // Biology
-  { name: 'Punnett Square Calculator', slug: 'punnett-square-calculator', category: 'biology', href: '/biology/punnett-square-calculator/' },
-  { name: 'Hardy-Weinberg Calculator', slug: 'hardy-weinberg-calculator', category: 'biology', href: '/biology/hardy-weinberg-calculator/' },
-  { name: 'Bacterial Growth Calculator', slug: 'bacterial-growth-calculator', category: 'biology', href: '/biology/bacterial-growth-calculator/' },
-  { name: 'Molecular Weight Calculator', slug: 'molecular-weight-calculator', category: 'biology', href: '/biology/molecular-weight-calculator/' },
+  { name: 'Punnett Square Calculator', slug: 'punnett-square-calculator', category: 'biology', href: '/punnett-square-calculator/' },
+  { name: 'Hardy-Weinberg Calculator', slug: 'hardy-weinberg-calculator', category: 'biology', href: '/hardy-weinberg-calculator/' },
+  { name: 'Bacterial Growth Calculator', slug: 'bacterial-growth-calculator', category: 'biology', href: '/bacterial-growth-calculator/' },
+  { name: 'Molecular Weight Calculator', slug: 'molecular-weight-calculator', category: 'biology', href: '/molecular-weight-calculator/' },
 
   // Chemistry
-  { name: 'Molar Mass Calculator', slug: 'molar-mass-calculator', category: 'chemistry', href: '/chemistry/molar-mass-calculator/' },
-  { name: 'Solution Dilution Calculator', slug: 'solution-dilution-calculator', category: 'chemistry', href: '/chemistry/solution-dilution-calculator/' },
-  { name: 'pH Calculator', slug: 'ph-calculator', category: 'chemistry', href: '/chemistry/ph-calculator/' },
-  { name: 'Stoichiometry Calculator', slug: 'stoichiometry-calculator', category: 'chemistry', href: '/chemistry/stoichiometry-calculator/' },
+  { name: 'Molar Mass Calculator', slug: 'molar-mass-calculator', category: 'chemistry', href: '/molar-mass-calculator/' },
+  { name: 'Solution Dilution Calculator', slug: 'solution-dilution-calculator', category: 'chemistry', href: '/solution-dilution-calculator/' },
+  { name: 'pH Calculator', slug: 'ph-calculator', category: 'chemistry', href: '/ph-calculator/' },
+  { name: 'Stoichiometry Calculator', slug: 'stoichiometry-calculator', category: 'chemistry', href: '/stoichiometry-calculator/' },
 
   // Physics
-  { name: 'Velocity & Acceleration Calculator', slug: 'velocity-acceleration-calculator', category: 'physics', href: '/physics/velocity-acceleration-calculator/' },
-  { name: 'Kinetic Energy Calculator', slug: 'kinetic-energy-calculator', category: 'physics', href: '/physics/kinetic-energy-calculator/' },
-  { name: 'Ohms Law Calculator', slug: 'ohms-law-calculator', category: 'physics', href: '/physics/ohms-law-calculator/' },
-  { name: 'Projectile Motion Calculator', slug: 'projectile-motion-calculator', category: 'physics', href: '/physics/projectile-motion-calculator/' },
+  { name: 'Velocity & Acceleration Calculator', slug: 'velocity-acceleration-calculator', category: 'physics', href: '/velocity-acceleration-calculator/' },
+  { name: 'Kinetic Energy Calculator', slug: 'kinetic-energy-calculator', category: 'physics', href: '/kinetic-energy-calculator/' },
+  { name: 'Ohms Law Calculator', slug: 'ohms-law-calculator', category: 'physics', href: '/ohms-law-calculator/' },
+  { name: 'Projectile Motion Calculator', slug: 'projectile-motion-calculator', category: 'physics', href: '/projectile-motion-calculator/' },
 
   // Food
-  { name: 'Recipe Scaler Calculator', slug: 'recipe-scaler-calculator', category: 'food', href: '/food/recipe-scaler-calculator/' },
-  { name: 'Macronutrient Calculator', slug: 'macronutrient-calculator', category: 'food', href: '/food/macronutrient-calculator/' },
-  { name: 'Bakers Percentage Calculator', slug: 'bakers-percentage-calculator', category: 'food', href: '/food/bakers-percentage-calculator/' },
-  { name: 'Calorie per Serving Calculator', slug: 'calorie-per-serving-calculator', category: 'food', href: '/food/calorie-per-serving-calculator/' },
+  { name: 'Recipe Scaler Calculator', slug: 'recipe-scaler-calculator', category: 'food', href: '/recipe-scaler-calculator/' },
+  { name: 'Macronutrient Calculator', slug: 'macronutrient-calculator', category: 'food', href: '/macronutrient-calculator/' },
+  { name: 'Bakers Percentage Calculator', slug: 'bakers-percentage-calculator', category: 'food', href: '/bakers-percentage-calculator/' },
+  { name: 'Calorie per Serving Calculator', slug: 'calorie-per-serving-calculator', category: 'food', href: '/calorie-per-serving-calculator/' },
 
   // Sports
-  { name: 'Target Heart Rate Zone Calculator', slug: 'heart-rate-zone-calculator', category: 'sports', href: '/sports/heart-rate-zone-calculator/' },
-  { name: 'One-Rep Max (1RM) Calculator', slug: 'one-rep-max-calculator', category: 'sports', href: '/sports/one-rep-max-calculator/' },
-  { name: 'Golf Handicap Calculator', slug: 'golf-handicap-calculator', category: 'sports', href: '/sports/golf-handicap-calculator/' },
+  { name: 'Target Heart Rate Zone Calculator', slug: 'heart-rate-zone-calculator', category: 'sports', href: '/heart-rate-zone-calculator/' },
+  { name: 'One-Rep Max (1RM) Calculator', slug: 'one-rep-max-calculator', category: 'sports', href: '/one-rep-max-calculator/' },
+  { name: 'Golf Handicap Calculator', slug: 'golf-handicap-calculator', category: 'sports', href: '/golf-handicap-calculator/' },
 
   // Ecology
-  { name: 'Carbon Footprint Calculator', slug: 'carbon-footprint-calculator', category: 'ecology', href: '/ecology/carbon-footprint-calculator/' },
-  { name: 'Solar Energy Calculator', slug: 'solar-energy-calculator', category: 'ecology', href: '/ecology/solar-energy-calculator/' },
-  { name: 'Water Conservation Calculator', slug: 'water-conservation-calculator', category: 'ecology', href: '/ecology/water-conservation-calculator/' },
-  { name: 'Compost Ratio Calculator', slug: 'compost-ratio-calculator', category: 'ecology', href: '/ecology/compost-ratio-calculator/' },
+  { name: 'Carbon Footprint Calculator', slug: 'carbon-footprint-calculator', category: 'ecology', href: '/carbon-footprint-calculator/' },
+  { name: 'Solar Energy Calculator', slug: 'solar-energy-calculator', category: 'ecology', href: '/solar-energy-calculator/' },
+  { name: 'Water Conservation Calculator', slug: 'water-conservation-calculator', category: 'ecology', href: '/water-conservation-calculator/' },
+  { name: 'Compost Ratio Calculator', slug: 'compost-ratio-calculator', category: 'ecology', href: '/compost-ratio-calculator/' },
 
   // Everyday
-  { name: 'Age Calculator', slug: 'age-calculator', category: 'everyday', href: '/everyday/age-calculator/' },
-  { name: 'Date Calculator', slug: 'date-calculator', category: 'everyday', href: '/everyday/date-calculator/' },
-  { name: 'Time Calculator', slug: 'time-calculator', category: 'everyday', href: '/everyday/time-calculator/' },
-  { name: 'GPA Calculator', slug: 'gpa-calculator', category: 'everyday', href: '/everyday/gpa-calculator/' },
-  { name: 'Hours Calculator', slug: 'hours-calculator', category: 'everyday', href: '/everyday/hours-calculator/' },
+  { name: 'Age Calculator', slug: 'age-calculator', category: 'everyday', href: '/age-calculator/' },
+  { name: 'Date Calculator', slug: 'date-calculator', category: 'everyday', href: '/date-calculator/' },
+  { name: 'Time Calculator', slug: 'time-calculator', category: 'everyday', href: '/time-calculator/' },
+  { name: 'GPA Calculator', slug: 'gpa-calculator', category: 'everyday', href: '/gpa-calculator/' },
+  { name: 'Hours Calculator', slug: 'hours-calculator', category: 'everyday', href: '/hours-calculator/' },
 
   // Converter
-  { name: 'Universal Conversion Calculator', slug: 'conversion-calculator', category: 'converter', href: '/converter/conversion-calculator/' },
-  { name: 'Length Converter', slug: 'length-converter', category: 'converter', href: '/converter/length-converter/' },
-  { name: 'Weight Converter', slug: 'weight-converter', category: 'converter', href: '/converter/weight-converter/' },
-  { name: 'Temperature Converter', slug: 'temperature-converter', category: 'converter', href: '/converter/temperature-converter/' },
+  { name: 'Universal Conversion Calculator', slug: 'conversion-calculator', category: 'converter', href: '/conversion-calculator/' },
+  { name: 'Length Converter', slug: 'length-converter', category: 'converter', href: '/length-converter/' },
+  { name: 'Weight Converter', slug: 'weight-converter', category: 'converter', href: '/weight-converter/' },
+  { name: 'Temperature Converter', slug: 'temperature-converter', category: 'converter', href: '/temperature-converter/' },
 
-  { name: 'AI Prompt & Token Cost Calculator', slug: 'ai-token-cost-calculator', category: 'technology', href: '/technology/ai-token-cost-calculator/' },
+  { name: 'AI Prompt & Token Cost Calculator', slug: 'ai-token-cost-calculator', category: 'technology', href: '/ai-token-cost-calculator/' },
 ];
 
 /**

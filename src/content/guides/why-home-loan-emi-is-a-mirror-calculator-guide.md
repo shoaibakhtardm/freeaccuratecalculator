@@ -12,7 +12,7 @@ tags: ["home-loan", "emi-calculator", "mortgage-planning", "prepayment", "amorti
 lang: "en"
 targetCalculator:
   name: "EMI Calculator"
-  href: "/finance/emi-calculator/"
+  href: "/emi-calculator/"
   description: "Calculate your monthly home loan EMI, interest breakdown, and amortization schedule."
 relatedCalculators: ["emi-calculator", "sip-calculator", "step-up-sip-calculator"]
 faqs:
@@ -81,7 +81,7 @@ If a household earns ₹1,50,000 a month after taxes, most institutional lenders
 +--------------------------------------------------------------------------+
 ```
 
-The bank doesn't care if you have an elderly parent who might need medical care next year. The bank doesn't care if you want to take your children on summer vacations or build a healthy retirement nest egg on our [SIP Calculator](/finance/sip-calculator/). 
+The bank doesn't care if you have an elderly parent who might need medical care next year. The bank doesn't care if you want to take your children on summer vacations or build a healthy retirement nest egg on our [SIP Calculator](/sip-calculator/). 
 
 The bank only cares about one variable: **Will you default on your mortgage?**
 
@@ -219,11 +219,11 @@ With 5% Annual Step-Up:    |============ 12.3 Years ========| (7.7 Years Saved!)
 Let's look at how two families approached the exact same borrowing dilemma.
 
 ### Scenario A: Aarav and Meera, Engineering Their Exit
-After seeing the real numbers on our interactive [EMI Calculator](/finance/emi-calculator/), Aarav and Meera decided not to surrender to a 20-year sentence. 
+After seeing the real numbers on our interactive [EMI Calculator](/emi-calculator/), Aarav and Meera decided not to surrender to a 20-year sentence. 
 
 They designed a dual strategy:
 1. They committed to a **13th EMI prepayment** every December using Aarav's annual bonus.
-2. Meera redirected ₹10,000 a month from freelance design work directly into our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/) in an equity mutual fund.
+2. Meera redirected ₹10,000 a month from freelance design work directly into our [Step-Up SIP Calculator](/step-up-sip-calculator/) in an equity mutual fund.
 
 Within nine years, the compounding balance in Meera's mutual fund reached ₹22 Lakhs, while their remaining home loan balance had dropped to ₹28 Lakhs. 
 
@@ -286,6 +286,6 @@ However, the mortgage you use to finance that home must be treated with cold, di
 * Understand that the first seven years of your loan are built to enrich the lender unless you intervene.
 * Harness the compounding power of early prepayments to reclaim your freedom years ahead of schedule.
 
-Take five minutes today to run your own scenarios on our free, client-side [EMI Calculator](/finance/emi-calculator/). 
+Take five minutes today to run your own scenarios on our free, client-side [EMI Calculator](/emi-calculator/). 
 
 Model your monthly installment, test an extra annual payment, and design a repayment blueprint that lets you enjoy your dream home in complete peace.

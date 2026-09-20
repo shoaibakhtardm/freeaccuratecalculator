@@ -11,7 +11,7 @@ category: "health"
 tags: ["bmi", "tdee", "calorie-deficit", "weight-loss", "fitness", "nutrition", "ideal-weight"]
 targetCalculator:
   name: "BMI Calculator"
-  href: "/health/bmi-calculator/"
+  href: "/bmi-calculator/"
   description: "Apna Body Mass Index aur WHO healthy weight bracket check karein."
 relatedCalculators: ["calorie-calculator", "ideal-weight-calculator", "bmr-calculator"]
 faqs:
@@ -36,7 +36,7 @@ Apni body ko transform karne ke liye aapko do important numbers pata hone chahiy
 Is guide mein hum step-by-step samjhenge ki BMI aur TDEE kya hain aur inke mathematical formulas ka istemal karke perfect diet plan kaise banayein.
 
 > **Instant Body Numbers Check:**  
-> Sabse pehle hamara free [BMI Calculator](/health/bmi-calculator/) aur [Calorie & TDEE Calculator](/health/calorie-calculator/) kholiye aur apne accurate measurements check karein.
+> Sabse pehle hamara free [BMI Calculator](/bmi-calculator/) aur [Calorie & TDEE Calculator](/calorie-calculator/) kholiye aur apne accurate measurements check karein.
 
 ---
 
@@ -93,7 +93,7 @@ Hamwi formula ke anusar:
 * **Males:** 48 kg base (for 5 ft) + 2.7 kg per inch over 5 ft
 * **Females:** 45.5 kg base (for 5 ft) + 2.2 kg per inch over 5 ft
 
-Aap directly hamare [Ideal Weight Calculator](/health/ideal-weight-calculator/) par apni gender aur height daal kar clinical range check kar sakte hain.
+Aap directly hamare [Ideal Weight Calculator](/ideal-weight-calculator/) par apni gender aur height daal kar clinical range check kar sakte hain.
 
 ---
 
@@ -152,6 +152,6 @@ Sirf calories ginn-na kaafi nahi hai, nutrition ki quality bhi matter karti hai:
 
 Numbers se darna band karein, unhe apna dost banayein. Ek chhota calorie deficit aur daily movement aapki body composition ko 90 dino mein badal sakta hai.
 
-* 👉 **[Apna BMI abhi check karein (BMI Calculator)](/health/bmi-calculator/)**
-* 👉 **[Apna TDEE aur Daily Calorie Need calculate karein](/health/calorie-calculator/)**
-* 👉 **[Apna Clinical Ideal Weight check karein](/health/ideal-weight-calculator/)**
+* 👉 **[Apna BMI abhi check karein (BMI Calculator)](/bmi-calculator/)**
+* 👉 **[Apna TDEE aur Daily Calorie Need calculate karein](/calorie-calculator/)**
+* 👉 **[Apna Clinical Ideal Weight check karein](/ideal-weight-calculator/)**

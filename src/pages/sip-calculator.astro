@@ -13,10 +13,10 @@ import { faqDatabase } from '../data/faqDatabase';
 const faqs = faqDatabase['sip-calculator'];
 
 const relatedCalculators = [
-  { title: 'Step-Up SIP Calculator', href: '/finance/step-up-sip-calculator/', badge: 'Popular' },
-  { title: 'Compound Interest', href: '/finance/compound-interest-calculator/' },
-  { title: 'Lumpsum Calculator', href: '/finance/lumpsum-calculator/' },
-  { title: 'EMI Calculator', href: '/finance/emi-calculator/' },
+  { title: 'Step-Up SIP Calculator', href: '/step-up-sip-calculator/', badge: 'Popular' },
+  { title: 'Compound Interest', href: '/compound-interest-calculator/' },
+  { title: 'Lumpsum Calculator', href: '/lumpsum-calculator/' },
+  { title: 'EMI Calculator', href: '/emi-calculator/' },
 ];
 
 const formulaVariables = [
@@ -33,8 +33,8 @@ const schema = {
   '@graph': [
     {
       '@type': 'WebApplication',
-      '@id': 'https://freeaccuratecalculator.com/finance/sip-calculator/#webapp',
-      'url': 'https://freeaccuratecalculator.com/finance/sip-calculator/',
+      '@id': 'https://freeaccuratecalculator.com/sip-calculator/#webapp',
+      'url': 'https://freeaccuratecalculator.com/sip-calculator/',
       'name': 'SIP Calculator — Mutual Fund Systematic Investment Plan Growth Planner',
       'applicationCategory': 'FinanceApplication',
       'operatingSystem': 'All',
@@ -59,7 +59,7 @@ const schema = {
     },
     {
       '@type': 'BreadcrumbList',
-      '@id': 'https://freeaccuratecalculator.com/finance/sip-calculator/#breadcrumb',
+      '@id': 'https://freeaccuratecalculator.com/sip-calculator/#breadcrumb',
       'itemListElement': [
         {
           '@type': 'ListItem',
@@ -77,13 +77,13 @@ const schema = {
           '@type': 'ListItem',
           'position': 3,
           'name': 'SIP Calculator',
-          'item': 'https://freeaccuratecalculator.com/finance/sip-calculator/'
+          'item': 'https://freeaccuratecalculator.com/sip-calculator/'
         }
       ]
     },
     {
       '@type': 'FAQPage',
-      '@id': 'https://freeaccuratecalculator.com/finance/sip-calculator/#faq',
+      '@id': 'https://freeaccuratecalculator.com/sip-calculator/#faq',
       'mainEntity': faqs.map((faq) => ({
         '@type': 'Question',
         'name': faq.question,
@@ -1175,7 +1175,7 @@ const schema = {
         calculators={[
           {
             name: "Systematic Investment Plan (SIP)",
-            slug: "/finance/sip-calculator/",
+            slug: "/sip-calculator/",
             description: "Invest a fixed amount periodically to average out market volatility and build wealth disciplined over time.",
             pros: [
               "Averages purchase cost across market dips (Rupee/Dollar Cost Averaging)",
@@ -1189,7 +1189,7 @@ const schema = {
           },
           {
             name: "Lumpsum Investment",
-            slug: "/finance/compound-interest-calculator/",
+            slug: "/compound-interest-calculator/",
             description: "Deploy an entire capital sum in one go to capture full-cycle compounding across the entire horizon.",
             pros: [
               "Puts 100% of capital to work immediately from Day 1",
@@ -2092,7 +2092,7 @@ const schema = {
 
     csvRows.push([]);
     csvRows.push(['Verified By', 'Free Accurate Calculator — Client-Side Financial Engine']);
-    csvRows.push(['Website', 'https://freeaccuratecalculator.com/finance/sip-calculator/']);
+    csvRows.push(['Website', 'https://freeaccuratecalculator.com/sip-calculator/']);
 
     const escapeCsv = (val: any) => `"${String(val ?? '').replace(/"/g, '""')}"`;
     const csvContent = '\uFEFF' + csvRows.map(row => row.map(escapeCsv).join(',')).join('\r\n');

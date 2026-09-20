@@ -12,7 +12,7 @@ tags: ["personal-loan", "emi-calculator", "debt-consolidation", "interest-rates"
 lang: "en"
 targetCalculator:
   name: "EMI Calculator"
-  href: "/finance/emi-calculator/"
+  href: "/emi-calculator/"
   description: "Calculate your personal loan monthly installment, net disbursal, and total interest."
 relatedCalculators: ["emi-calculator", "sip-calculator", "percentage-calculator"]
 faqs:
@@ -118,7 +118,7 @@ It requires patience and memory keys (`M+` and `MR`), but here is the exact step
 
 While doing this manual math is a great test of your patience, one slip of a decimal key can throw your answer off by thousands of rupees. 
 
-That is why using an instant digital [EMI Calculator](/finance/emi-calculator/) is vastly safer for real-world budgeting.
+That is why using an instant digital [EMI Calculator](/emi-calculator/) is vastly safer for real-world budgeting.
 
 ---
 
@@ -211,7 +211,7 @@ Let's look at how two borrowers handled similar debt burdens.
 ### Scenario A: Elena’s Reset
 After realizing her debt consolidation had backfired, Elena stopped using credit cards entirely. 
 
-She took a hard look at her budget using our [Percentage Calculator](/math/percentage-calculator/), paused all non-essential dining out, and picked up weekend consulting work. 
+She took a hard look at her budget using our [Percentage Calculator](/percentage-calculator/), paused all non-essential dining out, and picked up weekend consulting work. 
 
 She dedicated an extra ₹8,000 every month directly toward prepaying her personal loan principal. 
 
@@ -264,4 +264,4 @@ Before you take on that obligation:
 
 Take control of your debt strategy today. 
 
-Use our free [EMI Calculator](/finance/emi-calculator/) to test your numbers, uncover the true cost of borrowing, and build a clear, step-by-step roadmap to total financial freedom.
+Use our free [EMI Calculator](/emi-calculator/) to test your numbers, uncover the true cost of borrowing, and build a clear, step-by-step roadmap to total financial freedom.

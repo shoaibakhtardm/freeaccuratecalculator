@@ -12,7 +12,7 @@ tags: ["car-loan", "emi-calculator", "auto-financing", "depreciation", "tractor-
 lang: "en"
 targetCalculator:
   name: "EMI Calculator"
-  href: "/finance/emi-calculator/"
+  href: "/emi-calculator/"
   description: "Calculate auto loan EMIs, interest breakdowns, and total cost of ownership."
 relatedCalculators: ["emi-calculator", "sip-calculator", "percentage-calculator"]
 faqs:
@@ -127,7 +127,7 @@ Consider the typical depreciation curve of a brand-new vehicle:
 
 When you use a **car emi calculator**, you must realize that you are paying compound bank interest on an asset that is actively disintegrating in your driveway. 
 
-Every extra year you spend making car payments is capital that could have been compounding inside our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/) to fund your genuine financial freedom.
+Every extra year you spend making car payments is capital that could have been compounding inside our [Step-Up SIP Calculator](/step-up-sip-calculator/) to fund your genuine financial freedom.
 
 ---
 
@@ -150,7 +150,7 @@ Imagine borrowing ₹10 Lakhs for 5 years at a quoted **"6.5% flat rate"**:
 * Total Repayment = $₹13,25,000$.
 * Monthly EMI = $₹13,25,000 \div 60 = \mathbf{₹22,083}$.
 
-Now plug ₹10 Lakhs and a ₹22,083 monthly payment into our standard [EMI Calculator](/finance/emi-calculator/):
+Now plug ₹10 Lakhs and a ₹22,083 monthly payment into our standard [EMI Calculator](/emi-calculator/):
 
 The true **effective reducing-balance interest rate is 11.9%!**
 
@@ -228,14 +228,14 @@ David made a bold decision. He sold the truck to a private party for $28,000, pa
 
 His monthly auto payment went from $720 to **$0**. 
 
-He redirected that $720 a month into our [SIP & Investment Calculator](/finance/sip-calculator/) in an index fund. Over the next ten years at 10% returns, that redirected truck payment will grow into **more than $145,000 in liquid wealth.**
+He redirected that $720 a month into our [SIP & Investment Calculator](/sip-calculator/) in an index fund. Over the next ten years at 10% returns, that redirected truck payment will grow into **more than $145,000 in liquid wealth.**
 
 David gave up a status symbol, but he bought his financial independence.
 
 ### Scenario B: Ramesh, The Strategic Tractor Operator
 Ramesh farms twenty acres in Punjab. He wanted to buy a 50 HP tractor costing ₹7.5 Lakhs. 
 
-Instead of guessing, he used our [EMI Calculator](/finance/emi-calculator/) to model a 5-year loan at 10.5% reducing balance:
+Instead of guessing, he used our [EMI Calculator](/emi-calculator/) to model a 5-year loan at 10.5% reducing balance:
 * Monthly EMI: **₹16,108**
 * Total Interest: ₹2.16 Lakhs
 
@@ -280,6 +280,6 @@ However, true upward mobility is measured by your **net worth and passive income
 * Insist on reducing-balance APR rather than deceptive flat interest quotes.
 * Adhere strictly to the **20/4/10 rule** so that transportation never suffocates your investment goals.
 
-Before you sign any dealership paperwork, take three minutes to test your numbers on our free [EMI Calculator](/finance/emi-calculator/). 
+Before you sign any dealership paperwork, take three minutes to test your numbers on our free [EMI Calculator](/emi-calculator/). 
 
 Look at the total interest payable, verify your amortization curve, and make sure that your next set of wheels moves your wealth forward, not backward.

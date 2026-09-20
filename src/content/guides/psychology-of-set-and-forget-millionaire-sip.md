@@ -12,7 +12,7 @@ tags: ["behavioral-finance", "sip-calculator", "set-and-forget", "financial-psyc
 lang: "en"
 targetCalculator:
   name: "SIP & Investment Calculator"
-  href: "/finance/sip-calculator/"
+  href: "/sip-calculator/"
   description: "Model your automated, long-term wealth compounding curve with zero stress."
 relatedCalculators: ["sip-calculator", "step-up-sip-calculator", "percentage-calculator"]
 faqs:
@@ -149,7 +149,7 @@ An advanced online calculator performs the exact same function for your financia
 +--------------------------------------------------------------------------+
 ```
 
-When Ananya mapped out her 20-year journey on our interactive [SIP & Investment Calculator](/finance/sip-calculator/), she didn't just look at the final ₹2.5 Crore milestone. 
+When Ananya mapped out her 20-year journey on our interactive [SIP & Investment Calculator](/sip-calculator/), she didn't just look at the final ₹2.5 Crore milestone. 
 
 She visualized the dips. She modeled what would happen if a major market recession struck in Year 6. 
 
@@ -210,7 +210,7 @@ Rajiv spent hundreds of hours of high-stress mental labor only to achieve an inf
 ### Scenario B: Ananya, The Automated Architect
 Ananya set up an automated ₹25,000 monthly SIP on the 5th of every month into two low-cost, diversified funds. 
 
-She also activated a **10% annual step-up** using our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/) to match her corporate bonuses. 
+She also activated a **10% annual step-up** using our [Step-Up SIP Calculator](/step-up-sip-calculator/) to match her corporate bonuses. 
 
 Over the same seven years:
 * She executed **zero manual trades**.
@@ -261,8 +261,8 @@ The path to financial freedom is surprisingly peaceful.
 It does not require brilliant market forecasting or constant screen time.
 
 It requires three simple, disciplined commitments:
-1. Open our free, client-side [SIP Calculator](/finance/sip-calculator/) to define your long-term target.
-2. Align your contributions with your career trajectory using our [Step-Up SIP Calculator](/finance/step-up-sip-calculator/).
+1. Open our free, client-side [SIP Calculator](/sip-calculator/) to define your long-term target.
+2. Align your contributions with your career trajectory using our [Step-Up SIP Calculator](/step-up-sip-calculator/).
 3. Set up an automated auto-debit on payday, close your laptop, and let the mathematics of compounding build your future while you enjoy your life.
 
 Take the anxiety out of wealth creation today. 

@@ -12,7 +12,7 @@ tags: ["electric-vehicles", "ev", "auto-loan", "gas-mileage", "total-cost-of-own
 lang: "en"
 targetCalculator:
   name: "Auto Loan Calculator"
-  href: "/finance/auto-loan-calculator/"
+  href: "/auto-loan-calculator/"
   badge: "Vehicle Finance"
   description: "Calculate monthly financing payments, interest charges, and loan amortization for new vehicles."
 relatedCalculators: ["compound-interest-calculator", "break-even-calculator"]
@@ -32,7 +32,7 @@ While marketing claims promise thousands of dollars in annual savings, the true 
 In this analysis, we reveal the exact break-even formula and model real-world vehicle pairings.
 
 > **Finance Your Vehicle:**  
-> Use our free [Auto Loan Calculator](/finance/auto-loan-calculator/) to compare monthly payments and interest costs between EV and internal combustion vehicles.
+> Use our free [Auto Loan Calculator](/auto-loan-calculator/) to compare monthly payments and interest costs between EV and internal combustion vehicles.
 
 ---
 

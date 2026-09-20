@@ -12,7 +12,7 @@ tags: ["tdee", "bmr", "calorie-calculator", "metabolism", "nutrition-science", "
 lang: "en"
 targetCalculator:
   name: "Calorie & TDEE Calculator"
-  href: "/health/calorie-calculator/"
+  href: "/calorie-calculator/"
   description: "Calculate your BMR, TDEE, and daily caloric targets with clinical precision."
 relatedCalculators: ["calorie-calculator", "bmi-calculator"]
 faqs:
@@ -125,7 +125,7 @@ If all of these algorithms are educated guesses, how do you actually arrive at a
 You treat the calculator as step one of a two-step experiment. Here is the step-by-step strategy I use with friends whenever they feel overwhelmed by contrasting numbers:
 
 ### Step 1: Pick the Right Formula for Your Current Body
-* If you do not know your body fat percentage with reasonable confidence, choose a tool based on **Mifflin-St Jeor**. Check our [BMI Calculator](/health/bmi-calculator/) and our [Calorie & TDEE Calculator](/health/calorie-calculator/) to test your numbers using this baseline.
+* If you do not know your body fat percentage with reasonable confidence, choose a tool based on **Mifflin-St Jeor**. Check our [BMI Calculator](/bmi-calculator/) and our [Calorie & TDEE Calculator](/calorie-calculator/) to test your numbers using this baseline.
 * If you have recently had a verified DEXA scan or skinfold caliper test done by an experienced trainer, switch to a **Katch-McArdle** calculator.
 
 ### Step 2: Under-Promise on the Activity Slider
@@ -140,7 +140,7 @@ Your Entire 24-Hour Day:
 [ 45-min Workout (3%) ] [ 8 Hours Sitting (33%) ] [ 8 Hours Sleep (33%) ] [ Commuting/Chores (31%) ]
 ```
 
-> **Pro Tip:** When setting up your initial numbers in our [Calorie & TDEE Calculator](/health/calorie-calculator/), pick one activity level lower than what you think you are. If you think you are "Moderately Active," test out "Lightly Active" first. It is far easier to add a snack later than to wonder why your progress stalled.
+> **Pro Tip:** When setting up your initial numbers in our [Calorie & TDEE Calculator](/calorie-calculator/), pick one activity level lower than what you think you are. If you think you are "Moderately Active," test out "Lightly Active" first. It is far easier to add a snack later than to wonder why your progress stalled.
 
 ### Step 3: Track the Two-Week Rolling Median
 Do not judge any calculator's accuracy based on what happens between Monday and Thursday.
@@ -218,7 +218,7 @@ Wearables like smartwatches and fitness bands are notoriously inaccurate at esti
 
 Most wrist trackers rely on heart rate optical sensors. If your heart rate spikes because you are excited, stressed, hot, or doing heavy barbell squats, the device's algorithm assumes you are sprinting at top speed. 
 
-Numerous sports science studies have shown consumer wearables can overestimate exercise burn by anywhere from 25% to over 80%. When calculating your intake, rely on conservative estimates from our [Calorie & TDEE Calculator](/health/calorie-calculator/) rather than eating back every single calorie your watch claims you burned.
+Numerous sports science studies have shown consumer wearables can overestimate exercise burn by anywhere from 25% to over 80%. When calculating your intake, rely on conservative estimates from our [Calorie & TDEE Calculator](/calorie-calculator/) rather than eating back every single calorie your watch claims you burned.
 
 ### 2. If I eat below my BMR, will I go into "starvation mode" and stop losing weight?
 The popular myth of "starvation mode" suggests that if you eat below your BMR, your body flips a biological switch, freezes your fat stores, and causes you to gain weight out of thin air. 

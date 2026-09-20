@@ -11,7 +11,7 @@ category: "finance"
 tags: ["compound-interest", "wealth", "investing", "rule-of-72", "financial-freedom"]
 targetCalculator:
   name: "Compound Interest Calculator"
-  href: "/finance/compound-interest-calculator/"
+  href: "/compound-interest-calculator/"
   description: "Calculate future value, compounding frequency effects, and regular contribution growth curves."
 relatedCalculators: ["sip-calculator", "investment-calculator", "inflation-calculator"]
 faqs:
@@ -34,7 +34,7 @@ While simple interest produces linear progress, compound interest produces geome
 In this deep dive, we break down **how to calculate compound interest**, explain the Rule of 72, and show why time in the market consistently beats timing the market.
 
 > **Model Your Growth:**  
-> Use our free [Compound Interest Calculator](/finance/compound-interest-calculator/) to test different initial deposits, monthly additions, and compounding frequencies.
+> Use our free [Compound Interest Calculator](/compound-interest-calculator/) to test different initial deposits, monthly additions, and compounding frequencies.
 
 ---
 
@@ -126,4 +126,4 @@ Does daily compounding matter compared to annual? Let's check $10,000 at 10% ove
 
 *Key Takeaway:* Moving from annual to monthly compounding produces an extra **$6,000+ in profit** on a $10k deposit!
 
-Simulate your custom financial targets right now on our [Compound Interest Calculator](/finance/compound-interest-calculator/).
+Simulate your custom financial targets right now on our [Compound Interest Calculator](/compound-interest-calculator/).

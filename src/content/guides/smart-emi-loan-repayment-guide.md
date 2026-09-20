@@ -11,7 +11,7 @@ category: "finance"
 tags: ["emi", "loan-repayment", "home-loan", "prepayment", "debt-management", "amortization"]
 targetCalculator:
   name: "EMI Calculator"
-  href: "/finance/emi-calculator/"
+  href: "/emi-calculator/"
   description: "Apna monthly loan installment, interest breakdown aur prepayment savings instantly calculate karein."
 relatedCalculators: ["amortization-calculator", "loan-calculator", "auto-loan-calculator"]
 faqs:
@@ -30,7 +30,7 @@ Home loan, car loan ya personal loan lena aaj ke samay mein aam baat hai, lekin 
 Agar aap apne loan ko smartly manage karna chahte hain aur lakhon rupaye ka interest bachana chahte hain, toh ye comprehensive guide aapke liye hai. 
 
 > **Apna EMI Abhi Calculate Karein:**  
-> Apne loan ki exact monthly installment aur interest breakdown dekhne ke liye hamara free [EMI Calculator](/finance/emi-calculator/) aur [Loan Amortization Calculator](/finance/amortization-calculator/) use karein.
+> Apne loan ki exact monthly installment aur interest breakdown dekhne ke liye hamara free [EMI Calculator](/emi-calculator/) aur [Loan Amortization Calculator](/amortization-calculator/) use karein.
 
 ---
 
@@ -59,7 +59,7 @@ Jab aap loan shuru karte hain, tab aapka outstanding principal balance sabse zya
 - **First 5 Years:** Aapki EMI ka 70% se 80% hissa sirf byaaj chukane mein chala jata hai.
 - **Last 5 Years:** Jab principal balance kaafi kam ho jata hai, tab EMI ka zyadatar hissa principal repayment mein jata hai.
 
-Is distribution ko detail mein samajhne ke liye aap [Loan Amortization Calculator](/finance/amortization-calculator/) par month-by-month repayment schedule dekh sakte hain.
+Is distribution ko detail mein samajhne ke liye aap [Loan Amortization Calculator](/amortization-calculator/) par month-by-month repayment schedule dekh sakte hain.
 
 ---
 
@@ -139,6 +139,6 @@ Sirf saal ka ₹50,000 extra dene se Aman ne lagbhag ₹18 lakh rupaye bacha liy
 Loan chukana mushkil nahi hai, bas disciplined planning ki zaroorat hai. Aaj hi apne loan ka tenure aur amortization schedule analyze karein aur ek chhota prepayment goal banayein.
 
 Apne loan numbers ko instantly check karne ke liye:
-* 👉 **[Apna EMI abhi calculate karein (EMI Calculator)](/finance/emi-calculator/)**
-* 👉 **[Loan Amortization Schedule dekhein (Amortization Calculator)](/finance/amortization-calculator/)**
-* 👉 **[Vehicle Loan ke liye Auto Loan Calculator use karein](/finance/auto-loan-calculator/)**
+* 👉 **[Apna EMI abhi calculate karein (EMI Calculator)](/emi-calculator/)**
+* 👉 **[Loan Amortization Schedule dekhein (Amortization Calculator)](/amortization-calculator/)**
+* 👉 **[Vehicle Loan ke liye Auto Loan Calculator use karein](/auto-loan-calculator/)**

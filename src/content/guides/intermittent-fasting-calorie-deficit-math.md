@@ -12,7 +12,7 @@ tags: ["calorie-deficit", "tdee", "bmr", "weight-loss", "nutrition", "fasting"]
 lang: "en"
 targetCalculator:
   name: "BMI & Health Calculator"
-  href: "/health/bmi-calculator/"
+  href: "/bmi-calculator/"
   badge: "WHO Clinical Standard"
   description: "Calculate your body mass index, healthy weight boundary, and metabolic baseline."
 relatedCalculators: ["macronutrient-calculator", "calorie-per-serving-calculator"]
@@ -32,7 +32,7 @@ Despite thousands of fad diets and conflicting nutrition advice, every successfu
 In this guide, we explore the exact mathematical formulas used by sports scientists to calculate Basal Metabolic Rate (BMR), Total Daily Energy Expenditure (TDEE), and project your exact target weight milestone on the calendar.
 
 > **Check Your Baseline:**  
-> Use our free [BMI & Body Composition Calculator](/health/bmi-calculator/) to find your healthy target weight range based on World Health Organization standards.
+> Use our free [BMI & Body Composition Calculator](/bmi-calculator/) to find your healthy target weight range based on World Health Organization standards.
 
 ---
 

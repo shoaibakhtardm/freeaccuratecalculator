@@ -12,7 +12,7 @@ tags: ["scooby-calculator", "bodybuilding", "tdee", "macro-calculator", "natural
 lang: "en"
 targetCalculator:
   name: "Calorie & TDEE Calculator"
-  href: "/health/calorie-calculator/"
+  href: "/calorie-calculator/"
   description: "Calculate your custom BMR, TDEE, and macro splits with lifter precision."
 relatedCalculators: ["calorie-calculator", "bmi-calculator"]
 faqs:
@@ -199,7 +199,7 @@ He constantly reminded young lifters:
 * **Fitness should enhance your life, not consume it.** You do not need to measure lettuce on a jeweler’s scale or decline dinner invitations with friends out of terror that a restaurant meal will ruin your progress.
 * **Longevity over ego.** Lifting with pristine form and protecting your rotator cuffs and lower back is far more important than showing off with sloppy, ego-driven weights that sideline you with injuries in your thirties.
 
-If you are currently setting up your nutrition targets, check our dedicated [Calorie & TDEE Calculator](/health/calorie-calculator/) to configure your numbers with lifter-focused precision, and use our [BMI Calculator](/health/bmi-calculator/) to track broad compositional milestones.
+If you are currently setting up your nutrition targets, check our dedicated [Calorie & TDEE Calculator](/calorie-calculator/) to configure your numbers with lifter-focused precision, and use our [BMI Calculator](/bmi-calculator/) to track broad compositional milestones.
 
 ---
 

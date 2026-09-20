@@ -3,7 +3,7 @@ import type { SupportedLocale } from './config';
 import { ALL_SUPPORTED_LOCALES, DEFAULT_LOCALE } from './config';
 
 export interface LocalizedRouteConfig {
-  canonicalPath: string; // e.g., '/math/percentage-calculator/'
+  canonicalPath: string; // e.g., '/percentage-calculator/'
   locales: Partial<Record<SupportedLocale, string>>; // locale -> path relative to siteOrigin
 }
 
@@ -14,19 +14,19 @@ export interface LocalizedRouteConfig {
  */
 export const VERIFIED_LOCALIZED_ROUTES: Record<string, LocalizedRouteConfig> = {
   'percentage-calculator': {
-    canonicalPath: '/math/percentage-calculator/',
+    canonicalPath: '/percentage-calculator/',
     locales: {
-      en: '/math/percentage-calculator/',
-      es: '/es/math/percentage-calculator/',
-      fr: '/fr/math/percentage-calculator/',
-      hi: '/hi/math/percentage-calculator/',
+      en: '/percentage-calculator/',
+      es: '/es/percentage-calculator/',
+      fr: '/fr/percentage-calculator/',
+      hi: '/hi/percentage-calculator/',
     },
   },
   'emi-calculator': {
-    canonicalPath: '/finance/emi-calculator/',
+    canonicalPath: '/emi-calculator/',
     locales: {
-      en: '/finance/emi-calculator/',
-      hi: '/hi/finance/emi-calculator/',
+      en: '/emi-calculator/',
+      hi: '/hi/emi-calculator/',
     },
   },
   'guides': {

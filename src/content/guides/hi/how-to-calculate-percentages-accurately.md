@@ -23,4 +23,4 @@ $$P = \frac{X}{Y} \times 100$$
 
 $$\text{प्रतिशत परिवर्तन} = \frac{\text{नया मान} - \text{मूल मान}}{|\text{मूल मान}|} \times 100$$
 
-* त्वरित और सटीक गणना के लिए हमारे [प्रतिशत कैलकुलेटर (Percentage Calculator)](/math/percentage-calculator/) का उपयोग करें।
+* त्वरित और सटीक गणना के लिए हमारे [प्रतिशत कैलकुलेटर (Percentage Calculator)](/percentage-calculator/) का उपयोग करें।
