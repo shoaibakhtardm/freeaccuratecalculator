@@ -6,7 +6,7 @@ import { SEARCHABLE_CALCULATORS } from '../../data/searchDatabase';
 
 const allSearchableToolsJson = JSON.stringify(SEARCHABLE_CALCULATORS);
 
-// Exactly 9 Pure Insurance Calculators arranged in strict 3-by-3 structure (3 columns × 3 rows = 9)
+// Insurance Calculators directory (only verified live routes with dedicated engines are listed)
 const INSURANCE_CALCULATORS = [
   // Row 1: Life & Longevity
   {
@@ -17,16 +17,6 @@ const INSURANCE_CALCULATORS = [
     href: '/term-life-insurance-calculator/',
     badge: 'Death Benefit',
     description: 'Calculate recommended term life insurance death benefit with DIME formula and debt coverage.',
-    subGroup: 'Life & Longevity',
-  },
-  {
-    id: 'whole-life-insurance-calculator',
-    name: 'Whole Life Insurance',
-    shortName: 'Whole Life',
-    icon: '🏛️',
-    href: '/whole-life-insurance-calculator/',
-    badge: 'Cash Value',
-    description: 'Project guaranteed cash value growth, permanent death benefit, and policy borrowing power.',
     subGroup: 'Life & Longevity',
   },
   {
@@ -51,26 +41,6 @@ const INSURANCE_CALCULATORS = [
     description: 'Compare health plan costs including premiums, deductibles, co-insurance, and OOP maximums.',
     subGroup: 'Health & Liability',
   },
-  {
-    id: 'disability-insurance-calculator',
-    name: 'Disability Insurance',
-    shortName: 'Disability Ins',
-    icon: '♿',
-    href: '/disability-insurance-calculator/',
-    badge: 'Income Shield',
-    description: 'Calculate short-term and long-term disability wage protection and monthly benefit requirements.',
-    subGroup: 'Health & Liability',
-  },
-  {
-    id: 'umbrella-insurance-calculator',
-    name: 'Umbrella Insurance',
-    shortName: 'Umbrella Ins',
-    icon: '☂️',
-    href: '/umbrella-insurance-calculator/',
-    badge: 'Excess Liability',
-    description: 'Calculate secondary umbrella liability coverage needed above standard home and auto limits.',
-    subGroup: 'Health & Liability',
-  },
 
   // Row 3: Vehicle & Property Protection
   {
@@ -83,40 +53,20 @@ const INSURANCE_CALCULATORS = [
     description: 'Estimate motor insurance premiums across liability, collision, comprehensive, and deductibles.',
     subGroup: 'Property & Vehicle',
   },
-  {
-    id: 'homeowners-insurance-calculator',
-    name: 'Homeowners Insurance',
-    shortName: 'Homeowners',
-    icon: '🏡',
-    href: '/homeowners-insurance-calculator/',
-    badge: 'Replacement Cost',
-    description: 'Estimate dwelling replacement values, personal belongings coverage, and annual premiums.',
-    subGroup: 'Property & Vehicle',
-  },
-  {
-    id: 'renters-insurance-calculator',
-    name: 'Renters Insurance',
-    shortName: 'Renters Ins',
-    icon: '🏢',
-    href: '/renters-insurance-calculator/',
-    badge: 'Personal Property',
-    description: 'Calculate personal property inventory and liability protection costs for apartment renters.',
-    subGroup: 'Property & Vehicle',
-  },
 ];
 
 const insuranceHubSchema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
   name: 'Insurance Calculators — Free Accurate Calculator',
-  description: 'Complete suite of actuarially verified insurance calculators arranged in a 3-by-3 structure: Term Life, Whole Life, Health, Auto, Homeowners, Renters, Disability, Umbrella, and Annuity Payout.',
+  description: 'Complete suite of actuarially verified insurance calculators: Term Life, Whole Life, Annuity Payout, Health, Disability, and Auto Insurance.',
   url: 'https://freeaccuratecalculator.com/insurance/',
 };
 ---
 
 <Layout
   title="Insurance Calculators — Fast, Accurate & Free Actuarial Tools"
-  description="Make smart risk decisions with verified insurance calculators: Term Life, Whole Life, Health, Auto, Homeowners, Renters, Disability, Umbrella, and Annuity Payout."
+  description="Make smart risk decisions with verified insurance calculators: Term Life, Whole Life, Annuity Payout, Health, Disability, and Auto Insurance."
   jsonLd={insuranceHubSchema}
 >
   <div class="max-w-7xl mx-auto space-y-8">

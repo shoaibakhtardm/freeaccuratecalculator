@@ -62,12 +62,15 @@ const allSchemas = [websiteSchema, organizationSchema, faqSchema].filter(Boolean
 
 const isFrenchLocale = currentLocale === 'fr';
 
+// Featured links point to verified live routes only (guides hub was retired with the guides content deletion).
+// The four obsolete English guide-card records (EMI / SIP / BMI / Compound Interest) were permanently
+// removed in the forensic URL cleanup. The calculators themselves remain live routes.
 const FEATURED_GUIDES = isFrenchLocale
   ? [
       {
         title: 'Comprendre et Calculer les Intérêts Composés',
-        desc: 'Guide exhaustif de la formule mathématique des intérêts composés avec exemples concrets et calendrier d’amortissement.',
-        href: '/fr/guides/how-compound-interest-works/',
+        desc: 'Formulaire mathématique des intérêts composés avec exemples concrets et capitalisation quotidienne, mensuelle ou annuelle.',
+        href: '/compound-interest-calculator/',
         tag: 'Finance & Épargne',
         readTime: '6 min',
         icon: '📈',
@@ -75,46 +78,13 @@ const FEATURED_GUIDES = isFrenchLocale
       {
         title: 'Calculer les Pourcentages avec Précision',
         desc: 'Méthodes pas-à-pas pour les remises commerciales, hausses de prix, marges et taux de variation sans erreur.',
-        href: '/fr/guides/how-to-calculate-percentages-accurately/',
+        href: '/fr/math/percentage-calculator/',
         tag: 'Mathématiques',
         readTime: '4 min',
         icon: '📐',
       },
     ]
-  : [
-      {
-        title: 'How to Calculate Home Loan EMI: Step-by-Step Formula & Analysis',
-        desc: 'Demystifying the reducing balance loan equation, interest components, and pre-payment acceleration strategies.',
-        href: '/guides/how-to-calculate-home-loan-emi/',
-        tag: 'Mortgage & Loans',
-        readTime: '7 min',
-        icon: '🏠',
-      },
-      {
-        title: 'How to Calculate SIP Returns: The Ultimate Wealth Compounding Guide',
-        desc: 'Learn the exact mathematical formulas for SIP, step-up contributions, and long-term inflation-adjusted returns.',
-        href: '/guides/how-to-calculate-sip-returns/',
-        tag: 'Investing & SIP',
-        readTime: '8 min',
-        icon: '📈',
-      },
-      {
-        title: 'Understanding Body Mass Index (BMI): Clinical Standards & Limitations',
-        desc: 'The science behind the Quetelet formula, WHO category cutoffs, and why BMI must be paired with body fat analysis.',
-        href: '/guides/understand-body-mass-index-bmi/',
-        tag: 'Health & Science',
-        readTime: '6 min',
-        icon: '🩺',
-      },
-      {
-        title: 'Compound Interest Demystified: The Exponential Wealth Engine',
-        desc: 'A rigorous mathematical breakdown of continuous compounding, frequency tiers, and Rule of 72 approximations.',
-        href: '/guides/how-compound-interest-works/',
-        tag: 'Personal Finance',
-        readTime: '9 min',
-        icon: '⚡',
-      },
-    ];
+  : [];
 
 const RAW_POPULAR_CALCULATORS = [
   // 1. Finance: EMI / Mortgage
@@ -457,7 +427,7 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
   )}
 
   <!-- Featured Educational Guides Section -->
-  {hpStrings.guidesSection && (
+  {hpStrings.guidesSection && FEATURED_GUIDES.length > 0 && (
     <section class="mt-12 mb-4 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto px-1">
       <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 pb-2 border-b border-slate-200/80 dark:border-slate-800/80">
         <div>
@@ -471,12 +441,6 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
             {hpStrings.guidesSection.desc}
           </p>
         </div>
-        <a
-          href={isFrenchLocale ? '/fr/guides/' : '/guides/'}
-          class="mt-3 sm:mt-0 inline-flex items-center gap-1 text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline shrink-0"
-        >
-          <span>{hpStrings.guidesSection.viewAll}</span>
-        </a>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 w-full">

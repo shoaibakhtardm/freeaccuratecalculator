@@ -17,25 +17,16 @@ export const VERIFIED_LOCALIZED_ROUTES: Record<string, LocalizedRouteConfig> = {
     canonicalPath: '/percentage-calculator/',
     locales: {
       en: '/percentage-calculator/',
-      es: '/es/percentage-calculator/',
-      fr: '/fr/percentage-calculator/',
-      hi: '/hi/percentage-calculator/',
+      es: '/es/math/percentage-calculator/',
+      fr: '/fr/math/percentage-calculator/',
+      hi: '/hi/math/percentage-calculator/',
     },
   },
   'emi-calculator': {
     canonicalPath: '/emi-calculator/',
     locales: {
       en: '/emi-calculator/',
-      hi: '/hi/emi-calculator/',
-    },
-  },
-  'guides': {
-    canonicalPath: '/guides/',
-    locales: {
-      en: '/guides/',
-      es: '/es/guides/',
-      fr: '/fr/guides/',
-      hi: '/hi/guides/',
+      hi: '/hi/finance/emi-calculator/',
     },
   },
 };
@@ -49,6 +40,12 @@ import { computeHreflangTags } from '../components/SEO/HreflangTags';
 
 /**
  * Resolves the full international alternate URLs for a given canonical route or slug.
+ *
+ * NOTE: Every hreflang target emitted here is verified against the actual build output.
+ * Localized calculator pages live under category-prefixed locale paths
+ * (e.g. /es/math/percentage-calculator/, /hi/finance/emi-calculator/).
+ * The retired /guides/ hub and localized guide routes were removed with the guides
+ * content deletion and are intentionally absent from this registry.
  */
 export function getAlternateHreflangLinks(
   currentPath: string,

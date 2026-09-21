@@ -4,7 +4,6 @@ import CalculatorLayout from '../layouts/CalculatorLayout.astro';
 import FormulaSection from '../components/calculator/FormulaSection.astro';
 import WorkedExample from '../components/calculator/WorkedExample.astro';
 import FAQSection from '../components/calculator/FAQSection.astro';
-import SocialProof from '../components/SocialProof.astro';
 
 const faqs = [
   {
@@ -77,9 +76,6 @@ const currentYear = now.getFullYear();
   relatedCalculators={relatedCalculators}
   faqs={faqs}
 >
-  <!-- Real-time Social Proof Widget -->
-  <SocialProof calculatorName="Age Calculator" />
-
   <!-- Calculator Main Box (SIP Design Standard) -->
   <div id="age-calculator-card" class="calculator-main-box relative rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6 overflow-hidden transition-all pb-24 sm:pb-8">
     <!-- Subtle Ambient Gradient Glow -->
@@ -803,23 +799,24 @@ const currentYear = now.getFullYear();
         const halfBday = new Date(birth.getFullYear(), birth.getMonth() + 6, birth.getDate());
         statHalfBirthday.textContent = halfBday.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       }
-
-      // Sync URL parameters
-      syncUrlParams(birth);
     }
 
-    function syncUrlParams(birth) {
+    // Build a shareable state URL on explicit share only.
+      // Never write calculator state into the address bar automatically:
+      // the canonical public URL must remain /age-calculator/ (clean, no query).
+    function buildShareUrl() {
       try {
+        const dob = datePickerInput?.value || '';
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(dob)) return null;
         const params = new URLSearchParams();
-        const y = birth.getFullYear();
-        const m = String(birth.getMonth() + 1).padStart(2, '0');
-        const d = String(birth.getDate()).padStart(2, '0');
-        params.set('dob', `${y}-${m}-${d}`);
+        params.set('dob', dob);
         if (enableTimeToggle?.checked && birthTimeInput?.value) {
           params.set('time', birthTimeInput.value);
         }
-        window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
-      } catch (_) {}
+        return `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+      } catch (_) {
+        return null;
+      }
     }
 
     // Start Live Ticker
@@ -983,6 +980,15 @@ const currentYear = now.getFullYear();
           birthTimeContainer.classList.add('grid');
         }
       }
+
+      // Soft-redirect: /age-calculator/?dob=... (any value) lands on the clean
+      // canonical URL /age-calculator/. State above is restored first, so shared
+      // links still work; the visible/replaceState URL becomes query-free.
+      if (urlParams.has('dob') || urlParams.has('time')) {
+        try {
+          window.history.replaceState({}, '', window.location.pathname);
+        } catch (_) {}
+      }
     }
 
     // Action Toolbar Listeners
@@ -998,8 +1004,8 @@ const currentYear = now.getFullYear();
 
     if (ageShareBtn) {
       ageShareBtn.addEventListener('click', () => {
-        syncUrlParams();
-        navigator.clipboard.writeText(window.location.href).then(() => {
+        const shareUrl = buildShareUrl() || window.location.href;
+        navigator.clipboard.writeText(shareUrl).then(() => {
           if (typeof window.showToast === 'function') window.showToast('Link copied to clipboard!');
         });
       });

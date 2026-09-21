@@ -40,9 +40,10 @@ const legalLinks = [
   { name: hpStrings.footer.privacy, href: '/privacy-policy/', icon: '🛡️' },
 ];
 
-const guidesTitle = isLove ? 'Love Guides' : hpStrings.footer.guides;
-const guidesHref = isLove ? '/love/guides/' : '/guides/';
-const guidesAria = isLove ? 'Explore Love & Compatibility Guides' : `${hpStrings.footer.guides}`;
+// Guides hub was retired with the guides content deletion — link to the homepage tool directory instead.
+const guidesTitle = hpStrings.footer.guides;
+const guidesHref = '/';
+const guidesAria = `${hpStrings.footer.guides}`;
 ---
 
 <footer class="mt-6 sm:mt-8 border-t border-hairline bg-canvas transition-colors">

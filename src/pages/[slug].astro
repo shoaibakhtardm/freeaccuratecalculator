@@ -20,6 +20,7 @@ export function getStaticPaths() {
     'bmi-calculator',
     'emi-calculator',
     'income-tax-calculator',
+    'online-ruler',
     'percentage-calculator',
     'sip-calculator',
   ]);
@@ -96,7 +97,7 @@ const { calc, loveCalc } = Astro.props;
 const siteOrigin = 'https://freeaccuratecalculator.com';
 const canonicalUrl = `${siteOrigin}/${calc.slug}/`;
 const relatedCalculators = getRelatedCalculators(calc.category, calc.slug, 3);
-const catMeta = CATEGORY_METADATA.finance;
+const catMeta = CATEGORY_METADATA[calc.category as keyof typeof CATEGORY_METADATA] || CATEGORY_METADATA.finance;
 const webAppSchema = {
   '@context': 'https://schema.org',
   '@type': ['SoftwareApplication', 'WebApplication'],

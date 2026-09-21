@@ -6,7 +6,7 @@ import { SEARCHABLE_CALCULATORS } from '../../data/searchDatabase';
 
 const allSearchableToolsJson = JSON.stringify(SEARCHABLE_CALCULATORS);
 
-// 27 Pure Finance Calculators arranged in strict 3-by-3 structure (3 columns × 9 rows = 27)
+// Pure Finance Calculators directory (only verified live routes are listed)
 const FINANCE_CALCULATORS = [
   // Row 1: High Demand Investments & Core Loans (SIP #1, EMI #2, Mortgage #3)
   {
@@ -61,16 +61,6 @@ const FINANCE_CALCULATORS = [
     description: 'Complete payment-by-payment principal and interest breakdown schedule.',
     subGroup: 'Loans',
   },
-  {
-    id: 'payment-calculator',
-    name: 'Payment Calculator',
-    shortName: 'Payment',
-    icon: '💵',
-    href: '/payment-calculator/',
-    badge: 'Budget Fit',
-    description: 'Reverse calculate affordability, loan amounts, and payment terms.',
-    subGroup: 'Loans',
-  },
 
   // Row 3: Investment & Personal Loans
   {
@@ -83,26 +73,6 @@ const FINANCE_CALCULATORS = [
     description: 'Estimate monthly loan payments, total interest, and payoff dates.',
     subGroup: 'Loans',
   },
-  {
-    id: 'step-up-sip-calculator',
-    name: 'Step-Up SIP Calculator',
-    shortName: 'Step-Up SIP',
-    icon: '🚀',
-    href: '/step-up-sip-calculator/',
-    badge: 'Annual Boost',
-    description: 'Factor annual investment percentage increments into future SIP wealth.',
-    subGroup: 'SIP',
-  },
-  {
-    id: 'lumpsum-calculator',
-    name: 'Lumpsum Calculator',
-    shortName: 'Lumpsum',
-    icon: '💰',
-    href: '/lumpsum-calculator/',
-    badge: 'One-Time',
-    description: 'One-time capital investment returns compounded over your horizon.',
-    subGroup: 'SIP',
-  },
 
   // Row 4: Interest Mathematics
   {
@@ -113,26 +83,6 @@ const FINANCE_CALCULATORS = [
     href: '/compound-interest-calculator/',
     badge: 'Daily to Annual',
     description: 'Compound interest calculated across daily, monthly, or annual intervals.',
-    subGroup: 'Interest',
-  },
-  {
-    id: 'simple-interest-calculator',
-    name: 'Simple Interest',
-    shortName: 'Simple Int',
-    icon: '⏱️',
-    href: '/simple-interest-calculator/',
-    badge: 'Direct APR',
-    description: 'Straight-line simple interest on principal without compounding.',
-    subGroup: 'Interest',
-  },
-  {
-    id: 'interest-rate-calculator',
-    name: 'Interest Rate Calculator',
-    shortName: 'Interest Rate',
-    icon: '📉',
-    href: '/interest-rate-calculator/',
-    badge: 'Effective APY',
-    description: 'Calculate nominal vs effective annual percentage yields and loan rates.',
     subGroup: 'Interest',
   },
 
@@ -147,122 +97,12 @@ const FINANCE_CALCULATORS = [
     description: 'Calculate income tax liability with progressive slabs and standard deduction.',
     subGroup: 'Tax',
   },
-  {
-    id: 'salary-calculator',
-    name: 'Salary Calculator',
-    shortName: 'Salary',
-    icon: '💼',
-    href: '/salary-calculator/',
-    badge: 'Net Take-Home',
-    description: 'Gross to net take-home pay with taxes, deductions, and withholdings.',
-    subGroup: 'Tax',
-  },
-  {
-    id: 'sales-tax-calculator',
-    name: 'Sales Tax Calculator',
-    shortName: 'Sales Tax / GST',
-    icon: '🏷️',
-    href: '/sales-tax-calculator/',
-    badge: 'Forward/Reverse',
-    description: 'Calculate sales tax, VAT, or GST inclusive and exclusive prices.',
-    subGroup: 'Tax',
-  },
 
   // Row 6: Retirement & Long-Term
-  {
-    id: 'retirement-calculator',
-    name: 'Retirement Calculator',
-    shortName: 'Retirement',
-    icon: '🏖️',
-    href: '/retirement-calculator/',
-    badge: 'Corpus Goal',
-    description: 'Determine retirement savings requirements, inflation, and nest egg.',
-    subGroup: 'Retirement',
-  },
-  {
-    id: '401k-calculator',
-    name: '401(k) Calculator',
-    shortName: '401(k)',
-    icon: '🏛️',
-    href: '/401k-calculator/',
-    badge: 'Employer Match',
-    description: 'Project future 401(k) balance with salary deferrals and employer match.',
-    subGroup: 'Retirement',
-  },
-  {
-    id: 'roth-ira-calculator',
-    name: 'Roth IRA Calculator',
-    shortName: 'Roth IRA',
-    icon: '🌱',
-    href: '/roth-ira-calculator/',
-    badge: 'Tax-Free',
-    description: 'Tax-free retirement growth, annual contributions, and compound returns.',
-    subGroup: 'Retirement',
-  },
 
   // Row 7: Statutory Funds & Benefits
-  {
-    id: 'ppf-calculator',
-    name: 'PPF Calculator',
-    shortName: 'PPF',
-    icon: '🛡️',
-    href: '/ppf-calculator/',
-    badge: '15-Year Lock',
-    description: 'Public Provident Fund maturity amount, interest, and yearly extension.',
-    subGroup: 'Savings',
-  },
-  {
-    id: 'epf-calculator',
-    name: 'EPF Calculator',
-    shortName: 'EPF',
-    icon: '📑',
-    href: '/epf-calculator/',
-    badge: 'Statutory Rate',
-    description: 'Employee Provident Fund accumulation with employee and employer share.',
-    subGroup: 'Savings',
-  },
-  {
-    id: 'gratuity-calculator',
-    name: 'Gratuity Calculator',
-    shortName: 'Gratuity',
-    icon: '🎖️',
-    href: '/gratuity-calculator/',
-    badge: '15/26 Formula',
-    description: 'Statutory gratuity payout based on years of service and basic salary.',
-    subGroup: 'Savings',
-  },
 
   // Row 8: Wealth & Withdrawals
-  {
-    id: 'swp-calculator',
-    name: 'SWP Calculator',
-    shortName: 'SWP Cash',
-    icon: '🔄',
-    href: '/swp-calculator/',
-    badge: 'Withdrawal',
-    description: 'Systematic Withdrawal Plan for regular monthly income from mutual funds.',
-    subGroup: 'Wealth',
-  },
-  {
-    id: 'investment-calculator',
-    name: 'Investment Calculator',
-    shortName: 'Investment',
-    icon: '💎',
-    href: '/investment-calculator/',
-    badge: 'Future Capital',
-    description: 'Multi-asset return projections with periodic additional contributions.',
-    subGroup: 'Wealth',
-  },
-  {
-    id: 'inflation-calculator',
-    name: 'Inflation Calculator',
-    shortName: 'Inflation',
-    icon: '🎈',
-    href: '/inflation-calculator/',
-    badge: 'Purchasing Pwr',
-    description: 'Historic and future purchasing power eroded by inflation over time.',
-    subGroup: 'Wealth',
-  },
 
   // Row 9: Business & General Finance
   {
@@ -275,40 +115,20 @@ const FINANCE_CALCULATORS = [
     description: 'Gross margin, net profit margin, and cost markup percentages.',
     subGroup: 'Business',
   },
-  {
-    id: 'interest-calculator',
-    name: 'Fixed Interest Calculator',
-    shortName: 'Fixed Interest',
-    icon: '🔢',
-    href: '/interest-calculator/',
-    badge: 'Savings Gain',
-    description: 'General interest earned across fixed deposits and savings accounts.',
-    subGroup: 'Interest',
-  },
-  {
-    id: 'finance-calculator',
-    name: 'Finance Master Calculator',
-    shortName: 'Finance Master',
-    icon: '🧮',
-    href: '/finance-calculator/',
-    badge: 'Multi-Variable',
-    description: 'Comprehensive financial modeling for cash flows, NPV, and debt servicing.',
-    subGroup: 'Business',
-  },
 ];
 
 const financeHubSchema = {
   '@context': 'https://schema.org',
   '@type': 'CollectionPage',
   name: 'Finance Calculators — Free Accurate Calculator',
-  description: 'Complete suite of verified financial calculators arranged in a 3-by-3 structure: EMI, Mortgage, SIP, Income Tax, Compound Interest, 401(k), PPF, and Profit Margin.',
+  description: 'Complete suite of verified financial calculators: Loan EMI, Mortgage, Auto Loan, SIP, Lumpsum, Step-Up SIP, Compound Interest, Income Tax, Salary, 401(k), Roth IRA, and Profit Margin.',
   url: 'https://freeaccuratecalculator.com/finance/',
 };
 ---
 
 <Layout
   title="Finance Calculators — Fast, Accurate & Free Financial Tools"
-  description="Master your money with verified financial calculators: Loan EMI, Mortgage, SIP, Income Tax (Old vs New Regime), Compound Interest, 401(k), and Profit Margin."
+  description="Master your money with verified financial calculators: Loan EMI, Mortgage, Auto Loan, SIP, Lumpsum, Step-Up SIP, Compound Interest, Income Tax, Salary, 401(k), Roth IRA, and Profit Margin."
   jsonLd={financeHubSchema}
 >
   <div class="max-w-7xl mx-auto space-y-8">

@@ -242,6 +242,9 @@ function getPriorityAndChangeFreq(route) {
   if (route.includes('-calculator') || route.includes('/sip/')) {
     return { priority: '0.7', changefreq: 'weekly' };
   }
+  if (route === '/online-ruler/') {
+    return { priority: '0.7', changefreq: 'weekly' };
+  }
   if (route.startsWith('/guides/')) {
     return { priority: '0.6', changefreq: 'weekly' };
   }

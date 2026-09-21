@@ -4,13 +4,13 @@
 /finance/mortgage-calculator/          /mortgage-calculator/          301
 /finance/auto-loan-calculator/         /auto-loan-calculator/         301
 /finance/amortization-calculator/      /amortization-calculator/      301
-/finance/payment-calculator/           /payment-calculator/           301
+/finance/payment-calculator/           /loan-calculator/               301
 /finance/loan-calculator/              /loan-calculator/              301
 /finance/step-up-sip-calculator/       /step-up-sip-calculator/       301
 /finance/lumpsum-calculator/           /lumpsum-calculator/           301
 /finance/compound-interest-calculator/ /compound-interest-calculator/ 301
-/finance/simple-interest-calculator/   /simple-interest-calculator/   301
-/finance/interest-rate-calculator/     /interest-rate-calculator/     301
+/finance/simple-interest-calculator/   /compound-interest-calculator/ 301
+/finance/interest-rate-calculator/     /compound-interest-calculator/ 301
 /finance/income-tax-calculator/        /income-tax-calculator/        301
 /finance/profit-margin-calculator/     /profit-margin-calculator/     301
 /insurance/term-life-insurance-calculator/ /term-life-insurance-calculator/ 301
@@ -101,31 +101,31 @@
 /calculator/*                       /:splat                       301
 /terms                              /terms-of-use                  301
 /privacy                            /privacy-policy                301
-/blog                               /guides                        301
-/blog/*                             /guides/:splat                 301
+/blog                               /                                 301
+/blog/*                             /                                 301
 /index.html                         /                             301
 /home                               /                             301
 
 # Direct migration for remaining category-prefixed standard calculators
 /finance/salary-calculator/         /salary-calculator/             301
-/finance/sales-tax-calculator/      /sales-tax-calculator/          301
-/finance/retirement-calculator/     /retirement-calculator/         301
+/finance/sales-tax-calculator/      /profit-margin-calculator/        301
+/finance/retirement-calculator/     /401k-calculator/               301
 /finance/401k-calculator/           /401k-calculator/               301
 /finance/roth-ira-calculator/        /roth-ira-calculator/            301
-/finance/ppf-calculator/            /ppf-calculator/                301
-/finance/epf-calculator/            /epf-calculator/                301
-/finance/gratuity-calculator/       /gratuity-calculator/           301
-/finance/swp-calculator/            /swp-calculator/                301
-/finance/investment-calculator/     /investment-calculator/          301
-/finance/inflation-calculator/      /inflation-calculator/           301
-/finance/interest-calculator/       /interest-calculator/            301
-/finance/finance-calculator/        /finance-calculator/             301
-/everyday/grade-calculator/         /grade-calculator/               301
+/finance/ppf-calculator/            /sip-calculator/                  301
+/finance/epf-calculator/            /sip-calculator/                  301
+/finance/gratuity-calculator/       /salary-calculator/               301
+/finance/swp-calculator/            /sip-calculator/                  301
+/finance/investment-calculator/     /sip-calculator/                  301
+/finance/inflation-calculator/      /compound-interest-calculator/    301
+/finance/interest-calculator/       /compound-interest-calculator/ 301
+/finance/finance-calculator/        /sip-calculator/                  301
+/everyday/grade-calculator/         /gpa-calculator/                301
 /insurance/whole-life-insurance-calculator/ /whole-life-insurance-calculator/ 301
 /insurance/disability-insurance-calculator/ /disability-insurance-calculator/ 301
-/insurance/umbrella-insurance-calculator/ /umbrella-insurance-calculator/ 301
-/insurance/homeowners-insurance-calculator/ /homeowners-insurance-calculator/ 301
-/insurance/renters-insurance-calculator/ /renters-insurance-calculator/ 301
+/insurance/umbrella-insurance-calculator/ /term-life-insurance-calculator/ 301
+/insurance/homeowners-insurance-calculator/ /auto-insurance-calculator/    301
+/insurance/renters-insurance-calculator/ /health-insurance-calculator/  301
 
 # Direct migration for retired Love calculator detail paths
 /love/love-calculator-by-name/              /love-calculator-by-name/              301

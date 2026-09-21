@@ -118,6 +118,7 @@ export const ALL_FRONTEND_CALCULATORS: CalculatorCatalogItem[] = [
 
   // Everyday
   { name: 'Age Calculator', slug: 'age-calculator', category: 'everyday', href: '/age-calculator/' },
+  { name: 'Online Ruler', slug: 'online-ruler', category: 'everyday', href: '/online-ruler/' },
   { name: 'Date Calculator', slug: 'date-calculator', category: 'everyday', href: '/date-calculator/' },
   { name: 'Time Calculator', slug: 'time-calculator', category: 'everyday', href: '/time-calculator/' },
   { name: 'GPA Calculator', slug: 'gpa-calculator', category: 'everyday', href: '/gpa-calculator/' },
@@ -130,6 +131,18 @@ export const ALL_FRONTEND_CALCULATORS: CalculatorCatalogItem[] = [
   { name: 'Temperature Converter', slug: 'temperature-converter', category: 'converter', href: '/temperature-converter/' },
 
   { name: 'AI Prompt & Token Cost Calculator', slug: 'ai-token-cost-calculator', category: 'technology', href: '/ai-token-cost-calculator/' },
+
+  // Finance: restored root-level routes (dedicated engines verified in FinanceCalculatorView)
+  { name: 'Loan Calculator', slug: 'loan-calculator', category: 'finance', href: '/loan-calculator/' },
+  { name: 'Salary Calculator', slug: 'salary-calculator', category: 'finance', href: '/salary-calculator/' },
+  { name: '401(k) Calculator', slug: '401k-calculator', category: 'finance', href: '/401k-calculator/' },
+  { name: 'Roth IRA Calculator', slug: 'roth-ira-calculator', category: 'finance', href: '/roth-ira-calculator/' },
+  { name: 'Step-Up SIP Calculator', slug: 'step-up-sip-calculator', category: 'finance', href: '/step-up-sip-calculator/' },
+  { name: 'Lumpsum Calculator', slug: 'lumpsum-calculator', category: 'finance', href: '/lumpsum-calculator/' },
+
+  // Insurance: restored root-level routes (dedicated engines verified in FinanceCalculatorView)
+  { name: 'Whole Life Insurance Calculator', slug: 'whole-life-insurance-calculator', category: 'insurance', href: '/whole-life-insurance-calculator/' },
+  { name: 'Disability Insurance Calculator', slug: 'disability-insurance-calculator', category: 'insurance', href: '/disability-insurance-calculator/' },
 ];
 
 /**

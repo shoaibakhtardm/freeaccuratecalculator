@@ -13,21 +13,6 @@ export interface SearchCalculatorItem {
 
 export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
   {
-    "name": "401(k) Calculator",
-    "slug": "401k-calculator",
-    "category": "finance",
-    "categoryName": "Finance",
-    "icon": "💰",
-    "href": "/finance/401k-calculator/",
-    "keywords": [
-      "401k",
-      "pension",
-      "retirement",
-      "employer match",
-      "nest egg"
-    ]
-  },
-  {
     "name": "Age Calculator",
     "slug": "age-calculator",
     "category": "everyday",
@@ -41,6 +26,25 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
       "how old am i",
       "exact age",
       "seconds"
+    ]
+  },
+  {
+    "name": "Online Ruler",
+    "slug": "online-ruler",
+    "category": "everyday",
+    "categoryName": "Everyday",
+    "icon": "📏",
+    "href": "/online-ruler/",
+    "keywords": [
+      "ruler",
+      "measure",
+      "screen ruler",
+      "cm ruler",
+      "inch ruler",
+      "mm ruler",
+      "actual size ruler",
+      "measuring tool",
+      "virtual ruler"
     ]
   },
   {
@@ -323,7 +327,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "insurance",
     "categoryName": "Insurance",
     "icon": "🛡️",
-    "href": "/insurance/disability-insurance-calculator/",
+    "href": "/disability-insurance-calculator/",
     "keywords": [
       "disability",
       "income",
@@ -365,24 +369,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
       "loan emi",
       "bank emi"
     ]
-  },
-  {
-    "name": "EPF Calculator",
-    "slug": "epf-calculator",
-    "category": "finance",
-    "categoryName": "Finance",
-    "icon": "💰",
-    "href": "/finance/epf-calculator/",
-    "keywords": []
-  },
-  {
-    "name": "Finance Calculator",
-    "slug": "finance-calculator",
-    "category": "finance",
-    "categoryName": "Finance",
-    "icon": "💰",
-    "href": "/finance/finance-calculator/",
-    "keywords": []
   },
   {
     "name": "Fraction Calculator",
@@ -427,24 +413,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "categoryName": "Everyday",
     "icon": "☀️",
     "href": "/gpa-calculator/",
-    "keywords": []
-  },
-  {
-    "name": "Grade Calculator",
-    "slug": "grade-calculator",
-    "category": "everyday",
-    "categoryName": "Everyday",
-    "icon": "☀️",
-    "href": "/everyday/grade-calculator/",
-    "keywords": []
-  },
-  {
-    "name": "Gratuity Calculator",
-    "slug": "gratuity-calculator",
-    "category": "finance",
-    "categoryName": "Finance",
-    "icon": "💰",
-    "href": "/finance/gratuity-calculator/",
     "keywords": []
   },
   {
@@ -525,24 +493,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     ]
   },
   {
-    "name": "Inflation Calculator",
-    "slug": "inflation-calculator",
-    "category": "finance",
-    "categoryName": "Finance",
-    "icon": "💰",
-    "href": "/finance/inflation-calculator/",
-    "keywords": []
-  },
-  {
-    "name": "Interest Calculator",
-    "slug": "interest-calculator",
-    "category": "finance",
-    "categoryName": "Finance",
-    "icon": "💰",
-    "href": "/finance/interest-calculator/",
-    "keywords": []
-  },
-  {
     "name": "Interest Rate Calculator",
     "slug": "interest-rate-calculator",
     "category": "finance",
@@ -603,15 +553,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "categoryName": "Finance",
     "icon": "💰",
     "href": "/loan-calculator/",
-    "keywords": []
-  },
-  {
-    "name": "Lumpsum Calculator",
-    "slug": "lumpsum-calculator",
-    "category": "finance",
-    "categoryName": "Finance",
-    "icon": "💰",
-    "href": "/lumpsum-calculator/",
     "keywords": []
   },
   {
@@ -727,15 +668,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "keywords": []
   },
   {
-    "name": "PPF Calculator",
-    "slug": "ppf-calculator",
-    "category": "finance",
-    "categoryName": "Finance",
-    "icon": "💰",
-    "href": "/finance/ppf-calculator/",
-    "keywords": []
-  },
-  {
     "name": "Pregnancy Calculator",
     "slug": "pregnancy-calculator",
     "category": "health",
@@ -847,15 +779,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     ]
   },
   {
-    "name": "Retirement Calculator",
-    "slug": "retirement-calculator",
-    "category": "finance",
-    "categoryName": "Finance",
-    "icon": "💰",
-    "href": "/finance/retirement-calculator/",
-    "keywords": []
-  },
-  {
     "name": "ROAS Calculator",
     "slug": "roas-calculator",
     "category": "marketing",
@@ -874,48 +797,12 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "keywords": []
   },
   {
-    "name": "Roth IRA Calculator",
-    "slug": "roth-ira-calculator",
-    "category": "finance",
-    "categoryName": "Finance",
-    "icon": "💰",
-    "href": "/finance/roth-ira-calculator/",
-    "keywords": [
-      "roth ira",
-      "tax free retirement",
-      "ira contributions"
-    ]
-  },
-  {
     "name": "Running Pace Calculator",
     "slug": "pace-calculator",
     "category": "health",
     "categoryName": "Health",
     "icon": "🩺",
     "href": "/pace-calculator/",
-    "keywords": []
-  },
-  {
-    "name": "Salary Calculator",
-    "slug": "salary-calculator",
-    "category": "finance",
-    "categoryName": "Finance",
-    "icon": "💰",
-    "href": "/finance/salary-calculator/",
-    "keywords": [
-      "take home pay",
-      "gross to net",
-      "in hand salary",
-      "ctc to in hand"
-    ]
-  },
-  {
-    "name": "Sales Tax Calculator",
-    "slug": "sales-tax-calculator",
-    "category": "finance",
-    "categoryName": "Finance",
-    "icon": "💰",
-    "href": "/finance/sales-tax-calculator/",
     "keywords": []
   },
   {
@@ -1019,15 +906,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "keywords": []
   },
   {
-    "name": "Step-Up SIP Calculator",
-    "slug": "step-up-sip-calculator",
-    "category": "finance",
-    "categoryName": "Finance",
-    "icon": "💰",
-    "href": "/step-up-sip-calculator/",
-    "keywords": []
-  },
-  {
     "name": "Stoichiometry Calculator",
     "slug": "stoichiometry-calculator",
     "category": "chemistry",
@@ -1043,15 +921,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "categoryName": "Technology",
     "icon": "💻",
     "href": "/subnet-calculator/",
-    "keywords": []
-  },
-  {
-    "name": "SWP Calculator",
-    "slug": "swp-calculator",
-    "category": "finance",
-    "categoryName": "Finance",
-    "icon": "💰",
-    "href": "/finance/swp-calculator/",
     "keywords": []
   },
   {
@@ -1162,7 +1031,7 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "category": "insurance",
     "categoryName": "Insurance",
     "icon": "🛡️",
-    "href": "/insurance/whole-life-insurance-calculator/",
+    "href": "/whole-life-insurance-calculator/",
     "keywords": [
       "whole life",
       "life insurance",
@@ -1170,5 +1039,92 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
       "dividend",
       "insurance"
     ]
-  }
+  },
+  {
+    "name": "Salary Calculator",
+    "slug": "salary-calculator",
+    "category": "finance",
+    "categoryName": "Finance",
+    "icon": "💰",
+    "href": "/salary-calculator/",
+    "keywords": [
+      "take home pay",
+      "gross to net",
+      "in hand salary",
+      "ctc to in hand"
+    ]
+  },
+  {
+    "name": "401(k) Calculator",
+    "slug": "401k-calculator",
+    "category": "finance",
+    "categoryName": "Finance",
+    "icon": "💰",
+    "href": "/401k-calculator/",
+    "keywords": [
+      "401k",
+      "pension",
+      "retirement",
+      "employer match",
+      "nest egg"
+    ]
+  },
+  {
+    "name": "Roth IRA Calculator",
+    "slug": "roth-ira-calculator",
+    "category": "finance",
+    "categoryName": "Finance",
+    "icon": "💰",
+    "href": "/roth-ira-calculator/",
+    "keywords": [
+      "roth ira",
+      "tax free retirement",
+      "ira contributions"
+    ]
+  },
+  {
+    "name": "Step-Up SIP Calculator",
+    "slug": "step-up-sip-calculator",
+    "category": "finance",
+    "categoryName": "Finance",
+    "icon": "💰",
+    "href": "/step-up-sip-calculator/",
+    "keywords": []
+  },
+  {
+    "name": "Lumpsum Calculator",
+    "slug": "lumpsum-calculator",
+    "category": "finance",
+    "categoryName": "Finance",
+    "icon": "💰",
+    "href": "/lumpsum-calculator/",
+    "keywords": []
+  },
+  {
+    "name": "PPF Calculator",
+    "slug": "ppf-calculator",
+    "category": "finance",
+    "categoryName": "Finance",
+    "icon": "💰",
+    "href": "/sip-calculator/",
+    "keywords": []
+  },
+  {
+    "name": "EPF Calculator",
+    "slug": "epf-calculator",
+    "category": "finance",
+    "categoryName": "Finance",
+    "icon": "💰",
+    "href": "/sip-calculator/",
+    "keywords": []
+  },
+  {
+    "name": "Gratuity Calculator",
+    "slug": "gratuity-calculator",
+    "category": "finance",
+    "categoryName": "Finance",
+    "icon": "💰",
+    "href": "/salary-calculator/",
+    "keywords": []
+  },
 ];

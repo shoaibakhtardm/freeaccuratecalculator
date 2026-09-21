@@ -41,32 +41,32 @@ const DEFAULT_ORIGIN = 'https://freeaccuratecalculator.com';
  */
 export const MULTILANG_ROUTES_REGISTRY: Record<string, Partial<Record<SupportedLocale, string>>> = {
   // Percentage Calculator
+  // English: /percentage-calculator/ (dedicated static page)
+  // Localized: /es/math/..., /fr/math/..., /hi/math/... (verified dist routes)
   '/percentage-calculator/': {
     en: '/percentage-calculator/',
-    es: '/es/percentage-calculator/',
-    fr: '/fr/percentage-calculator/',
-    hi: '/hi/percentage-calculator/',
+    es: '/es/math/percentage-calculator/',
+    fr: '/fr/math/percentage-calculator/',
+    hi: '/hi/math/percentage-calculator/',
+  },
+  // Localized Percentage Calculator pages (path-keyed as served under /{locale}/math/...)
+  '/math/percentage-calculator/': {
+    en: '/percentage-calculator/',
+    es: '/es/math/percentage-calculator/',
+    fr: '/fr/math/percentage-calculator/',
+    hi: '/hi/math/percentage-calculator/',
   },
   // EMI Calculator
+  // English: /emi-calculator/ (dedicated static page)
+  // Hindi: /hi/finance/emi-calculator/ (verified dist route)
   '/emi-calculator/': {
     en: '/emi-calculator/',
-    hi: '/hi/emi-calculator/',
+    hi: '/hi/finance/emi-calculator/',
   },
-  // Guides Hub
-  '/guides/': {
-    en: '/guides/',
-    es: '/es/guides/',
-    fr: '/fr/guides/',
-    hi: '/hi/guides/',
-  },
-  // Specific Multilingual Guides
-  '/guides/how-compound-interest-works/': {
-    en: '/guides/how-compound-interest-works/',
-    fr: '/fr/guides/how-compound-interest-works/',
-  },
-  '/guides/how-to-calculate-percentages-accurately/': {
-    en: '/guides/how-to-calculate-percentages-accurately/',
-    fr: '/fr/guides/how-to-calculate-percentages-accurately/',
+  // Localized EMI Calculator page (path-keyed as served under /hi/finance/...)
+  '/finance/emi-calculator/': {
+    en: '/emi-calculator/',
+    hi: '/hi/finance/emi-calculator/',
   },
 };
 

@@ -107,7 +107,7 @@ const rawPath = Astro.url.pathname.replace(/\/$/, '');
   {isFrench && (
     <Fragment slot="head">
       <link rel="alternate" hreflang="fr" href={`https://freeaccuratecalculator.com${rawPath}/`} />
-      <link rel="alternate" hreflang="en" href={`https://freeaccuratecalculator.com${rawPath}/?lang=en`} />
+      <link rel="alternate" hreflang="en" href={`https://freeaccuratecalculator.com${rawPath}/`} />
       <link rel="alternate" hreflang="x-default" href={`https://freeaccuratecalculator.com${rawPath}/`} />
     </Fragment>
   )}
