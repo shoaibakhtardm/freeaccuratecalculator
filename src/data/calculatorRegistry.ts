@@ -4166,6 +4166,428 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
       };
     `,
   },
+  {
+    id: 'tip-calculator',
+    category: 'everyday',
+    name: 'Tip Calculator',
+    title: 'Tip Calculator — Fast Gratuity & Equal Bill Splitting',
+    description: 'Calculate restaurant tips, total bill amounts, and per-person split costs with preset percentages, tax separation, and dollar rounding.',
+    badge: 'Everyday',
+    badgeColor: 'text-link border-link/30 bg-link/10',
+    formula: {
+      name: 'Gratuity & Bill Split Formula',
+      expression: 'Total = Bill × (1 + Tip% ÷ 100); Share = Total ÷ Diners',
+      explanation: 'Calculates the tip amount based on bill subtotal and divides total cost evenly among all dining guests.',
+      variables: [
+        { symbol: 'Bill', meaning: 'Pre-tip restaurant bill subtotal' },
+        { symbol: 'Tip%', meaning: 'Desired gratuity percentage (15%, 18%, 20%, etc.)' },
+        { symbol: 'Diners', meaning: 'Number of people splitting the payment' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: $75 Dinner Bill with 18% Tip Split by 2',
+      scenario: 'Two friends share a $75.00 restaurant meal and leave an 18% tip.',
+      steps: [
+        {
+          number: 1,
+          title: 'Calculate Tip Amount',
+          description: '$75.00 × 0.18 = $13.50 gratuity.',
+          mathExpression: 'Tip = $75.00 × 0.18 = $13.50',
+        },
+        {
+          number: 2,
+          title: 'Compute Total Bill',
+          description: '$75.00 + $13.50 = $88.50 total bill.',
+          mathExpression: 'Total = $75.00 + $13.50 = $88.50',
+        },
+        {
+          number: 3,
+          title: 'Divide Per Person',
+          description: '$88.50 ÷ 2 diners = $44.25 per person.',
+          mathExpression: 'Per Person = $88.50 ÷ 2 = $44.25',
+        },
+      ],
+      conclusion: 'Total tip is $13.50; each diner pays $44.25.',
+    },
+    faqs: [
+      {
+        question: 'What is standard restaurant tipping etiquette?',
+        answer: 'In the United States, 15% to 20% of the pre-tax bill is standard for casual to fine dining table service, with 18% being typical.',
+      },
+      {
+        question: 'Should I calculate tip before or after sales tax?',
+        answer: 'Etiquette experts, including the Emily Post Institute, recommend tipping on the pre-tax food and beverage subtotal rather than on tax.',
+      },
+      {
+        question: 'How does rounding up to the nearest dollar work?',
+        answer: 'Rounding up increases the total bill to the next whole dollar increment, adding the remaining cents directly into the server tip.',
+      },
+    ],
+    inputs: [
+      { id: 'bill_amount', label: 'Bill Amount ($)', type: 'number', defaultValue: 75, step: 1, min: 0 },
+      { id: 'tip_percent', label: 'Tip Percentage (%)', type: 'number', defaultValue: 18, step: 1, min: 0, max: 100 },
+      { id: 'split_count', label: 'Number of Diners (Split)', type: 'number', defaultValue: 2, step: 1, min: 1, max: 50 },
+    ],
+    defaultResult: {
+      label: 'Tip Amount',
+      initialValue: 13.5,
+      decimals: 2,
+      prefix: '$',
+      secondaryText: 'Total Bill: $88.50 • Per Person Share: $44.25',
+      accent: 'link',
+    },
+    computeScript: `
+      const bill = Math.max(0, parseFloat(inputs.bill_amount || '75'));
+      const tipPct = Math.max(0, parseFloat(inputs.tip_percent || '18'));
+      const split = Math.max(1, Math.round(parseFloat(inputs.split_count || '2')));
+      const tip = (bill * tipPct) / 100;
+      const total = bill + tip;
+      const perPerson = total / split;
+      return {
+        value: tip,
+        secondary: 'Total: $' + total.toFixed(2) + ' • Per Person (' + split + '): $' + perPerson.toFixed(2)
+      };
+    `,
+  },
+  {
+    id: 'discount-calculator',
+    category: 'everyday',
+    name: 'Discount Calculator',
+    title: 'Discount Calculator — Sale Price, Percent Off & Total Savings',
+    description: 'Calculate final sale prices, dollar savings, and stacked coupon discounts with optional sales tax inclusion for shopping savings.',
+    badge: 'Shopping',
+    badgeColor: 'text-cyan border-cyan/30 bg-cyan/10',
+    formula: {
+      name: 'Discount and Markdown Formula',
+      expression: 'Sale Price = Original Price × (1 - Discount% ÷ 100) × (1 - Coupon% ÷ 100)',
+      explanation: 'Calculates markdown savings by applying primary percentage discounts and sequential coupon discounts to the original price.',
+      variables: [
+        { symbol: 'Original Price', meaning: 'Pre-sale sticker price' },
+        { symbol: 'Discount%', meaning: 'Store sale markdown percentage' },
+        { symbol: 'Coupon%', meaning: 'Secondary additional coupon percentage' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: $80 Item at 30% Off',
+      scenario: 'Purchasing an $80.00 coat marked down by 30% with an 8% sales tax rate.',
+      steps: [
+        {
+          number: 1,
+          title: 'Calculate Discount Savings',
+          description: '$80.00 × 0.30 = $24.00 off.',
+          mathExpression: 'Savings = $80.00 × 0.30 = $24.00',
+        },
+        {
+          number: 2,
+          title: 'Compute Discounted Price',
+          description: '$80.00 - $24.00 = $56.00 pre-tax.',
+          mathExpression: 'Price = $80.00 - $24.00 = $56.00',
+        },
+        {
+          number: 3,
+          title: 'Apply 8% Sales Tax',
+          description: '$56.00 × 1.08 = $60.48 final register cost.',
+          mathExpression: 'Final Cost = $56.00 × 1.08 = $60.48',
+        },
+      ],
+      conclusion: 'You save $24.00 (30.0%); final price with tax is $60.48.',
+    },
+    faqs: [
+      {
+        question: 'How do stacked discounts calculate?',
+        answer: 'Stacked discounts are applied sequentially: the second coupon percentage applies to the already discounted price, not the original MSRP.',
+      },
+      {
+        question: 'How do I calculate percent off in my head?',
+        answer: 'To find 20% off, move the decimal point one spot to the left to find 10%, double that amount, and subtract from the original price.',
+      },
+      {
+        question: 'Is sales tax charged on the original or discounted price?',
+        answer: 'In most jurisdictions, retail sales tax is assessed on the final discounted price paid at the register.',
+      },
+    ],
+    inputs: [
+      { id: 'original_price', label: 'Original Price ($)', type: 'number', defaultValue: 80, step: 1, min: 0 },
+      { id: 'discount_percent', label: 'Discount (Percent Off %)', type: 'number', defaultValue: 30, step: 1, min: 0, max: 100 },
+      { id: 'tax_percent', label: 'Sales Tax Rate (%)', type: 'number', defaultValue: 8, step: 0.1, min: 0, max: 50 },
+    ],
+    defaultResult: {
+      label: 'Final Sale Price (with Tax)',
+      initialValue: 60.48,
+      decimals: 2,
+      prefix: '$',
+      secondaryText: 'You Save: $24.00 (30.0% Off) • Tax: $4.48',
+      accent: 'cyan',
+    },
+    computeScript: `
+      const price = Math.max(0, parseFloat(inputs.original_price || '80'));
+      const disc = Math.min(100, Math.max(0, parseFloat(inputs.discount_percent || '30')));
+      const taxRate = Math.max(0, parseFloat(inputs.tax_percent || '8')) / 100;
+      const savings = (price * disc) / 100;
+      const preTax = price - savings;
+      const tax = preTax * taxRate;
+      const finalPrice = preTax + tax;
+      return {
+        value: finalPrice,
+        secondary: 'You Save: $' + savings.toFixed(2) + ' (' + disc + '% Off) • Subtotal: $' + preTax.toFixed(2)
+      };
+    `,
+  },
+  {
+    id: 'ovulation-calculator',
+    category: 'health',
+    name: 'Ovulation Calculator',
+    title: 'Ovulation Calculator — Fertile Window & Conception Peak Days',
+    description: 'Estimate your fertile window and peak ovulation date based on menstrual cycle length using clinical ACOG timing guidelines.',
+    badge: 'Clinical',
+    badgeColor: 'text-violet border-violet/30 bg-violet/10',
+    formula: {
+      name: 'Luteal Phase Ovulation Formula',
+      expression: 'Ovulation Day = Cycle Length - 14 Days; Fertile Window = Days [-5 to +1]',
+      explanation: 'In clinical reproductive physiology, ovulation typically occurs 14 days before the start of the next period.',
+      variables: [
+        { symbol: 'Cycle Length', meaning: 'Average days between menses onset (typically 28 days)' },
+        { symbol: 'Luteal Phase', meaning: 'Constant post-ovulatory interval (clinical norm: 14 days)' },
+        { symbol: 'Fertile Window', meaning: '5 days prior to ovulation plus ovulation day itself' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: 28-Day Menstrual Cycle',
+      scenario: 'Cycle length is 28 days with period starting on Day 1 of the calendar month.',
+      steps: [
+        {
+          number: 1,
+          title: 'Calculate Ovulation Day',
+          description: '28 days - 14 days = Day 14 peak ovulation.',
+          mathExpression: 'Ovulation = 28 - 14 = Day 14',
+        },
+        {
+          number: 2,
+          title: 'Determine 6-Day Fertile Window',
+          description: 'Day 14 - 5 days = Day 9 to Day 14 (plus 24h egg viability).',
+          mathExpression: 'Fertile Window = Cycle Days 9 through 15',
+        },
+      ],
+      conclusion: 'Peak fertility window spans Cycle Days 9 to 15, with maximum likelihood on Days 13–14.',
+    },
+    faqs: [
+      {
+        question: 'When is a woman most fertile during her cycle?',
+        answer: 'Fertility is highest during the 5 days before ovulation and the day of ovulation itself, with peak probability occurring in the 48 hours preceding egg release.',
+      },
+      {
+        question: 'How accurate is calendar-based ovulation calculation?',
+        answer: 'Calendar estimation provides an approximate fertile window based on population averages. Menstrual cycles naturally vary due to stress, hormonal fluctuations, and illness.',
+      },
+      {
+        question: 'Is this calculator a method of contraception?',
+        answer: 'No. This calculator is strictly an educational estimator for planning conception and should never be used as a reliable contraceptive method.',
+      },
+    ],
+    inputs: [
+      { id: 'cycle_length', label: 'Average Cycle Length (Days)', type: 'number', defaultValue: 28, min: 21, max: 45, step: 1 },
+      { id: 'days_since_lmp', label: 'Days Since Last Period Started', type: 'number', defaultValue: 10, min: 1, max: 45, step: 1 },
+      { id: 'luteal_phase', label: 'Luteal Phase Length (Days)', type: 'number', defaultValue: 14, min: 10, max: 16, step: 1 },
+    ],
+    defaultResult: {
+      label: 'Peak Ovulation Day in Cycle',
+      initialValue: 14,
+      decimals: 0,
+      prefix: 'Cycle Day ',
+      secondaryText: 'Fertile Window: Cycle Days 9 to 15 (Highest Probability)',
+      accent: 'violet',
+    },
+    computeScript: `
+      const cycle = Math.max(21, Math.min(45, parseFloat(inputs.cycle_length || '28')));
+      const luteal = Math.max(10, Math.min(16, parseFloat(inputs.luteal_phase || '14')));
+      const daysSince = Math.max(1, parseFloat(inputs.days_since_lmp || '10'));
+      const ovuDay = cycle - luteal;
+      const windowStart = Math.max(1, ovuDay - 5);
+      const windowEnd = ovuDay + 1;
+      let status = '';
+      if (daysSince < windowStart) {
+        status = (windowStart - daysSince) + ' days until fertile window';
+      } else if (daysSince <= windowEnd) {
+        status = 'CURRENTLY IN HIGH FERTILE WINDOW';
+      } else {
+        status = 'Post-ovulatory luteal phase; next cycle in ~' + Math.max(0, cycle - daysSince) + ' days';
+      }
+      return {
+        value: ovuDay,
+        secondary: 'Fertile Window: Days ' + windowStart + '–' + windowEnd + ' • ' + status
+      };
+    `,
+  },
+  {
+    id: 'pregnancy-due-date-calculator',
+    category: 'health',
+    name: 'Pregnancy Due Date Calculator',
+    title: 'Pregnancy Due Date Calculator — Estimated Delivery Date by LMP',
+    description: 'Estimate your baby\'s due date using Naegele\'s rule based on your last menstrual period or conception date with trimester milestones.',
+    badge: 'Clinical',
+    badgeColor: 'text-violet border-violet/30 bg-violet/10',
+    formula: {
+      name: 'Naegele’s Clinical Gestational Formula',
+      expression: 'Due Date = First Day of LMP + 280 Days (40 Gestational Weeks)',
+      explanation: 'Calculates the estimated date of delivery (EDD) assuming a standard 28-day cycle with ovulation on Day 14.',
+      variables: [
+        { symbol: 'LMP', meaning: 'First day of last normal menstrual period' },
+        { symbol: '280 Days', meaning: 'Standard clinical human gestation from LMP (40 weeks)' },
+        { symbol: 'Cycle Adjustment', meaning: '+/- difference from 28-day cycle baseline' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: LMP was 70 Days Ago (10 Weeks)',
+      scenario: 'Patient reported LMP 70 days ago with a regular 28-day cycle.',
+      steps: [
+        {
+          number: 1,
+          title: 'Determine Gestational Age Today',
+          description: '70 days ÷ 7 = 10 weeks 0 days gestational age.',
+          mathExpression: 'Gestational Age = 70 ÷ 7 = 10 Weeks',
+        },
+        {
+          number: 2,
+          title: 'Calculate Remaining Days',
+          description: '280 total days - 70 days elapsed = 210 days remaining.',
+          mathExpression: 'Remaining = 280 - 70 = 210 Days (30 Weeks)',
+        },
+        {
+          number: 3,
+          title: 'Identify Trimester',
+          description: '10 weeks is within Weeks 1 to 13 (First Trimester).',
+          mathExpression: 'Trimester = First Trimester',
+        },
+      ],
+      conclusion: 'You are 10 weeks pregnant (1st Trimester) with 210 days until estimated delivery.',
+    },
+    faqs: [
+      {
+        question: 'What percentage of babies are born on their exact due date?',
+        answer: 'Only approximately 4% of babies are born on their exact estimated due date. Most healthy births occur between 37 and 42 weeks of gestation.',
+      },
+      {
+        question: 'What is Naegele\'s Rule for estimating delivery dates?',
+        answer: 'Naegele\'s rule calculates the expected delivery date by adding 1 year and 7 days, then subtracting 3 months from the first day of the last menstrual period (equivalent to adding 280 days).',
+      },
+      {
+        question: 'When does each trimester begin and end?',
+        answer: 'The first trimester spans Weeks 1 to 13; the second trimester spans Weeks 14 to 27; and the third trimester spans Week 28 until birth.',
+      },
+    ],
+    inputs: [
+      { id: 'days_since_lmp', label: 'Days Since First Day of Last Period (LMP)', type: 'number', defaultValue: 70, min: 1, max: 294, step: 1 },
+      { id: 'cycle_length', label: 'Average Menstrual Cycle Length (Days)', type: 'number', defaultValue: 28, min: 21, max: 40, step: 1 },
+    ],
+    defaultResult: {
+      label: 'Current Gestational Age',
+      initialValue: 10,
+      decimals: 0,
+      prefix: 'Week ',
+      suffix: ' of 40',
+      secondaryText: 'First Trimester • Days Remaining: 210 days (~30 weeks)',
+      accent: 'violet',
+    },
+    computeScript: `
+      const daysSince = Math.max(1, Math.min(294, parseFloat(inputs.days_since_lmp || '70')));
+      const cycle = Math.max(21, Math.min(40, parseFloat(inputs.cycle_length || '28')));
+      const cycleAdj = cycle - 28;
+      const totalGestationalDays = 280 + cycleAdj;
+      const weeks = Math.floor(daysSince / 7);
+      const days = daysSince % 7;
+      const daysRemaining = Math.max(0, totalGestationalDays - daysSince);
+      const weeksRemaining = Math.ceil(daysRemaining / 7);
+      let trimester = weeks <= 13 ? 'First Trimester' : weeks <= 27 ? 'Second Trimester' : 'Third Trimester';
+      return {
+        value: weeks,
+        secondary: trimester + ' (Week ' + weeks + ', Day ' + days + ') • ' + daysRemaining + ' Days Remaining (~' + weeksRemaining + ' wks)'
+      };
+    `,
+  },
+  {
+    id: 'inflation-calculator',
+    category: 'finance',
+    name: 'Inflation Calculator',
+    title: 'Inflation Calculator — Purchasing Power & Future Money Value Decay',
+    description: 'Calculate how inflation impacts purchasing power over time using historical CPI compound decay rates and future cost projections.',
+    badge: 'Economics',
+    badgeColor: 'text-cyan border-cyan/30 bg-cyan/10',
+    formula: {
+      name: 'Compound Inflation Formula',
+      expression: 'Future Cost = Present Value × (1 + r)ⁿ; Purchasing Power = PV ÷ (1 + r)ⁿ',
+      explanation: 'Measures the progressive compounding effect of consumer price inflation on the purchasing power of money over time.',
+      variables: [
+        { symbol: 'PV', meaning: 'Present capital or current purchasing power' },
+        { symbol: 'r', meaning: 'Annualized inflation rate as a decimal (e.g. 0.032 for 3.2%)' },
+        { symbol: 'n', meaning: 'Time horizon in years' },
+      ],
+    },
+    example: {
+      title: 'Worked Example: $10,000 Over 15 Years at 3.2% Inflation',
+      scenario: 'Calculating future cost of goods and purchasing power erosion on $10,000 at 3.2% annual CPI inflation.',
+      steps: [
+        {
+          number: 1,
+          title: 'Calculate Compounding Factor',
+          description: '(1 + 0.032)^15 ≈ 1.6075 factor.',
+          mathExpression: '(1 + 0.032)¹⁵ = 1.6075',
+        },
+        {
+          number: 2,
+          title: 'Determine Future Equivalent Cost',
+          description: '$10,000 × 1.6075 = $16,075 required in 15 years to match today’s living standard.',
+          mathExpression: 'Future Cost = $10,000 × 1.6075 = $16,075',
+        },
+        {
+          number: 3,
+          title: 'Calculate Purchasing Power of Stored Cash',
+          description: '$10,000 ÷ 1.6075 = $6,221 today\'s equivalent value.',
+          mathExpression: 'Real Value = $10,000 ÷ 1.6075 = $6,221',
+        },
+      ],
+      conclusion: 'You need $16,075 in 15 years to buy what $10,000 buys today. Real cash value declines by 37.8%.',
+    },
+    faqs: [
+      {
+        question: 'What is inflation and how is it measured?',
+        answer: 'Inflation is the rate at which the general level of prices for goods and services rises, eroding purchasing power. It is most commonly measured by the Consumer Price Index (CPI).',
+      },
+      {
+        question: 'What is the Rule of 72 for inflation?',
+        answer: 'The Rule of 72 estimates how long it takes for purchasing power to be cut in half: divide 72 by the annual inflation rate (e.g., at 3% inflation, 72 ÷ 3 = 24 years).',
+      },
+      {
+        question: 'How can individuals protect savings against inflation?',
+        answer: 'Holding cash or low-interest accounts loses purchasing power over time. Assets with historical returns above inflation include broad equity index funds, real estate, and Treasury Inflation-Protected Securities (TIPS).',
+      },
+    ],
+    inputs: [
+      { id: 'initial_amount', label: 'Starting Capital / Current Cost ($)', type: 'number', defaultValue: 10000, step: 500, min: 0 },
+      { id: 'inflation_rate', label: 'Annual Inflation Rate (%)', type: 'number', defaultValue: 3.2, step: 0.1, min: 0, max: 100 },
+      { id: 'years', label: 'Time Horizon (Years)', type: 'number', defaultValue: 15, step: 1, min: 1, max: 50 },
+    ],
+    defaultResult: {
+      label: 'Future Cost Needed',
+      initialValue: 16075,
+      decimals: 0,
+      prefix: '$',
+      secondaryText: 'Purchasing Power of Cash: $6,221 (37.8% Loss of Value)',
+      accent: 'cyan',
+    },
+    computeScript: `
+      const pv = Math.max(0, parseFloat(inputs.initial_amount || '10000'));
+      const r = Math.max(0, parseFloat(inputs.inflation_rate || '3.2')) / 100;
+      const y = Math.max(1, Math.round(parseFloat(inputs.years || '15')));
+      const factor = Math.pow(1 + r, y);
+      const fv = pv * factor;
+      const realVal = factor > 0 ? pv / factor : 0;
+      const lossPct = factor > 0 ? (1 - (1 / factor)) * 100 : 0;
+      return {
+        value: Math.round(fv),
+        secondary: 'Purchasing Power Retained: $' + Math.round(realVal).toLocaleString() + ' (' + lossPct.toFixed(1) + '% Loss)'
+      };
+    `,
+  },
 ];
 
 export const CALCULATORS: CalculatorEntry[] = [

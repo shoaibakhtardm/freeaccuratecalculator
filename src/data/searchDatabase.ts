@@ -1127,4 +1127,49 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "href": "/salary-calculator/",
     "keywords": []
   },
+  {
+    "name": "Tip Calculator",
+    "slug": "tip-calculator",
+    "category": "everyday",
+    "categoryName": "Everyday",
+    "icon": "🍽️",
+    "href": "/tip-calculator/",
+    "keywords": ["tip", "bill split", "gratuity", "restaurant", "dining"]
+  },
+  {
+    "name": "Discount Calculator",
+    "slug": "discount-calculator",
+    "category": "everyday",
+    "categoryName": "Everyday",
+    "icon": "🏷️",
+    "href": "/discount-calculator/",
+    "keywords": ["discount", "percent off", "sale", "coupon", "savings", "markdown"]
+  },
+  {
+    "name": "Ovulation Calculator",
+    "slug": "ovulation-calculator",
+    "category": "health",
+    "categoryName": "Health",
+    "icon": "🌸",
+    "href": "/ovulation-calculator/",
+    "keywords": ["ovulation", "fertile window", "conception", "fertility", "period"]
+  },
+  {
+    "name": "Pregnancy Due Date Calculator",
+    "slug": "pregnancy-due-date-calculator",
+    "category": "health",
+    "categoryName": "Health",
+    "icon": "👶",
+    "href": "/pregnancy-due-date-calculator/",
+    "keywords": ["pregnancy", "due date", "baby due date", "conception", "trimester", "gestational age"]
+  },
+  {
+    "name": "Inflation Calculator",
+    "slug": "inflation-calculator",
+    "category": "finance",
+    "categoryName": "Finance",
+    "icon": "📉",
+    "href": "/inflation-calculator/",
+    "keywords": ["inflation", "purchasing power", "cpi", "money value", "future value", "cost of living"]
+  }
 ];

@@ -87,48 +87,72 @@ const FEATURED_GUIDES = isFrenchLocale
   : [];
 
 const RAW_POPULAR_CALCULATORS = [
-  // 1. Finance: EMI / Mortgage
-  { key: 'emi-calculator', icon: '🏦', href: '/emi-calculator/' },
-  // 2. Insurance: Auto Insurance Estimator
-  { key: 'auto-insurance-calculator', icon: '🛡️', href: '/auto-insurance-calculator/' },
-  // 3. Legal: Child Support Calculator
-  { key: 'child-support-calculator', icon: '⚖️', href: '/child-support-calculator/' },
-  // 4. Business: ROI Calculator
-  { key: 'roi-calculator', icon: '💼', href: '/roi-calculator/' },
-  // 5. Construction: Concrete Volume Calculator
-  { key: 'concrete-calculator', icon: '🏗️', href: '/concrete-calculator/' },
-  // 6. Real Estate: Property Tax / Stamp Duty Calculator
-  { key: 'property-tax-calculator', icon: '🏢', href: '/property-tax-calculator/' },
-  // 7. Technology: Password Generator
-  { key: 'password-generator', icon: '🔐', href: '/password-generator/' },
-  // 8. Health: BMI Calculator
-  { key: 'bmi-calculator', icon: '🩺', href: '/bmi-calculator/' },
-  // 9. Statistics: Sample Size Calculator
-  { key: 'sample-size-calculator', icon: '📊', href: '/sample-size-calculator/' },
-  // 10. Marketing: ROAS Calculator
-  { key: 'roas-calculator', icon: '🎯', href: '/roas-calculator/' },
-  // 11. Math: Percentage Calculator
+  // 1. Percentage Calculator
   { key: 'percentage-calculator', icon: '📐', href: '/percentage-calculator/' },
-  // 12. Automotive: Fuel Cost / MPG Calculator
-  { key: 'fuel-cost-calculator', icon: '⛽', href: '/fuel-cost-calculator/' },
-  // 13. Biology: Genetics / Biology Calculator
-  { key: 'punnett-square-calculator', icon: '🧬', href: '/punnett-square-calculator/' },
-  // 14. Chemistry: Molar Mass Calculator
-  { key: 'molar-mass-calculator', icon: '🧪', href: '/molar-mass-calculator/' },
-  // 15. Physics: Ohm’s Law Calculator
-  { key: 'ohms-law-calculator', icon: '⚡', href: '/ohms-law-calculator/' },
-  // 16. Food: TDEE / Calorie & Macro Calculator
-  { key: 'macronutrient-calculator', icon: '🥗', href: '/macronutrient-calculator/' },
-  // 17. Sports: 1RM (One Rep Max) Calculator
-  { key: 'one-rep-max-calculator', icon: '🏋️', href: '/one-rep-max-calculator/' },
-  // 18. Ecology: Carbon Footprint Calculator
-  { key: 'carbon-footprint-calculator', icon: '🌱', href: '/carbon-footprint-calculator/' },
-  // 19. Everyday: Exact Age Calculator
+  // 2. BMI Calculator
+  { key: 'bmi-calculator', icon: '🩺', href: '/bmi-calculator/' },
+  // 3. Age Calculator
   { key: 'age-calculator', icon: '🎂', href: '/age-calculator/' },
-  // 20. Converter: Universal Unit/Currency Converter
-  { key: 'length-converter', icon: '🔄', href: '/length-converter/' },
-  // 21. Love: Love Compatibility Calculator
+  // 4. Love Calculator
   { key: 'love-calculator', icon: '💖', href: '/love-calculator/' },
+  // 5. Scientific Calculator
+  { key: 'scientific-calculator', icon: '🔬', href: '/scientific-calculator/' },
+  // 6. EMI Calculator
+  { key: 'emi-calculator', icon: '🏦', href: '/emi-calculator/' },
+  // 7. Mortgage Calculator
+  { key: 'mortgage-calculator', icon: '🏠', href: '/mortgage-calculator/' },
+  // 8. Loan Calculator
+  { key: 'loan-calculator', icon: '💳', href: '/loan-calculator/' },
+  // 9. Time Calculator
+  { key: 'time-calculator', icon: '⏱️', href: '/time-calculator/' },
+  // 10. Date Calculator
+  { key: 'date-calculator', icon: '📅', href: '/date-calculator/' },
+  // 11. Salary Calculator
+  { key: 'salary-calculator', icon: '💼', href: '/salary-calculator/' },
+  // 12. Compound Interest Calculator
+  { key: 'compound-interest-calculator', icon: '📈', href: '/compound-interest-calculator/' },
+  // 13. Unit Converter
+  { key: 'conversion-calculator', icon: '🔄', href: '/conversion-calculator/' },
+  // 14. Body Fat Calculator
+  { key: 'body-fat-calculator', icon: '🏃', href: '/body-fat-calculator/' },
+  // 15. BMR Calculator
+  { key: 'bmr-calculator', icon: '🔥', href: '/bmr-calculator/' },
+  // 16. SIP Calculator
+  { key: 'sip-calculator', icon: '📊', href: '/sip-calculator/' },
+  // 17. Auto Loan Calculator
+  { key: 'auto-loan-calculator', icon: '🚗', href: '/auto-loan-calculator/' },
+  // 18. GPA Calculator
+  { key: 'gpa-calculator', icon: '🎓', href: '/gpa-calculator/' },
+  // 19. ROI Calculator
+  { key: 'roi-calculator', icon: '💹', href: '/roi-calculator/' },
+  // 20. Tip Calculator
+  { key: 'tip-calculator', icon: '🍽️', href: '/tip-calculator/' },
+  // 21. Income Tax Calculator
+  { key: 'income-tax-calculator', icon: '📑', href: '/income-tax-calculator/' },
+  // 22. Probability Calculator
+  { key: 'probability-calculator', icon: '🎲', href: '/probability-calculator/' },
+  // 23. Password Generator
+  { key: 'password-generator', icon: '🔐', href: '/password-generator/' },
+  // 24. Discount Calculator
+  { key: 'discount-calculator', icon: '🏷️', href: '/discount-calculator/' },
+  // 25. Ovulation Calculator
+  { key: 'ovulation-calculator', icon: '🌸', href: '/ovulation-calculator/' },
+  // 26. Ohm's Law Calculator
+  { key: 'ohms-law-calculator', icon: '⚡', href: '/ohms-law-calculator/' },
+  // 27. Pregnancy Due Date Calculator
+  { key: 'pregnancy-due-date-calculator', icon: '👶', href: '/pregnancy-due-date-calculator/' },
+  // 28. Concrete Calculator
+  { key: 'concrete-calculator', icon: '🏗️', href: '/concrete-calculator/' },
+  // 29. Paint Calculator
+  { key: 'paint-calculator', icon: '🎨', href: '/paint-calculator/' },
+  // 30. Amortization Calculator
+  { key: 'amortization-calculator', icon: '📋', href: '/amortization-calculator/' },
+  // 31. Inflation Calculator
+  { key: 'inflation-calculator', icon: '📉', href: '/inflation-calculator/' },
+  // 32. Square Footage Calculator
+  { key: 'square-footage-calculator', icon: '📏', href: '/square-footage-calculator/' },
+  // 33. Ruler
+  { key: 'ruler', icon: '📐', href: '/ruler/' },
 ];
 
 const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
@@ -222,18 +246,18 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
       </span>
     </div>
 
-    <!-- 21 Popular Calculators in 3-Column Grid Layout (1 Top Calculator per Category) -->
-    <div class="grid grid-cols-3 gap-2 sm:gap-3 md:gap-3.5">
+    <!-- 33 Popular Calculators in 3-Column Grid Layout (Mobile, Tablet, and Desktop: 3 col) -->
+    <div class="grid grid-cols-3 gap-1.5 sm:gap-3 md:gap-3.5">
       {POPULAR_CALCULATORS.map((item) => (
         <a
           href={item.href}
           title={`${hpStrings.search.openCalc || 'Explore'} ${item.name}`}
-          class="group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[72px] sm:min-h-[82px] md:min-h-[90px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/90 hover:border-indigo-500/60 dark:hover:border-indigo-400/60 p-2 sm:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-lg hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 active:scale-[0.97]"
+          class="group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[64px] sm:min-h-[82px] md:min-h-[90px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/90 hover:border-indigo-500/60 dark:hover:border-indigo-400/60 p-1.5 sm:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-lg hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 active:scale-[0.97]"
         >
-          <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-base sm:text-lg md:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-950/30 transition-all mb-1 sm:mb-1.5">
+          <span class="flex h-7 w-7 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-lg sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-sm sm:text-lg md:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-950/30 transition-all mb-1 sm:mb-1.5">
             {item.icon}
           </span>
-          <span class="w-full text-center font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-[10.5px] sm:text-xs md:text-sm leading-tight whitespace-nowrap overflow-hidden">
+          <span class="w-full text-center font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors text-[9.5px] sm:text-xs md:text-sm leading-tight truncate px-0.5">
             {item.name}
           </span>
         </a>

@@ -165,6 +165,23 @@ export class CalculatorEngineFactory {
         };
       }
 
+      case 'inflation-calculator': {
+        const pv = sanitizeNumber(inputs.initial_amount ?? inputs.principal, 10000, 0);
+        const rate = sanitizeNumber(inputs.inflation_rate ?? inputs.annualRate, 3.2, 0, 100);
+        const years = sanitizeNumber(inputs.years, 15, 1, 100);
+
+        const r = rate / 100;
+        const factor = Math.pow(1 + r, years);
+        const fv = roundToCents(pv * factor);
+        const pp = roundToCents(factor > 0 ? pv / factor : 0);
+
+        return {
+          value: fv,
+          formattedValue: fv.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+          secondaryText: `Purchasing Power of Cash: $${pp.toLocaleString()} | Loss Factor: ${factor.toFixed(2)}x`,
+        };
+      }
+
       default: {
         return { value: 0, formattedValue: '0.00', secondaryText: 'Engine calculation ready' };
       }
@@ -218,6 +235,36 @@ export class CalculatorEngineFactory {
         };
       }
 
+      case 'ovulation-calculator': {
+        const cycle = sanitizeNumber(inputs.cycle_length, 28, 21, 45);
+        const luteal = sanitizeNumber(inputs.luteal_phase, 14, 10, 16);
+        const ovuDay = cycle - luteal;
+        const winStart = Math.max(1, ovuDay - 5);
+        const winEnd = ovuDay + 1;
+
+        return {
+          value: ovuDay,
+          formattedValue: `Day ${ovuDay}`,
+          secondaryText: `Fertile Window: Cycle Days ${winStart} to ${winEnd}`,
+        };
+      }
+
+      case 'pregnancy-due-date-calculator':
+      case 'pregnancy-calculator': {
+        const daysSince = sanitizeNumber(inputs.days_since_lmp, 70, 1, 294);
+        const cycle = sanitizeNumber(inputs.cycle_length, 28, 21, 40);
+        const totalDays = 280 + (cycle - 28);
+        const weeks = Math.floor(daysSince / 7);
+        const days = daysSince % 7;
+        const daysLeft = Math.max(0, totalDays - daysSince);
+
+        return {
+          value: weeks,
+          formattedValue: `Week ${weeks}`,
+          secondaryText: `Gestational Age: ${weeks}w ${days}d | Days Remaining: ${daysLeft}`,
+        };
+      }
+
       default: {
         return { value: 0, formattedValue: '0.0', secondaryText: 'Health formula computed' };
       }
@@ -257,6 +304,38 @@ export class CalculatorEngineFactory {
           value: safeMargin,
           formattedValue: `${safeMargin.toFixed(2)}%`,
           secondaryText: `Net Profit: $${profit.toLocaleString()} on $${revenue.toLocaleString()} revenue`,
+        };
+      }
+
+      case 'tip-calculator': {
+        const bill = sanitizeNumber(inputs.bill_amount ?? inputs.bill, 0, 0);
+        const tipPct = sanitizeNumber(inputs.tip_percent ?? inputs.tipRate, 18, 0, 100);
+        const split = sanitizeNumber(inputs.split_count ?? inputs.diners, 1, 1, 100);
+
+        const tip = roundToCents((bill * tipPct) / 100);
+        const total = roundToCents(bill + tip);
+        const perPerson = roundToCents(total / split);
+
+        return {
+          value: tip,
+          formattedValue: tip.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+          secondaryText: `Total: $${total.toLocaleString()} | Per Person: $${perPerson.toLocaleString()}`,
+        };
+      }
+
+      case 'discount-calculator': {
+        const price = sanitizeNumber(inputs.original_price ?? inputs.price, 0, 0);
+        const disc = sanitizeNumber(inputs.discount_percent ?? inputs.discount, 0, 0, 100);
+        const taxRate = sanitizeNumber(inputs.tax_percent ?? inputs.tax, 0, 0, 100) / 100;
+
+        const savings = roundToCents((price * disc) / 100);
+        const preTax = roundToCents(price - savings);
+        const finalPrice = roundToCents(preTax * (1 + taxRate));
+
+        return {
+          value: finalPrice,
+          formattedValue: finalPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+          secondaryText: `You Save: $${savings.toLocaleString()} (${disc}% Off) | Subtotal: $${preTax.toLocaleString()}`,
         };
       }
 

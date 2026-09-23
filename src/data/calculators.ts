@@ -143,6 +143,13 @@ export const ALL_FRONTEND_CALCULATORS: CalculatorCatalogItem[] = [
   // Insurance: restored root-level routes (dedicated engines verified in FinanceCalculatorView)
   { name: 'Whole Life Insurance Calculator', slug: 'whole-life-insurance-calculator', category: 'insurance', href: '/whole-life-insurance-calculator/' },
   { name: 'Disability Insurance Calculator', slug: 'disability-insurance-calculator', category: 'insurance', href: '/disability-insurance-calculator/' },
+
+  // Expanded Core Calculators
+  { name: 'Tip Calculator', slug: 'tip-calculator', category: 'everyday', href: '/tip-calculator/' },
+  { name: 'Discount Calculator', slug: 'discount-calculator', category: 'everyday', href: '/discount-calculator/' },
+  { name: 'Ovulation Calculator', slug: 'ovulation-calculator', category: 'health', href: '/ovulation-calculator/' },
+  { name: 'Pregnancy Due Date Calculator', slug: 'pregnancy-due-date-calculator', category: 'health', href: '/pregnancy-due-date-calculator/' },
+  { name: 'Inflation Calculator', slug: 'inflation-calculator', category: 'finance', href: '/inflation-calculator/' },
 ];
 
 /**

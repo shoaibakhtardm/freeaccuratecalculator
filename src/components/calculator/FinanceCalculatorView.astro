@@ -1326,6 +1326,175 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
         if (s1Lbl) s1Lbl.textContent = 'Principal Invested';
         if (s2Lbl) s2Lbl.textContent = 'Tax-Free Investment Growth';
       }
+      // 14. Inflation & Purchasing Power Decay Engine
+      else if (slug.includes('inflation')) {
+        const pv = Math.max(0, parseFloat(inputs.initial_amount || inputs.principal || 10000));
+        const r = Math.max(0, parseFloat(inputs.inflation_rate || inputs.annualRate || 3.2)) / 100;
+        const years = Math.max(1, Math.round(parseFloat(inputs.years || 15)));
+
+        for (let y = 1; y <= Math.min(years, 45); y++) {
+          const factor = Math.pow(1 + r, y);
+          const fv = pv * factor;
+          const pp = factor > 0 ? pv / factor : 0;
+          rows.push({
+            period: `Year ${y}`,
+            payment: Math.round(fv),
+            principal: Math.round(pv),
+            interest: Math.round(fv - pv),
+            balance: Math.round(pp),
+          });
+        }
+
+        const totalFactor = Math.pow(1 + r, years);
+        res1 = Math.round(pv * totalFactor);
+        res2 = Math.round(totalFactor > 0 ? pv / totalFactor : 0);
+        res3 = Math.max(0, Math.round(res1 - pv));
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Future Required Capital';
+        if (heroSubLbl) heroSubLbl.textContent = `Inflation Multiplier: ${totalFactor.toFixed(2)}x • Real Value Retained: ${((1 / totalFactor) * 100).toFixed(1)}%`;
+        if (s1Lbl) s1Lbl.textContent = 'Purchasing Power of Cash';
+        if (s2Lbl) s2Lbl.textContent = 'Total Purchasing Power Loss';
+      }
+      // 15. Tip & Dining Bill Split Engine
+      else if (slug.includes('tip')) {
+        const bill = Math.max(0, parseFloat(inputs.bill_amount || inputs.bill || 75));
+        const tipPct = Math.max(0, parseFloat(inputs.tip_percent || inputs.tipRate || 18));
+        const split = Math.max(1, Math.round(parseFloat(inputs.split_count || inputs.diners || 2)));
+
+        const tipAmount = (bill * tipPct) / 100;
+        const totalBill = bill + tipAmount;
+        const perPerson = totalBill / split;
+
+        res1 = Math.round(tipAmount * 100) / 100;
+        res2 = Math.round(bill * 100) / 100;
+        res3 = Math.round(totalBill * 100) / 100;
+
+        const tipOptions = [10, 15, 18, 20, 22, 25];
+        tipOptions.forEach((pct) => {
+          const tAmt = (bill * pct) / 100;
+          const tot = bill + tAmt;
+          rows.push({
+            period: `${pct}% Gratuity Tier`,
+            payment: Math.round(tAmt * 100) / 100,
+            principal: Math.round(bill * 100) / 100,
+            interest: Math.round(tAmt * 100) / 100,
+            balance: Math.round((tot / split) * 100) / 100,
+          });
+        });
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Calculated Tip Amount';
+        if (heroSubLbl) heroSubLbl.textContent = `Per Person Share (${split} Diners): ${currentCurrencySymbol} ${formatVal(perPerson, 2)}`;
+        if (s1Lbl) s1Lbl.textContent = 'Bill Subtotal (Pre-Tip)';
+        if (s2Lbl) s2Lbl.textContent = 'Total Bill (with Tip)';
+      }
+      // 16. Shopping Discount & Markdown Engine
+      else if (slug.includes('discount')) {
+        const price = Math.max(0, parseFloat(inputs.original_price || inputs.price || 80));
+        const disc = Math.min(100, Math.max(0, parseFloat(inputs.discount_percent || inputs.discount || 30)));
+        const taxRate = Math.max(0, parseFloat(inputs.tax_percent || inputs.tax || 8)) / 100;
+
+        const savings = (price * disc) / 100;
+        const preTax = price - savings;
+        const tax = preTax * taxRate;
+        const finalPrice = preTax + tax;
+
+        res1 = Math.round(finalPrice * 100) / 100;
+        res2 = Math.round(preTax * 100) / 100;
+        res3 = Math.round(savings * 100) / 100;
+
+        const discountTiers = [10, 20, 30, 40, 50, 70];
+        discountTiers.forEach((tier) => {
+          const tierSavings = (price * tier) / 100;
+          const tierPreTax = price - tierSavings;
+          const tierFinal = tierPreTax * (1 + taxRate);
+          rows.push({
+            period: `${tier}% Off Sale`,
+            payment: Math.round(tierFinal * 100) / 100,
+            principal: Math.round(tierPreTax * 100) / 100,
+            interest: Math.round(tierSavings * 100) / 100,
+            balance: Math.round(tierFinal * 100) / 100,
+          });
+        });
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Final Discounted Price';
+        if (heroSubLbl) heroSubLbl.textContent = `You Save: ${currentCurrencySymbol} ${formatVal(savings, 2)} (${disc}% Markdown)`;
+        if (s1Lbl) s1Lbl.textContent = 'Pre-Tax Discounted Subtotal';
+        if (s2Lbl) s2Lbl.textContent = 'Total Savings Amount';
+      }
+      // 17. Ovulation & Fertile Window Engine
+      else if (slug.includes('ovulation')) {
+        const cycle = Math.max(21, Math.min(45, parseFloat(inputs.cycle_length || 28)));
+        const luteal = Math.max(10, Math.min(16, parseFloat(inputs.luteal_phase || 14)));
+        const daysSince = Math.max(1, parseFloat(inputs.days_since_lmp || 10));
+
+        const ovuDay = cycle - luteal;
+        const winStart = Math.max(1, ovuDay - 5);
+        const winEnd = ovuDay + 1;
+
+        res1 = ovuDay;
+        res2 = winStart;
+        res3 = winEnd;
+
+        rows = [
+          { period: 'Menstrual Phase (Days 1–5)', payment: 5, principal: 1, interest: 5, balance: cycle },
+          { period: `Follicular Phase (Days 1–${ovuDay - 1})`, payment: ovuDay - 1, principal: 1, interest: ovuDay - 1, balance: cycle },
+          { period: `High Fertile Window (Days ${winStart}–${winEnd})`, payment: 6, principal: winStart, interest: winEnd, balance: cycle },
+          { period: `Peak Ovulation (Day ${ovuDay})`, payment: 1, principal: ovuDay, interest: ovuDay, balance: cycle },
+          { period: `Luteal Phase (Days ${ovuDay + 1}–${cycle})`, payment: luteal, principal: ovuDay + 1, interest: cycle, balance: cycle },
+        ];
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Peak Ovulation (Cycle Day)';
+        if (heroSubLbl) heroSubLbl.textContent = `Fertile Window: Cycle Days ${winStart} to ${winEnd} (Highest Probability)`;
+        if (s1Lbl) s1Lbl.textContent = 'Fertile Window Begins';
+        if (s2Lbl) s2Lbl.textContent = 'Fertile Window Ends';
+      }
+      // 18. Pregnancy Gestational & Due Date Engine
+      else if (slug.includes('pregnancy')) {
+        const daysSince = Math.max(1, Math.min(294, parseFloat(inputs.days_since_lmp || 70)));
+        const cycle = Math.max(21, Math.min(40, parseFloat(inputs.cycle_length || 28)));
+        const totalDays = 280 + (cycle - 28);
+
+        const weeks = Math.floor(daysSince / 7);
+        const days = daysSince % 7;
+        const daysLeft = Math.max(0, totalDays - daysSince);
+        const weeksLeft = Math.ceil(daysLeft / 7);
+
+        res1 = weeks;
+        res2 = daysLeft;
+        res3 = weeksLeft;
+
+        rows = [
+          { period: '1st Trimester (Weeks 1–13)', payment: 13, principal: 1, interest: 13, balance: 40 },
+          { period: '2nd Trimester (Weeks 14–27)', payment: 14, principal: 14, interest: 27, balance: 40 },
+          { period: '3rd Trimester (Weeks 28–40)', payment: 13, principal: 28, interest: 40, balance: 40 },
+          { period: 'Full Term Delivery Window (Weeks 37–42)', payment: 5, principal: 37, interest: 42, balance: 40 },
+        ];
+
+        const heroLbl = document.getElementById('hero-result-label');
+        const heroSubLbl = document.getElementById('hero-result-sub');
+        const s1Lbl = document.getElementById('sec-card-1-label');
+        const s2Lbl = document.getElementById('sec-card-2-label');
+        if (heroLbl) heroLbl.textContent = 'Current Gestational Age';
+        if (heroSubLbl) heroSubLbl.textContent = `Stage: ${weeks <= 13 ? '1st Trimester' : weeks <= 27 ? '2nd Trimester' : '3rd Trimester'} • Exact: ${weeks} Weeks, ${days} Days`;
+        if (s1Lbl) s1Lbl.textContent = 'Days Remaining to Full Term';
+        if (s2Lbl) s2Lbl.textContent = 'Weeks Remaining to Due Date';
+      }
       // 5. Default General Investment / Finance Fallback
       else {
         const p = parseFloat(inputs.principal || inputs.investmentAmount || inputs.initialDeposit || 100000) || 0;

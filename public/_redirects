@@ -117,7 +117,9 @@
 /finance/gratuity-calculator/       /salary-calculator/               301
 /finance/swp-calculator/            /sip-calculator/                  301
 /finance/investment-calculator/     /sip-calculator/                  301
-/finance/inflation-calculator/      /compound-interest-calculator/    301
+/finance/inflation-calculator/      /inflation-calculator/            301
+/unit-converter/                    /conversion-calculator/           301
+/pregnancy-calculator/              /pregnancy-due-date-calculator/   301
 /finance/interest-calculator/       /compound-interest-calculator/ 301
 /finance/finance-calculator/        /sip-calculator/                  301
 /everyday/grade-calculator/         /gpa-calculator/                301
