@@ -166,3 +166,95 @@ test('Competitive Upgrades — Dark Mode & WCAG Contrast Verification', () => {
   assert.ok(cssContent.includes('--color-mute: #8e8e8e;'), 'Dark mode must use WCAG AA compliant mute color');
 });
 
+test('Multilingual Homepages Technical SEO, Hreflang & Schema Parity (12 Locales)', () => {
+  const locales = [
+    { code: 'en', relPath: 'dist/client/index.html', url: 'https://freeaccuratecalculator.com/', expectedDir: 'ltr' },
+    { code: 'es', relPath: 'dist/client/es/index.html', url: 'https://freeaccuratecalculator.com/es/', expectedDir: 'ltr' },
+    { code: 'fr', relPath: 'dist/client/fr/index.html', url: 'https://freeaccuratecalculator.com/fr/', expectedDir: 'ltr' },
+    { code: 'de', relPath: 'dist/client/de/index.html', url: 'https://freeaccuratecalculator.com/de/', expectedDir: 'ltr' },
+    { code: 'hi', relPath: 'dist/client/hi/index.html', url: 'https://freeaccuratecalculator.com/hi/', expectedDir: 'ltr' },
+    { code: 'pt', relPath: 'dist/client/pt/index.html', url: 'https://freeaccuratecalculator.com/pt/', expectedDir: 'ltr' },
+    { code: 'it', relPath: 'dist/client/it/index.html', url: 'https://freeaccuratecalculator.com/it/', expectedDir: 'ltr' },
+    { code: 'ar', relPath: 'dist/client/ar/index.html', url: 'https://freeaccuratecalculator.com/ar/', expectedDir: 'rtl' },
+    { code: 'ja', relPath: 'dist/client/ja/index.html', url: 'https://freeaccuratecalculator.com/ja/', expectedDir: 'ltr' },
+    { code: 'zh', relPath: 'dist/client/zh/index.html', url: 'https://freeaccuratecalculator.com/zh/', expectedDir: 'ltr' },
+    { code: 'nl', relPath: 'dist/client/nl/index.html', url: 'https://freeaccuratecalculator.com/nl/', expectedDir: 'ltr' },
+    { code: 'ru', relPath: 'dist/client/ru/index.html', url: 'https://freeaccuratecalculator.com/ru/', expectedDir: 'ltr' },
+  ];
+
+  for (const loc of locales) {
+    const fullPath = path.join(projectRoot, loc.relPath);
+    if (!fs.existsSync(fullPath)) continue; // Will be verified in dist build
+    const html = fs.readFileSync(fullPath, 'utf8');
+
+    // 1. Single H1
+    const h1Matches = html.match(/<h1[^>]*>[\s\S]*?<\/h1>/g);
+    assert.equal(h1Matches?.length, 1, `${loc.code} must have exactly one H1`);
+
+    // 2. Canonical self-reference
+    assert.ok(
+      html.includes(`<link rel="canonical" href="${loc.url}">`),
+      `${loc.code} must have exact self-referencing canonical tag`
+    );
+
+    // 3. 13 hreflang tags including x-default
+    const hreflangTags = [...html.matchAll(/<link rel="alternate" hreflang="([^"]+)" href="([^"]+)">/g)];
+    assert.equal(hreflangTags.length, 13, `${loc.code} must have exactly 13 hreflang tags (12 languages + x-default)`);
+    assert.ok(
+      html.includes('<link rel="alternate" hreflang="x-default" href="https://freeaccuratecalculator.com/">'),
+      `${loc.code} x-default must point to https://freeaccuratecalculator.com/`
+    );
+    assert.ok(
+      html.includes(`<link rel="alternate" hreflang="${loc.code}" href="${loc.url}">`),
+      `${loc.code} must self-reference in hreflang tags`
+    );
+
+    // 4. HTML lang and dir attributes
+    assert.ok(
+      html.includes(`lang="${loc.code}"`),
+      `${loc.code} must declare correct lang attribute`
+    );
+    assert.ok(
+      html.includes(`dir="${loc.expectedDir}"`),
+      `${loc.code} must declare correct dir attribute (${loc.expectedDir})`
+    );
+
+    // 5. Schema verification: Organization once, WebSite once, WebPage once, FAQPage absent on homepage
+    const jsonLdBlocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+    const schemas = jsonLdBlocks.map(b => JSON.parse(b[1]));
+
+    const orgs = schemas.filter(s => s['@type'] === 'Organization');
+    assert.equal(orgs.length, 1, `${loc.code} must contain Organization schema exactly once`);
+    assert.equal(orgs[0]['@id'], 'https://freeaccuratecalculator.com/#organization');
+
+    const sites = schemas.filter(s => s['@type'] === 'WebSite');
+    assert.equal(sites.length, 1, `${loc.code} must contain WebSite schema exactly once`);
+    assert.equal(sites[0]['@id'], 'https://freeaccuratecalculator.com/#website');
+
+    const pages = schemas.filter(s => s['@type'] === 'WebPage');
+    assert.equal(pages.length, 1, `${loc.code} must contain WebPage schema exactly once`);
+
+    const faqs = schemas.filter(s => s['@type'] === 'FAQPage');
+    assert.equal(faqs.length, 0, `${loc.code} homepage must NOT emit consumer FAQPage schema`);
+
+    // 6. Zero dead social URLs
+    assert.ok(
+      !html.includes('twitter.com/accuratecalc') && !html.includes('twitter.com/FreeAccurateCalc'),
+      `${loc.code} must not contain dead Twitter profile URL`
+    );
+
+    // 7. No raw English slug leakage on localized homepages
+    if (loc.code !== 'en') {
+      assert.ok(!html.includes('>scientific-calculator<'), `${loc.code} must not leak raw scientific-calculator slug`);
+      assert.ok(!html.includes('>mortgage-calculator<'), `${loc.code} must not leak raw mortgage-calculator slug`);
+      assert.ok(!html.includes('>loan-calculator<'), `${loc.code} must not leak raw loan-calculator slug`);
+      assert.ok(!html.includes('>salary-calculator<'), `${loc.code} must not leak raw salary-calculator slug`);
+      assert.ok(!html.includes('>compound-interest-calculator<'), `${loc.code} must not leak raw compound-interest-calculator slug`);
+    }
+
+    // 8. Content parity: Methodology and FAQs visible sections exist
+    assert.ok(html.includes('<details class="group py-4'), `${loc.code} must contain visible FAQ accordion`);
+  }
+});
+
+

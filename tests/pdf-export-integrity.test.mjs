@@ -4,7 +4,7 @@ import fs from 'fs';
 
 describe('SIP Calculator PDF Download & Print Lifecycle Forensic Verification', () => {
   const layoutContent = fs.readFileSync('src/layouts/Layout.astro', 'utf8');
-  const sipContent = fs.readFileSync('src/pages/finance/sip-calculator.astro', 'utf8');
+  const sipContent = fs.readFileSync('src/pages/sip-calculator.astro', 'utf8');
   const globalCss = fs.readFileSync('src/styles/global.css', 'utf8');
 
   it('Bug #1 Fix: Layout.astro implements strict single-flight locking & anti-double-print cooldown', () => {

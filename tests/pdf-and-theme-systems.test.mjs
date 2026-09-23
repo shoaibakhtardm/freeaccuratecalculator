@@ -33,7 +33,7 @@ describe('P0 PDF & Print Export System Integrity', () => {
   });
 
   it('SIP Calculator has complete dedicated print report and script synchronizer', () => {
-    const sipPath = path.join(ROOT, 'src/pages/finance/sip-calculator.astro');
+    const sipPath = path.join(ROOT, 'src/pages/sip-calculator.astro');
     const content = fs.readFileSync(sipPath, 'utf8');
 
     assert.ok(content.includes('id="sip-print-report"'), 'Dedicated sip-print-report container must exist');
@@ -48,7 +48,7 @@ describe('P0 PDF & Print Export System Integrity', () => {
   });
 
   it('EMI Calculator has complete dedicated print report and script synchronizer', () => {
-    const emiPath = path.join(ROOT, 'src/pages/finance/emi-calculator.astro');
+    const emiPath = path.join(ROOT, 'src/pages/emi-calculator.astro');
     const content = fs.readFileSync(emiPath, 'utf8');
 
     assert.ok(content.includes('id="emi-print-report"'), 'Dedicated emi-print-report container must exist');
@@ -62,7 +62,7 @@ describe('P0 PDF & Print Export System Integrity', () => {
   });
 
   it('Income Tax Calculator has complete dedicated print report and live sync', () => {
-    const taxPath = path.join(ROOT, 'src/pages/finance/income-tax-calculator.astro');
+    const taxPath = path.join(ROOT, 'src/pages/income-tax-calculator.astro');
     const content = fs.readFileSync(taxPath, 'utf8');
 
     assert.ok(content.includes('id="tax-print-report"'), 'tax-print-report container must exist');

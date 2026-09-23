@@ -29,7 +29,26 @@ const formulaVariables = calc.mathInputs.map((inp) => ({
   meaning: inp.label + (inp.unit ? ` (${inp.unit})` : ''),
 }));
 
+const isCurrencyCalculator =
+  calc.category === 'finance' ||
+  calc.category === 'insurance' ||
+  calc.category === 'real-estate' ||
+  calc.category === 'business' ||
+  calc.slug.includes('tax') ||
+  calc.slug.includes('fee') ||
+  calc.slug.includes('cost') ||
+  calc.slug.includes('salary') ||
+  calc.slug.includes('alimony') ||
+  calc.slug.includes('child-support') ||
+  calc.slug.includes('settlement') ||
+  calc.slug.includes('pricing') ||
+  calc.resultPrefix === '$' ||
+  calc.mathInputs.some((i) => i.unit === '$' || (typeof i.label === 'string' && i.label.includes('$')));
+
 const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || calc.slug.includes('emi') || calc.slug.includes('amortization') || calc.slug.includes('payment');
+const isInvestment = calc.slug.includes('sip') || calc.slug.includes('interest') || calc.slug.includes('investment') || calc.slug.includes('401k') || calc.slug.includes('roth') || calc.slug.includes('annuity') || calc.slug.includes('lumpsum') || calc.slug.includes('inflation');
+const showFinancialVisualizer = isCurrencyCalculator && (isLoan || isInvestment);
+const isPercentageResult = calc.resultUnit === '%' || (calc.defaultResult && calc.defaultResult.suffix === '%') || calc.slug.includes('roi');
 ---
 
 <div class="finance-calc-unified-container space-y-6">
@@ -122,7 +141,7 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
 
       <div class="flex items-center gap-2 font-mono text-mute">
         <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span id="finance-header-currency-label" class="font-semibold text-ink">{defaultCurrency} ({defaultSymbol})</span>
+        <span id="finance-header-currency-label" class="font-semibold text-ink">{isCurrencyCalculator ? `${defaultCurrency} (${defaultSymbol})` : 'Exact Precision Engine'}</span>
         <span>•</span>
         <span>100% Private Client-Side</span>
       </div>
@@ -159,7 +178,7 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
                 <div class="relative flex items-center gap-2">
                   <div class="relative flex-1">
                     <span class="symbol-addon absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-mono text-mute select-none font-bold">
-                      {inp.unit === '$' || inp.unit === '₹' ? inp.unit : (inp.label.toLowerCase().includes('rate') || inp.label.toLowerCase().includes('percent') ? '' : '₹')}
+                      {inp.unit === '$' || inp.unit === '₹' ? inp.unit : (isCurrencyCalculator && !inp.label.toLowerCase().includes('rate') && !inp.label.toLowerCase().includes('percent') && !inp.label.toLowerCase().includes('year') && !inp.label.toLowerCase().includes('month') && !inp.label.toLowerCase().includes('age') && !inp.label.toLowerCase().includes('hour') ? defaultSymbol : '')}
                     </span>
                     <input
                       id={`inp-${inp.id}`}
@@ -169,7 +188,7 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
                       min={inp.min ?? 0}
                       max={inp.max ?? 10000000}
                       value={inp.defaultValue}
-                      class={`finance-input w-full min-h-[46px] min-h-[44px] rounded-xl border border-hairline bg-canvas-elevated py-2.5 ${inp.label.toLowerCase().includes('rate') ? 'pl-3 pr-8' : 'pl-8 pr-3'} text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20 tabular-nums font-semibold transition-all shadow-2xs`}
+                      class={`finance-input w-full min-h-[46px] min-h-[44px] rounded-xl border border-hairline bg-canvas-elevated py-2.5 ${inp.label.toLowerCase().includes('rate') || !isCurrencyCalculator ? 'pl-3 pr-8' : 'pl-8 pr-3'} text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20 tabular-nums font-semibold transition-all shadow-2xs`}
                     />
                     {inp.unit && (
                       <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-mono text-mute select-none font-bold">
@@ -225,13 +244,16 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
                 {calc.resultLabel || "Primary Output"}
               </span>
               <div class="flex items-baseline gap-2 mt-1">
-                <span id="hero-result-symbol" class="text-2xl sm:text-3xl font-bold font-mono text-ink">{defaultSymbol}</span>
+                <span id="hero-result-symbol" class={`text-2xl sm:text-3xl font-bold font-mono text-ink ${!isCurrencyCalculator || isPercentageResult ? 'hidden' : ''}`}>{defaultSymbol}</span>
                 <span id="hero-result-val" class="text-3xl sm:text-4xl font-extrabold font-mono text-ink tabular-nums tracking-tight">
-                  0
+                  {calc.initialValue !== undefined ? calc.initialValue : 0}
                 </span>
+                {calc.resultUnit && (
+                  <span id="hero-result-unit" class="text-lg sm:text-xl font-bold font-mono text-ink/70">{calc.resultUnit}</span>
+                )}
               </div>
               <p id="hero-result-sub" class="text-xs text-mute mt-1 font-mono">
-                {isLoan ? "Scheduled periodic installment obligation" : "Expected financial corpus projection"}
+                {calc.secondaryText || (isLoan ? "Scheduled periodic installment obligation" : (isCurrencyCalculator ? "Expected financial corpus projection" : "Verified output calculation"))}
               </p>
             </div>
 
@@ -247,6 +269,7 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
           </div>
 
           <!-- Live Spectrum Bar -->
+          {showFinancialVisualizer && (
           <div class="space-y-2 mt-5 pt-4 border-t border-hairline">
             <div class="flex items-center justify-between text-xs font-mono">
               <span class="text-link font-semibold flex items-center gap-1.5">
@@ -263,6 +286,7 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
               <div id="spectrum-gain" class="h-full bg-cyan transition-all duration-300 rounded-r-full" style="width: 50%;"></div>
             </div>
           </div>
+          )}
         </div>
 
         <!-- 2 Secondary Cards -->
@@ -270,29 +294,30 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
           <div class="p-4 rounded-xl border border-hairline bg-canvas/40 flex flex-col justify-between">
             <div class="flex items-center justify-between">
               <span id="sec-card-1-label" class="text-[11px] font-mono font-bold uppercase tracking-wider text-mute">
-                {isLoan ? "Principal Borrowed" : "Total Invested"}
+                {isCurrencyCalculator ? (isLoan ? "Principal Borrowed" : "Total Invested") : "Base / Parameter"}
               </span>
               <span class="w-2 h-2 rounded-full bg-link"></span>
             </div>
             <div class="mt-2 text-xl sm:text-2xl font-bold font-mono text-ink tabular-nums">
-              <span id="sec-card-1-sym">{defaultSymbol}</span> <span id="sec-card-1-val">0</span>
+              <span id="sec-card-1-sym" class={!isCurrencyCalculator ? 'hidden' : ''}>{defaultSymbol}</span> <span id="sec-card-1-val">0</span>
             </div>
           </div>
 
           <div class="p-4 rounded-xl border border-hairline bg-canvas/40 flex flex-col justify-between">
             <div class="flex items-center justify-between">
               <span id="sec-card-2-label" class="text-[11px] font-mono font-bold uppercase tracking-wider text-mute">
-                {isLoan ? "Total Interest" : "Estimated Wealth Gain"}
+                {isCurrencyCalculator ? (isLoan ? "Total Interest" : "Estimated Wealth Gain") : "Secondary Metric"}
               </span>
               <span class="w-2 h-2 rounded-full bg-cyan"></span>
             </div>
             <div class="mt-2 text-xl sm:text-2xl font-bold font-mono text-cyan tabular-nums">
-              <span id="sec-card-2-sym">{defaultSymbol}</span> <span id="sec-card-2-val">0</span>
+              <span id="sec-card-2-sym" class={!isCurrencyCalculator ? 'hidden' : ''}>{defaultSymbol}</span> <span id="sec-card-2-val">0</span>
             </div>
           </div>
         </div>
 
         <!-- Interactive SVG Donut Visualizer -->
+        {showFinancialVisualizer && (
         <div class="p-4 sm:p-5 rounded-2xl border border-hairline bg-canvas/40 flex flex-col sm:flex-row items-center justify-around gap-4">
           <div class="relative w-36 h-36 shrink-0 flex items-center justify-center">
             <svg class="w-full h-full transform -rotate-90" viewBox="0 0 140 140">
@@ -323,10 +348,11 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
             </div>
             <div class="pt-2 border-t border-hairline flex items-center justify-between sm:justify-start gap-4 text-[11px]">
               <span class="text-mute">Total Sum:</span>
-              <span id="legend-total-val" class="font-bold text-ink">₹ 0</span>
+              <span id="legend-total-val" class="font-bold text-ink">{defaultSymbol} 0</span>
             </div>
           </div>
         </div>
+        )}
 
       </div>
     </div>
@@ -344,27 +370,31 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
         </div>
       </div>
 
-      <div class="p-3.5 rounded-xl border border-hairline bg-canvas/40 flex items-start gap-3">
-        <div class="w-8 h-8 rounded-lg bg-link/10 text-link flex items-center justify-center shrink-0 mt-0.5">
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+      {isCurrencyCalculator && (
+        <div class="p-3.5 rounded-xl border border-hairline bg-canvas/40 flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-link/10 text-link flex items-center justify-center shrink-0 mt-0.5">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-mute block">Inflation Proof (6%)</span>
+            <span id="matrix-inflation-val" class="text-xs font-mono font-bold text-ink block mt-0.5">--</span>
+            <p class="text-[10px] text-mute mt-0.5 leading-tight">Real purchasing power outcome.</p>
+          </div>
         </div>
-        <div>
-          <span class="text-[10px] font-mono uppercase tracking-wider text-mute block">Inflation Proof (6%)</span>
-          <span id="matrix-inflation-val" class="text-xs font-mono font-bold text-ink block mt-0.5">--</span>
-          <p class="text-[10px] text-mute mt-0.5 leading-tight">Real purchasing power outcome.</p>
-        </div>
-      </div>
+      )}
 
-      <div class="p-3.5 rounded-xl border border-hairline bg-canvas/40 flex items-start gap-3">
-        <div class="w-8 h-8 rounded-lg bg-violet/10 text-violet flex items-center justify-center shrink-0 mt-0.5">
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      {isCurrencyCalculator && (
+        <div class="p-3.5 rounded-xl border border-hairline bg-canvas/40 flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-violet/10 text-violet flex items-center justify-center shrink-0 mt-0.5">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          </div>
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-mute block">Total Obligation / Worth</span>
+            <span id="matrix-total-val" class="text-xs font-mono font-bold text-ink block mt-0.5">--</span>
+            <p class="text-[10px] text-mute mt-0.5 leading-tight">Cumulative financial commitment.</p>
+          </div>
         </div>
-        <div>
-          <span class="text-[10px] font-mono uppercase tracking-wider text-mute block">Total Obligation / Worth</span>
-          <span id="matrix-total-val" class="text-xs font-mono font-bold text-ink block mt-0.5">--</span>
-          <p class="text-[10px] text-mute mt-0.5 leading-tight">Cumulative financial commitment.</p>
-        </div>
-      </div>
+      )}
 
       <div class="p-3.5 rounded-xl border border-hairline bg-canvas/40 flex items-start gap-3">
         <div class="w-8 h-8 rounded-lg bg-cyan/10 text-cyan flex items-center justify-center shrink-0 mt-0.5">
@@ -409,7 +439,7 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
     </div>
 
     <!-- Annual Accumulation / Breakdown Schedule Table -->
-    <div id="schedule-section-card" class="space-y-3 pt-2 print:hidden">
+    <div id="schedule-section-card" class="space-y-3 pt-2 print:hidden" style={!showFinancialVisualizer ? "display: none;" : ""}>
       <div class="flex items-center justify-between">
         <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-ink font-mono">
           Multi-Year Amortization & Breakdown Schedule
@@ -481,10 +511,14 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </span>
-            <h3 class="text-base sm:text-lg font-bold text-ink tracking-tight font-display">Download {calc.name} Statement & Schedule</h3>
+            <h3 class="text-base sm:text-lg font-bold text-ink tracking-tight font-display">
+              {isCurrencyCalculator ? `Download ${calc.name} Statement & Schedule` : `Export ${calc.name} Summary & Report`}
+            </h3>
           </div>
           <p class="text-xs sm:text-sm text-mute leading-relaxed max-w-2xl">
-            Instantly export your personalized financial statement, breakdown schedule, and mathematical proof in your preferred format.
+            {isCurrencyCalculator 
+              ? "Instantly export your personalized financial statement, breakdown schedule, and mathematical proof in your preferred format."
+              : "Instantly export your verified calculation summary, mathematical proof, and report in your preferred format."}
           </p>
           <div class="flex flex-wrap items-center gap-3 pt-1 text-[11px] font-mono text-mute">
             <span class="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
@@ -545,7 +579,7 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
 </div>
 
 <!-- Client-side Calculation & State Engine -->
-<script is:inline define:vars={{ slug: calc.slug, calcName: calc.name, initCurrCode: defaultCurrency, initCurrSym: defaultSymbol, initIsIndian: defaultIsIndian }}>
+<script is:inline define:vars={{ slug: calc.slug, calcName: calc.name, initCurrCode: defaultCurrency, initCurrSym: defaultSymbol, initIsIndian: defaultIsIndian, computeScript: calc.computeScript || '', resultUnit: calc.resultUnit || '', resultPrefix: calc.resultPrefix || '', isCurrency: isCurrencyCalculator, calcDecimals: calc.decimals ?? 2 }}>
   (function () {
     // 1. Silent Currency Management
     let currentCurrencyCode = typeof window.facGetActiveCurrency === 'function'
@@ -593,13 +627,34 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
     }
 
     function updateCurrencyUI() {
-      document.querySelectorAll('.symbol-addon, #hero-result-symbol, #sec-card-1-sym, #sec-card-2-sym').forEach((el) => {
+      if (!isCurrency || resultUnit === '%' || slug.includes('roi')) {
+        document.querySelectorAll('#hero-result-symbol').forEach((el) => {
+          el.style.display = 'none';
+        });
+      }
+      if (!isCurrency) {
+        document.querySelectorAll('#hero-result-symbol, #sec-card-1-sym, #sec-card-2-sym').forEach((el) => {
+          el.style.display = 'none';
+        });
+        return;
+      }
+      document.querySelectorAll('.symbol-addon, #sec-card-1-sym, #sec-card-2-sym').forEach((el) => {
         if (el.textContent && el.textContent.trim() !== '%') {
           el.textContent = currentCurrencySymbol;
+          el.style.display = '';
         }
       });
+      if (resultUnit !== '%' && !slug.includes('roi')) {
+        const heroSym = document.getElementById('hero-result-symbol');
+        if (heroSym) {
+          heroSym.textContent = currentCurrencySymbol;
+          heroSym.style.display = '';
+        }
+      }
       const headerLabel = document.getElementById('finance-header-currency-label');
-      if (headerLabel) headerLabel.textContent = `${currentCurrencyCode} (${currentCurrencySymbol})`;
+      if (headerLabel) {
+        headerLabel.textContent = isCurrency ? `${currentCurrencyCode} (${currentCurrencySymbol})` : 'Exact Precision Engine';
+      }
     }
 
     // Calculation State
@@ -621,7 +676,7 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
           const isYear = inp.name.toLowerCase().includes('year') || inp.name.toLowerCase().includes('term') || inp.name.toLowerCase().includes('age');
           if (isRate) disp.textContent = `${Number(inp.value).toFixed(2)}%`;
           else if (isYear) disp.textContent = `${inp.value} Years`;
-          else if (!isNaN(num)) disp.textContent = `${currentCurrencySymbol} ${formatVal(num, 0)}`;
+          else if (!isNaN(num)) disp.textContent = isCurrency ? `${currentCurrencySymbol} ${formatVal(num, 0)}` : formatVal(num, 2);
           else disp.textContent = inp.value;
         }
       });
@@ -1495,7 +1550,34 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
         if (s1Lbl) s1Lbl.textContent = 'Days Remaining to Full Term';
         if (s2Lbl) s2Lbl.textContent = 'Weeks Remaining to Due Date';
       }
-      // 5. Default General Investment / Finance Fallback
+      // 19. Dedicated Registry computeScript (covers all 73+ non-financial and specialized calculators!)
+      else if (computeScript) {
+        try {
+          const runCompute = new Function('inputs', computeScript);
+          const computed = runCompute(inputs);
+          if (computed && typeof computed === 'object') {
+            res1 = computed.value !== undefined ? computed.value : 0;
+            res2 = computed.baseValue ?? computed.principal ?? 0;
+            res3 = computed.secondaryValue ?? computed.interest ?? 0;
+            const heroSubLbl = document.getElementById('hero-result-sub');
+            if (heroSubLbl && (computed.secondaryText || computed.secondary)) {
+              heroSubLbl.textContent = computed.secondaryText || computed.secondary;
+            }
+            const multBadge = document.getElementById('finance-multiplier-badge');
+            if (multBadge && computed.badge) {
+              multBadge.textContent = computed.badge;
+            }
+            if (computed.schedule && Array.isArray(computed.schedule)) {
+              rows = computed.schedule;
+            }
+          } else if (typeof computed === 'number') {
+            res1 = computed;
+          }
+        } catch (scriptErr) {
+          console.error('computeScript execution error for ' + slug + ':', scriptErr);
+        }
+      }
+      // 20. Default General Investment / Finance Fallback
       else {
         const p = parseFloat(inputs.principal || inputs.investmentAmount || inputs.initialDeposit || 100000) || 0;
         const monthlyP = parseFloat(inputs.monthlyContribution || inputs.monthlyDeposit || inputs.monthlyInvestment || 0) || 0;
@@ -1535,10 +1617,11 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
       const sec2Val = document.getElementById('sec-card-2-val');
       const mobileVal = document.getElementById('mobile-hud-val');
 
-      if (heroVal) heroVal.textContent = formatVal(res1, 0);
-      if (sec1Val) sec1Val.textContent = formatVal(res2, 0);
-      if (sec2Val) sec2Val.textContent = formatVal(res3, 0);
-      if (mobileVal) mobileVal.textContent = `${currentCurrencySymbol} ${formatVal(res1, 0)}`;
+      const primaryDecimals = calcDecimals !== undefined ? calcDecimals : (isCurrency ? 0 : 2);
+      if (heroVal) heroVal.textContent = typeof res1 === 'number' ? formatVal(res1, primaryDecimals) : String(res1);
+      if (sec1Val) sec1Val.textContent = typeof res2 === 'number' ? formatVal(res2, 0) : String(res2);
+      if (sec2Val) sec2Val.textContent = typeof res3 === 'number' ? formatVal(res3, 0) : String(res3);
+      if (mobileVal) mobileVal.textContent = isCurrency && resultUnit !== '%' ? `${currentCurrencySymbol} ${formatVal(res1, primaryDecimals)}` : `${typeof res1 === 'number' ? formatVal(res1, primaryDecimals) : res1}${resultUnit ? ' ' + resultUnit : ''}`;
 
       // Spectrum Bar & Ratios
       const totalBase = (res2 + res3) || 1;
@@ -1552,8 +1635,8 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
 
       if (barP) barP.style.width = `${principalPct.toFixed(1)}%`;
       if (barG) barG.style.width = `${gainPct.toFixed(1)}%`;
-      if (labelP) labelP.textContent = `${currentCurrencySymbol} ${formatVal(res2, 0)} (${principalPct.toFixed(1)}%)`;
-      if (labelG) labelG.textContent = `${currentCurrencySymbol} ${formatVal(res3, 0)} (${gainPct.toFixed(1)}%)`;
+      if (labelP) labelP.textContent = isCurrency ? `${currentCurrencySymbol} ${formatVal(res2, 0)} (${principalPct.toFixed(1)}%)` : `${formatVal(res2, 0)} (${principalPct.toFixed(1)}%)`;
+      if (labelG) labelG.textContent = isCurrency ? `${currentCurrencySymbol} ${formatVal(res3, 0)} (${gainPct.toFixed(1)}%)` : `${formatVal(res3, 0)} (${gainPct.toFixed(1)}%)`;
 
       // SVG Donut Rings
       const circ = 339.29;
@@ -1574,11 +1657,11 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
 
       if (leg1) leg1.textContent = `${principalPct.toFixed(1)}%`;
       if (leg2) leg2.textContent = `${gainPct.toFixed(1)}%`;
-      if (legTot) legTot.textContent = `${currentCurrencySymbol} ${formatVal(res2 + res3, 0)}`;
+      if (legTot) legTot.textContent = isCurrency ? `${currentCurrencySymbol} ${formatVal(res2 + res3, 0)}` : formatVal(res2 + res3, 0);
 
       // Badges
       const multBadge = document.getElementById('finance-multiplier-badge');
-      if (multBadge) {
+      if (multBadge && !computeScript) {
         const mult = res2 > 0 ? ((res2 + res3) / res2).toFixed(2) : '1.00';
         multBadge.textContent = `${mult}x Ratio`;
       }
@@ -1600,16 +1683,22 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
     }
 
     function renderSchedule(rows) {
+      const scheduleCard = document.getElementById('schedule-section-card');
+      if (!rows || rows.length === 0) {
+        if (scheduleCard) scheduleCard.style.display = 'none';
+        return;
+      }
+      if (scheduleCard) scheduleCard.style.display = 'block';
       if (!scheduleBody) return;
       let html = '';
       rows.slice(0, 50).forEach((r) => {
         html += `
           <tr class="hover:bg-canvas-subtle/50 transition-colors">
             <td class="py-2.5 px-3.5 font-semibold text-link whitespace-nowrap">${r.period}</td>
-            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.payment, 0)}</td>
-            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono text-mute whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.principal, 0)}</td>
-            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono text-violet font-semibold whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.interest, 0)}</td>
-            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono font-bold text-cyan whitespace-nowrap">${currentCurrencySymbol} ${formatVal(r.balance, 0)}</td>
+            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono whitespace-nowrap">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.payment, 0)}</td>
+            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono text-mute whitespace-nowrap">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.principal, 0)}</td>
+            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono text-violet font-semibold whitespace-nowrap">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.interest, 0)}</td>
+            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono font-bold text-cyan whitespace-nowrap">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.balance, 0)}</td>
           </tr>
         `;
       });
@@ -1625,15 +1714,16 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
       const m3 = document.getElementById('print-metric-value-3');
 
       if (pDate) pDate.textContent = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-      if (pCurr) pCurr.textContent = `${currentCurrencyCode} (${currentCurrencySymbol})`;
-      if (m1) m1.textContent = `${currentCurrencySymbol} ${formatVal(r1, 0)}`;
-      if (m2) m2.textContent = `${currentCurrencySymbol} ${formatVal(r2, 0)}`;
-      if (m3) m3.textContent = `${currentCurrencySymbol} ${formatVal(r3, 0)}`;
+      if (pCurr) pCurr.textContent = isCurrency ? `${currentCurrencyCode} (${currentCurrencySymbol})` : (resultUnit || 'Standard');
+      const decimals = isCurrency ? 0 : calcDecimals;
+      if (m1) m1.textContent = isCurrency ? `${currentCurrencySymbol} ${formatVal(r1, 0)}` : `${formatVal(r1, decimals)} ${resultUnit}`.trim();
+      if (m2) m2.textContent = isCurrency ? `${currentCurrencySymbol} ${formatVal(r2, 0)}` : formatVal(r2, decimals);
+      if (m3) m3.textContent = isCurrency ? `${currentCurrencySymbol} ${formatVal(r3, 0)}` : formatVal(r3, decimals);
 
       if (pGrid) {
         let phtml = '';
         for (const [k, v] of Object.entries(inputs)) {
-          phtml += `<div><span class="text-slate-500 uppercase block text-[10px]">${k}:</span><strong>${typeof v === 'number' ? formatVal(v, 0) : v}</strong></div>`;
+          phtml += `<div><span class="text-slate-500 uppercase block text-[10px]">${k}:</span><strong>${typeof v === 'number' ? formatVal(v, isCurrency ? 0 : calcDecimals) : v}</strong></div>`;
         }
         pGrid.innerHTML = phtml;
       }
@@ -1644,10 +1734,10 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
           pRows += `
             <tr>
               <td class="py-1 px-2 font-bold">${r.period}</td>
-              <td class="py-1 px-2 text-right">${currentCurrencySymbol} ${formatVal(r.payment, 0)}</td>
-              <td class="py-1 px-2 text-right">${currentCurrencySymbol} ${formatVal(r.principal, 0)}</td>
-              <td class="py-1 px-2 text-right">${currentCurrencySymbol} ${formatVal(r.interest, 0)}</td>
-              <td class="py-1 px-2 text-right font-bold">${currentCurrencySymbol} ${formatVal(r.balance, 0)}</td>
+              <td class="py-1 px-2 text-right">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.payment, 0)}</td>
+              <td class="py-1 px-2 text-right">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.principal, 0)}</td>
+              <td class="py-1 px-2 text-right">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.interest, 0)}</td>
+              <td class="py-1 px-2 text-right font-bold">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.balance, 0)}</td>
             </tr>
           `;
         });
@@ -1731,15 +1821,26 @@ const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || c
     window.addEventListener('beforeprint', () => recalculate());
 
     function copySummary() {
-      const text = [
+      const primaryDisplay = isCurrency 
+        ? `${currentCurrencySymbol} ${formatVal(currentReportState.val1, 0)}` 
+        : `${formatVal(currentReportState.val1, calcDecimals)} ${resultUnit}`.trim();
+
+      const lines = [
         `📊 ${calcName} Summary — Free Accurate Calculator`,
         `----------------------------------------------------`,
-        `• Primary Result: ${currentCurrencySymbol} ${formatVal(currentReportState.val1, 0)}`,
-        `• Base Amount: ${currentCurrencySymbol} ${formatVal(currentReportState.val2, 0)}`,
-        `• Growth/Cost: ${currentCurrencySymbol} ${formatVal(currentReportState.val3, 0)}`,
-        `----------------------------------------------------`,
-        `Calculate online: ${window.location.href}`,
-      ].join('\n');
+        `• Primary Result: ${primaryDisplay}`,
+      ];
+
+      if (isCurrency || currentReportState.val2 !== 0) {
+        lines.push(`• Base / Secondary: ${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(currentReportState.val2, isCurrency ? 0 : calcDecimals)}`);
+      }
+      if (isCurrency || currentReportState.val3 !== 0) {
+        lines.push(`• Additional Metric: ${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(currentReportState.val3, isCurrency ? 0 : calcDecimals)}`);
+      }
+      lines.push(`----------------------------------------------------`);
+      lines.push(`Calculate online: ${window.location.href}`);
+
+      const text = lines.join('\n');
 
       navigator.clipboard.writeText(text).then(() => {
         showToast('Summary copied to clipboard!');

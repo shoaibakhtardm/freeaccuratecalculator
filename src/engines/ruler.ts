@@ -71,33 +71,54 @@ export interface DevicePreset {
  * calibration. PPI is derived on demand via `devicePresetPpi()`.
  */
 export const DEVICE_PRESETS: readonly DevicePreset[] = [
-  // ---- Phones -----------------------------------------------------------
-  { id: 'iphone-se-3', label: 'iPhone SE 3 (4.7″, 375×667 pt)', diagonalIn: 4.7, widthPx: 375, heightPx: 667 },
-  { id: 'iphone-14', label: 'iPhone 14 / 13 (6.1″, 390×844 pt)', diagonalIn: 6.1, widthPx: 390, heightPx: 844 },
-  { id: 'iphone-15', label: 'iPhone 15 / 15 Pro (6.1″, 393×852 pt)', diagonalIn: 6.1, widthPx: 393, heightPx: 852 },
+  // ---- Flagship Phones ---------------------------------------------------
+  { id: 'iphone-16-pro-max', label: 'iPhone 16 Pro Max (6.9″, 430×932 pt)', diagonalIn: 6.9, widthPx: 430, heightPx: 932 },
+  { id: 'iphone-16-pro', label: 'iPhone 16 Pro (6.3″, 393×852 pt)', diagonalIn: 6.3, widthPx: 393, heightPx: 852 },
+  { id: 'iphone-16', label: 'iPhone 16 / 15 / 14 / 13 (6.1″, 390×844 pt)', diagonalIn: 6.1, widthPx: 390, heightPx: 844 },
   { id: 'iphone-15-pro-max', label: 'iPhone 15 Plus / Pro Max (6.7″, 430×932 pt)', diagonalIn: 6.7, widthPx: 430, heightPx: 932 },
-  { id: 'galaxy-s24', label: 'Samsung Galaxy S24 (6.2″, 360×780 dp)', diagonalIn: 6.2, widthPx: 360, heightPx: 780 },
+  { id: 'iphone-se-3', label: 'iPhone SE 3 (4.7″, 375×667 pt)', diagonalIn: 4.7, widthPx: 375, heightPx: 667 },
   { id: 'galaxy-s24-ultra', label: 'Samsung Galaxy S24 Ultra (6.8″, 384×824 dp)', diagonalIn: 6.8, widthPx: 384, heightPx: 824 },
-  { id: 'galaxy-z-fold-5', label: 'Samsung Galaxy Z Fold 5 inner (7.6″, 690×829 dp)', diagonalIn: 7.6, widthPx: 690, heightPx: 829 },
-  { id: 'pixel-8', label: 'Google Pixel 8 (6.2″, 412×915 dp)', diagonalIn: 6.2, widthPx: 412, heightPx: 915 },
-  { id: 'pixel-8-pro', label: 'Google Pixel 8 Pro (6.7″, 448×998 dp)', diagonalIn: 6.7, widthPx: 448, heightPx: 998 },
+  { id: 'galaxy-s24', label: 'Samsung Galaxy S24 (6.2″, 360×780 dp)', diagonalIn: 6.2, widthPx: 360, heightPx: 780 },
+  { id: 'galaxy-z-fold-5', label: 'Samsung Galaxy Z Fold 5 / 6 (7.6″, 690×829 dp)', diagonalIn: 7.6, widthPx: 690, heightPx: 829 },
+  { id: 'pixel-9-pro-xl', label: 'Google Pixel 9 Pro XL (6.8″, 448×998 dp)', diagonalIn: 6.8, widthPx: 448, heightPx: 998 },
+  { id: 'pixel-9', label: 'Google Pixel 9 / 8 (6.2″, 412×915 dp)', diagonalIn: 6.2, widthPx: 412, heightPx: 915 },
   // ---- Tablets ----------------------------------------------------------
-  { id: 'ipad-mini', label: 'iPad mini (8.3″, 744×1133 pt)', diagonalIn: 8.3, widthPx: 744, heightPx: 1133 },
-  { id: 'ipad-air', label: 'iPad Air (11″, 820×1180 pt)', diagonalIn: 11, widthPx: 820, heightPx: 1180 },
-  { id: 'ipad-pro', label: 'iPad Pro (13″, 1032×1376 pt)', diagonalIn: 13, widthPx: 1032, heightPx: 1376 },
+  { id: 'ipad-pro-m4-13', label: 'iPad Pro 13″ M4 (1032×1376 pt)', diagonalIn: 13.0, widthPx: 1032, heightPx: 1376 },
+  { id: 'ipad-pro-m4-11', label: 'iPad Pro 11″ M4 (834×1210 pt)', diagonalIn: 11.1, widthPx: 834, heightPx: 1210 },
+  { id: 'ipad-air', label: 'iPad Air 11″ (820×1180 pt)', diagonalIn: 10.9, widthPx: 820, heightPx: 1180 },
+  { id: 'ipad-mini', label: 'iPad mini 6 (8.3″, 744×1133 pt)', diagonalIn: 8.3, widthPx: 744, heightPx: 1133 },
   // ---- Laptops ----------------------------------------------------------
-  { id: 'macbook-air-13', label: 'MacBook Air 13″ (1280×832 pt)', diagonalIn: 13.6, widthPx: 1280, heightPx: 832 },
-  { id: 'macbook-air-15', label: 'MacBook Air 15″ (1440×932 pt)', diagonalIn: 15.3, widthPx: 1440, heightPx: 932 },
-  { id: 'macbook-pro-14', label: 'MacBook Pro 14″ (1512×982 pt)', diagonalIn: 14.2, widthPx: 1512, heightPx: 982 },
   { id: 'macbook-pro-16', label: 'MacBook Pro 16″ (1728×1117 pt)', diagonalIn: 16.2, widthPx: 1728, heightPx: 1117 },
-  { id: 'win-laptop-14', label: 'Windows laptop 14″ (1250×810, 125% scaling)', diagonalIn: 14, widthPx: 1250, heightPx: 810 },
-  { id: 'win-laptop-15', label: 'Windows laptop 15.6″ (1366×768, 100% scaling)', diagonalIn: 15.6, widthPx: 1366, heightPx: 768 },
+  { id: 'macbook-pro-14', label: 'MacBook Pro 14″ (1512×982 pt)', diagonalIn: 14.2, widthPx: 1512, heightPx: 982 },
+  { id: 'macbook-air-15', label: 'MacBook Air 15″ (1440×932 pt)', diagonalIn: 15.3, widthPx: 1440, heightPx: 932 },
+  { id: 'macbook-air-13', label: 'MacBook Air 13″ (1280×832 pt)', diagonalIn: 13.6, widthPx: 1280, heightPx: 832 },
+  { id: 'win-laptop-14', label: 'Windows laptop 14″ FHD (1250×810, 125%)', diagonalIn: 14.0, widthPx: 1250, heightPx: 810 },
+  { id: 'win-laptop-15', label: 'Windows laptop 15.6″ FHD (1366×768, 100%)', diagonalIn: 15.6, widthPx: 1366, heightPx: 768 },
   // ---- Monitors ---------------------------------------------------------
   { id: 'monitor-24-fhd', label: 'Monitor 24″ FHD (1920×1080)', diagonalIn: 24, widthPx: 1920, heightPx: 1080 },
   { id: 'monitor-27-qhd', label: 'Monitor 27″ QHD (2560×1440)', diagonalIn: 27, widthPx: 2560, heightPx: 1440 },
   { id: 'monitor-27-4k', label: 'Monitor 27″ 4K UHD (3840×2160)', diagonalIn: 27, widthPx: 3840, heightPx: 2160 },
   { id: 'monitor-32-4k', label: 'Monitor 32″ 4K UHD (3840×2160)', diagonalIn: 32, widthPx: 3840, heightPx: 2160 },
 ];
+
+/** Converts decimal inches to a clean fraction string, e.g. 2.625 -> "2 5/8″" */
+export function toFractionalInch(inches: number, maxDenominator: number = 16): string {
+  if (!isFinite(inches) || inches < 0) return '0″';
+  const whole = Math.floor(inches);
+  const remainder = inches - whole;
+  if (remainder < 1 / (maxDenominator * 2)) {
+    return `${whole}″`;
+  }
+  const fractionNum = Math.round(remainder * maxDenominator);
+  if (fractionNum === maxDenominator) {
+    return `${whole + 1}″`;
+  }
+  const gcd = (a: number, b: number): number => (b === 0 ? a : gcd(b, a % b));
+  const divisor = gcd(fractionNum, maxDenominator);
+  const num = fractionNum / divisor;
+  const den = maxDenominator / divisor;
+  return whole > 0 ? `${whole} ${num}/${den}″` : `${num}/${den}″`;
+}
 
 /** Standard physical reference objects (ISO 216 / ANSI / ISO/IEC 7810 ID-1). */
 export interface ReferenceObject {
@@ -519,3 +540,4 @@ export function formatComparison(valueA: number, unitA: RulerUnit, valueB: numbe
   const fmtMm = Math.abs(diffMm) < 100 ? Math.abs(diffMm).toFixed(1) : Math.abs(diffMm).toFixed(0);
   return `${valueA} ${unitA} vs ${valueB} ${unitB} — ${valueA} ${unitA} is ${sign} ${valueB} ${unitB} (${fmtMm} mm difference)`;
 }
+

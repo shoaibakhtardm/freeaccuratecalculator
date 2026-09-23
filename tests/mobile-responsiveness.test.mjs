@@ -35,12 +35,12 @@ test('Mobile Responsiveness Verification — HTML & CSS Audit', async (t) => {
   });
 
   await t.test('Breadcrumbs support wrapping to prevent viewport overflow', () => {
-    const emiHtml = fs.readFileSync(path.join(distClient, 'finance/emi-calculator/index.html'), 'utf-8');
+    const emiHtml = fs.readFileSync(path.join(distClient, 'emi-calculator/index.html'), 'utf-8');
     assert.ok(emiHtml.includes('flex-wrap'));
   });
 
   await t.test('Calculator input layout uses responsive single-to-multi-column grid and 44px touch targets', () => {
-    const emiHtml = fs.readFileSync(path.join(distClient, 'finance/emi-calculator/index.html'), 'utf-8');
+    const emiHtml = fs.readFileSync(path.join(distClient, 'emi-calculator/index.html'), 'utf-8');
     assert.ok(emiHtml.includes('id="emi-principal"'));
     assert.ok(emiHtml.includes('id="emi-rate"'));
     assert.ok(emiHtml.includes('id="emi-tenure"'));
@@ -50,21 +50,21 @@ test('Mobile Responsiveness Verification — HTML & CSS Audit', async (t) => {
   });
 
   await t.test('BMI calculator has responsive spectrum bar and 44px unit toggle', () => {
-    const bmiHtml = fs.readFileSync(path.join(distClient, 'health/bmi-calculator/index.html'), 'utf-8');
+    const bmiHtml = fs.readFileSync(path.join(distClient, 'bmi-calculator/index.html'), 'utf-8');
     assert.ok(bmiHtml.includes('id="unit-metric-btn"'));
     assert.ok(bmiHtml.includes('min-h-[44px]'));
     assert.ok(bmiHtml.includes('bmi-gauge-needle'));
   });
 
   await t.test('Amortization schedule table has self-contained horizontal scroll container and mobile hint', () => {
-    const emiHtml = fs.readFileSync(path.join(distClient, 'finance/emi-calculator/index.html'), 'utf-8');
+    const emiHtml = fs.readFileSync(path.join(distClient, 'emi-calculator/index.html'), 'utf-8');
     assert.ok(emiHtml.includes('overflow-x-auto max-w-full'));
     assert.ok(emiHtml.includes('min-w-[480px]'));
     assert.ok(emiHtml.includes('Swipe schedule horizontally'));
   });
 
   await t.test('Dynamic calculator template has 44px min-height touch targets and iOS zoom protection', () => {
-    const mortgageHtml = fs.readFileSync(path.join(distClient, 'finance/mortgage-calculator/index.html'), 'utf-8');
+    const mortgageHtml = fs.readFileSync(path.join(distClient, 'mortgage-calculator/index.html'), 'utf-8');
     assert.ok(mortgageHtml.includes('min-h-[44px]'));
     assert.ok(mortgageHtml.includes('text-base sm:text-sm'));
   });

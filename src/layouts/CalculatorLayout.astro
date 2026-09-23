@@ -81,12 +81,16 @@ const canonicalUrl = canonicalProp || `${siteOrigin}${normalizedPathname}`;
 // Map internal category to standard Schema.org ApplicationCategory
 let appCategory = 'UtilityApplication';
 const catKey = (category.href || category.label || '').toLowerCase();
-if (catKey.includes('finance')) {
+if (catKey.includes('finance') || catKey.includes('business') || catKey.includes('insurance') || catKey.includes('legal') || catKey.includes('real-estate')) {
   appCategory = 'FinanceApplication';
-} else if (catKey.includes('health')) {
+} else if (catKey.includes('health') || catKey.includes('food') || catKey.includes('sports')) {
   appCategory = 'HealthApplication';
-} else if (catKey.includes('math')) {
+} else if (catKey.includes('math') || catKey.includes('statistics') || catKey.includes('science') || catKey.includes('physics') || catKey.includes('chemistry') || catKey.includes('biology')) {
   appCategory = 'EducationalApplication';
+} else if (catKey.includes('construction')) {
+  appCategory = 'DesignApplication';
+} else if (catKey.includes('love')) {
+  appCategory = 'LifestyleApplication';
 }
 
 // Auto-generate WebApplication & SoftwareApplication Schema.org structured data

@@ -35,7 +35,13 @@ export function getStaticPaths() {
     const registryEntry = CALCULATORS.find((calculator) => calculator.id === slug);
     const seeded = getAllCalculators().find((calculator) => calculator.slug === slug);
     const calc: CalculatorEntity = seeded
-      ? seeded
+      ? {
+          ...seeded,
+          computeScript: registryEntry?.computeScript,
+          secondaryText: registryEntry?.defaultResult?.secondaryText,
+          initialValue: registryEntry?.defaultResult?.initialValue,
+          example: registryEntry?.example,
+        }
       : {
           slug,
           title: registryEntry?.title ?? slug.replace(/-/g, ' '),
@@ -50,6 +56,10 @@ export function getStaticPaths() {
           resultPrefix: registryEntry?.defaultResult?.prefix ?? '',
           resultUnit: registryEntry?.defaultResult?.suffix ?? '',
           decimals: registryEntry?.defaultResult?.decimals ?? 2,
+          computeScript: registryEntry?.computeScript,
+          secondaryText: registryEntry?.defaultResult?.secondaryText,
+          initialValue: registryEntry?.defaultResult?.initialValue,
+          example: registryEntry?.example,
           mathInputs: registryEntry?.inputs?.map((input) => ({
             id: input.id,
             label: input.label,
@@ -95,14 +105,30 @@ export function getStaticPaths() {
 
 const { calc, loveCalc } = Astro.props;
 const siteOrigin = 'https://freeaccuratecalculator.com';
-const canonicalUrl = `${siteOrigin}/${calc.slug}/`;
+const currentSlug = Astro.params.slug || calc.slug;
+const canonicalUrl = `${siteOrigin}/${currentSlug}/`;
 const relatedCalculators = getRelatedCalculators(calc.category, calc.slug, 3);
 const catMeta = CATEGORY_METADATA[calc.category as keyof typeof CATEGORY_METADATA] || CATEGORY_METADATA.finance;
+
+let appCategory = 'UtilitiesApplication';
+const cat = (calc.category || '').toLowerCase();
+if (['finance', 'business', 'real-estate', 'insurance', 'legal'].includes(cat)) {
+  appCategory = 'FinanceApplication';
+} else if (['health', 'food', 'sports'].includes(cat)) {
+  appCategory = 'HealthApplication';
+} else if (['math', 'statistics', 'physics', 'chemistry', 'biology'].includes(cat)) {
+  appCategory = 'EducationalApplication';
+} else if (['construction'].includes(cat)) {
+  appCategory = 'DesignApplication';
+} else if (['love'].includes(cat)) {
+  appCategory = 'LifestyleApplication';
+}
+
 const webAppSchema = {
   '@context': 'https://schema.org',
   '@type': ['SoftwareApplication', 'WebApplication'],
   name: calc.name,
-  applicationCategory: 'FinanceApplication',
+  applicationCategory: appCategory,
   operatingSystem: 'All',
   browserRequirements: 'Requires JavaScript. Requires HTML5.',
   url: canonicalUrl,
@@ -136,7 +162,7 @@ const faqSchema = {
   <article class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-10" itemscope itemtype="https://schema.org/WebApplication">
     <Breadcrumbs
       items={[
-        { label: catMeta.name, href: '/finance/' },
+        { label: catMeta.name, href: `/${calc.category}/` },
         { label: calc.name },
       ]}
     />
@@ -145,7 +171,7 @@ const faqSchema = {
       <div class="flex items-center gap-2">
         <span class="mono-eyebrow text-link font-semibold uppercase tracking-wider text-xs">{catMeta.name}</span>
         <span class="h-1 w-1 rounded-full bg-faint"></span>
-        <span class="text-[11px] font-mono text-mute">Programmatic pSEO Engine</span>
+        <span class="text-[11px] font-mono text-mute">Verified Calculation Engine</span>
         {calc.badge && (
           <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono font-medium bg-link/10 text-link border border-link/20">
             {calc.badge}
@@ -156,7 +182,13 @@ const faqSchema = {
       <p class="text-base text-body max-w-3xl leading-relaxed">{calc.metaDescription}</p>
     </header>
 
-    <FinanceCalculatorView calc={calc} relatedCalculators={relatedCalculators} />
+    <FinanceCalculatorView
+      calc={calc}
+      relatedCalculators={relatedCalculators}
+      defaultCurrency="USD"
+      defaultSymbol="$"
+      defaultIsIndian={false}
+    />
   </article>
 </Layout>
 )}

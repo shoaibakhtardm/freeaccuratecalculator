@@ -1,0 +1,2708 @@
+{
+  "total": 135,
+  "passedHtmlCheck": 135,
+  "passedMathCheck": 135,
+  "passedEdgeCases": 0,
+  "details": [
+    {
+      "name": "401(k) Calculator",
+      "url": "/401k-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Age Calculator",
+      "url": "/age-calculator/",
+      "category": "Everyday",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "AI Love Predictor 2026",
+      "url": "/ai-love-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "AI Love Predictor 2026",
+      "url": "/ai-love-predictor/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "AI Prompt & Token Cost Calculator",
+      "url": "/ai-token-cost-calculator/",
+      "category": "Technology",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "dedicated_custom_engine",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Alimony Estimator",
+      "url": "/alimony-calculator/",
+      "category": "Legal",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Amortization Calculator",
+      "url": "/amortization-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Annuity Payout Calculator",
+      "url": "/annuity-payout-calculator/",
+      "category": "Insurance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Auto Insurance Estimator",
+      "url": "/auto-insurance-calculator/",
+      "category": "Insurance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Auto Loan Calculator",
+      "url": "/auto-loan-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Bacterial Growth Calculator",
+      "url": "/bacterial-growth-calculator/",
+      "category": "Biology",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Baker’s Percentage Tool",
+      "url": "/bakers-percentage-calculator/",
+      "category": "Food",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Bandwidth Calculator",
+      "url": "/bandwidth-calculator/",
+      "category": "Technology",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Birth Date Compatibility",
+      "url": "/birth-date-compatibility/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Birth Date Compatibility",
+      "url": "/birth-date-love-compatibility/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "BMI Calculator",
+      "url": "/bmi-calculator/",
+      "category": "Health",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "dedicated_custom_engine",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "BMR Calculator",
+      "url": "/bmr-calculator/",
+      "category": "Health",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Body Fat Calculator",
+      "url": "/body-fat-calculator/",
+      "category": "Health",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Break-Even Analysis",
+      "url": "/break-even-calculator/",
+      "category": "Business",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Ex Reconciliation Chance",
+      "url": "/breakup-compatibility-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Brick & Mortar Calculator",
+      "url": "/brick-calculator/",
+      "category": "Construction",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Business Valuation Tool",
+      "url": "/business-valuation-calculator/",
+      "category": "Business",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Fiverr Gig Pricing Formula for $3,000/Month Net",
+      "url": "/business/freelance/fiverr-freelance-gig-pricing-for-3000-monthly-take-home/",
+      "category": "Business (Freelance Rate)",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Freelance Rate Needed to Net $100k Annually",
+      "url": "/business/freelance/freelance-hourly-rate-to-make-100k-a-year/",
+      "category": "Business (Freelance Rate)",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Customer Acquisition Cost",
+      "url": "/cac-calculator/",
+      "category": "Marketing",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Calorie Calculator",
+      "url": "/calorie-calculator/",
+      "category": "Health",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Calorie per Serving Tool",
+      "url": "/calorie-per-serving-calculator/",
+      "category": "Food",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Cap Rate Calculator",
+      "url": "/cap-rate-calculator/",
+      "category": "Real-estate",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Car Depreciation Tool",
+      "url": "/car-depreciation-calculator/",
+      "category": "Automotive",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Carbon Footprint Calculator",
+      "url": "/carbon-footprint-calculator/",
+      "category": "Ecology",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Celebrity Crush Match",
+      "url": "/celebrity-love-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Child Support Calculator",
+      "url": "/child-support-calculator/",
+      "category": "Legal",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Chinese Zodiac Love",
+      "url": "/chinese-zodiac-love-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Composting C:N Ratio Tool",
+      "url": "/compost-ratio-calculator/",
+      "category": "Ecology",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Compound Interest Calculator",
+      "url": "/compound-interest-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Concrete Calculator",
+      "url": "/concrete-calculator/",
+      "category": "Construction",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Confidence Interval",
+      "url": "/confidence-interval-calculator/",
+      "category": "Statistics",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Conversion Calculator",
+      "url": "/conversion-calculator/",
+      "category": "Converter",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Conversion Rate Calculator",
+      "url": "/conversion-rate-calculator/",
+      "category": "Marketing",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Couple Nickname Generator",
+      "url": "/couple-nickname-generator-match/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Crush Love Test",
+      "url": "/crush-love-test-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Crush Love Test",
+      "url": "/crush-love-test/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Data Transfer Time",
+      "url": "/data-transfer-calculator/",
+      "category": "Technology",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Date Calculator",
+      "url": "/date-calculator/",
+      "category": "Everyday",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Disability Insurance Calculator",
+      "url": "/disability-insurance-calculator/",
+      "category": "Insurance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Discount Calculator",
+      "url": "/discount-calculator/",
+      "category": "Everyday",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Email ROI Calculator",
+      "url": "/email-roi-calculator/",
+      "category": "Marketing",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "EMI Calculator",
+      "url": "/emi-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "dedicated_custom_engine",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Calculadora de Porcentajes",
+      "url": "/es/math/percentage-calculator/",
+      "category": "Multilingual (ES)",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "FLAMES Love Game",
+      "url": "/flames-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Calculateur de Pourcentage",
+      "url": "/fr/math/percentage-calculator/",
+      "category": "Multilingual (FR)",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Fraction Calculator",
+      "url": "/fraction-calculator/",
+      "category": "Math",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Friendship to Love",
+      "url": "/friendship-to-love-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Fuel Cost Calculator",
+      "url": "/fuel-cost-calculator/",
+      "category": "Automotive",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Golf Handicap Estimator",
+      "url": "/golf-handicap-calculator/",
+      "category": "Sports",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "GPA Calculator",
+      "url": "/gpa-calculator/",
+      "category": "Everyday",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Hardy-Weinberg Estimator",
+      "url": "/hardy-weinberg-calculator/",
+      "category": "Biology",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Health Insurance Premium Calculator",
+      "url": "/health-insurance-calculator/",
+      "category": "Insurance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Target Heart Rate Zone",
+      "url": "/heart-rate-zone-calculator/",
+      "category": "Sports",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "ऋण ईएमआई कैलकुलेटर",
+      "url": "/hi/finance/emi-calculator/",
+      "category": "Multilingual (HI)",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "प्रतिशत कैलकुलेटर",
+      "url": "/hi/math/percentage-calculator/",
+      "category": "Multilingual (HI)",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Hours Calculator",
+      "url": "/hours-calculator/",
+      "category": "Everyday",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Ideal Weight Calculator",
+      "url": "/ideal-weight-calculator/",
+      "category": "Health",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Income Tax Calculator",
+      "url": "/income-tax-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Inflation Calculator",
+      "url": "/inflation-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Kinetic Energy Calculator",
+      "url": "/kinetic-energy-calculator/",
+      "category": "Physics",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Marriage & Kundli Compatibility",
+      "url": "/kundli-matching/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Legal Fee Calculator",
+      "url": "/legal-fee-calculator/",
+      "category": "Legal",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Length & Distance Converter",
+      "url": "/length-converter/",
+      "category": "Converter",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Loan Calculator",
+      "url": "/loan-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Love Calculator by Name",
+      "url": "/love-calculator-by-name/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "love_hash_engine",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Love Calculator by Name",
+      "url": "/love-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Zodiac Love Compatibility",
+      "url": "/love-compatibility-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Love Language Compatibility",
+      "url": "/love-language-compatibility/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "love_hash_engine",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Lumpsum Calculator",
+      "url": "/lumpsum-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Macronutrient Ratio Tool",
+      "url": "/macronutrient-calculator/",
+      "category": "Food",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Marriage & Kundli Compatibility",
+      "url": "/marriage-compatibility-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Molar Mass Calculator",
+      "url": "/molar-mass-calculator/",
+      "category": "Chemistry",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "DNA / RNA Molecular Weight",
+      "url": "/molecular-weight-calculator/",
+      "category": "Biology",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Mortgage Calculator",
+      "url": "/mortgage-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Gas Mileage (MPG)",
+      "url": "/mpg-calculator/",
+      "category": "Automotive",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Numerology Love Match",
+      "url": "/numerology-love-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Ohm’s Law Calculator",
+      "url": "/ohms-law-calculator/",
+      "category": "Physics",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "One-Rep Max (1RM) Tool",
+      "url": "/one-rep-max-calculator/",
+      "category": "Sports",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Ovulation Calculator",
+      "url": "/ovulation-calculator/",
+      "category": "Health",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Pace Calculator",
+      "url": "/pace-calculator/",
+      "category": "Health",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Paint Coverage Estimator",
+      "url": "/paint-calculator/",
+      "category": "Construction",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Password Generator",
+      "url": "/password-generator/",
+      "category": "Technology",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Percentage Calculator",
+      "url": "/percentage-calculator/",
+      "category": "Math",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "dedicated_custom_engine",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "pH & pOH Calculator",
+      "url": "/ph-calculator/",
+      "category": "Chemistry",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Prank Love Calculator",
+      "url": "/prank-love-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Pregnancy Due Date Calculator",
+      "url": "/pregnancy-due-date-calculator/",
+      "category": "Health",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Probability Calculator",
+      "url": "/probability-calculator/",
+      "category": "Statistics",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Profit Margin Calculator",
+      "url": "/profit-margin-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Projectile Motion Tool",
+      "url": "/projectile-motion-calculator/",
+      "category": "Physics",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Property Tax Calculator",
+      "url": "/property-tax-calculator/",
+      "category": "Real-estate",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Punnett Square Calculator",
+      "url": "/punnett-square-calculator/",
+      "category": "Biology",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Random Number Generator",
+      "url": "/random-number-generator/",
+      "category": "Math",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Recipe Scaler & Converter",
+      "url": "/recipe-scaler-calculator/",
+      "category": "Food",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Relationship Compatibility Test",
+      "url": "/relationship-compatibility-test/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Relationship Compatibility Test",
+      "url": "/relationship-counter/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Rental Yield Calculator",
+      "url": "/rental-yield-calculator/",
+      "category": "Real-estate",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "ROAS Calculator",
+      "url": "/roas-calculator/",
+      "category": "Marketing",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "ROI Calculator",
+      "url": "/roi-calculator/",
+      "category": "Business",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Roth IRA Calculator",
+      "url": "/roth-ira-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Online Screen Ruler",
+      "url": "/ruler/",
+      "category": "Interactive Tools",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "dedicated_custom_engine",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Salary Calculator",
+      "url": "/salary-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Sample Size Calculator",
+      "url": "/sample-size-calculator/",
+      "category": "Statistics",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Scientific Calculator",
+      "url": "/scientific-calculator/",
+      "category": "Math",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Settlement Value Estimator",
+      "url": "/settlement-value-calculator/",
+      "category": "Legal",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "SIP Calculator",
+      "url": "/sip-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Solar Panel Energy Tool",
+      "url": "/solar-energy-calculator/",
+      "category": "Ecology",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Solution Dilution (C1V1)",
+      "url": "/solution-dilution-calculator/",
+      "category": "Chemistry",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Soulmate Name Matcher",
+      "url": "/soulmate-name-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Square Footage Calculator",
+      "url": "/square-footage-calculator/",
+      "category": "Construction",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Standard Deviation Calculator",
+      "url": "/standard-deviation-calculator/",
+      "category": "Statistics",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Step-Up SIP Calculator",
+      "url": "/step-up-sip-calculator/",
+      "category": "Finance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Stoichiometry Calculator",
+      "url": "/stoichiometry-calculator/",
+      "category": "Chemistry",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Subnet Calculator",
+      "url": "/subnet-calculator/",
+      "category": "Technology",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Tarot Love Reading Calc",
+      "url": "/tarot-love-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Temperature Converter",
+      "url": "/temperature-converter/",
+      "category": "Converter",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Term Life Insurance Calculator",
+      "url": "/term-life-insurance-calculator/",
+      "category": "Insurance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Time Calculator",
+      "url": "/time-calculator/",
+      "category": "Everyday",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Tip Calculator",
+      "url": "/tip-calculator/",
+      "category": "Everyday",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Triangle Calculator",
+      "url": "/triangle-calculator/",
+      "category": "Math",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "True Love Percentage",
+      "url": "/true-love-calculator-by-names/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "True Love Percentage",
+      "url": "/true-love-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Twin Flame Calculator",
+      "url": "/twin-flame-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Velocity & Acceleration",
+      "url": "/velocity-acceleration-calculator/",
+      "category": "Physics",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Water Conservation Tool",
+      "url": "/water-conservation-calculator/",
+      "category": "Ecology",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Future Wedding Date",
+      "url": "/wedding-date-predictor-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Weight & Mass Converter",
+      "url": "/weight-converter/",
+      "category": "Converter",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Whole Life Insurance Calculator",
+      "url": "/whole-life-insurance-calculator/",
+      "category": "Insurance",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "registry_computeScript",
+      "mathTests": {
+        "normal": "PASS",
+        "zero": "PASS",
+        "negative": "PASS",
+        "decimal": "PASS",
+        "large": "PASS",
+        "malformed": "PASS_HANDLED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Zodiac Love Compatibility",
+      "url": "/zodiac-compatibility/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    },
+    {
+      "name": "Zodiac Love Compatibility",
+      "url": "/zodiac-love-compatibility-calculator/",
+      "category": "Love & Relationships",
+      "htmlExists": true,
+      "hasCanonical": true,
+      "hasTitle": true,
+      "hasH1": true,
+      "calculationEngine": "fallback_standard_engine",
+      "mathTests": {
+        "normal": "SKIPPED",
+        "zero": "SKIPPED",
+        "negative": "SKIPPED",
+        "decimal": "SKIPPED",
+        "large": "SKIPPED",
+        "malformed": "SKIPPED"
+      },
+      "status": "PASS",
+      "notes": []
+    }
+  ]
+}

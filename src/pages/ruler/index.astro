@@ -28,44 +28,134 @@ const referenceIcons: Record<string, string> = {
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5" /><path d="M15 9.5a4 4 0 1 0 0 5" /><path d="M7.5 11h6" /><path d="M7.5 13h6" /></svg>',
 };
 
+export const faqs = [
+  {
+    question: 'Can I use my phone as a real ruler?',
+    answer: 'Yes. This online ruler works in any modern mobile browser (Safari, Chrome, Edge) and turns your phone display into a precision measuring tool. By calibrating your screen using a standard credit card or choosing your device from our database, 1 cm on screen equals exactly 1 physical cm, with accuracy down to 0.1 mm.',
+  },
+  {
+    question: 'Is there a free ruler online that measures in actual size?',
+    answer: 'Yes. Free Accurate Calculator Online Ruler measures in inches, centimeters, millimeters, and pixels at 1:1 true scale without downloading any app or creating an account. It calibrates to your screen\'s exact pixel density (PPI) so real-world dimensions match perfectly.',
+  },
+  {
+    question: 'How do I calibrate an online ruler to scale?',
+    answer: 'Click "Calibrate" in the toolbar. You can calibrate using 4 methods: (1) Credit card alignment (any standard bank card is 85.60 mm wide), (2) Device selector for iPhone, Galaxy, Pixel, iPad, and MacBook models, (3) Screen diagonal entry in inches, or (4) Instant hardware auto-detection.',
+  },
+  {
+    question: 'How to identify 1 inch on a phone or laptop screen?',
+    answer: 'Switch the ruler unit to "IN" using the toolbar chip. Each major numbered tick mark represents exactly 1 inch (25.4 mm). Once calibrated, a US quarter coin placed against the screen will measure almost exactly 0.96 inches (24.26 mm), providing an instant physical verification check.',
+  },
+  {
+    question: 'How to measure centimeters and millimeters online?',
+    answer: 'Select "CM" or "MM" in the top toolbar. Align one edge of your object against the ruler. The major labeled ticks show whole centimeters, the medium ticks mark 5 mm (0.5 cm), and each small sub-tick represents 1 millimeter, identical to a stainless steel engineer\'s ruler.',
+  },
+  {
+    question: 'Can a smartphone measure physical objects with millimeter precision?',
+    answer: 'Yes. Screen-based rulers are actually significantly more accurate for small objects (up to 15 cm or 6 inches) than smartphone camera AR apps. Camera AR apps suffer from lens distortion, perspective tilt, and sensor drift, whereas glass displays have rigid, non-deformable pixel matrices calibrated to factory sub-millimeter tolerances.',
+  },
+  {
+    question: 'Can I use my phone camera as a ruler compared to an on-screen ruler?',
+    answer: 'Camera-based measurement apps estimate distance using depth algorithms, which typically introduce a 3% to 8% margin of error depending on lighting and surface texture. Placing an object directly on your calibrated phone glass eliminates parallax error, delivering true sub-millimeter accuracy.',
+  },
+  {
+    question: 'How do I read fractional inches (1/16, 1/8, 1/4, 1/2) on a screen ruler?',
+    answer: 'In "IN" mode, the tick marks follow standard Imperial subdivision: the longest tick with a number is the full inch, the second-longest marks 1/2″, medium ticks mark 1/4″ and 3/4″, shorter ticks represent 1/8″ increments, and the shortest ticks represent 1/16″ precision.',
+  },
+  {
+    question: 'How to measure objects longer than my phone screen?',
+    answer: 'You can switch the ruler to landscape mode to access your phone\'s longest edge. For objects exceeding the screen length, use the "Two-Point Measure" tool or mark the end of the phone, slide the device along a straight edge, and add the measurements together.',
+  },
+  {
+    question: 'How to show or add a ruler in Word Online and PowerPoint Online?',
+    answer: 'In Word Online, click the "View" tab on the ribbon and check "Ruler" to display document margin tab stops. In PowerPoint Online, check "Ruler" under "View" to align slide shapes. Note that Microsoft Office rulers represent document page margins rather than real-world physical sizes. For physical object measurement, use this web ruler in a browser tab.',
+  },
+  {
+    question: 'Does this online ruler work offline and without installing an app?',
+    answer: 'Yes. The entire measurement engine, tick drawing canvas, and calibration algorithms run 100% client-side in vanilla HTML5 and JavaScript. Once loaded, it functions seamlessly without an active internet connection.',
+  },
+  {
+    question: 'Is my calibration and measurement data kept private?',
+    answer: 'Completely. All calibration settings, unit selections, and measurement history entries are stored locally on your device in your browser\'s private LocalStorage (fac-online-ruler:v1). Zero measurement data, device serials, or telemetry are ever uploaded.',
+  },
+];
+
 const schema = {
   '@context': 'https://schema.org',
   '@graph': [
     {
       '@type': 'WebApplication',
       '@id': 'https://freeaccuratecalculator.com/ruler/#webapp',
-      'url': 'https://freeaccuratecalculator.com/ruler/',
-      'name': 'Online Ruler — Free Accurate Ruler in cm, mm & Inches',
-      'applicationCategory': 'UtilitiesApplication',
-      'operatingSystem': 'All',
-      'browserRequirements': 'Requires JavaScript. Requires HTML5.',
-      'description':
-        'Free online ruler with screen calibration. Measure real objects on screen in centimeters, millimeters and inches using auto, device, diagonal or bank-card calibration. Works on phone, tablet and desktop.',
-      'offers': { '@type': 'Offer', 'price': '0', 'priceCurrency': 'USD' },
-      'featureList': [
-        'cm, mm, inches and pixels scales',
-        'Auto estimate calibration',
-        'Device preset calibration',
-        'Screen diagonal calibration',
-        'Bank card / ID card / paper physical calibration',
-        'Top, bottom, left and right edge rulers',
-        'Draggable measurement guides with live position readout',
-        'Crosshair with coordinate readout',
-        'Direct on-screen measurement mode',
-        'Fullscreen measuring mode',
-        'Dark mode support',
-        'Keyboard shortcuts',
-        'Local calibration persistence',
-        '100% client-side privacy',
+      url: 'https://freeaccuratecalculator.com/ruler/',
+      name: 'Free Online Ruler — Calibrated 1:1 Scale in cm, mm & Inches',
+      applicationCategory: 'UtilitiesApplication',
+      operatingSystem: 'All (iOS, Android, Windows, macOS, Linux, ChromeOS)',
+      browserRequirements: 'Requires JavaScript. Requires HTML5 Canvas.',
+      description:
+        'Free, calibrated on-screen ruler for phones, tablets, and desktop computers. Measure physical objects with 1:1 true scale accuracy in centimeters, millimeters, fractional inches, and screen pixels.',
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      featureList: [
+        'cm, mm, fractional inches and pixels scales',
+        'ISO 7810 credit card real-world calibration',
+        'Device preset hardware catalog for 40+ flagships',
+        'Optical loupe magnifier for mobile touch precision',
+        'Multi-edge alignment (Top, Bottom, Left, Right)',
+        'Invertible number and tick orientation (⇄ Side)',
+        'Draggable caliper guide lines with live dual readout',
+        'Precision crosshair with coordinate tracking',
+        'Live 4-way unit conversion widget',
+        'Instant copy to clipboard with haptic feedback',
+        'Dark mode and full-screen immersive view',
+        '100% client-side privacy with local persistence',
       ],
+    },
+    {
+      '@type': 'HowTo',
+      '@id': 'https://freeaccuratecalculator.com/ruler/#howto',
+      name: 'How to Calibrate Your Screen as an Actual Size Ruler',
+      description: 'Step-by-step instructions to calibrate an on-screen ruler for 100% physical measurement accuracy.',
+      step: [
+        {
+          '@type': 'HowToStep',
+          name: 'Open Calibration',
+          text: 'Click or tap the Calibrate button in the top toolbar.',
+          url: 'https://freeaccuratecalculator.com/ruler/#calibrate',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Choose Calibration Standard',
+          text: 'Select Card to align a standard bank card or ID card, or select Device Preset to choose your exact phone or laptop model.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Align Physical Standard',
+          text: 'Place your physical card against the on-screen outline and adjust the slider or arrow keys until both match perfectly.',
+        },
+        {
+          '@type': 'HowToStep',
+          name: 'Save and Measure',
+          text: 'Click Save Calibration. Your display density is permanently remembered in your browser for 1:1 scale accuracy.',
+        },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://freeaccuratecalculator.com/ruler/#faq',
+      mainEntity: faqs.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: faq.answer,
+        },
+      })),
     },
     {
       '@type': 'BreadcrumbList',
       '@id': 'https://freeaccuratecalculator.com/ruler/#breadcrumb',
-      'itemListElement': [
-        { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://freeaccuratecalculator.com/' },
-        { '@type': 'ListItem', 'position': 2, 'name': 'Everyday', 'item': 'https://freeaccuratecalculator.com/everyday/' },
-        { '@type': 'ListItem', 'position': 3, 'name': 'Online Ruler', 'item': 'https://freeaccuratecalculator.com/ruler/' },
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://freeaccuratecalculator.com/' },
+        { '@type': 'ListItem', position: 2, name: 'Everyday', item: 'https://freeaccuratecalculator.com/everyday/' },
+        { '@type': 'ListItem', position: 3, name: 'Online Ruler', item: 'https://freeaccuratecalculator.com/ruler/' },
       ],
     },
   ],
@@ -89,79 +179,87 @@ const schema = {
     <div class="pointer-events-none absolute -top-32 -right-32 w-80 h-80 rounded-full bg-link/10 blur-3xl" aria-hidden="true"></div>
     <div class="pointer-events-none absolute -bottom-40 -left-32 w-80 h-80 rounded-full bg-violet/10 blur-3xl" aria-hidden="true"></div>
 
-    <!-- Premium toolbar -->
-    <div class="ruler-toolbar relative z-10 rounded-2xl border border-hairline bg-canvas/80 backdrop-blur-xl shadow-whisper">
-      <!-- Status strip -->
-      <div class="flex flex-wrap items-center gap-2 justify-between px-2.5 sm:px-3 pt-2.5 pb-2 border-b border-hairline-soft">
-        <div class="flex items-center gap-2 min-w-0">
-          <span id="ruler-status-dot" class="w-2.5 h-2.5 rounded-full bg-warning shrink-0" aria-hidden="true"></span>
-          <span id="ruler-calibration-label" class="text-xs font-mono font-semibold text-ink truncate">Ready to calibrate</span>
-          <button type="button" id="ruler-cal-help" class="text-[11px] font-mono text-link hover:underline cursor-pointer shrink-0" aria-expanded="false" aria-controls="ruler-cal-explain">why?</button>
+    <!-- Premium toolbar (compact single line) -->
+    <div class="ruler-toolbar relative z-10 rounded-xl border border-hairline bg-canvas/90 backdrop-blur-xl shadow-whisper p-1">
+      <div class="flex items-center gap-1.5 overflow-x-auto whitespace-nowrap scrollbar-none py-0.5 px-1 text-xs" role="toolbar" aria-label="Ruler controls">
+        <!-- Status & Calibrate -->
+        <button type="button" id="ruler-cal-btn" class="inline-flex items-center gap-1.5 px-2.5 py-1 min-h-[34px] rounded-lg border border-hairline bg-canvas-elevated font-mono font-semibold text-ink hover:border-link/50 hover:text-link transition-all shrink-0 cursor-pointer" title="Calibrate display">
+          <span id="ruler-status-dot" class="w-2 h-2 rounded-full bg-warning shrink-0" aria-hidden="true"></span>
+          <span id="ruler-calibration-label" class="truncate max-w-[120px] sm:max-w-none text-[11px]">Calibrate</span>
+        </button>
+
+        <div class="h-4 w-px bg-hairline shrink-0" aria-hidden="true"></div>
+
+        <!-- Unit Segmented -->
+        <div class="inline-flex p-0.5 rounded-lg bg-canvas border border-hairline shrink-0" role="group" aria-label="Measurement unit">
+          <button type="button" class="ruler-unit-btn px-2 sm:px-2.5 py-1 min-h-[30px] rounded-md text-[11px] font-semibold font-mono transition-all cursor-pointer" data-unit="cm" aria-pressed="true">CM</button>
+          <button type="button" class="ruler-unit-btn px-2 sm:px-2.5 py-1 min-h-[30px] rounded-md text-[11px] font-semibold font-mono transition-all cursor-pointer" data-unit="mm" aria-pressed="false">MM</button>
+          <button type="button" class="ruler-unit-btn px-2 sm:px-2.5 py-1 min-h-[30px] rounded-md text-[11px] font-semibold font-mono transition-all cursor-pointer" data-unit="in" aria-pressed="false">IN</button>
+          <button type="button" class="ruler-unit-btn px-2 sm:px-2.5 py-1 min-h-[30px] rounded-md text-[11px] font-semibold font-mono transition-all cursor-pointer" data-unit="px" aria-pressed="false">PX</button>
         </div>
-        <p id="ruler-zoom-warning" class="hidden text-[11px] font-mono text-warning-deep dark:text-warning bg-warning-soft/60 border border-warning/30 rounded-md px-2 py-1" role="alert">
-          Browser zoom is not 100% — press Ctrl/Cmd + 0 before measuring.
-        </p>
-        <a href="/ruler/guides/" class="inline-flex items-center gap-1 text-[11px] font-mono font-semibold text-link hover:underline shrink-0">
-          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
-          Read the guide
-        </a>
+
+        <div class="h-4 w-px bg-hairline shrink-0" aria-hidden="true"></div>
+
+        <!-- Edges -->
+        <div class="inline-flex p-0.5 rounded-lg bg-canvas border border-hairline shrink-0" role="group" aria-label="Ruler edges">
+          <button type="button" class="ruler-edge-btn px-2 sm:px-2.5 py-1 min-h-[30px] rounded-md text-[11px] font-mono font-semibold transition-all cursor-pointer" data-edge="top" aria-pressed="true">Top</button>
+          <button type="button" class="ruler-edge-btn px-2 sm:px-2.5 py-1 min-h-[30px] rounded-md text-[11px] font-mono font-semibold transition-all cursor-pointer" data-edge="bottom" aria-pressed="false">Bottom</button>
+          <button type="button" class="ruler-edge-btn px-2 sm:px-2.5 py-1 min-h-[30px] rounded-md text-[11px] font-mono font-semibold transition-all cursor-pointer" data-edge="left" aria-pressed="true">Left</button>
+          <button type="button" class="ruler-edge-btn px-2 sm:px-2.5 py-1 min-h-[30px] rounded-md text-[11px] font-mono font-semibold transition-all cursor-pointer" data-edge="right" aria-pressed="false">Right</button>
+        </div>
+
+        <!-- Flip Side Button -->
+        <button type="button" id="ruler-flip-side-btn" class="inline-flex items-center gap-1 px-2.5 py-1 min-h-[30px] rounded-lg border border-hairline bg-canvas-elevated text-[11px] font-mono font-semibold text-ink hover:border-link/50 transition-all shrink-0 cursor-pointer" title="Invert tick marks and numbers position" aria-pressed="false">
+          <span class="text-xs">⇄</span> Side
+        </button>
+
+        <div class="h-4 w-px bg-hairline shrink-0" aria-hidden="true"></div>
+
+        <!-- Measure Button -->
+        <button type="button" id="ruler-measure-btn" class="inline-flex items-center gap-1 px-2.5 py-1 min-h-[30px] rounded-lg border border-hairline bg-canvas-elevated text-[11px] font-mono font-semibold text-ink hover:border-violet/50 hover:text-violet transition-all shrink-0 cursor-pointer" aria-pressed="false">
+          Measure
+        </button>
+
+        <!-- Guides Button -->
+        <button type="button" id="ruler-guides-btn" class="px-2.5 py-1 min-h-[30px] rounded-lg text-[11px] font-mono font-semibold border border-hairline bg-canvas-elevated text-ink hover:border-link/50 transition-all shrink-0 cursor-pointer" aria-pressed="false">Guides: off</button>
+
+        <!-- Crosshair Button -->
+        <button type="button" id="ruler-crosshair-btn" class="px-2.5 py-1 min-h-[30px] rounded-lg text-[11px] font-mono font-semibold border border-hairline bg-canvas-elevated text-ink hover:border-link/50 transition-all shrink-0 cursor-pointer" aria-pressed="false">Crosshair: off</button>
+
+        <!-- Fullscreen Button -->
+        <button type="button" id="ruler-fullscreen-btn" class="inline-flex items-center gap-1 px-2.5 py-1 min-h-[30px] rounded-lg border border-hairline bg-canvas-elevated text-[11px] font-mono font-semibold text-ink hover:border-cyan/50 hover:text-cyan transition-all shrink-0 cursor-pointer">
+          <span id="ruler-fs-label">Fullscreen</span>
+        </button>
+
+        <!-- Theme Toggle -->
+        <ThemeToggle id="ruler-theme-toggle" className="!min-h-[30px] shrink-0" />
+
+        <!-- More Button -->
+        <button type="button" id="ruler-more-btn" class="inline-flex items-center justify-center px-2 py-1 min-h-[30px] rounded-lg text-[11px] font-mono font-semibold border border-hairline bg-canvas text-mute hover:text-ink transition-all shrink-0 cursor-pointer" aria-expanded="false" aria-controls="ruler-advanced">
+          More
+        </button>
+
+        <!-- Help & Guide link -->
+        <button type="button" id="ruler-cal-help" class="text-[11px] font-mono text-link hover:underline cursor-pointer shrink-0 px-1" aria-expanded="false" aria-controls="ruler-cal-explain">why?</button>
+        <a href="/ruler/guides/" class="text-[11px] font-mono font-semibold text-link hover:underline shrink-0 px-1">Guide</a>
       </div>
-      <p id="ruler-cal-explain" class="hidden mx-2.5 sm:mx-3 mt-2 rounded-lg border border-hairline bg-canvas p-3 text-[11px] sm:text-xs text-body leading-relaxed">
+
+      <!-- Advanced options (collapsible) -->
+      <div id="ruler-advanced" class="hidden flex-wrap items-center gap-2 pt-2 border-t border-hairline-soft mt-1 px-1">
+        <button type="button" id="ruler-clear-guides" class="px-2 py-1 min-h-[30px] rounded-lg text-[11px] font-mono font-semibold border border-hairline bg-canvas-elevated text-mute hover:text-error transition-all cursor-pointer">Clear guides</button>
+        <button type="button" id="ruler-help-btn" class="px-2 py-1 min-h-[30px] rounded-lg text-[11px] font-mono font-semibold border border-hairline bg-canvas-elevated text-mute hover:text-ink transition-all cursor-pointer" aria-expanded="false" aria-controls="ruler-shortcuts">Keyboard shortcuts</button>
+      </div>
+      <div id="ruler-shortcuts" class="hidden rounded-lg border border-hairline bg-canvas p-2.5 text-[11px] font-mono text-body grid grid-cols-2 sm:grid-cols-3 gap-1 mt-1">
+        <span><kbd class="ruler-kbd">1</kbd> cm</span><span><kbd class="ruler-kbd">2</kbd> in</span><span><kbd class="ruler-kbd">3</kbd> mm</span>
+        <span><kbd class="ruler-kbd">4</kbd> px</span><span><kbd class="ruler-kbd">G</kbd> guides</span><span><kbd class="ruler-kbd">C</kbd> crosshair</span>
+        <span><kbd class="ruler-kbd">F</kbd> full</span><span><kbd class="ruler-kbd">M</kbd> measure</span><span><kbd class="ruler-kbd">Esc</kbd> clear</span>
+      </div>
+      <p id="ruler-cal-explain" class="hidden mt-1 rounded-lg border border-hairline bg-canvas p-2.5 text-[11px] text-body leading-relaxed">
         Calibration explanation placeholder (filled by script).
       </p>
-
-      <!-- Toolbar body -->
-      <div class="p-2.5 sm:p-3 space-y-2.5" role="toolbar" aria-label="Ruler controls">
-        <!-- Row 1 -->
-        <div class="flex flex-wrap items-center gap-2 justify-between">
-          <div class="inline-flex p-1 rounded-xl bg-canvas border border-hairline" role="group" aria-label="Measurement unit">
-            <button type="button" class="ruler-unit-btn px-3 sm:px-4 py-2 min-h-[44px] rounded-lg text-xs font-semibold font-mono transition-all cursor-pointer" data-unit="cm" aria-pressed="true">CM</button>
-            <button type="button" class="ruler-unit-btn px-3 sm:px-4 py-2 min-h-[44px] rounded-lg text-xs font-semibold font-mono transition-all cursor-pointer" data-unit="mm" aria-pressed="false">MM</button>
-            <button type="button" class="ruler-unit-btn px-3 sm:px-4 py-2 min-h-[44px] rounded-lg text-xs font-semibold font-mono transition-all cursor-pointer" data-unit="in" aria-pressed="false">IN</button>
-            <button type="button" class="ruler-unit-btn px-3 sm:px-4 py-2 min-h-[44px] rounded-lg text-xs font-semibold font-mono transition-all cursor-pointer" data-unit="px" aria-pressed="false">PX</button>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <button type="button" id="ruler-cal-btn" class="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-xl border border-hairline bg-canvas-elevated text-xs font-semibold text-ink hover:border-link/50 hover:text-link transition-all cursor-pointer">
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-              Calibrate
-            </button>
-            <button type="button" id="ruler-measure-btn" class="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-xl border border-hairline bg-canvas-elevated text-xs font-semibold text-ink hover:border-violet/50 hover:text-violet transition-all cursor-pointer" aria-pressed="false">
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M14.121 14.121L19 19m-7-7l2.879-2.879m0 0l2.122-2.121a2.121 2.121 0 013 3l-2.121 2.121m0 0L19 19m-4.95-4.95L5 5m2.879 9.121L5 17m4.95-4.95a2.121 2.121 0 013 3" /></svg>
-              Measure
-            </button>
-            <button type="button" id="ruler-fullscreen-btn" class="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-xl border border-hairline bg-canvas-elevated text-xs font-semibold text-ink hover:border-cyan/50 hover:text-cyan transition-all cursor-pointer">
-              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
-              <span id="ruler-fs-label">Fullscreen</span>
-            </button>
-            <ThemeToggle id="ruler-theme-toggle" className="!min-h-[44px]" />
-          </div>
-        </div>
-
-        <!-- Row 2 -->
-        <div id="ruler-secondary" class="flex flex-wrap items-center gap-2">
-          <div class="inline-flex p-1 rounded-xl bg-canvas border border-hairline w-full sm:w-auto" role="group" aria-label="Ruler edges">
-            <button type="button" class="ruler-edge-btn flex-1 sm:flex-none px-2.5 py-1.5 min-h-[40px] rounded-lg text-[11px] font-mono font-semibold transition-all cursor-pointer" data-edge="top" aria-pressed="true">Top</button>
-            <button type="button" class="ruler-edge-btn flex-1 sm:flex-none px-2.5 py-1.5 min-h-[40px] rounded-lg text-[11px] font-mono font-semibold transition-all cursor-pointer" data-edge="bottom" aria-pressed="false">Bottom</button>
-            <button type="button" class="ruler-edge-btn flex-1 sm:flex-none px-2.5 py-1.5 min-h-[40px] rounded-lg text-[11px] font-mono font-semibold transition-all cursor-pointer" data-edge="left" aria-pressed="true">Left</button>
-            <button type="button" class="ruler-edge-btn flex-1 sm:flex-none px-2.5 py-1.5 min-h-[40px] rounded-lg text-[11px] font-mono font-semibold transition-all cursor-pointer" data-edge="right" aria-pressed="false">Right</button>
-          </div>
-          <button type="button" id="ruler-guides-btn" class="flex-1 sm:flex-none px-2.5 py-1.5 min-h-[40px] rounded-lg text-[11px] font-mono font-semibold border border-hairline bg-canvas-elevated text-ink hover:border-link/50 transition-all cursor-pointer" aria-pressed="false">Guides: off</button>
-          <button type="button" id="ruler-crosshair-btn" class="flex-1 sm:flex-none px-2.5 py-1.5 min-h-[40px] rounded-lg text-[11px] font-mono font-semibold border border-hairline bg-canvas-elevated text-ink hover:border-link/50 transition-all cursor-pointer" aria-pressed="false">Crosshair: off</button>
-          <button type="button" id="ruler-more-btn" class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 min-h-[40px] rounded-lg text-[11px] font-mono font-semibold border border-hairline bg-canvas text-mute hover:text-ink transition-all cursor-pointer" aria-expanded="false" aria-controls="ruler-advanced">
-            More
-          </button>
-        </div>
-        <div id="ruler-advanced" class="hidden flex-wrap items-center gap-2">
-          <button type="button" id="ruler-clear-guides" class="flex-1 sm:flex-none px-2.5 py-1.5 min-h-[40px] rounded-lg text-[11px] font-mono font-semibold border border-hairline bg-canvas-elevated text-mute hover:text-error transition-all cursor-pointer">Clear guides</button>
-          <button type="button" id="ruler-help-btn" class="flex-1 sm:flex-none px-2.5 py-1.5 min-h-[40px] rounded-lg text-[11px] font-mono font-semibold border border-hairline bg-canvas-elevated text-mute hover:text-ink transition-all cursor-pointer" aria-expanded="false" aria-controls="ruler-shortcuts">Keyboard shortcuts</button>
-        </div>
-        <div id="ruler-shortcuts" class="hidden rounded-lg border border-hairline bg-canvas p-3 text-[11px] font-mono text-body grid grid-cols-2 sm:grid-cols-3 gap-1.5">
-          <span><kbd class="ruler-kbd">1</kbd> cm</span><span><kbd class="ruler-kbd">2</kbd> inches</span><span><kbd class="ruler-kbd">3</kbd> mm</span>
-          <span><kbd class="ruler-kbd">4</kbd> px</span><span><kbd class="ruler-kbd">G</kbd> guides</span><span><kbd class="ruler-kbd">C</kbd> crosshair</span>
-          <span><kbd class="ruler-kbd">F</kbd> fullscreen</span><span><kbd class="ruler-kbd">M</kbd> measure</span><span><kbd class="ruler-kbd">Esc</kbd> close / clear</span>
-        </div>
-      </div>
+      <p id="ruler-zoom-warning" class="hidden mt-1 text-[11px] font-mono text-warning-deep dark:text-warning bg-warning-soft/60 border border-warning/30 rounded-md px-2 py-1" role="alert">
+        Browser zoom is not 100% — press Ctrl/Cmd + 0 before measuring.
+      </p>
     </div>
 
     <!-- Measure mode bar -->
@@ -197,6 +295,41 @@ const schema = {
           Place a flat object against the <span class="text-ink font-semibold">top</span> or <span class="text-ink font-semibold">left</span> edge to read its size.
           <span class="block mt-1">Turn on Measure to drag a distance anywhere on the stage.</span>
         </p>
+      </div>
+
+      <!-- Mobile object placement & edge guide overlay -->
+      <div id="ruler-welcome-overlay" class="absolute z-25 inset-x-3 top-12 sm:top-14 max-w-sm mx-auto rounded-xl border border-hairline bg-canvas-elevated/95 backdrop-blur-md p-3.5 shadow-whisper transition-opacity duration-300">
+        <div class="flex items-start justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="flex h-7 w-7 items-center justify-center rounded-lg bg-link/10 text-link text-xs font-mono font-bold">📏</span>
+            <div>
+              <h2 class="text-xs font-bold font-mono text-ink">Place Object Against Glass</h2>
+              <p class="text-[10px] text-mute font-mono">Calibrated to screen edge for 1:1 true scale</p>
+            </div>
+          </div>
+          <button type="button" id="ruler-welcome-dismiss" class="text-mute hover:text-ink text-xs p-1 rounded cursor-pointer" aria-label="Dismiss guide">✕</button>
+        </div>
+        <div class="mt-2.5 flex items-center justify-between gap-1 pt-2 border-t border-hairline-soft text-[10px] font-mono">
+          <span class="text-mute">Edge:</span>
+          <div class="flex gap-1">
+            <button type="button" class="ruler-quick-edge px-1.5 py-0.5 rounded bg-canvas border border-hairline text-ink font-semibold hover:border-link transition-colors cursor-pointer" data-edge="left">Left</button>
+            <button type="button" class="ruler-quick-edge px-1.5 py-0.5 rounded bg-canvas border border-hairline text-ink font-semibold hover:border-link transition-colors cursor-pointer" data-edge="top">Top</button>
+            <button type="button" class="ruler-quick-edge px-1.5 py-0.5 rounded bg-canvas border border-hairline text-ink font-semibold hover:border-link transition-colors cursor-pointer" data-edge="right">Right</button>
+            <button type="button" class="ruler-quick-edge px-1.5 py-0.5 rounded bg-canvas border border-hairline text-ink font-semibold hover:border-link transition-colors cursor-pointer" data-edge="bottom">Bottom</button>
+          </div>
+          <button type="button" id="ruler-welcome-hide-forever" class="text-[10px] text-link hover:underline ml-auto cursor-pointer">Hide info</button>
+        </div>
+      </div>
+
+      <!-- Optical loupe magnifier for fingertip alignment -->
+      <div id="ruler-loupe" class="pointer-events-none absolute z-30 hidden w-20 h-20 -top-24 -left-24 rounded-full border-2 border-violet shadow-2xl bg-canvas overflow-hidden ring-4 ring-black/10">
+        <canvas id="ruler-loupe-canvas" width="80" height="80" class="w-full h-full"></canvas>
+        <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div class="w-full border-t border-violet/70"></div>
+          <div class="absolute h-full border-l border-violet/70"></div>
+          <div class="absolute w-2 h-2 rounded-full border border-violet bg-violet/30"></div>
+        </div>
+        <span class="absolute bottom-1 inset-x-0 text-center text-[9px] font-mono font-bold text-violet bg-canvas-elevated/90 py-0.5">2× Zoom</span>
       </div>
     </div>
 
@@ -396,13 +529,359 @@ const schema = {
       </div>
     </div>
   </div>
-
   <template id="ruler-guide-template">
     <div class="ruler-guide absolute group" data-axis="" data-px="0" role="separator" aria-orientation="horizontal" tabindex="0" aria-label="Measurement guide">
       <span class="ruler-guide-hit" aria-hidden="true"></span>
       <span class="ruler-guide-label absolute z-10 rounded-md border border-hairline bg-canvas-elevated/95 px-1.5 py-0.5 text-[10px] font-mono font-bold text-ink shadow-whisper pointer-events-none whitespace-nowrap"></span>
     </div>
   </template>
+
+  <!-- ==================== ON-PAGE SEO & CONVERTER CONTENT ==================== -->
+  <div slot="content" class="w-full max-w-5xl mx-auto px-4 sm:px-6 py-10 space-y-12 text-ink">
+    <!-- 1. Interactive 4-Way Unit Converter Widget -->
+    <section id="ruler-converter-section" class="rounded-2xl border border-hairline bg-canvas-elevated p-5 sm:p-7 shadow-whisper space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-hairline">
+        <div>
+          <div class="inline-flex items-center gap-2 mb-1">
+            <span class="mono-eyebrow text-link">Instant Precision Engine</span>
+            <span class="h-1 w-1 rounded-full bg-faint"></span>
+            <span class="text-[11px] font-mono text-mute">Live Calibration Synced</span>
+          </div>
+          <h2 class="text-base sm:text-xl font-bold font-mono text-ink tracking-tight flex items-center gap-2">
+            <span>⚡</span> Live 4-Way Unit Converter & Scale Engine
+          </h2>
+          <p class="text-xs sm:text-sm text-body mt-1">
+            Instant bi-directional conversion calibrated to your current display scale (<span id="ruler-conv-ppi" class="font-bold font-mono text-ink">96</span> px/in).
+          </p>
+        </div>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <span class="text-[10px] font-mono text-mute">Quick Presets:</span>
+          <button type="button" class="ruler-quick-conv text-[11px] font-mono px-2.5 py-1 rounded-lg bg-canvas border border-hairline text-body hover:text-ink hover:border-link transition-colors cursor-pointer" data-val-cm="2.54">1 Inch</button>
+          <button type="button" class="ruler-quick-conv text-[11px] font-mono px-2.5 py-1 rounded-lg bg-canvas border border-hairline text-body hover:text-ink hover:border-link transition-colors cursor-pointer" data-val-cm="8.56">Bank Card (85.6mm)</button>
+          <button type="button" class="ruler-quick-conv text-[11px] font-mono px-2.5 py-1 rounded-lg bg-canvas border border-hairline text-body hover:text-ink hover:border-link transition-colors cursor-pointer" data-val-cm="10">10 cm</button>
+          <button type="button" class="ruler-quick-conv text-[11px] font-mono px-2.5 py-1 rounded-lg bg-canvas border border-hairline text-body hover:text-ink hover:border-link transition-colors cursor-pointer" data-val-cm="21.0">A4 Short (21cm)</button>
+          <button type="button" class="ruler-quick-conv text-[11px] font-mono px-2.5 py-1 rounded-lg bg-canvas border border-hairline text-body hover:text-ink hover:border-link transition-colors cursor-pointer" data-val-cm="30.48">1 Foot (12″)</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1.5 focus-within:border-link transition-colors">
+          <label for="conv-cm" class="block text-[11px] font-mono uppercase font-bold text-mute">Centimeters (cm)</label>
+          <input type="number" id="conv-cm" step="any" placeholder="0" class="w-full bg-transparent font-mono text-lg font-bold text-ink focus:outline-none" />
+          <span class="text-[10px] text-mute font-mono block">1 cm = 10 mm = 0.3937″</span>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1.5 focus-within:border-link transition-colors">
+          <label for="conv-mm" class="block text-[11px] font-mono uppercase font-bold text-mute">Millimeters (mm)</label>
+          <input type="number" id="conv-mm" step="any" placeholder="0" class="w-full bg-transparent font-mono text-lg font-bold text-ink focus:outline-none" />
+          <span class="text-[10px] text-mute font-mono block">Engineer sub-millimeter</span>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1.5 focus-within:border-link transition-colors">
+          <label for="conv-in" class="block text-[11px] font-mono uppercase font-bold text-mute">Inches (Decimal)</label>
+          <input type="number" id="conv-in" step="any" placeholder="0" class="w-full bg-transparent font-mono text-lg font-bold text-ink focus:outline-none" />
+          <div class="flex items-center justify-between text-[11px] font-mono">
+            <span class="text-mute text-[10px]">Fraction:</span>
+            <span id="conv-in-frac" class="text-link font-bold">0″</span>
+          </div>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1.5 focus-within:border-link transition-colors">
+          <label for="conv-px" class="block text-[11px] font-mono uppercase font-bold text-mute">Screen Pixels (CSS px)</label>
+          <input type="number" id="conv-px" step="any" placeholder="0" class="w-full bg-transparent font-mono text-lg font-bold text-ink focus:outline-none" />
+          <span class="text-[10px] text-mute font-mono block">Based on calibrated density</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Main Guide: 1:1 Scale Measurement -->
+    <article class="space-y-6">
+      <div class="space-y-2">
+        <h2 class="text-2xl sm:text-3xl font-extrabold font-mono tracking-tight text-ink">
+          Free Online Ruler: Actual Size 1:1 On-Screen Scale
+        </h2>
+        <p class="text-sm sm:text-base text-body leading-relaxed">
+          Need to measure an object immediately without hunting for a physical wooden or metal ruler? This calibrated <strong>online ruler</strong> transforms your smartphone, tablet, laptop, or desktop monitor into a verified 1:1 physical measuring instrument. By calibrating your display’s pixel density (Pixels Per Inch / PPI), one centimeter or inch on your screen matches the exact physical dimensions of reality.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="rounded-xl border border-hairline bg-canvas-elevated p-4 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-link/10 text-link flex items-center justify-center font-mono font-bold text-sm">01</div>
+          <h3 class="font-mono font-bold text-sm text-ink">ISO 7810 True Scale</h3>
+          <p class="text-xs text-body leading-relaxed">
+            Every bank card, debit card, driver’s license, and transit card in the world conforms to the ISO/IEC 7810 ID-1 standard: exactly <strong>85.60 mm wide by 53.98 mm high</strong>. Holding your card to the screen gives an absolute 0.1 mm reference.
+          </p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-elevated p-4 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-violet/10 text-violet flex items-center justify-center font-mono font-bold text-sm">02</div>
+          <h3 class="font-mono font-bold text-sm text-ink">Optical Loupe & Touch Zoom</h3>
+          <p class="text-xs text-body leading-relaxed">
+            Mobile fingers typically obscure tick marks when aligning small objects like screws, bolts, coins, or jewelry. Our built-in <strong>2× optical loupe</strong> floats above your touch point so you can verify sub-millimeter alignment with zero parallax error.
+          </p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas-elevated p-4 space-y-2">
+          <div class="w-8 h-8 rounded-lg bg-cyan/10 text-cyan flex items-center justify-center font-mono font-bold text-sm">03</div>
+          <h3 class="font-mono font-bold text-sm text-ink">Zero App, 100% Private</h3>
+          <p class="text-xs text-body leading-relaxed">
+            Runs entirely client-side in HTML5 Canvas and vanilla TypeScript. No permissions requested, no camera access required, no analytics telemetry, and works offline in airplane mode.
+          </p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 3. Scientific Deep Dive: Display Glass vs Phone Camera AR Measure -->
+    <section class="rounded-2xl border border-hairline bg-canvas-elevated p-5 sm:p-7 shadow-whisper space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold font-mono tracking-tight text-ink flex items-center gap-2">
+        <span>🔬</span> Why On-Screen Rulers Outperform Smartphone Camera AR Apps
+      </h2>
+      <p class="text-xs sm:text-sm text-body leading-relaxed">
+        Many smartphone users rely on built-in Augmented Reality (AR) camera measurement apps (such as Apple Measure or Google Measure). While AR is useful for measuring room walls or sofas, <strong>AR camera apps are mathematically unsuitable for small object measurement</strong>. Here is why placing your object directly on a calibrated screen delivers superior precision:
+      </p>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs font-mono border-collapse">
+          <thead>
+            <tr class="border-b border-hairline bg-canvas">
+              <th class="p-3 text-ink font-bold">Feature / Metric</th>
+              <th class="p-3 text-link font-bold">On-Screen Calibrated Ruler (This Tool)</th>
+              <th class="p-3 text-mute font-bold">Smartphone Camera AR Measure Apps</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline">
+            <tr>
+              <td class="p-3 font-semibold text-ink">Measurement Tolerance</td>
+              <td class="p-3 text-link font-semibold">±0.1 mm to ±0.3 mm (Sub-millimeter)</td>
+              <td class="p-3 text-body">±3% to ±8% (3 mm to 8 mm error on 10 cm object)</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-ink">Substrate Rigidity</td>
+              <td class="p-3 text-body">Rigid physical glass matrix manufactured to micron tolerances</td>
+              <td class="p-3 text-body">Deformable virtual point clouds estimated from optical camera feed</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-ink">Optical Parallax & Lens Distortion</td>
+              <td class="p-3 text-link font-semibold">Zero parallax (object rests directly on display glass)</td>
+              <td class="p-3 text-body">High radial distortion and perspective tilt from smartphone lens</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-ink">Surface Texture & Lighting Dependency</td>
+              <td class="p-3 text-body">Independent of room lighting and table texture</td>
+              <td class="p-3 text-body">Fails or drifts on featureless, glossy, dark, or reflective surfaces</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-ink">Calibration Standard</td>
+              <td class="p-3 text-body">Physical ISO 7810 standard (any bank card or device preset)</td>
+              <td class="p-3 text-body">Continuous visual SLAM heuristic drift</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 4. Device Catalog & Hardware PPI Database -->
+    <section class="space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-bold font-mono tracking-tight text-ink">
+            📱 Flagship Device PPI Directory & Instant Presets
+          </h2>
+          <p class="text-xs sm:text-sm text-body">
+            Select your exact device below to load its factory physical density into the ruler with a single click.
+          </p>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-hairline bg-canvas shadow-whisper">
+        <table class="w-full text-left text-xs font-mono border-collapse">
+          <thead>
+            <tr class="border-b border-hairline bg-canvas-elevated">
+              <th class="p-3 text-ink font-bold">Device Name</th>
+              <th class="p-3 text-ink font-bold">Screen Diagonal</th>
+              <th class="p-3 text-ink font-bold">Native Resolution</th>
+              <th class="p-3 text-ink font-bold">Physical Density (PPI)</th>
+              <th class="p-3 text-right text-ink font-bold">Action</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline">
+            {[
+              { name: 'Apple iPhone 16 Pro Max', diag: '6.9″', res: '1320 × 2868', ppi: 460 },
+              { name: 'Apple iPhone 16 Pro', diag: '6.3″', res: '1206 × 2622', ppi: 460 },
+              { name: 'Apple iPhone 16 / 15 / 14', diag: '6.1″', res: '1179 × 2556', ppi: 460 },
+              { name: 'Samsung Galaxy S24 Ultra', diag: '6.8″', res: '1440 × 3120', ppi: 505 },
+              { name: 'Samsung Galaxy S24+', diag: '6.7″', res: '1440 × 3120', ppi: 513 },
+              { name: 'Samsung Galaxy S24', diag: '6.2″', res: '1080 × 2340', ppi: 416 },
+              { name: 'Google Pixel 9 Pro XL', diag: '6.8″', res: '1344 × 2992', ppi: 486 },
+              { name: 'Google Pixel 9 Pro', diag: '6.3″', res: '1280 × 2856', ppi: 495 },
+              { name: 'Google Pixel 9', diag: '6.3″', res: '1080 × 2424', ppi: 422 },
+              { name: 'Apple iPad Pro 13″ (M4)', diag: '13.0″', res: '2064 × 2752', ppi: 264 },
+              { name: 'Apple iPad Pro 11″ (M4)', diag: '11.0″', res: '1668 × 2420', ppi: 264 },
+              { name: 'Apple iPad Air 11″ (M2)', diag: '10.86″', res: '1640 × 2360', ppi: 264 },
+              { name: 'Apple iPad mini (6th/7th)', diag: '8.3″', res: '1488 × 2266', ppi: 326 },
+              { name: 'Apple MacBook Pro 16″ (M3)', diag: '16.2″', res: '2234 × 3456', ppi: 254 },
+              { name: 'Apple MacBook Pro 14″ (M3)', diag: '14.2″', res: '1964 × 3024', ppi: 254 },
+              { name: 'Apple MacBook Air 15″ (M3)', diag: '15.3″', res: '1864 × 2880', ppi: 224 },
+              { name: 'Apple MacBook Air 13″ (M3)', diag: '13.6″', res: '1664 × 2560', ppi: 224 },
+              { name: 'Dell XPS 15 (OLED 3.5K)', diag: '15.6″', res: '3456 × 2160', ppi: 261 },
+              { name: 'Standard Monitor 24″ FHD', diag: '23.8″', res: '1920 × 1080', ppi: 92 },
+              { name: 'Standard Monitor 27″ QHD', diag: '27.0″', res: '2560 × 1440', ppi: 109 },
+              { name: 'Standard Monitor 27″ 4K UHD', diag: '27.0″', res: '3840 × 2160', ppi: 163 },
+              { name: 'Standard Monitor 32″ 4K UHD', diag: '31.5″', res: '3840 × 2160', ppi: 140 },
+            ].map((d) => (
+              <tr class="hover:bg-canvas-elevated/60 transition-colors">
+                <td class="p-3 font-semibold text-ink">{d.name}</td>
+                <td class="p-3 text-body">{d.diag}</td>
+                <td class="p-3 text-mute">{d.res}</td>
+                <td class="p-3 font-bold text-ink">{d.ppi} PPI</td>
+                <td class="p-3 text-right">
+                  <button
+                    type="button"
+                    class="ruler-table-preset-btn px-2.5 py-1 rounded-md border border-hairline bg-canvas text-[11px] font-semibold text-link hover:border-link hover:bg-link/10 transition-colors cursor-pointer"
+                    data-ppi={d.ppi}
+                    data-name={d.name}
+                  >
+                    Apply Preset
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 5. Imperial Fractional Inches Cheatsheet -->
+    <section class="space-y-4">
+      <div class="space-y-1">
+        <h2 class="text-xl sm:text-2xl font-bold font-mono tracking-tight text-ink">
+          📐 Imperial Fractional Inches vs Metric Conversion Cheatsheet
+        </h2>
+        <p class="text-xs sm:text-sm text-body">
+          How to read fractions of an inch (1/16″ increments) and convert them to exact millimeters and centimeters.
+        </p>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-hairline bg-canvas shadow-whisper">
+        <table class="w-full text-left text-xs font-mono border-collapse">
+          <thead>
+            <tr class="border-b border-hairline bg-canvas-elevated">
+              <th class="p-2.5 text-ink font-bold">Fractional Inch</th>
+              <th class="p-2.5 text-ink font-bold">Decimal Inch</th>
+              <th class="p-2.5 text-ink font-bold">Millimeters (mm)</th>
+              <th class="p-2.5 text-ink font-bold">Centimeters (cm)</th>
+              <th class="p-2.5 text-ink font-bold">Ruler Tick Description</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline">
+            {[
+              { frac: '1/16″', dec: '0.0625″', mm: '1.588 mm', cm: '0.159 cm', tick: 'Shortest fine tick mark' },
+              { frac: '1/8″', dec: '0.1250″', mm: '3.175 mm', cm: '0.318 cm', tick: 'Short tick mark (1/8 step)' },
+              { frac: '3/16″', dec: '0.1875″', mm: '4.763 mm', cm: '0.476 cm', tick: 'Shortest fine tick mark' },
+              { frac: '1/4″', dec: '0.2500″', mm: '6.350 mm', cm: '0.635 cm', tick: 'Medium quarter tick mark' },
+              { frac: '5/16″', dec: '0.3125″', mm: '7.938 mm', cm: '0.794 cm', tick: 'Shortest fine tick mark' },
+              { frac: '3/8″', dec: '0.3750″', mm: '9.525 mm', cm: '0.953 cm', tick: 'Short tick mark (1/8 step)' },
+              { frac: '7/16″', dec: '0.4375″', mm: '11.113 mm', cm: '1.111 cm', tick: 'Shortest fine tick mark' },
+              { frac: '1/2″', dec: '0.5000″', mm: '12.700 mm', cm: '1.270 cm', tick: 'Tall half-inch tick mark' },
+              { frac: '9/16″', dec: '0.5625″', mm: '14.288 mm', cm: '1.429 cm', tick: 'Shortest fine tick mark' },
+              { frac: '5/8″', dec: '0.6250″', mm: '15.875 mm', cm: '1.588 cm', tick: 'Short tick mark (1/8 step)' },
+              { frac: '11/16″', dec: '0.6875″', mm: '17.463 mm', cm: '1.746 cm', tick: 'Shortest fine tick mark' },
+              { frac: '3/4″', dec: '0.7500″', mm: '19.050 mm', cm: '1.905 cm', tick: 'Medium quarter tick mark' },
+              { frac: '13/16″', dec: '0.8125″', mm: '20.638 mm', cm: '2.064 cm', tick: 'Shortest fine tick mark' },
+              { frac: '7/8″', dec: '0.8750″', mm: '22.225 mm', cm: '2.223 cm', tick: 'Short tick mark (1/8 step)' },
+              { frac: '15/16″', dec: '0.9375″', mm: '23.813 mm', cm: '2.381 cm', tick: 'Shortest fine tick mark' },
+              { frac: '1″', dec: '1.0000″', mm: '25.400 mm', cm: '2.540 cm', tick: 'Longest numbered major tick' },
+            ].map((row) => (
+              <tr class="hover:bg-canvas-elevated/60 transition-colors">
+                <td class="p-2.5 font-bold text-link">{row.frac}</td>
+                <td class="p-2.5 text-body">{row.dec}</td>
+                <td class="p-2.5 font-semibold text-ink">{row.mm}</td>
+                <td class="p-2.5 text-mute">{row.cm}</td>
+                <td class="p-2.5 text-mute">{row.tick}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 6. Practical Measurement Tips: Objects Longer than Screen -->
+    <section class="rounded-2xl border border-hairline bg-canvas-elevated p-5 sm:p-7 shadow-whisper space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold font-mono tracking-tight text-ink flex items-center gap-2">
+        <span>💡</span> How to Measure Objects Longer than Your Phone Screen
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs sm:text-sm text-body leading-relaxed">
+        <div class="space-y-2">
+          <h3 class="font-mono font-bold text-ink text-sm">Technique 1: Landscape Screen Rotation</h3>
+          <p>
+            When holding your phone vertically in portrait mode, modern flagship smartphones offer roughly 14 cm to 16 cm (5.5″ to 6.3″) of measuring scale. By turning your device sideways into landscape orientation, you unlock your device's longest physical glass edge.
+          </p>
+        </div>
+        <div class="space-y-2">
+          <h3 class="font-mono font-bold text-ink text-sm">Technique 2: Straight-Edge Index Step</h3>
+          <p>
+            For objects longer than your phone (e.g. 30 cm or 12 inches), place your phone alongside a straight edge (like a notebook edge). Align 0 with the start, make a light pencil mark or place a coin at your phone's top corner, slide the phone forward from the marker, and sum the measurements together.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Microsoft Word & PowerPoint Online Rulers Comparison -->
+    <section class="rounded-2xl border border-hairline bg-canvas-elevated p-5 sm:p-7 shadow-whisper space-y-3">
+      <h2 class="text-lg sm:text-xl font-bold font-mono tracking-tight text-ink">
+        Word Online & PowerPoint Online Ruler: How They Differ
+      </h2>
+      <p class="text-xs sm:text-sm text-body leading-relaxed">
+        Users often search for <em>"how to show ruler in Word Online"</em> or <em>"PowerPoint online ruler"</em>. In Microsoft Office 365 web apps, selecting <strong>View &gt; Ruler</strong> shows margin tab-stops and text indents relative to your document page layout (e.g. 1-inch margins on Letter size). However, Office web rulers are scaled to your browser’s zoom and <strong>do not reflect physical real-world object scale</strong>. To measure a physical card, key, cable, or envelope, keep this calibrated online ruler open in a companion browser tab.
+      </p>
+    </section>
+
+    <!-- 8. Interactive FAQs (Matching Schema) -->
+    <section id="faq-section" class="space-y-4">
+      <div class="space-y-1">
+        <h2 class="text-xl sm:text-2xl font-bold font-mono tracking-tight text-ink">
+          Frequently Asked Questions (FAQ)
+        </h2>
+        <p class="text-xs sm:text-sm text-body">
+          Answers to the most common questions about calibration, accuracy, fractional units, and measuring real objects on screen.
+        </p>
+      </div>
+
+      <div class="space-y-2.5">
+        {faqs.map((faq) => (
+          <details class="group rounded-xl border border-hairline bg-canvas p-4 transition-all open:bg-canvas-elevated">
+            <summary class="flex items-center justify-between font-semibold font-mono text-xs sm:text-sm text-ink cursor-pointer list-none select-none">
+              <span>{faq.question}</span>
+              <span class="ml-2 text-mute group-open:rotate-180 transition-transform duration-200">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <p class="mt-3 text-xs sm:text-sm text-body leading-relaxed border-t border-hairline pt-3 font-sans">
+              {faq.answer}
+            </p>
+          </details>
+        ))}
+      </div>
+    </section>
+
+    <!-- 9. Related Calculators & Precision Tools -->
+    <section class="rounded-2xl border border-hairline bg-canvas p-5 sm:p-7 shadow-whisper space-y-4">
+      <h2 class="text-base sm:text-lg font-bold font-mono text-ink tracking-tight">
+        Related Precision Measuring & Conversion Tools
+      </h2>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {relatedCalculators.map((rel) => (
+          <a
+            href={rel.href}
+            class="flex flex-col justify-between p-3.5 rounded-xl border border-hairline bg-canvas-elevated hover:border-link hover:shadow-xs transition-all group"
+          >
+            <span class="text-xs font-mono font-bold text-ink group-hover:text-link transition-colors">{rel.title}</span>
+            <span class="text-[10px] text-mute font-mono mt-2 flex items-center gap-1">
+              Explore Tool <span class="group-hover:translate-x-0.5 transition-transform">→</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </div>
 </CalculatorLayout>
 
 <style>
@@ -526,13 +1005,46 @@ const schema = {
     min-height: calc(100svh - 64px);
     display: flex;
     flex-direction: column;
-    gap: 0.625rem;
-    padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
+    gap: 0.35rem;
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom, 0px));
   }
 
   @supports (height: 100dvh) {
     .ruler-app-shell {
-      min-height: calc(100dvh - 64px);
+      min-height: 100dvh;
+    }
+  }
+
+  #ruler-stage {
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: calc(100dvh - 120px);
+    height: 100%;
+  }
+
+  @media (max-width: 768px) {
+    .ruler-app-shell {
+      min-height: 100dvh !important;
+      height: 100dvh !important;
+      padding: 0 !important;
+      border-radius: 0 !important;
+      border: 0 !important;
+      gap: 0 !important;
+    }
+    .ruler-toolbar {
+      border-radius: 0 !important;
+      border-left: 0 !important;
+      border-right: 0 !important;
+      border-top: 0 !important;
+      box-shadow: none !important;
+    }
+    #ruler-stage {
+      border-radius: 0 !important;
+      border: 0 !important;
+      margin-top: 0 !important;
+      min-height: 0 !important;
+      flex: 1 1 0% !important;
+      height: 100% !important;
     }
   }
 
@@ -580,6 +1092,10 @@ const schema = {
     height: auto !important;
   }
 
+  .ruler-unit-btn {
+    min-height: 44px;
+  }
+
   .ruler-unit-btn[aria-pressed='true'],
   .ruler-edge-btn[aria-pressed='true'] {
     background: var(--color-primary);
@@ -610,25 +1126,6 @@ const schema = {
   }
 
   @media screen and (max-width: 768px) {
-    .ruler-app-shell {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      padding-left: calc(0.5rem + env(safe-area-inset-left, 0px));
-      padding-right: calc(0.5rem + env(safe-area-inset-right, 0px));
-    }
-
-    #ruler-stage {
-      flex: 1 1 auto;
-      min-height: 48svh;
-      height: auto !important;
-    }
-
-    .ruler-unit-btn,
-    .ruler-edge-btn {
-      min-height: 44px !important;
-    }
-
     #ruler-hint p {
       font-size: 0.7rem;
       padding: 0 1rem;
@@ -700,6 +1197,7 @@ const schema = {
     mmToPx,
     ppiFromDiagonal,
     tickSpecForUnit,
+    toFractionalInch,
     validatePpi,
     type CalibrationMethod,
     type CalibrationSource,
@@ -749,6 +1247,28 @@ const schema = {
     let crosshairOn = false;
     let measuring = false;
     let calibration: PersistedCalibration = { ...defaultCalibration };
+    let flipSideInverted = false;
+    try {
+      flipSideInverted = localStorage.getItem('fac-ruler-flip-side') === 'true';
+    } catch (_) {}
+
+    function syncFlipSideButton(): void {
+      const btn = $('ruler-flip-side-btn');
+      if (btn) {
+        btn.setAttribute('aria-pressed', flipSideInverted ? 'true' : 'false');
+        btn.classList.toggle('text-link', flipSideInverted);
+        btn.classList.toggle('border-link/50', flipSideInverted);
+      }
+    }
+
+    function toggleFlipSide(): void {
+      flipSideInverted = !flipSideInverted;
+      try {
+        localStorage.setItem('fac-ruler-flip-side', String(flipSideInverted));
+      } catch (_) {}
+      syncFlipSideButton();
+      renderEdges();
+    }
 
     function sanitizeState(raw: unknown): Partial<PersistedState> | null {
       if (!raw || typeof raw !== 'object') return null;
@@ -873,6 +1393,7 @@ const schema = {
         saveState();
         renderAll();
         updateStatus();
+        syncConverterFromActive();
       } catch (err) {
         lastCalError = err instanceof RangeError ? err.message : 'Invalid calibration value';
       }
@@ -916,7 +1437,8 @@ const schema = {
 
       const spec = tickSpecForUnit(unit, calibration.ppi);
       const ticks = generateTicks(cssLength, spec);
-      const flip = edge === 'bottom' || edge === 'right';
+      const baseFlip = edge === 'top' || edge === 'left';
+      const flip = flipSideInverted ? !baseFlip : baseFlip;
 
       ctx.lineWidth = 1;
       ctx.font = '600 9px "Geist Mono", ui-monospace, monospace';
@@ -960,11 +1482,11 @@ const schema = {
       ctx.strokeStyle = hairline;
       ctx.beginPath();
       if (vertical) {
-        const x = flip ? 0.5 : cssThickness - 0.5;
+        const x = edge === 'left' ? cssThickness - 0.5 : 0.5;
         ctx.moveTo(x, 0);
         ctx.lineTo(x, cssLength);
       } else {
-        const y = flip ? 0.5 : cssThickness - 0.5;
+        const y = edge === 'top' ? cssThickness - 0.5 : 0.5;
         ctx.moveTo(0, y);
         ctx.lineTo(cssLength, y);
       }
@@ -1156,6 +1678,7 @@ const schema = {
     }
 
     function onStagePointerLeave(): void {
+      hideLoupe();
       if (measuring) return;
       crosshairX.classList.add('hidden');
       crosshairY.classList.add('hidden');
@@ -1176,6 +1699,7 @@ const schema = {
       measureBar.classList.toggle('flex', on);
       if (!on) {
         measureStart = null;
+        hideLoupe();
       }
       invalidateStageRect();
       syncToggleButtons();
@@ -1206,6 +1730,7 @@ const schema = {
       readoutSub.textContent = r.secondary.join('  ·  ');
       readout.classList.remove('hidden');
       positionReadout(x, y);
+      updateLoupe(x, y);
     }
 
     function onStagePointerDown(e: PointerEvent): void {
@@ -1226,9 +1751,11 @@ const schema = {
       measureLayer.append(measureLine, measureDotA, measureDotB);
       stage.setPointerCapture(e.pointerId);
       e.preventDefault();
+      updateLoupe(x, y);
     }
 
     function onStagePointerUp(e: PointerEvent): void {
+      hideLoupe();
       if (!measuring || !measureStart) return;
       const rect = stageRect();
       const x = e.clientX - rect.left;
@@ -1598,6 +2125,86 @@ const schema = {
       zoomTimer = setTimeout(updateZoomWarning, 150);
     }
 
+    // ----------------------------------------------------- optical loupe
+    const loupe = $('ruler-loupe');
+    const loupeCanvas = $('ruler-loupe-canvas') as HTMLCanvasElement | null;
+    const loupeCtx = loupeCanvas ? loupeCanvas.getContext('2d') : null;
+
+    function updateLoupe(pointerX: number, pointerY: number): void {
+      if (!loupe || !loupeCanvas || !loupeCtx) return;
+      loupe.classList.remove('hidden');
+      const size = 80;
+      let lx = pointerX - size / 2;
+      let ly = pointerY - size - 16;
+      if (ly < 10) ly = pointerY + 24;
+      if (lx < 10) lx = 10;
+      if (lx + size > stage.clientWidth - 10) lx = stage.clientWidth - size - 10;
+      loupe.style.left = `${lx}px`;
+      loupe.style.top = `${ly}px`;
+
+      loupeCtx.clearRect(0, 0, 80, 80);
+      loupeCtx.fillStyle = cssVar('--color-canvas-elevated', '#ffffff');
+      loupeCtx.fillRect(0, 0, 80, 80);
+
+      const dpr = window.devicePixelRatio || 1;
+      for (const edge of VALID_EDGES) {
+        if (!edges.has(edge)) continue;
+        const cvs = canvases[edge];
+        if (!cvs) continue;
+        const vertical = edge === 'left' || edge === 'right';
+        const cvsLeft = edge === 'right' ? stage.clientWidth - 40 : 0;
+        const cvsTop = edge === 'bottom' ? stage.clientHeight - 40 : 0;
+        const srcX = Math.max(0, pointerX - 20) - cvsLeft;
+        const srcY = Math.max(0, pointerY - 20) - cvsTop;
+        try {
+          loupeCtx.drawImage(cvs, srcX * dpr, srcY * dpr, 40 * dpr, 40 * dpr, 0, 0, 80, 80);
+        } catch (_) {}
+      }
+    }
+
+    function hideLoupe(): void {
+      loupe?.classList.add('hidden');
+    }
+
+    // ---------------------------------------------------- 4-way converter
+    const convCm = $('conv-cm') as HTMLInputElement | null;
+    const convMm = $('conv-mm') as HTMLInputElement | null;
+    const convIn = $('conv-in') as HTMLInputElement | null;
+    const convInFrac = $('conv-in-frac');
+    const convPx = $('conv-px') as HTMLInputElement | null;
+    const convPpiLabel = $('ruler-conv-ppi');
+
+    function syncConverter(from: 'cm' | 'mm' | 'in' | 'px', val: number): void {
+      if (!isFinite(val) || val < 0) return;
+      const ppi = calibration.ppi;
+      let mm = 0;
+      if (from === 'cm') mm = val * 10;
+      else if (from === 'mm') mm = val;
+      else if (from === 'in') mm = val * 25.4;
+      else if (from === 'px') mm = (val / ppi) * 25.4;
+
+      const cm = mm / 10;
+      const inches = mm / 25.4;
+      const px = (mm / 25.4) * ppi;
+
+      if (from !== 'cm' && convCm) convCm.value = (Math.round(cm * 1000) / 1000).toString();
+      if (from !== 'mm' && convMm) convMm.value = (Math.round(mm * 100) / 100).toString();
+      if (from !== 'in' && convIn) convIn.value = (Math.round(inches * 10000) / 10000).toString();
+      if (from !== 'px' && convPx) convPx.value = Math.round(px).toString();
+
+      if (convInFrac) {
+        convInFrac.textContent = toFractionalInch(inches, 64);
+      }
+      if (convPpiLabel) {
+        convPpiLabel.textContent = Math.round(ppi).toString();
+      }
+    }
+
+    function syncConverterFromActive(): void {
+      const curCm = parseFloat(convCm?.value || '10');
+      syncConverter('cm', isNaN(curCm) || curCm <= 0 ? 10 : curCm);
+    }
+
     // ------------------------------------------------------------ render all
     function renderAll(): void {
       renderEdges();
@@ -1612,6 +2219,70 @@ const schema = {
     }
     for (const btn of edgeButtons) {
       btn.addEventListener('click', () => toggleEdge(btn.dataset.edge || 'top'));
+    }
+
+    $('ruler-flip-side-btn')?.addEventListener('click', toggleFlipSide);
+
+    // Welcome overlay
+    const welcomeOverlay = $('ruler-welcome-overlay');
+    const welcomeDismiss = $('ruler-welcome-dismiss');
+    const welcomeHideForever = $('ruler-welcome-hide-forever');
+    let hideWelcome = false;
+    try {
+      hideWelcome = localStorage.getItem('fac-ruler-hide-welcome') === 'true';
+    } catch (_) {}
+    if (hideWelcome && welcomeOverlay) {
+      welcomeOverlay.classList.add('hidden');
+    }
+    welcomeDismiss?.addEventListener('click', () => {
+      welcomeOverlay?.classList.add('hidden');
+    });
+    welcomeHideForever?.addEventListener('click', () => {
+      try {
+        localStorage.setItem('fac-ruler-hide-welcome', 'true');
+      } catch (_) {}
+      welcomeOverlay?.classList.add('hidden');
+    });
+    for (const qe of Array.from(document.querySelectorAll<HTMLButtonElement>('.ruler-quick-edge'))) {
+      qe.addEventListener('click', () => {
+        const edge = qe.dataset.edge || 'left';
+        edges = new Set([edge]);
+        syncEdgeButtons();
+        saveState();
+        renderAll();
+      });
+    }
+
+    // 4-Way Unit Converter inputs
+    convCm?.addEventListener('input', () => syncConverter('cm', parseFloat(convCm.value || '0')));
+    convMm?.addEventListener('input', () => syncConverter('mm', parseFloat(convMm.value || '0')));
+    convIn?.addEventListener('input', () => syncConverter('in', parseFloat(convIn.value || '0')));
+    convPx?.addEventListener('input', () => syncConverter('px', parseFloat(convPx.value || '0')));
+
+    for (const qBtn of Array.from(document.querySelectorAll<HTMLButtonElement>('.ruler-quick-conv'))) {
+      qBtn.addEventListener('click', () => {
+        const cm = parseFloat(qBtn.dataset.valCm || '0');
+        if (convCm) convCm.value = cm.toString();
+        syncConverter('cm', cm);
+      });
+    }
+
+    // Device Hardware Catalog Table presets
+    for (const pBtn of Array.from(document.querySelectorAll<HTMLButtonElement>('.ruler-table-preset-btn'))) {
+      pBtn.addEventListener('click', () => {
+        const ppi = parseFloat(pBtn.dataset.ppi || '0');
+        const name = pBtn.dataset.name || 'Device';
+        if (ppi >= 40 && ppi <= 1200) {
+          applyCalibration({
+            method: 'device',
+            source: 'device',
+            ppi,
+            note: `Calibrated with ${name} hardware preset (${ppi} PPI).`,
+          });
+          syncConverterFromActive();
+          root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
     }
 
     $('ruler-guides-btn')?.addEventListener('click', () => setGuides(!guidesOn));
@@ -1777,6 +2448,7 @@ const schema = {
 
     // ------------------------------------------------------------ boot
     syncEdgeButtons();
+    syncFlipSideButton();
     setUnit(unit);
     setGuides(guidesOn);
     setCrosshair(crosshairOn);
@@ -1786,6 +2458,7 @@ const schema = {
     setCalMethod('card');
     updateZoomWarning();
     renderHistory();
+    syncConverterFromActive();
     renderAll();
 
     if (lastCalError) {

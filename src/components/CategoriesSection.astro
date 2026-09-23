@@ -64,13 +64,16 @@ const sectionAriaLabel = hpStrings.categoriesSection.heading;
     {categories.map((cat) => {
       const href = `/${cat.id}/`;
       const catDisplayName = hpStrings.categoriesSection.categories[cat.id] || cat.name;
-      const linkTitle = `${sectionHeading} ${catDisplayName}`;
+      const catDesc = hpStrings.categoriesSection.descriptions?.[cat.id] || '';
+      const linkTitle = catDesc ? `${catDisplayName} — ${catDesc}` : `${sectionHeading}: ${catDisplayName}`;
+      const ariaLabel = catDesc ? `${catDisplayName} Calculators. ${catDesc}` : `${catDisplayName} Calculators`;
 
       return (
         <a
           href={href}
           data-category={cat.id}
           title={linkTitle}
+          aria-label={ariaLabel}
           class="category-filter-btn group relative flex flex-col items-center justify-center text-center w-full min-w-0 min-h-[72px] sm:min-h-[82px] md:min-h-[90px] rounded-xl sm:rounded-2xl border border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-950/70 hover:bg-slate-50 dark:hover:bg-slate-800/90 hover:border-indigo-500/60 dark:hover:border-indigo-400/60 p-2 sm:p-3 cursor-pointer transition-all duration-200 shadow-2xs hover:shadow-lg hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 active:scale-[0.97]"
         >
           <span class="flex h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 shrink-0 items-center justify-center rounded-xl sm:rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-base sm:text-lg md:text-xl shadow-2xs group-hover:scale-110 group-hover:border-indigo-400/50 group-hover:bg-indigo-50/50 dark:group-hover:bg-indigo-950/30 transition-all mb-1 sm:mb-1.5">

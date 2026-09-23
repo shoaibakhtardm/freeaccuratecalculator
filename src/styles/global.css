@@ -422,7 +422,7 @@ body {
   #main-header, #smart-email-modal, #country-modal, .fac-copy-result-btn,
   .ad-slot-container, .breadcrumbs-container, .print\:hidden,
   .fac-theme-toggle-btn, .fac-clear-btn, .fac-kbd-shortcut,
-  #master-social-proof, .history-drawer-container {
+  #master-social-proof, .history-drawer-container, #mobile-sticky-hud {
     display: none !important;
   }
 }

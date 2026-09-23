@@ -284,14 +284,14 @@ test('Global Currency System — Selective Relevance Across Calculators', async 
   });
 
   await t.test('Health pages (e.g. BMI) do not contain CurrencySwitcher', () => {
-    const bmiPage = fs.readFileSync(path.join(process.cwd(), 'src/pages/health/bmi-calculator.astro'), 'utf-8');
+    const bmiPage = fs.readFileSync(path.join(process.cwd(), 'src/pages/bmi-calculator.astro'), 'utf-8');
     assert.ok(!bmiPage.includes('CurrencySwitcher'), 'BMI Calculator page must not contain CurrencySwitcher');
   });
 
   await t.test('Currency switcher component exists and EMI supports active currency', () => {
     const switcher = fs.readFileSync(path.join(process.cwd(), 'src/components/common/CurrencySwitcher.astro'), 'utf-8');
     assert.ok(switcher.includes('facSetActiveCurrency'), 'CurrencySwitcher must call facSetActiveCurrency on change');
-    const emiPage = fs.readFileSync(path.join(process.cwd(), 'src/pages/finance/emi-calculator.astro'), 'utf-8');
+    const emiPage = fs.readFileSync(path.join(process.cwd(), 'src/pages/emi-calculator.astro'), 'utf-8');
     assert.ok(emiPage.includes('currency') || emiPage.includes('Format') || emiPage.includes('symbol'), 'EMI Calculator must support currency formatting');
   });
 });

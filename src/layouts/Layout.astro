@@ -101,7 +101,10 @@ const baseSchemas: Array<Record<string, any>> = [
       width: 512,
       height: 512,
     },
-    description: 'Free, accurate, and privacy-focused online calculators for finance, health, math, and everyday decisions.',
+    sameAs: [
+      'https://github.com/shoaibakhtardm/freeaccuratecalculator',
+    ],
+    description: 'Free, transparent, and private online calculators for personal finance, health, math, and everyday decisions.',
   },
   {
     '@context': 'https://schema.org',
@@ -130,7 +133,18 @@ const customSchemas = jsonLd
     : [jsonLd]
   : [];
 
-const renderedSchemas = [...baseSchemas, ...customSchemas];
+// Deduplicate schemas by '@id' or '@type' to ensure clean, non-redundant JSON-LD emission
+const schemaMap = new Map<string, Record<string, any>>();
+for (const schema of baseSchemas) {
+  const key = schema['@id'] || schema['@type'];
+  schemaMap.set(key, schema);
+}
+for (const schema of customSchemas) {
+  if (!schema) continue;
+  const key = schema['@id'] || schema['@type'];
+  schemaMap.set(key, schema);
+}
+const renderedSchemas = Array.from(schemaMap.values());
 
 // Compute technical SEO hreflangs (guaranteed 200 OK targets, zero 404 hreflangs, includes hi & x-default)
 const hreflangLinks = getAlternateHreflangLinks(pathname, siteOrigin);
@@ -229,7 +243,7 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
     </noscript>
 
-    <!-- Inline Critical Above-The-Fold CSS (0ms FCP, 0.00 CLS) -->
+    <!-- Inline Critical Above-The-Fold CSS (Fast FCP, 0.00 CLS) -->
     <style is:inline>
       body { margin: 0; font-family: 'Plus Jakarta Sans', 'Cairo', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
       .calculator-container { max-width: 1280px; margin: 0 auto; padding: 1.5rem; }

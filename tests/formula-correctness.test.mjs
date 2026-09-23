@@ -258,7 +258,9 @@ test('Age Calculator Chronometrics & Feature Verification', async (t) => {
   });
 
   await t.test('Dedicated age-calculator HTML page exists with day, time, second controls and future limit', () => {
-    const distPath = path.join(process.cwd(), 'dist', 'client', 'everyday', 'age-calculator', 'index.html');
+    const distPath = fs.existsSync(path.join(process.cwd(), 'dist', 'client', 'age-calculator', 'index.html'))
+      ? path.join(process.cwd(), 'dist', 'client', 'age-calculator', 'index.html')
+      : path.join(process.cwd(), 'dist', 'client', 'everyday', 'age-calculator', 'index.html');
     assert.ok(fs.existsSync(distPath), 'Dist HTML for age calculator must exist');
     const content = fs.readFileSync(distPath, 'utf-8');
 

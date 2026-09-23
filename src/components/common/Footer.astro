@@ -14,18 +14,18 @@ const hpStrings = getHomepageStrings(currentLocale);
 const isLove = Astro.url.pathname.startsWith('/love');
 
 const statements: Record<string, string> = {
-  en: 'Fast, Precise & 100% Private.',
-  es: 'Rápido, Preciso y 100% Privado.',
-  fr: 'Précis, Rapide & 100% Privé.',
-  de: 'Schnell, Präzise & 100% Privat.',
-  hi: 'तेज़, सटीक एवं 100% सुरक्षित।',
-  pt: 'Rápido, Preciso e 100% Privado.',
-  it: 'Rapido, Preciso e 100% Privato.',
-  ar: 'سريع، دقيق وخاص بنسبة 100%.',
-  ja: '高速・高精度・100%プライベート',
-  zh: '快速、精准、100% 本地私密',
-  nl: 'Snel, Nauwkeurig en 100% Privé.',
-  ru: 'Быстро, точно и 100% конфиденциально.',
+  en: 'Fast, Transparent & In-Browser.',
+  es: 'Rápido, Transparente y en tu Navegador.',
+  fr: 'Rapide, Transparent & dans Votre Navigateur.',
+  de: 'Schnell, Transparent & im Browser.',
+  hi: 'तेज़, पारदर्शी एवं ब्राउज़र-आधारित गणनाएं।',
+  pt: 'Rápido, Transparente e no seu Navegador.',
+  it: 'Rapido, Trasparente e nel tuo Browser.',
+  ar: 'سريع، شفاف وحسابات داخل متصفحك.',
+  ja: '高速・透明性・ブラウザ内完結計算',
+  zh: '快速、透明、浏览器本地计算',
+  nl: 'Snel, Transparant en in uw Browser.',
+  ru: 'Быстро, прозрачно и прямо в браузере.',
 };
 
 const statementText = statements[currentLocale] || statements.en;

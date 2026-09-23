@@ -17,48 +17,23 @@ const hpStrings = getHomepageStrings(currentLocale);
 const websiteOrigin = 'https://freeaccuratecalculator.com';
 const pageUrl = currentLocale === 'en' ? `${websiteOrigin}/` : `${websiteOrigin}/${currentLocale}/`;
 
-const websiteSchema = {
+const webPageSchema = {
   '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: hpStrings.seo.websiteName,
+  '@type': 'WebPage',
+  '@id': `${pageUrl}#webpage`,
   url: pageUrl,
-  description: hpStrings.seo.websiteDesc,
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: `${websiteOrigin}/?q={search_term_string}`,
-    'query-input': 'required name=search_term_string',
+  name: hpStrings.seo.title,
+  description: hpStrings.seo.description,
+  inLanguage: currentLocale,
+  isPartOf: {
+    '@id': `${websiteOrigin}/#website`,
+  },
+  about: {
+    '@id': `${websiteOrigin}/#organization`,
   },
 };
 
-const organizationSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'Organization',
-  name: 'Free Accurate Calculator',
-  url: websiteOrigin,
-  logo: `${websiteOrigin}/favicon.svg`,
-  sameAs: [
-    'https://twitter.com/FreeAccurateCalc',
-    'https://github.com/shoaibakhtardm/freeaccuratecalculator',
-  ],
-  description: hpStrings.seo.websiteDesc,
-};
-
-const faqSchema = hpStrings.faqSection?.items?.length
-  ? {
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: hpStrings.faqSection.items.map((item) => ({
-        '@type': 'Question',
-        name: item.question,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: item.answer,
-        },
-      })),
-    }
-  : null;
-
-const allSchemas = [websiteSchema, organizationSchema, faqSchema].filter(Boolean);
+const allSchemas = [webPageSchema];
 
 const isFrenchLocale = currentLocale === 'fr';
 

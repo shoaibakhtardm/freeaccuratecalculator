@@ -1,0 +1,947 @@
+[
+  {
+    "index": 1,
+    "name": "401(k) Calculator",
+    "url": "/401k-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 2,
+    "name": "Age Calculator",
+    "url": "/age-calculator/",
+    "category": "Everyday",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 3,
+    "name": "AI Love Predictor 2026",
+    "url": "/ai-love-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 4,
+    "name": "AI Love Predictor 2026",
+    "url": "/ai-love-predictor/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 5,
+    "name": "AI Prompt & Token Cost Calculator",
+    "url": "/ai-token-cost-calculator/",
+    "category": "Technology",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 6,
+    "name": "Alimony Estimator",
+    "url": "/alimony-calculator/",
+    "category": "Legal",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 7,
+    "name": "Amortization Calculator",
+    "url": "/amortization-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 8,
+    "name": "Annuity Payout Calculator",
+    "url": "/annuity-payout-calculator/",
+    "category": "Insurance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 9,
+    "name": "Auto Insurance Estimator",
+    "url": "/auto-insurance-calculator/",
+    "category": "Insurance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 10,
+    "name": "Auto Loan Calculator",
+    "url": "/auto-loan-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 11,
+    "name": "Bacterial Growth Calculator",
+    "url": "/bacterial-growth-calculator/",
+    "category": "Biology",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 12,
+    "name": "Baker’s Percentage Tool",
+    "url": "/bakers-percentage-calculator/",
+    "category": "Food",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 13,
+    "name": "Bandwidth Calculator",
+    "url": "/bandwidth-calculator/",
+    "category": "Technology",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 14,
+    "name": "Birth Date Compatibility",
+    "url": "/birth-date-compatibility/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 15,
+    "name": "Birth Date Compatibility",
+    "url": "/birth-date-love-compatibility/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 16,
+    "name": "BMI Calculator",
+    "url": "/bmi-calculator/",
+    "category": "Health",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 17,
+    "name": "BMR Calculator",
+    "url": "/bmr-calculator/",
+    "category": "Health",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 18,
+    "name": "Body Fat Calculator",
+    "url": "/body-fat-calculator/",
+    "category": "Health",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 19,
+    "name": "Break-Even Analysis",
+    "url": "/break-even-calculator/",
+    "category": "Business",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 20,
+    "name": "Ex Reconciliation Chance",
+    "url": "/breakup-compatibility-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 21,
+    "name": "Brick & Mortar Calculator",
+    "url": "/brick-calculator/",
+    "category": "Construction",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 22,
+    "name": "Business Valuation Tool",
+    "url": "/business-valuation-calculator/",
+    "category": "Business",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 23,
+    "name": "Fiverr Gig Pricing Formula for $3,000/Month Net",
+    "url": "/business/freelance/fiverr-freelance-gig-pricing-for-3000-monthly-take-home/",
+    "category": "Business (Freelance Rate)",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 24,
+    "name": "Freelance Rate Needed to Net $100k Annually",
+    "url": "/business/freelance/freelance-hourly-rate-to-make-100k-a-year/",
+    "category": "Business (Freelance Rate)",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 25,
+    "name": "Customer Acquisition Cost",
+    "url": "/cac-calculator/",
+    "category": "Marketing",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 26,
+    "name": "Calorie Calculator",
+    "url": "/calorie-calculator/",
+    "category": "Health",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 27,
+    "name": "Calorie per Serving Tool",
+    "url": "/calorie-per-serving-calculator/",
+    "category": "Food",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 28,
+    "name": "Cap Rate Calculator",
+    "url": "/cap-rate-calculator/",
+    "category": "Real-estate",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 29,
+    "name": "Car Depreciation Tool",
+    "url": "/car-depreciation-calculator/",
+    "category": "Automotive",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 30,
+    "name": "Carbon Footprint Calculator",
+    "url": "/carbon-footprint-calculator/",
+    "category": "Ecology",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 31,
+    "name": "Celebrity Crush Match",
+    "url": "/celebrity-love-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 32,
+    "name": "Child Support Calculator",
+    "url": "/child-support-calculator/",
+    "category": "Legal",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 33,
+    "name": "Chinese Zodiac Love",
+    "url": "/chinese-zodiac-love-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 34,
+    "name": "Composting C:N Ratio Tool",
+    "url": "/compost-ratio-calculator/",
+    "category": "Ecology",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 35,
+    "name": "Compound Interest Calculator",
+    "url": "/compound-interest-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 36,
+    "name": "Concrete Calculator",
+    "url": "/concrete-calculator/",
+    "category": "Construction",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 37,
+    "name": "Confidence Interval",
+    "url": "/confidence-interval-calculator/",
+    "category": "Statistics",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 38,
+    "name": "Conversion Calculator",
+    "url": "/conversion-calculator/",
+    "category": "Converter",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 39,
+    "name": "Conversion Rate Calculator",
+    "url": "/conversion-rate-calculator/",
+    "category": "Marketing",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 40,
+    "name": "Couple Nickname Generator",
+    "url": "/couple-nickname-generator-match/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 41,
+    "name": "Crush Love Test",
+    "url": "/crush-love-test-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 42,
+    "name": "Crush Love Test",
+    "url": "/crush-love-test/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 43,
+    "name": "Data Transfer Time",
+    "url": "/data-transfer-calculator/",
+    "category": "Technology",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 44,
+    "name": "Date Calculator",
+    "url": "/date-calculator/",
+    "category": "Everyday",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 45,
+    "name": "Disability Insurance Calculator",
+    "url": "/disability-insurance-calculator/",
+    "category": "Insurance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 46,
+    "name": "Discount Calculator",
+    "url": "/discount-calculator/",
+    "category": "Everyday",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 47,
+    "name": "Email ROI Calculator",
+    "url": "/email-roi-calculator/",
+    "category": "Marketing",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 48,
+    "name": "EMI Calculator",
+    "url": "/emi-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 49,
+    "name": "Calculadora de Porcentajes",
+    "url": "/es/math/percentage-calculator/",
+    "category": "Multilingual (ES)",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 50,
+    "name": "FLAMES Love Game",
+    "url": "/flames-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 51,
+    "name": "Calculateur de Pourcentage",
+    "url": "/fr/math/percentage-calculator/",
+    "category": "Multilingual (FR)",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 52,
+    "name": "Fraction Calculator",
+    "url": "/fraction-calculator/",
+    "category": "Math",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 53,
+    "name": "Friendship to Love",
+    "url": "/friendship-to-love-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 54,
+    "name": "Fuel Cost Calculator",
+    "url": "/fuel-cost-calculator/",
+    "category": "Automotive",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 55,
+    "name": "Golf Handicap Estimator",
+    "url": "/golf-handicap-calculator/",
+    "category": "Sports",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 56,
+    "name": "GPA Calculator",
+    "url": "/gpa-calculator/",
+    "category": "Everyday",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 57,
+    "name": "Hardy-Weinberg Estimator",
+    "url": "/hardy-weinberg-calculator/",
+    "category": "Biology",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 58,
+    "name": "Health Insurance Premium Calculator",
+    "url": "/health-insurance-calculator/",
+    "category": "Insurance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 59,
+    "name": "Target Heart Rate Zone",
+    "url": "/heart-rate-zone-calculator/",
+    "category": "Sports",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 60,
+    "name": "ऋण ईएमआई कैलकुलेटर",
+    "url": "/hi/finance/emi-calculator/",
+    "category": "Multilingual (HI)",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 61,
+    "name": "प्रतिशत कैलकुलेटर",
+    "url": "/hi/math/percentage-calculator/",
+    "category": "Multilingual (HI)",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 62,
+    "name": "Hours Calculator",
+    "url": "/hours-calculator/",
+    "category": "Everyday",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 63,
+    "name": "Ideal Weight Calculator",
+    "url": "/ideal-weight-calculator/",
+    "category": "Health",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 64,
+    "name": "Income Tax Calculator",
+    "url": "/income-tax-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 65,
+    "name": "Inflation Calculator",
+    "url": "/inflation-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 66,
+    "name": "Kinetic Energy Calculator",
+    "url": "/kinetic-energy-calculator/",
+    "category": "Physics",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 67,
+    "name": "Marriage & Kundli Compatibility",
+    "url": "/kundli-matching/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 68,
+    "name": "Legal Fee Calculator",
+    "url": "/legal-fee-calculator/",
+    "category": "Legal",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 69,
+    "name": "Length & Distance Converter",
+    "url": "/length-converter/",
+    "category": "Converter",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 70,
+    "name": "Loan Calculator",
+    "url": "/loan-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 71,
+    "name": "Love Calculator by Name",
+    "url": "/love-calculator-by-name/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 72,
+    "name": "Love Calculator by Name",
+    "url": "/love-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 73,
+    "name": "Zodiac Love Compatibility",
+    "url": "/love-compatibility-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 74,
+    "name": "Love Language Compatibility",
+    "url": "/love-language-compatibility/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 75,
+    "name": "Lumpsum Calculator",
+    "url": "/lumpsum-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 76,
+    "name": "Macronutrient Ratio Tool",
+    "url": "/macronutrient-calculator/",
+    "category": "Food",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 77,
+    "name": "Marriage & Kundli Compatibility",
+    "url": "/marriage-compatibility-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 78,
+    "name": "Molar Mass Calculator",
+    "url": "/molar-mass-calculator/",
+    "category": "Chemistry",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 79,
+    "name": "DNA / RNA Molecular Weight",
+    "url": "/molecular-weight-calculator/",
+    "category": "Biology",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 80,
+    "name": "Mortgage Calculator",
+    "url": "/mortgage-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 81,
+    "name": "Gas Mileage (MPG)",
+    "url": "/mpg-calculator/",
+    "category": "Automotive",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 82,
+    "name": "Numerology Love Match",
+    "url": "/numerology-love-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 83,
+    "name": "Ohm’s Law Calculator",
+    "url": "/ohms-law-calculator/",
+    "category": "Physics",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 84,
+    "name": "One-Rep Max (1RM) Tool",
+    "url": "/one-rep-max-calculator/",
+    "category": "Sports",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 85,
+    "name": "Ovulation Calculator",
+    "url": "/ovulation-calculator/",
+    "category": "Health",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 86,
+    "name": "Pace Calculator",
+    "url": "/pace-calculator/",
+    "category": "Health",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 87,
+    "name": "Paint Coverage Estimator",
+    "url": "/paint-calculator/",
+    "category": "Construction",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 88,
+    "name": "Password Generator",
+    "url": "/password-generator/",
+    "category": "Technology",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 89,
+    "name": "Percentage Calculator",
+    "url": "/percentage-calculator/",
+    "category": "Math",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 90,
+    "name": "pH & pOH Calculator",
+    "url": "/ph-calculator/",
+    "category": "Chemistry",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 91,
+    "name": "Prank Love Calculator",
+    "url": "/prank-love-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 92,
+    "name": "Pregnancy Due Date Calculator",
+    "url": "/pregnancy-due-date-calculator/",
+    "category": "Health",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 93,
+    "name": "Probability Calculator",
+    "url": "/probability-calculator/",
+    "category": "Statistics",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 94,
+    "name": "Profit Margin Calculator",
+    "url": "/profit-margin-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 95,
+    "name": "Projectile Motion Tool",
+    "url": "/projectile-motion-calculator/",
+    "category": "Physics",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 96,
+    "name": "Property Tax Calculator",
+    "url": "/property-tax-calculator/",
+    "category": "Real-estate",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 97,
+    "name": "Punnett Square Calculator",
+    "url": "/punnett-square-calculator/",
+    "category": "Biology",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 98,
+    "name": "Random Number Generator",
+    "url": "/random-number-generator/",
+    "category": "Math",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 99,
+    "name": "Recipe Scaler & Converter",
+    "url": "/recipe-scaler-calculator/",
+    "category": "Food",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 100,
+    "name": "Relationship Compatibility Test",
+    "url": "/relationship-compatibility-test/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 101,
+    "name": "Relationship Compatibility Test",
+    "url": "/relationship-counter/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 102,
+    "name": "Rental Yield Calculator",
+    "url": "/rental-yield-calculator/",
+    "category": "Real-estate",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 103,
+    "name": "ROAS Calculator",
+    "url": "/roas-calculator/",
+    "category": "Marketing",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 104,
+    "name": "ROI Calculator",
+    "url": "/roi-calculator/",
+    "category": "Business",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 105,
+    "name": "Roth IRA Calculator",
+    "url": "/roth-ira-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 106,
+    "name": "Online Screen Ruler",
+    "url": "/ruler/",
+    "category": "Interactive Tools",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 107,
+    "name": "Salary Calculator",
+    "url": "/salary-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 108,
+    "name": "Sample Size Calculator",
+    "url": "/sample-size-calculator/",
+    "category": "Statistics",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 109,
+    "name": "Scientific Calculator",
+    "url": "/scientific-calculator/",
+    "category": "Math",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 110,
+    "name": "Settlement Value Estimator",
+    "url": "/settlement-value-calculator/",
+    "category": "Legal",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 111,
+    "name": "SIP Calculator",
+    "url": "/sip-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 112,
+    "name": "Solar Panel Energy Tool",
+    "url": "/solar-energy-calculator/",
+    "category": "Ecology",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 113,
+    "name": "Solution Dilution (C1V1)",
+    "url": "/solution-dilution-calculator/",
+    "category": "Chemistry",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 114,
+    "name": "Soulmate Name Matcher",
+    "url": "/soulmate-name-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 115,
+    "name": "Square Footage Calculator",
+    "url": "/square-footage-calculator/",
+    "category": "Construction",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 116,
+    "name": "Standard Deviation Calculator",
+    "url": "/standard-deviation-calculator/",
+    "category": "Statistics",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 117,
+    "name": "Step-Up SIP Calculator",
+    "url": "/step-up-sip-calculator/",
+    "category": "Finance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 118,
+    "name": "Stoichiometry Calculator",
+    "url": "/stoichiometry-calculator/",
+    "category": "Chemistry",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 119,
+    "name": "Subnet Calculator",
+    "url": "/subnet-calculator/",
+    "category": "Technology",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 120,
+    "name": "Tarot Love Reading Calc",
+    "url": "/tarot-love-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 121,
+    "name": "Temperature Converter",
+    "url": "/temperature-converter/",
+    "category": "Converter",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 122,
+    "name": "Term Life Insurance Calculator",
+    "url": "/term-life-insurance-calculator/",
+    "category": "Insurance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 123,
+    "name": "Time Calculator",
+    "url": "/time-calculator/",
+    "category": "Everyday",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 124,
+    "name": "Tip Calculator",
+    "url": "/tip-calculator/",
+    "category": "Everyday",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 125,
+    "name": "Triangle Calculator",
+    "url": "/triangle-calculator/",
+    "category": "Math",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 126,
+    "name": "True Love Percentage",
+    "url": "/true-love-calculator-by-names/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 127,
+    "name": "True Love Percentage",
+    "url": "/true-love-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 128,
+    "name": "Twin Flame Calculator",
+    "url": "/twin-flame-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 129,
+    "name": "Velocity & Acceleration",
+    "url": "/velocity-acceleration-calculator/",
+    "category": "Physics",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 130,
+    "name": "Water Conservation Tool",
+    "url": "/water-conservation-calculator/",
+    "category": "Ecology",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 131,
+    "name": "Future Wedding Date",
+    "url": "/wedding-date-predictor-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 132,
+    "name": "Weight & Mass Converter",
+    "url": "/weight-converter/",
+    "category": "Converter",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 133,
+    "name": "Whole Life Insurance Calculator",
+    "url": "/whole-life-insurance-calculator/",
+    "category": "Insurance",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 134,
+    "name": "Zodiac Love Compatibility",
+    "url": "/zodiac-compatibility/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  },
+  {
+    "index": 135,
+    "name": "Zodiac Love Compatibility",
+    "url": "/zodiac-love-compatibility-calculator/",
+    "category": "Love & Relationships",
+    "status": "Pending Audit"
+  }
+]

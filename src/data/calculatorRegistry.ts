@@ -925,63 +925,7 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
       };
     `,
   },
-  {
-    id: 'inflation-calculator',
-    category: 'finance',
-    name: 'Inflation Calculator',
-    title: 'Inflation Calculator — Purchasing Power & Historical Value',
-    description: 'Calculate how inflation erodes purchasing power over time and determine what future amounts are worth in today’s dollars.',
-    badge: 'Universal',
-    badgeColor: 'text-link border-link/30 bg-link/10',
-    formula: {
-      name: 'Inflation Purchasing Power Formula',
-      expression: 'Adjusted Value = Today Value × (1 + Inflation Rate)ᵗ',
-      explanation: 'Projects the equivalent nominal dollar amount required in the future to match current buying power at annual inflation rate i.',
-    },
-    example: {
-      title: 'Worked Example: $100 purchasing power after 15 years at 3% inflation',
-      scenario: 'Evaluating the buying power of $100 over 15 years at an average 3.0% annual inflation rate.',
-      steps: [
-        {
-          number: 1,
-          title: 'Calculate future nominal cost',
-          description: '$100 × (1.03)¹⁵ = $155.80.',
-          mathExpression: 'Future Cost = $155.80',
-        },
-      ],
-      conclusion: 'You will need $155.80 in 15 years to purchase what $100 buys today.',
-    },
-    faqs: [
-      {
-        question: 'What is the Federal Reserve target inflation rate?',
-        answer: 'The US Federal Reserve targets an average long-run inflation rate of 2.0% per year.',
-      },
-    ],
-    inputs: [
-      { id: 'amount', label: 'Starting Value ($)', type: 'number', defaultValue: 100, step: 10 },
-      { id: 'inflation_rate', label: 'Average Annual Inflation (%)', type: 'number', defaultValue: 3.0, step: 0.1 },
-      { id: 'years', label: 'Number of Years', type: 'number', defaultValue: 15, step: 1 },
-    ],
-    defaultResult: {
-      label: 'Future Cost for Same Goods',
-      initialValue: 155.80,
-      decimals: 2,
-      secondaryText: 'Cumulative Price Increase: 55.80%',
-      accent: 'link',
-      prefix: '$',
-    },
-    computeScript: `
-      const amt = parseFloat(inputs.amount || '0');
-      const rate = parseFloat(inputs.inflation_rate || '0') / 100;
-      const yrs = parseFloat(inputs.years || '0');
-      const futureVal = amt * Math.pow(1 + rate, yrs);
-      const increasePct = amt > 0 ? ((futureVal - amt) / amt) * 100 : 0;
-      return {
-        value: futureVal,
-        secondary: 'Cumulative Price Increase: ' + increasePct.toFixed(2) + '%'
-      };
-    `,
-  },
+
   {
     id: 'finance-calculator',
     category: 'finance',
@@ -2242,9 +2186,14 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
       const range = max - min + 1;
       let rand = 0;
       if (range > 0) {
-        const arr = new Uint32Array(1);
-        window.crypto.getRandomValues(arr);
-        rand = min + (arr[0] % range);
+        const cryptoObj = typeof window !== 'undefined' && window.crypto ? window.crypto : (typeof globalThis !== 'undefined' && globalThis.crypto ? globalThis.crypto : null);
+        if (cryptoObj && typeof cryptoObj.getRandomValues === 'function') {
+          const arr = new Uint32Array(1);
+          cryptoObj.getRandomValues(arr);
+          rand = min + (arr[0] % range);
+        } else {
+          rand = Math.floor(Math.random() * range) + min;
+        }
       } else {
         rand = min;
       }

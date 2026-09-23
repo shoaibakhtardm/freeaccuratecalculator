@@ -35,12 +35,26 @@ export interface CalculatorEntity {
   formula: string; // mathematical formula representation for visual rendering
   formulaExplanation?: string;
   mathInputs: MathInput[];
-  faqs: [FAQItem, FAQItem, FAQItem, FAQItem, FAQItem]; // Exactly 5 intent-driven Q&A objects
+  faqs: FAQItem[];
   resultLabel: string;
   resultUnit?: string;
   resultPrefix?: string;
   decimals?: number;
   engineType: 'arithmetic' | 'finance' | 'health' | 'custom';
+  computeScript?: string;
+  secondaryText?: string;
+  initialValue?: number;
+  example?: {
+    title: string;
+    scenario: string;
+    steps: Array<{
+      number: number;
+      title: string;
+      description: string;
+      mathExpression: string;
+    }>;
+    conclusion: string;
+  };
 }
 
 export interface CalculatorCatalogItem {
