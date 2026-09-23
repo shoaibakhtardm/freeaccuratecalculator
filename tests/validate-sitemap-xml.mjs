@@ -84,6 +84,22 @@ test('Strict XML Sitemap Protocol Verification', async (t) => {
     }
   });
 
+  await t.test('Exactly one sitemap index exists; no legacy duplicate indexes; public/ and dist/ parity', () => {
+    for (const dir of [PUBLIC_DIR, DIST_DIR]) {
+      if (!fs.existsSync(dir)) continue;
+      assert.ok(fs.existsSync(path.join(dir, 'sitemap.xml')), `${dir}/sitemap.xml (single authoritative index) must exist`);
+      assert.ok(!fs.existsSync(path.join(dir, 'sitemap_index.xml')), `${dir}/sitemap_index.xml legacy duplicate index must not exist`);
+      assert.ok(!fs.existsSync(path.join(dir, 'sitemap-index.xml')), `${dir}/sitemap-index.xml legacy duplicate index must not exist`);
+    }
+
+    // public/ and dist/client/ must expose the identical sitemap file set
+    if (fs.existsSync(DIST_DIR)) {
+      const publicSet = fs.readdirSync(PUBLIC_DIR).filter((f) => /^sitemap.*\.xml$/.test(f)).sort();
+      const distSet = fs.readdirSync(DIST_DIR).filter((f) => /^sitemap.*\.xml$/.test(f)).sort();
+      assert.deepEqual(distSet, publicSet, `dist/client sitemap files must match public/ exactly: public=${publicSet.join(',')} dist=${distSet.join(',')}`);
+    }
+  });
+
   await t.test('Master sitemapindex references every generated child sitemap with 0 missing and valid HTTPS URLs', () => {
     const sitemapXml = fs.readFileSync(path.join(PUBLIC_DIR, 'sitemap.xml'), 'utf-8');
     assert.match(sitemapXml, /^<\?xml version="1.0" encoding="UTF-8"\?>\s*<sitemapindex/);

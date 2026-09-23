@@ -118,7 +118,7 @@ export const ALL_FRONTEND_CALCULATORS: CalculatorCatalogItem[] = [
 
   // Everyday
   { name: 'Age Calculator', slug: 'age-calculator', category: 'everyday', href: '/age-calculator/' },
-  { name: 'Online Ruler', slug: 'online-ruler', category: 'everyday', href: '/online-ruler/' },
+  { name: 'Online Ruler', slug: 'ruler', category: 'everyday', href: '/ruler/' },
   { name: 'Date Calculator', slug: 'date-calculator', category: 'everyday', href: '/date-calculator/' },
   { name: 'Time Calculator', slug: 'time-calculator', category: 'everyday', href: '/time-calculator/' },
   { name: 'GPA Calculator', slug: 'gpa-calculator', category: 'everyday', href: '/gpa-calculator/' },

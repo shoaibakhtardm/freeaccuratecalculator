@@ -1,7 +1,7 @@
 // src/engines/ruler.ts
 //
 // The ONE authoritative measurement engine for the Free Accurate Calculator
-// Online Ruler (/online-ruler/).
+// Online Ruler (/ruler/).
 //
 // Every unit conversion, PPI calibration, tick generation, and readout
 // formatting decision flows through this module. UI components (toolbar,
@@ -61,26 +61,42 @@ export interface DevicePreset {
 }
 
 /**
- * Curated device presets (portrait CSS pixel geometry + typical diagonal).
- * This is deliberately a short, maintainable list — it is an estimate source,
- * not a marketing "device database". Users needing precision should calibrate
- * with a physical card (ISO 85.60 × 53.98 mm) instead.
+ * Curated device presets (portrait CSS pixel geometry + physical diagonal).
+ *
+ * Every entry records the device's CSS-pixel viewport (width × height as the
+ * browser reports them) and its true panel diagonal in inches. `widthPx` and
+ * `heightPx` are CSS pixels, NOT raw hardware pixels — a preset is a fast,
+ * model-aware starting point, but panel variance means a physical card
+ * (ISO 85.60 × 53.98 mm) or the screen diagonal remains the most trustworthy
+ * calibration. PPI is derived on demand via `devicePresetPpi()`.
  */
 export const DEVICE_PRESETS: readonly DevicePreset[] = [
-  { id: 'iphone-standard', label: 'iPhone (6.1″, 393×852 pt)', diagonalIn: 6.1, widthPx: 393, heightPx: 852 },
-  { id: 'iphone-pro-max', label: 'iPhone Pro Max (6.7″, 430×932 pt)', diagonalIn: 6.7, widthPx: 430, heightPx: 932 },
+  // ---- Phones -----------------------------------------------------------
+  { id: 'iphone-se-3', label: 'iPhone SE 3 (4.7″, 375×667 pt)', diagonalIn: 4.7, widthPx: 375, heightPx: 667 },
+  { id: 'iphone-14', label: 'iPhone 14 / 13 (6.1″, 390×844 pt)', diagonalIn: 6.1, widthPx: 390, heightPx: 844 },
+  { id: 'iphone-15', label: 'iPhone 15 / 15 Pro (6.1″, 393×852 pt)', diagonalIn: 6.1, widthPx: 393, heightPx: 852 },
+  { id: 'iphone-15-pro-max', label: 'iPhone 15 Plus / Pro Max (6.7″, 430×932 pt)', diagonalIn: 6.7, widthPx: 430, heightPx: 932 },
+  { id: 'galaxy-s24', label: 'Samsung Galaxy S24 (6.2″, 360×780 dp)', diagonalIn: 6.2, widthPx: 360, heightPx: 780 },
+  { id: 'galaxy-s24-ultra', label: 'Samsung Galaxy S24 Ultra (6.8″, 384×824 dp)', diagonalIn: 6.8, widthPx: 384, heightPx: 824 },
+  { id: 'galaxy-z-fold-5', label: 'Samsung Galaxy Z Fold 5 inner (7.6″, 690×829 dp)', diagonalIn: 7.6, widthPx: 690, heightPx: 829 },
+  { id: 'pixel-8', label: 'Google Pixel 8 (6.2″, 412×915 dp)', diagonalIn: 6.2, widthPx: 412, heightPx: 915 },
+  { id: 'pixel-8-pro', label: 'Google Pixel 8 Pro (6.7″, 448×998 dp)', diagonalIn: 6.7, widthPx: 448, heightPx: 998 },
+  // ---- Tablets ----------------------------------------------------------
   { id: 'ipad-mini', label: 'iPad mini (8.3″, 744×1133 pt)', diagonalIn: 8.3, widthPx: 744, heightPx: 1133 },
   { id: 'ipad-air', label: 'iPad Air (11″, 820×1180 pt)', diagonalIn: 11, widthPx: 820, heightPx: 1180 },
   { id: 'ipad-pro', label: 'iPad Pro (13″, 1032×1376 pt)', diagonalIn: 13, widthPx: 1032, heightPx: 1376 },
-  { id: 'android-mid', label: 'Android phone (6.5″, 412×915 dp)', diagonalIn: 6.5, widthPx: 412, heightPx: 915 },
-  { id: 'android-xl', label: 'Android phone large (6.8″, 448×998 dp)', diagonalIn: 6.8, widthPx: 448, heightPx: 998 },
+  // ---- Laptops ----------------------------------------------------------
   { id: 'macbook-air-13', label: 'MacBook Air 13″ (1280×832 pt)', diagonalIn: 13.6, widthPx: 1280, heightPx: 832 },
+  { id: 'macbook-air-15', label: 'MacBook Air 15″ (1440×932 pt)', diagonalIn: 15.3, widthPx: 1440, heightPx: 932 },
   { id: 'macbook-pro-14', label: 'MacBook Pro 14″ (1512×982 pt)', diagonalIn: 14.2, widthPx: 1512, heightPx: 982 },
   { id: 'macbook-pro-16', label: 'MacBook Pro 16″ (1728×1117 pt)', diagonalIn: 16.2, widthPx: 1728, heightPx: 1117 },
   { id: 'win-laptop-14', label: 'Windows laptop 14″ (1250×810, 125% scaling)', diagonalIn: 14, widthPx: 1250, heightPx: 810 },
   { id: 'win-laptop-15', label: 'Windows laptop 15.6″ (1366×768, 100% scaling)', diagonalIn: 15.6, widthPx: 1366, heightPx: 768 },
-  { id: 'monitor-24', label: 'Desktop monitor 24″ (1920×1080)', diagonalIn: 24, widthPx: 1920, heightPx: 1080 },
-  { id: 'monitor-27', label: 'Desktop monitor 27″ (2560×1440)', diagonalIn: 27, widthPx: 2560, heightPx: 1440 },
+  // ---- Monitors ---------------------------------------------------------
+  { id: 'monitor-24-fhd', label: 'Monitor 24″ FHD (1920×1080)', diagonalIn: 24, widthPx: 1920, heightPx: 1080 },
+  { id: 'monitor-27-qhd', label: 'Monitor 27″ QHD (2560×1440)', diagonalIn: 27, widthPx: 2560, heightPx: 1440 },
+  { id: 'monitor-27-4k', label: 'Monitor 27″ 4K UHD (3840×2160)', diagonalIn: 27, widthPx: 3840, heightPx: 2160 },
+  { id: 'monitor-32-4k', label: 'Monitor 32″ 4K UHD (3840×2160)', diagonalIn: 32, widthPx: 3840, heightPx: 2160 },
 ];
 
 /** Standard physical reference objects (ISO 216 / ANSI / ISO/IEC 7810 ID-1). */
@@ -436,9 +452,9 @@ export function calibrationQuality(state: CalibrationState): CalibrationQuality 
     case 'default':
       return {
         confidence: 'estimated',
-        label: 'Estimated (default 96 PPI)',
+        label: 'Estimated — ready to calibrate',
         explanation:
-          'Using the CSS reference density of 96 PPI. On most devices this will not match the physical screen — calibrating takes under a minute.',
+          "Using standard web density (96 PPI). Click 'Calibrate' and match a bank card to make this ruler 100% accurate for your specific screen.",
       };
     default:
       return {

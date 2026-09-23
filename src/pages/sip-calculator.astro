@@ -113,7 +113,7 @@ const schema = {
   </div>
 
   <!-- Calculator Main Box -->
-  <div id="sip-calculator-card" class="calculator-main-box relative rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6 overflow-hidden transition-all pb-24 sm:pb-8">
+  <div id="sip-calculator-card" class="calculator-main-box relative rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6 overflow-hidden transition-all">
 
     <!-- Subtle Ambient Gradient Glow -->
     <div class="pointer-events-none absolute -top-32 -right-32 w-80 h-80 rounded-full bg-link/10 blur-3xl print:hidden"></div>
@@ -657,6 +657,95 @@ const schema = {
       </div>
     </div>
 
+    <!-- Year-by-Year Wealth Amortization Table Section (moved: directly after main result cards) -->
+    <div id="schedule-section-card" class="space-y-3 print:hidden">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-link" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <h3 class="text-xs sm:text-sm font-bold font-mono uppercase tracking-wider text-ink">
+            Year-by-Year Wealth Amortization Table
+          </h3>
+        </div>
+        <span class="text-[11px] font-mono text-mute">Scroll horizontally on mobile</span>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-hairline bg-canvas">
+        <table class="w-full min-w-[480px] text-left text-xs font-mono">
+          <thead class="border-b border-hairline bg-canvas-elevated text-mute">
+            <tr>
+              <th class="py-3 px-3.5 whitespace-nowrap">Year</th>
+              <th class="py-3 px-3.5 text-right whitespace-nowrap">Cumulative Invested</th>
+              <th class="py-3 px-3.5 text-right whitespace-nowrap">Annual Growth</th>
+              <th class="py-3 px-3.5 text-right whitespace-nowrap">Ending Corpus</th>
+            </tr>
+          </thead>
+          <tbody id="sip-schedule-body" class="divide-y divide-hairline text-ink">
+            <!-- Dynamic rows populated by script -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Download & Export Section Card (moved: directly after main result cards) -->
+    <div id="sip-bottom-export-wrapper" class="rounded-[20px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper print:hidden">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
+        <div class="space-y-1.5">
+          <div class="flex items-center gap-2.5">
+            <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-link/10 text-link">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </span>
+            <h3 class="text-base sm:text-lg font-bold text-ink tracking-tight font-display">Download SIP Wealth Report & Amortization Schedule</h3>
+          </div>
+          <p class="text-xs sm:text-sm text-mute leading-relaxed max-w-2xl">
+            Instantly export your personalized wealth accumulation plan, year-by-year compounding schedule, and maturity projections in your preferred format.
+          </p>
+          <div class="flex flex-wrap items-center gap-3 pt-1 text-[11px] font-mono text-mute">
+            <span class="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+              Excel / Google Sheets (.csv)
+            </span>
+            <span>•</span>
+            <span class="inline-flex items-center gap-1 text-link font-semibold">
+              <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+              Printable PDF Statement
+            </span>
+            <span>•</span>
+            <span>100% Client-Side & Private</span>
+          </div>
+        </div>
+
+        <div class="flex flex-row items-center gap-2.5 sm:gap-3 shrink-0 flex-nowrap w-full md:w-auto">
+          <button
+            type="button"
+            id="action-download-pdf-btn"
+            class="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-link hover:bg-link-hover active:scale-95 text-white text-xs sm:text-sm font-semibold font-mono shadow-xs transition-all cursor-pointer whitespace-nowrap min-h-[44px]"
+            title="Download PDF Wealth Statement"
+          >
+            <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <span>Download PDF</span>
+          </button>
+
+          <button
+            type="button"
+            id="action-download-excel-btn"
+            class="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs sm:text-sm font-semibold font-mono shadow-xs transition-all cursor-pointer whitespace-nowrap min-h-[44px]"
+            title="Download Schedule in Excel/CSV format"
+          >
+            <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            <span>Download Excel (.csv)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Compounding Intelligence Matrix: 4 High-Engagement Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-2 print:hidden">
 
@@ -901,62 +990,6 @@ const schema = {
       </div>
     </div>
 
-    <!-- Annual Accumulation Schedule Table Section -->
-    <div id="schedule-section-card" class="space-y-3 pt-4 border-t border-hairline print:hidden">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <svg class="w-4 h-4 text-link" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          <h3 class="text-xs sm:text-sm font-bold font-mono uppercase tracking-wider text-ink">
-            Year-by-Year Wealth Amortization Table
-          </h3>
-        </div>
-        <span class="text-[11px] font-mono text-mute">Scroll horizontally on mobile</span>
-      </div>
-
-      <div class="overflow-x-auto rounded-xl border border-hairline bg-canvas">
-        <table class="w-full min-w-[480px] text-left text-xs font-mono">
-          <thead class="border-b border-hairline bg-canvas-elevated text-mute">
-            <tr>
-              <th class="py-3 px-3.5 whitespace-nowrap">Year</th>
-              <th class="py-3 px-3.5 text-right whitespace-nowrap">Cumulative Invested</th>
-              <th class="py-3 px-3.5 text-right whitespace-nowrap">Annual Growth</th>
-              <th class="py-3 px-3.5 text-right whitespace-nowrap">Ending Corpus</th>
-            </tr>
-          </thead>
-          <tbody id="sip-schedule-body" class="divide-y divide-hairline text-ink">
-            <!-- Dynamic rows populated by script -->
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- Mobile Sticky Floating HUD (Shown only on small screens) -->
-  <div
-    id="mobile-sticky-hud"
-    class="fixed bottom-0 left-0 right-0 z-40 sm:hidden bg-slate-900/95 backdrop-blur-md text-white px-4 py-2.5 border-t border-slate-700 shadow-2xl flex items-center justify-between print:hidden"
-  >
-    <div class="space-y-0.5">
-      <div class="text-[10px] font-mono uppercase tracking-wider text-slate-400">
-        <span id="mobile-hud-title">Expected Corpus</span>
-      </div>
-      <div class="flex items-baseline gap-1.5 font-mono">
-        <span id="mobile-hud-val" class="text-base font-bold text-white tabular-nums">₹ 23,23,391</span>
-        <span id="mobile-hud-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-cyan/20 text-cyan font-semibold">+93.6%</span>
-      </div>
-    </div>
-
-    <div class="flex items-center gap-2">
-      <button
-        type="button"
-        id="mobile-hud-scroll-btn"
-        class="px-3 py-2 min-h-[44px] flex items-center justify-center rounded-lg bg-link text-white text-xs font-mono font-semibold active:scale-95 transition-transform"
-      >
-        View Table
-      </button>
-    </div>
   </div>
 
   <!-- Toast Notification Alert -->
@@ -972,64 +1005,6 @@ const schema = {
 
   <!-- Educational & Bottom Content (Strictly hidden during PDF / Print) -->
   <div id="sip-bottom-content-area" class="print:hidden space-y-8 mt-6">
-
-    <!-- Download & Export Section Card -->
-    <div id="sip-bottom-export-wrapper" class="rounded-[20px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-5">
-        <div class="space-y-1.5">
-          <div class="flex items-center gap-2.5">
-            <span class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-link/10 text-link">
-              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-              </svg>
-            </span>
-            <h3 class="text-base sm:text-lg font-bold text-ink tracking-tight font-display">Download SIP Wealth Report & Amortization Schedule</h3>
-          </div>
-          <p class="text-xs sm:text-sm text-mute leading-relaxed max-w-2xl">
-            Instantly export your personalized wealth accumulation plan, year-by-year compounding schedule, and maturity projections in your preferred format.
-          </p>
-          <div class="flex flex-wrap items-center gap-3 pt-1 text-[11px] font-mono text-mute">
-            <span class="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold">
-              <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-              Excel / Google Sheets (.csv)
-            </span>
-            <span>•</span>
-            <span class="inline-flex items-center gap-1 text-link font-semibold">
-              <svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
-              Printable PDF Statement
-            </span>
-            <span>•</span>
-            <span>100% Client-Side & Private</span>
-          </div>
-        </div>
-
-        <div class="flex flex-row items-center gap-2.5 sm:gap-3 shrink-0 flex-nowrap w-full md:w-auto">
-          <button
-            type="button"
-            id="action-download-pdf-btn"
-            class="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-link hover:bg-link-hover active:scale-95 text-white text-xs sm:text-sm font-semibold font-mono shadow-xs transition-all cursor-pointer whitespace-nowrap min-h-[44px]"
-            title="Download PDF Wealth Statement"
-          >
-            <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <span>Download PDF</span>
-          </button>
-
-          <button
-            type="button"
-            id="action-download-excel-btn"
-            class="flex-1 md:flex-initial inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs sm:text-sm font-semibold font-mono shadow-xs transition-all cursor-pointer whitespace-nowrap min-h-[44px]"
-            title="Download Schedule in Excel/CSV format"
-          >
-            <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            <span>Download Excel (.csv)</span>
-          </button>
-        </div>
-      </div>
-    </div>
 
     <!-- Formula Section -->
     <div id="sip-formula-wrapper">
@@ -1315,12 +1290,6 @@ const schema = {
   const scheduleBody = document.getElementById('sip-schedule-body');
   const printScheduleBody = document.getElementById('print-schedule-body');
 
-  // Mobile Sticky HUD
-  const mobileHudTitle = document.getElementById('mobile-hud-title');
-  const mobileHudVal = document.getElementById('mobile-hud-val');
-  const mobileHudBadge = document.getElementById('mobile-hud-badge');
-
-  // Toast Element
   const toastEl = document.getElementById('sip-toast');
   const toastMsg = document.getElementById('sip-toast-message');
   let toastTimeout: any = null;
@@ -1461,7 +1430,6 @@ const schema = {
       if (primaryLabel) primaryLabel.textContent = 'Monthly Investment';
       if (heroLabel) heroLabel.textContent = 'Expected Maturity Corpus';
       if (heroSub) heroSub.textContent = 'Total accumulated wealth at compound rate';
-      if (mobileHudTitle) mobileHudTitle.textContent = 'Expected Corpus';
 
       const defaultAmt = '10000';
       if (primaryInput) primaryInput.value = defaultAmt;
@@ -1476,7 +1444,6 @@ const schema = {
       if (primaryLabel) primaryLabel.textContent = 'Target Wealth Goal';
       if (heroLabel) heroLabel.textContent = 'Required Monthly SIP';
       if (heroSub) heroSub.textContent = 'Deposit needed each month to achieve goal';
-      if (mobileHudTitle) mobileHudTitle.textContent = 'Required Monthly SIP';
 
       const defaultGoal = '10000000';
       if (primaryInput) primaryInput.value = defaultGoal;
@@ -1568,8 +1535,6 @@ const schema = {
       if (secInvestedValue) secInvestedValue.textContent = formatCurrencyValue(investedCapital, isIndianFormat);
       if (secInvestedSub) secInvestedSub.textContent = `${months} Monthly Deposits${stepUpPercent > 0 ? ' (Increasing)' : ''}`;
       if (secGainValue) secGainValue.textContent = formatCurrencyValue(wealthGain, isIndianFormat);
-
-      if (mobileHudVal) mobileHudVal.textContent = `${currentCurrencySymbol} ${formatCompactValue(displayMaturity, isIndianFormat)}`;
     } else {
       // Goal Mode: calculate required monthly SIP
       maturityCorpus = rawVal;
@@ -1591,8 +1556,6 @@ const schema = {
       if (secInvestedValue) secInvestedValue.textContent = formatCurrencyValue(investedCapital, isIndianFormat);
       if (secInvestedSub) secInvestedSub.textContent = `Target: ${currentCurrencySymbol} ${formatCurrencyValue(maturityCorpus, isIndianFormat)}`;
       if (secGainValue) secGainValue.textContent = formatCurrencyValue(wealthGain, isIndianFormat);
-
-      if (mobileHudVal) mobileHudVal.textContent = `${currentCurrencySymbol} ${formatCurrencyValue(monthlyDeposit, isIndianFormat)}/mo`;
     }
 
     // Wealth Multiplier & Gain Pct
@@ -1601,7 +1564,6 @@ const schema = {
 
     if (multBadge) multBadge.textContent = `${multiplier}x Return`;
     if (heroSecBadge) heroSecBadge.textContent = `+${gainPct}% Gain`;
-    if (mobileHudBadge) mobileHudBadge.textContent = `+${gainPct}%`;
 
     // Spectrum & Donut Visualization
     const totalRef = maturityCorpus || 1;
@@ -2022,14 +1984,6 @@ const schema = {
     showToast('Reset to default values');
   });
 
-  // Mobile HUD Scroll button
-  document.getElementById('mobile-hud-scroll-btn')?.addEventListener('click', () => {
-    const schedCard = document.getElementById('schedule-section-card');
-    if (schedCard) {
-      schedCard.scrollIntoView({ behavior: 'smooth' });
-    }
-  });
-
   // Excel (.csv) Export
   function downloadExcel() {
     const rawVal = Math.max(0, parseFloat(primaryInput?.value || '0') || 0);
@@ -2263,7 +2217,6 @@ const schema = {
     .fac-embed-watermark,
     #history-drawer,
     #history-drawer-backdrop,
-    #mobile-sticky-hud,
     #sip-social-proof,
     #sip-presets,
     #sip-toast,

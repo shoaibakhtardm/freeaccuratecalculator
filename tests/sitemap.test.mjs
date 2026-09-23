@@ -8,16 +8,18 @@ const PUBLIC_DIR = path.resolve('public');
 const SRC_DIR = path.resolve('src');
 
 test('Categorized Sitemap and Discovery Audit', async (t) => {
-  await t.test('sitemap_index.xml and sitemap-index.xml exist and chunked sitemaps are under 500 URLs', () => {
-    const publicSitemapIndex1 = path.join(PUBLIC_DIR, 'sitemap_index.xml');
-    const publicSitemapIndex2 = path.join(PUBLIC_DIR, 'sitemap-index.xml');
+  await t.test('sitemap.xml is the single authoritative index, legacy indexes are gone, children under 500 URLs', () => {
+    const publicSitemapIndex = path.join(PUBLIC_DIR, 'sitemap.xml');
     const publicFinanceSitemap = path.join(PUBLIC_DIR, 'sitemap-finance.xml');
 
-    assert.ok(fs.existsSync(publicSitemapIndex1), 'sitemap_index.xml must exist in public');
-    assert.ok(fs.existsSync(publicSitemapIndex2), 'sitemap-index.xml must exist in public');
+    assert.ok(fs.existsSync(publicSitemapIndex), 'sitemap.xml must exist in public');
     assert.ok(fs.existsSync(publicFinanceSitemap), 'sitemap-finance.xml must exist in public');
 
-    const indexContent = fs.readFileSync(publicSitemapIndex1, 'utf-8');
+    // Legacy duplicate index filenames must NOT be generated anymore
+    assert.ok(!fs.existsSync(path.join(PUBLIC_DIR, 'sitemap_index.xml')), 'sitemap_index.xml must not exist (legacy duplicate index)');
+    assert.ok(!fs.existsSync(path.join(PUBLIC_DIR, 'sitemap-index.xml')), 'sitemap-index.xml must not exist (legacy duplicate index)');
+
+    const indexContent = fs.readFileSync(publicSitemapIndex, 'utf-8');
     assert.match(indexContent, /<sitemapindex/, 'Must have <sitemapindex> root tag');
     assert.match(indexContent, /<loc>https:\/\/freeaccuratecalculator\.com\/sitemap-finance\.xml<\/loc>/);
     assert.match(indexContent, /<lastmod>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z<\/lastmod>/, 'Must have ISO 8601 timestamps');
@@ -25,7 +27,7 @@ test('Categorized Sitemap and Discovery Audit', async (t) => {
     // Verify all sitemap-*.xml files have <= 500 URLs
     const files = fs.readdirSync(PUBLIC_DIR);
     for (const file of files) {
-      if (file.startsWith('sitemap-') && file.endsWith('.xml') && file !== 'sitemap-index.xml' && file !== 'sitemap_index.xml') {
+      if (file.startsWith('sitemap-') && file.endsWith('.xml')) {
         const content = fs.readFileSync(path.join(PUBLIC_DIR, file), 'utf-8');
         const urlMatches = content.match(/<loc>/g) || [];
         assert.ok(urlMatches.length <= 500, `${file} must contain at most 500 URLs, found ${urlMatches.length}`);
@@ -62,24 +64,28 @@ test('Categorized Sitemap and Discovery Audit', async (t) => {
     assert.match(mainContent, /<loc>https:\/\/freeaccuratecalculator\.com\/about\/<\/loc>\s*<lastmod>[^<]+<\/lastmod>\s*<changefreq>monthly<\/changefreq>\s*<priority>0\.5<\/priority>/);
   });
 
-  await t.test('robots.txt points strictly to sitemap index files and blocks AI bots', () => {
+  await t.test('robots.txt declares exactly one canonical sitemap and blocks AI bots', () => {
     const robotsPath = path.join(PUBLIC_DIR, 'robots.txt');
     assert.ok(fs.existsSync(robotsPath), 'robots.txt should exist in public');
     const content = fs.readFileSync(robotsPath, 'utf-8');
-    assert.match(content, /Sitemap:\s*https:\/\/freeaccuratecalculator\.com\/sitemap_index\.xml/);
-    assert.match(content, /Sitemap:\s*https:\/\/freeaccuratecalculator\.com\/sitemap-index\.xml/);
+    const sitemapLines = content.split('\n').filter((l) => /^Sitemap:/i.test(l.trim()));
+    assert.equal(sitemapLines.length, 1, `robots.txt must declare exactly one Sitemap directive, found: ${sitemapLines.join(' | ')}`);
+    assert.match(sitemapLines[0], /^Sitemap:\s*https:\/\/freeaccuratecalculator\.com\/sitemap\.xml\r?$/);
+    assert.doesNotMatch(content, /sitemap_index\.xml/, 'robots.txt must not reference legacy sitemap_index.xml');
+    assert.doesNotMatch(content, /sitemap-index\.xml/, 'robots.txt must not reference legacy sitemap-index.xml');
     assert.match(content, /User-agent:\s*Googlebot/);
     assert.match(content, /User-agent:\s*GPTBot/);
     assert.match(content, /User-agent:\s*CCBot/);
     assert.match(content, /User-agent:\s*ClaudeBot/);
   });
 
-  await t.test('Layout.astro includes link rel="sitemap" to sitemap indexes', () => {
+  await t.test('Layout.astro includes exactly one link rel="sitemap" pointing at /sitemap.xml', () => {
     const layoutPath = path.join(SRC_DIR, 'layouts', 'Layout.astro');
     assert.ok(fs.existsSync(layoutPath), 'Layout.astro should exist');
     const content = fs.readFileSync(layoutPath, 'utf-8');
-    assert.match(content, /<link rel="sitemap" href="\/sitemap_index\.xml" \/>/);
-    assert.match(content, /<link rel="sitemap" href="\/sitemap-index\.xml" \/>/);
+    const sitemapLinks = content.match(/<link rel="sitemap"[^>]*>/g) || [];
+    assert.equal(sitemapLinks.length, 1, `Layout.astro must include exactly one sitemap link, found: ${sitemapLinks.join(' | ')}`);
+    assert.match(sitemapLinks[0], /href="\/sitemap\.xml"/);
   });
 
   await t.test('100% HTML pages are present in the sitemap system', () => {

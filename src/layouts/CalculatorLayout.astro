@@ -31,6 +31,26 @@ interface Props {
   /** France bilingual hreflang alternates (informational) */
   hreflangFr?: string;
   hreflangEn?: string;
+  /**
+   * Application-first pages (e.g. /ruler/) collapse the page-title
+   * block on mobile only — subtitle and Embed/Share actions are hidden so the
+   * interactive tool starts almost immediately below the global header.
+   * Desktop presentation is unchanged.
+   */
+  compactMobileHeader?: boolean;
+  /**
+   * Suppress the site-wide "amortization spreadsheet" email capture modal.
+   * Used on app-first pages where an unrelated finance CTA must not interrupt
+   * the primary tool experience.
+   */
+  disableEmailModal?: boolean;
+  /**
+   * Tool-first / app-shell pages (e.g. /ruler/) remove the breadcrumb
+   * trail, the page-title block and the sidebar so the interactive tool owns
+   * the entire screen. A screen-reader-only H1 is retained for SEO and
+   * accessibility so the page keeps a single, meaningful heading.
+   */
+  appFullscreen?: boolean;
 }
 
 const {
@@ -47,6 +67,9 @@ const {
   canonical: canonicalProp,
   hreflangFr: _hreflangFr,
   hreflangEn: _hreflangEn,
+  compactMobileHeader = false,
+  disableEmailModal = false,
+  appFullscreen = false,
 } = Astro.props;
 
 const siteOrigin = 'https://freeaccuratecalculator.com';
@@ -113,108 +136,123 @@ const isFrench = lang?.startsWith('fr') || Astro.url.pathname.startsWith('/fr/')
   lang={lang}
 >
   <slot name="header" slot="header" />
-  <div class="max-w-7xl mx-auto">
-    <!-- Breadcrumbs -->
-    <Breadcrumbs
-      isFrench={isFrench}
-      items={[
-        { label: category.label, href: category.href },
-        { label: calculatorName },
-      ]}
-    />
 
-    <!-- Header & Action Row -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-hairline pb-6 mb-8">
-      <div class="space-y-1.5">
-        <div class="flex items-center gap-2">
-          <span class="mono-eyebrow text-link">{category.label}</span>
-          <span class="h-1 w-1 rounded-full bg-faint"></span>
-          <span class="text-[11px] font-mono text-mute">
-            {isFrench ? "Moteur 100% Côté Client & Privé" : "Instant Client-Side Engine"}
-          </span>
-        </div>
-        <h1 class="display-hero text-ink">{h1}</h1>
-        <p class="text-sm text-body max-w-2xl">{subtitle}</p>
-      </div>
-
-      <div class="flex items-center gap-2 shrink-0">
-        <EmbedButton isFrench={isFrench} />
-        <ShareButton isFrench={isFrench} />
-      </div>
+  {appFullscreen ? (
+    <div class="w-full">
+      <h1 class="sr-only">{h1}</h1>
+      <p class="sr-only">{subtitle}</p>
+      <slot />
+      <slot name="content" />
     </div>
+  ) : (
+    <div class="max-w-7xl mx-auto">
+      <!-- Breadcrumbs -->
+      <Breadcrumbs
+        isFrench={isFrench}
+        items={[
+          { label: category.label, href: category.href },
+          { label: calculatorName },
+        ]}
+      />
 
-    <!-- Main Grid: Calculator & Content (Left) + Sidebar (Right) -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-      <!-- Main Content Column (8 cols) -->
-      <div class="lg:col-span-8 space-y-8">
-        <!-- The Calculator UI Slot -->
-        <slot />
+      <!-- Header & Action Row -->
+      <div
+        class:list={[
+          'flex flex-col md:flex-row md:items-end justify-between gap-4',
+          compactMobileHeader ? 'border-b-0 md:border-b pb-2 mb-4 md:pb-6 md:mb-8' : 'border-b pb-6 mb-8',
+        ]}
+      >
+        <div class:list={[compactMobileHeader ? 'space-y-1' : 'space-y-1.5', 'min-w-0']}>
+          <div class="flex items-center gap-2">
+            <span class="mono-eyebrow text-link">{category.label}</span>
+            <span class="h-1 w-1 rounded-full bg-faint"></span>
+            <span class:list={['text-[11px] font-mono text-mute', compactMobileHeader && 'hidden sm:inline']}>
+              {isFrench ? "Moteur 100% Côté Client & Privé" : "Instant Client-Side Engine"}
+            </span>
+          </div>
+          <h1 class:list={['text-ink', compactMobileHeader ? 'text-xl sm:text-2xl md:display-hero font-semibold tracking-tight' : 'display-hero']}>{h1}</h1>
+          <p class:list={['text-sm text-body max-w-2xl', compactMobileHeader && 'hidden sm:block']}>{subtitle}</p>
+        </div>
 
-        <!-- Calculator Result Sharing Component -->
-        <ShareResult calculatorTitle={calculatorName} isFrench={isFrench} />
-
-        <!-- Native in-content ad slot between calculator and educational content -->
-        <AdSlot slotType="in-content" slotId="CALC-INCONTENT-01" />
-
-        <!-- Educational Sections Slot (Formula, Worked Example, FAQ) -->
-        <slot name="content" />
-
-        <!-- Embed Mode Attribution Watermark (Visible only when in fac-embed-view) -->
-        <div class="hidden fac-embed-watermark text-center text-xs text-mute py-3 border-t border-hairline font-mono">
-          {isFrench ? "⚡ Outil interactif fourni par" : "⚡ Interactive tool provided by"}{' '}
-          <a href={canonicalUrl} target="_blank" rel="noopener" class="text-link font-semibold hover:underline">Free Accurate Calculator</a>
-          {' '}• {isFrench ? "100% Gratuit & Confidentiel" : "100% Free & Private"}
+        <div class:list={['items-center gap-2 shrink-0', compactMobileHeader ? 'hidden sm:flex' : 'flex']}>
+          <EmbedButton isFrench={isFrench} />
+          <ShareButton isFrench={isFrench} />
         </div>
       </div>
 
-      <!-- Sidebar Column (4 cols) -->
-      <aside class="lg:col-span-4 space-y-6">
-        <!-- Sidebar Ad Slot (Sticky Desktop) -->
-        <div class="sticky top-20 space-y-6">
-          <AdSlot slotType="rectangle" slotId="CALC-SIDEBAR-01" className="my-0" />
+      <!-- Main Grid: Calculator & Content (Left) + Sidebar (Right) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <!-- Main Content Column (8 cols) -->
+        <div class="lg:col-span-8 space-y-8">
+          <!-- The Calculator UI Slot -->
+          <slot />
 
-          {relatedCalculators.length > 0 && (
-            <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-5 shadow-whisper space-y-3">
-              <h3 class="mono-eyebrow text-ink">{isFrench ? "Calculatrices Similaires" : "Related Calculators"}</h3>
-              <ul class="space-y-2">
-                {relatedCalculators.map((rel) => (
-                  <li>
-                    <a
-                      href={rel.href}
-                      class="flex items-center justify-between rounded-[6px] border border-hairline-soft bg-canvas p-2.5 text-xs font-medium text-body hover:text-ink hover:border-mute transition-colors"
-                    >
-                      <span>{rel.title}</span>
-                      {rel.badge && (
-                        <span class="text-[10px] font-mono text-mute px-1.5 py-0.5 rounded bg-hairline-soft">
-                          {rel.badge}
-                        </span>
-                      )}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <!-- Calculator Result Sharing Component -->
+          <ShareResult calculatorTitle={calculatorName} isFrench={isFrench} />
 
-          <!-- Trust Badge -->
-          <div class="rounded-[8px] border border-hairline-soft bg-canvas p-4 text-xs text-mute space-y-1.5">
-            <div class="flex items-center gap-1.5 font-medium text-ink">
-              <svg class="h-3.5 w-3.5 text-link" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-              </svg>
-              <span>{isFrench ? "Vérifié Mathématiquement" : "Mathematically Verified"}</span>
-            </div>
-            <p class="text-[11px] leading-relaxed">
-              {isFrench
-                ? "Formules rigoureusement conformes aux normes et modèles de référence. Calculs instantanés dans votre navigateur sans latence et en toute confidentialité."
-                : "Formulas checked against standard reference models. Results compute instantly in your browser with zero latency."}
-            </p>
+          <!-- Native in-content ad slot between calculator and educational content -->
+          <AdSlot slotType="in-content" slotId="CALC-INCONTENT-01" />
+
+          <!-- Educational Sections Slot (Formula, Worked Example, FAQ) -->
+          <slot name="content" />
+
+          <!-- Embed Mode Attribution Watermark (Visible only when in fac-embed-view) -->
+          <div class="hidden fac-embed-watermark text-center text-xs text-mute py-3 border-t border-hairline font-mono">
+            {isFrench ? "⚡ Outil interactif fourni par" : "⚡ Interactive tool provided by"}{' '}
+            <a href={canonicalUrl} target="_blank" rel="noopener" class="text-link font-semibold hover:underline">Free Accurate Calculator</a>
+            {' '}• {isFrench ? "100% Gratuit & Confidentiel" : "100% Free & Private"}
           </div>
         </div>
-      </aside>
+
+        <!-- Sidebar Column (4 cols) -->
+        <aside class="lg:col-span-4 space-y-6">
+          <!-- Sidebar Ad Slot (Sticky Desktop) -->
+          <div class="sticky top-20 space-y-6">
+            <AdSlot slotType="rectangle" slotId="CALC-SIDEBAR-01" className="my-0" />
+
+            {relatedCalculators.length > 0 && (
+              <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-5 shadow-whisper space-y-3">
+                <h3 class="mono-eyebrow text-ink">{isFrench ? "Calculatrices Similaires" : "Related Calculators"}</h3>
+                <ul class="space-y-2">
+                  {relatedCalculators.map((rel) => (
+                    <li>
+                      <a
+                        href={rel.href}
+                        class="flex items-center justify-between rounded-[6px] border border-hairline-soft bg-canvas p-2.5 text-xs font-medium text-body hover:text-ink hover:border-mute transition-colors"
+                      >
+                        <span>{rel.title}</span>
+                        {rel.badge && (
+                          <span class="text-[10px] font-mono text-mute px-1.5 py-0.5 rounded bg-hairline-soft">
+                            {rel.badge}
+                          </span>
+                        )}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <!-- Trust Badge -->
+            <div class="rounded-[8px] border border-hairline-soft bg-canvas p-4 text-xs text-mute space-y-1.5">
+              <div class="flex items-center gap-1.5 font-medium text-ink">
+                <svg class="h-3.5 w-3.5 text-link" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                </svg>
+                <span>{isFrench ? "Vérifié Mathématiquement" : "Mathematically Verified"}</span>
+              </div>
+              <p class="text-[11px] leading-relaxed">
+                {isFrench
+                  ? "Formules rigoureusement conformes aux normes et modèles de référence. Calculs instantanés dans votre navigateur sans latence et en toute confidentialité."
+                  : "Formulas checked against standard reference models. Results compute instantly in your browser with zero latency."}
+              </p>
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
-  </div>
+  )}
 
   <!-- Smart Email Capture Modal (Triggers non-intrusively after 2 calculations) -->
-  <SmartEmailModal isFrench={isFrench} />
+  {!disableEmailModal && <SmartEmailModal isFrench={isFrench} />}
 </Layout>

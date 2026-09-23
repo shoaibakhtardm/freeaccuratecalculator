@@ -1,54 +1,25 @@
 // src/pages/rss.xml.ts
+// Minimal static RSS channel. The legacy guides content collection was retired
+// (src/content/guides removed), so the feed no longer derives items from
+// getCollection('guides') — which previously produced an empty feed and a build
+// warning. Keep the endpoint live for subscribers; extend items here if new
+// editorial content is reintroduced.
 import type { APIRoute } from 'astro';
-import { getCollection } from 'astro:content';
 
 export const prerender = true;
 
-export const GET: APIRoute = async (context) => {
+export const GET: APIRoute = async () => {
   const siteUrl = 'https://freeaccuratecalculator.com';
-  const guides = await getCollection('guides');
-
-  // Filter English primary guides and sort by publication date descending
-  const sortedGuides = guides
-    .filter((g) => g.data.lang === 'en' && !g.id.includes('/'))
-    .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime());
-
-  function escapeXml(unsafe: string) {
-    return unsafe
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&apos;');
-  }
-
-  const itemsXml = sortedGuides
-    .map((post) => {
-      const slug = post.id.replace(/\.(md|mdx)$/, '');
-      const link = `${siteUrl}/guides/${slug}/`;
-      const pubDateRfc822 = new Date(post.data.pubDate).toUTCString();
-
-      return `    <item>
-      <title>${escapeXml(post.data.title)}</title>
-      <link>${link}</link>
-      <guid isPermaLink="true">${link}</guid>
-      <description>${escapeXml(post.data.description)}</description>
-      <pubDate>${pubDateRfc822}</pubDate>
-      <category>${escapeXml(post.data.category)}</category>
-    </item>`;
-    })
-    .join('\n');
 
   const rssFeed = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Free Accurate Calculator — Official Guides &amp; Research</title>
+    <title>Free Accurate Calculator — Official Updates</title>
     <link>${siteUrl}</link>
-    <description>Empirical mathematical guides, financial formulas, health benchmarks, and quantitative algorithms.</description>
+    <description>Free online calculators for finance, math, health, business, science, and everyday use.</description>
     <language>en-US</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${siteUrl}/rss.xml" rel="self" type="application/rss+xml"/>
-${itemsXml}
   </channel>
 </rss>`;
 

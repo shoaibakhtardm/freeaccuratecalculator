@@ -1,0 +1,358 @@
+---
+// src/pages/ruler/guides.astro
+// Online Ruler — Guides, deep-dive explanations & FAQ.
+// Canonical URL: /ruler/guides/
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+import FAQSection from '../../components/calculator/FAQSection.astro';
+
+const faqs = [
+  {
+    question: 'What is an online ruler?',
+    answer:
+      'An online ruler is a browser-based measuring tool that renders a calibrated scale on your screen, so you can measure small physical objects in centimeters, millimeters, or inches without downloading anything. Free Accurate Calculator\u2019s version also supports direct on-screen measurement, draggable guides, and a crosshair with a live coordinate readout.',
+  },
+  {
+    question: 'How do I use an online ruler?',
+    answer:
+      'Place the object you want to measure directly against the edge of the on-screen ruler, then read the value at the object\u2019s far edge. For best results, calibrate the ruler first (a bank card takes about a minute) and make sure browser zoom is at 100%, because zoom changes how large the scale appears.',
+  },
+  {
+    question: 'How do I measure centimeters online?',
+    answer:
+      'Switch the unit control to CM, place the object against the top or left ruler edge, and read the major tick closest to the object\u2019s end. Each major tick is one centimeter and each small tick is one millimeter. The Measure mode also shows the result in cm, mm, and inches at once.',
+  },
+  {
+    question: 'How do I measure inches online?',
+    answer:
+      'Switch the unit control to IN and read the ruler in inch marks \u2014 large ticks are whole inches, medium ticks are half and quarter inches, and minor ticks are sixteenths. If the scale has not been calibrated, calibrate with a card or your screen diagonal first for trustworthy inch values.',
+  },
+  {
+    question: 'How do I measure millimeters online?',
+    answer:
+      'Switch the unit control to MM. Every minor tick is exactly one millimeter and labeled ticks appear every ten millimeters. Millimeters are ideal for small objects like coins, screws, or jewelry because the scale shows the finest detail.',
+  },
+  {
+    question: 'Can I use my phone as a ruler?',
+    answer:
+      'Yes. The ruler is fully touch-enabled and mobile-optimized: drag guides with your finger, use calibration sized for phones, and rotate to landscape for longer objects. Phone screens are small, so objects longer than the visible ruler require measuring in two passes and adding the values.',
+  },
+  {
+    question: 'Can I use a laptop screen as a ruler?',
+    answer:
+      'Yes \u2014 that is exactly what this tool does. Calibrate with your laptop\u2019s screen diagonal (e.g. 13.3\u2033, 14\u2033, 15.6\u2033) plus its resolution, or align a bank card against the card rectangle for a direct physical reference. Then place flat objects against the screen edge and read the scale.',
+  },
+  {
+    question: 'How do I calibrate an online ruler?',
+    answer:
+      'Open Calibrate and pick a method: Auto estimate (fastest, least precise), Device preset (pick your device category), Screen diagonal (enter your display size and resolution), or a physical reference such as a bank card \u2014 drag the card rectangle until it matches the real card held against the screen. Your calibration is saved in your browser for next time.',
+  },
+  {
+    question: 'Why does an online ruler need calibration?',
+    answer:
+      'Screens differ in pixel density, and browsers cannot read the physical dimensions of your display. Without calibration the tool must guess pixels-per-inch from typical device data, which can be off by a noticeable margin. Calibration replaces that guess with your device\u2019s real geometry or a physical reference.',
+  },
+  {
+    question: 'Is an online ruler accurate?',
+    answer:
+      'With physical-reference calibration, an online ruler is accurate enough for school, crafts, sewing, and quick DIY checks \u2014 typically within about half a millimeter on a careful alignment. Without calibration it is an estimate that can be off by several percent. It is not a substitute for a certified measuring instrument.',
+  },
+  {
+    question: 'How do I make an online ruler actual size?',
+    answer:
+      'Calibrate with a physical reference: hold any standard bank card against the card rectangle in the calibration dialog and resize the rectangle until the edges match exactly. Save the calibration \u2014 the ruler then shows true actual size on your display. Keep browser zoom at 100% when measuring.',
+  },
+  {
+    question: 'Does browser zoom affect ruler accuracy?',
+    answer:
+      'Yes, significantly. Zoom changes how many CSS pixels the ruler occupies for a physical distance, so a calibrated scale at 110% zoom is overstated by roughly 10%. The ruler detects zoom changes and shows a warning; reset zoom to 100% (Ctrl/Cmd + 0) before measuring.',
+  },
+  {
+    question: 'What is 1 inch in centimeters?',
+    answer:
+      'One inch is exactly 2.54 centimeters (25.4 millimeters) by international definition. The ruler\u2019s conversion engine uses this exact factor for every readout, so inch and metric scales always agree.',
+  },
+  {
+    question: 'What is 1 centimeter in millimeters?',
+    answer:
+      'One centimeter is exactly 10 millimeters. The ruler\u2019s metric scales are built on this relationship: minor ticks are millimeters and every tenth tick is a labeled centimeter.',
+  },
+  {
+    question: 'Can I measure an object directly on my screen?',
+    answer:
+      'Yes. Enable Measure mode, click or tap a start point, then drag to the end point. The tool shows the distance in your selected unit plus conversions in mm, cm, and inches \u2014 useful for measuring on-screen elements like photos or UI mockups.',
+  },
+];
+
+const relatedCalculators = [
+  { title: 'Length Converter', href: '/length-converter/' },
+  { title: 'Unit Conversion Calculator', href: '/conversion-calculator/' },
+  { title: 'Percentage Calculator', href: '/percentage-calculator/' },
+  { title: 'Age Calculator', href: '/age-calculator/' },
+];
+
+const canonical = 'https://freeaccuratecalculator.com/ruler/guides/';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Article',
+      '@id': `${canonical}#article`,
+      'headline': 'Online Ruler Guides — How to Measure in cm, mm & Inches',
+      'description':
+        'Complete guide to the free online ruler: how to use it, how to calibrate your screen, unit scales, accuracy, device support and common uses.',
+      'mainEntityOfPage': { '@type': 'WebPage', '@id': canonical },
+      'inLanguage': 'en',
+      'author': { '@type': 'Organization', 'name': 'Free Accurate Calculator', 'url': 'https://freeaccuratecalculator.com/' },
+      'publisher': { '@type': 'Organization', 'name': 'Free Accurate Calculator', 'url': 'https://freeaccuratecalculator.com/' },
+      'about': 'Online ruler, screen calibration, measuring in centimeters, millimeters and inches',
+    },
+    {
+      '@type': 'BreadcrumbList',
+      '@id': `${canonical}#breadcrumb`,
+      'itemListElement': [
+        { '@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': 'https://freeaccuratecalculator.com/' },
+        { '@type': 'ListItem', 'position': 2, 'name': 'Everyday', 'item': 'https://freeaccuratecalculator.com/everyday/' },
+        { '@type': 'ListItem', 'position': 3, 'name': 'Online Ruler', 'item': 'https://freeaccuratecalculator.com/ruler/' },
+        { '@type': 'ListItem', 'position': 4, 'name': 'Guides', 'item': canonical },
+      ],
+    },
+    {
+      '@type': 'HowTo',
+      '@id': `${canonical}#howto`,
+      'name': 'How to Use the Actual Size Online Ruler',
+      'description':
+        'Calibrate your screen, choose a measurement unit, and measure real objects in centimeters, millimeters or inches with a free online ruler.',
+      'totalTime': 'PT1M',
+      'step': [
+        {
+          '@type': 'HowToStep',
+          'position': 1,
+          'name': 'Calibrate Your Screen',
+          'text':
+            'Open Calibrate and match a bank card (85.60 × 53.98 mm) against the on-screen outline, or enter your screen diagonal, so the ruler reflects your display\u2019s true pixels per inch.',
+        },
+        {
+          '@type': 'HowToStep',
+          'position': 2,
+          'name': 'Select Your Unit',
+          'text':
+            'Choose centimeters, millimeters, inches, or pixels with the unit control (keyboard keys 1\u20134) so the scale matches the unit you want to read.',
+        },
+        {
+          '@type': 'HowToStep',
+          'position': 3,
+          'name': 'Measure Your Object',
+          'text':
+            'Place the object flat against the top or left ruler edge and read the value at its far edge, or turn on Measure mode and drag across the stage for an instant multi-unit readout.',
+        },
+      ],
+    },
+  ],
+};
+---
+
+<CalculatorLayout
+  title="Online Ruler Guides — How to Measure in cm, mm & Inches"
+  metaDescription="Complete guide to the free online ruler: how to use it, calibrate your screen, read cm, mm and inch scales, accuracy, device support and common measuring uses."
+  h1="Online Ruler Guides"
+  subtitle="Everything you need to measure real objects on screen: calibration methods, unit scales, accuracy limits, device tips and answers to the most common ruler questions."
+  category={{ label: 'Everyday', href: '/everyday/' }}
+  calculatorName="Online Ruler Guides"
+  relatedCalculators={relatedCalculators}
+  jsonLd={schema}
+  disableEmailModal
+  canonical={canonical}
+>
+  <div class="space-y-8">
+    <!-- Back to the tool — the primary action of this page cluster -->
+    <a
+      href="/ruler/"
+      class="group flex flex-col sm:flex-row sm:items-center gap-3 rounded-2xl border border-hairline bg-gradient-to-br from-canvas-elevated to-canvas p-4 sm:p-5 shadow-whisper hover:border-link/50 transition-all"
+    >
+      <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-link/10 text-link">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4h16v16H4z" /><path stroke-linecap="round" stroke-linejoin="round" d="M8 4v6M12 4v6M16 4v6M8 20v-6M12 20v-6M16 20v-6" /></svg>
+      </span>
+      <span class="min-w-0 flex-1">
+        <span class="block text-sm font-semibold text-ink">Open the Online Ruler tool</span>
+        <span class="block text-xs text-body">Calibrated cm, mm & inch ruler with draggable guides, crosshair and direct measure mode.</span>
+      </span>
+      <span class="shrink-0 text-link text-sm font-semibold group-hover:translate-x-0.5 transition-transform" aria-hidden="true">Start measuring →</span>
+    </a>
+
+    <!-- ───────────────────────── HOW TO ───────────────────────── -->
+    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-4">
+      <span class="mono-eyebrow text-link">Actual size</span>
+      <h2 class="heading-md text-ink">How to Use the Actual Size Online Ruler</h2>
+      <p class="text-xs sm:text-sm text-body leading-relaxed">
+        This actual size online ruler renders a real-world measuring scale on your screen once calibrated. Pick the guide that matches what you need — centimeters, inches, a phone ruler, or a laptop and monitor screen ruler — and measure flat objects directly on the display.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+        <div class="rounded-xl border border-hairline bg-canvas p-4 space-y-1.5">
+          <h3 class="text-sm font-semibold text-ink font-mono">Measure in Centimeters (cm)</h3>
+          <p class="text-body leading-relaxed">Switch to the cm scale to measure in centimeters online: each bold tick is one centimeter and each small tick is one millimeter. This centimetre ruler is the everyday choice for sewing, crafts and school work where a normal ruler in cm is expected.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas p-4 space-y-1.5">
+          <h3 class="text-sm font-semibold text-ink font-mono">Measure in Inches (in)</h3>
+          <p class="text-body leading-relaxed">Use the inch ruler to measure in inches online with whole inches, halves, quarters and sixteenths — the same layout as a physical imperial ruler. An online ruler in inches is ideal for US paper sizes, hardware and quick DIY checks.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas p-4 space-y-1.5">
+          <h3 class="text-sm font-semibold text-ink font-mono">Ruler for Mobile Phones (iPhone & Android)</h3>
+          <p class="text-body leading-relaxed">A phone ruler for iPhone and Android that fits in your pocket: calibrate against a bank card, rotate to landscape for a longer span, and drag guides with your finger. This mobile ruler measures coins, jewellery and small parts anywhere.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas p-4 space-y-1.5">
+          <h3 class="text-sm font-semibold text-ink font-mono">Screen Ruler for Laptops & Monitors</h3>
+          <p class="text-body leading-relaxed">Turn a laptop or desktop monitor into a screen ruler with a much longer measuring edge. Use the device presets or your screen diagonal for a MacBook, Windows laptop or 4K monitor, then measure paper, envelopes and cables end to end.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── WHAT IS ───────────────────────── -->
+    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-4">
+      <span class="mono-eyebrow text-link">Guide</span>
+      <h2 class="heading-md text-ink">What Is an Online Ruler?</h2>
+      <div class="space-y-3 text-xs sm:text-sm text-body leading-relaxed">
+        <p>
+          An online ruler is a measuring scale rendered on your screen that represents real physical distance — centimeters, millimeters, or inches. Place a flat object against the edge of the scale and read its size the same way you would with a physical ruler. Because every display packs pixels differently, a good online ruler is also a calibration tool: it needs to know how many pixels correspond to one inch on <em>your</em> screen before its numbers mean anything.
+        </p>
+        <p>
+          This tool combines the ruler, the calibration system, and a direct measurement mode in one place. Everything runs locally in your browser — no downloads, no uploads, no account.
+        </p>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── HOW TO USE ───────────────────────── -->
+    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-4">
+      <span class="mono-eyebrow text-link">How to</span>
+      <h2 class="heading-md text-ink">How to Use the Online Ruler</h2>
+      <ol class="space-y-3 text-xs sm:text-sm text-body leading-relaxed list-decimal list-inside">
+        <li><strong class="text-ink">Calibrate first.</strong> Click <em>Calibrate</em> and match the on-screen outline to a bank card held against your display. This takes under a minute and makes every measurement meaningful.</li>
+        <li><strong class="text-ink">Pick your unit.</strong> Switch between cm, mm, inches, or raw pixels with the unit control (keys 1–4).</li>
+        <li><strong class="text-ink">Measure edge-to-edge.</strong> Place the object against the top or left ruler and read the value at its far edge. Enable extra edges from the edge controls.</li>
+        <li><strong class="text-ink">Or measure anywhere.</strong> Turn on <em>Measure</em>, then click and drag across the stage to measure any distance — the result shows your unit plus conversions.</li>
+        <li><strong class="text-ink">Use guides for comparisons.</strong> Enable <em>Guides</em> and drag the dashed lines to mark positions; each guide shows its live position in the active unit.</li>
+      </ol>
+      <p class="text-xs text-mute font-mono">Keep browser zoom at 100% while measuring — zoom changes the scale. The tool shows a warning when it detects a zoomed viewport.</p>
+    </section>
+
+    <!-- ───────────────────────── CALIBRATION ───────────────────────── -->
+    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-4">
+      <span class="mono-eyebrow text-link">Calibration</span>
+      <h2 class="heading-md text-ink">How to Calibrate the Ruler</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+        <div class="rounded-xl border border-hairline bg-canvas p-4 space-y-1.5">
+          <h3 class="text-sm font-semibold text-ink font-mono">1 · Physical card or object</h3>
+          <p class="text-body leading-relaxed">Hold a standard bank card (85.60 × 53.98 mm), a sheet of A4 or US Letter paper, or a coin against the outline and resize the outline until the edges match. This is a direct screen-to-object reference and the most trustworthy method.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas p-4 space-y-1.5">
+          <h3 class="text-sm font-semibold text-ink font-mono">2 · Screen diagonal</h3>
+          <p class="text-body leading-relaxed">Enter your display's diagonal (e.g. 13.3″, 15.6″, 27″) and resolution. The engine computes pixels-per-inch from the Pythagorean diagonal of your pixel grid — solid when you know the panel size.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas p-4 space-y-1.5">
+          <h3 class="text-sm font-semibold text-ink font-mono">3 · Device preset</h3>
+          <p class="text-body leading-relaxed">Pick a device category — iPhone, iPad, Android, MacBook, Windows laptop, or desktop monitor. Presets use typical panel geometry for each category; they beat a blind guess but are not model-exact.</p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas p-4 space-y-1.5">
+          <h3 class="text-sm font-semibold text-ink font-mono">4 · Auto estimate</h3>
+          <p class="text-body leading-relaxed">The fastest option. The tool reads your reported screen resolution and pixel ratio and assumes a typical diagonal for your device class. It is clearly labeled as an estimate — because it is one.</p>
+        </div>
+      </div>
+      <p class="text-xs text-mute font-mono">Your calibration is saved in this browser only (namespace fac-online-ruler:v1) and restores automatically on your next visit.</p>
+    </section>
+
+    <!-- ───────────────────────── UNITS ───────────────────────── -->
+    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-4">
+      <span class="mono-eyebrow text-link">Units</span>
+      <h2 class="heading-md text-ink">Online Ruler in Centimeters, Millimeters and Inches</h2>
+      <div class="space-y-3 text-xs sm:text-sm text-body leading-relaxed">
+        <p>
+          The cm ruler divides each centimeter into ten millimeter ticks with bold centimeter marks — the everyday choice for crafts, school, and sewing. The mm ruler labels every ten millimeters and is the finest scale, ideal for coins, screws, and jewelry. The inch ruler shows whole inches with eighth and sixteenth subdivisions, matching how imperial tape measures and rulers are read. A fourth mode, px, measures in screen pixels and needs no calibration at all — it is exact by definition and useful for checking on-screen layouts and print-size mockups.
+        </p>
+        <p>
+          All four scales come from one conversion engine built on the exact definitions: 1 inch = 25.4 mm and 1 cm = 10 mm. Every readout also shows the equivalent values in the other units, so a single measurement gives you the full conversion at once.
+        </p>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── DEVICES ───────────────────────── -->
+    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-4">
+      <span class="mono-eyebrow text-link">Devices</span>
+      <h2 class="heading-md text-ink">Can You Use Your Phone or Laptop as a Ruler?</h2>
+      <div class="space-y-3 text-xs sm:text-sm text-body leading-relaxed">
+        <p>
+          Yes — both work well within the limits of their screen size. On a phone, the ruler spans roughly 6–9 cm or 2.5–3.5 inches, which covers coins, stamps, screws, jewelry, and most craft work. Rotate to landscape for the longer span, drag guides with your finger, and use card calibration sized for phone screens. On a laptop or desktop monitor you get a much longer measuring edge (typically 25–60 cm), which handles envelopes, books, cables, and paper sizes end-to-end.
+        </p>
+        <p>
+          The practical limit is the same for every screen: you can only measure as long as the visible ruler. For longer objects, mark the end with a guide, slide the object, and add the two readings.
+        </p>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── ACCURACY ───────────────────────── -->
+    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-4">
+      <span class="mono-eyebrow text-link">Honesty</span>
+      <h2 class="heading-md text-ink">How Accurate Is an Online Ruler?</h2>
+      <div class="space-y-3 text-xs sm:text-sm text-body leading-relaxed">
+        <p>
+          An uncalibrated online ruler is an estimate. Browsers cannot detect your screen's physical dimensions, so the starting scale assumes a typical pixels-per-inch value that may be off by several percent on your device. Calibration fixes this: matching a bank card gives the scale a direct physical reference, and entering your screen's true diagonal grounds the math in real geometry.
+        </p>
+        <p>
+          What still affects results: <strong class="text-ink">browser zoom</strong> (reset to 100%), <strong class="text-ink">operating-system display scaling</strong> (which changes how the browser reports pixels), <strong class="text-ink">alignment precision</strong> (a card edge that is half a millimeter off shifts the whole scale), and <strong class="text-ink">panel manufacturing variance</strong> (nominal sizes are rounded). We do not publish an accuracy percentage because none would be scientifically honest — instead, the status indicator on the ruler always tells you exactly which confidence level the current scale has: estimated, calibrated with device data, or calibrated with a physical reference.
+        </p>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── COMPARISON ───────────────────────── -->
+    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-4">
+      <span class="mono-eyebrow text-link">Comparison</span>
+      <h2 class="heading-md text-ink">Online Ruler vs Physical Ruler</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs sm:text-sm border-collapse">
+          <thead>
+            <tr class="border-b-2 border-hairline text-mute font-mono uppercase text-[10px] tracking-wider">
+              <th class="py-2 pr-3">Aspect</th>
+              <th class="py-2 pr-3">Online ruler (this tool)</th>
+              <th class="py-2">Physical ruler</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline text-body">
+            <tr><td class="py-2 pr-3 font-medium text-ink">Availability</td><td class="py-2 pr-3">Any device with a browser, instantly</td><td class="py-2">Must be within reach</td></tr>
+            <tr><td class="py-2 pr-3 font-medium text-ink">Units</td><td class="py-2 pr-3">cm, mm, inches, pixels — switchable instantly</td><td class="py-2">Fixed markings on the tool</td></tr>
+            <tr><td class="py-2 pr-3 font-medium text-ink">Max length</td><td class="py-2 pr-3">Your screen's visible size</td><td class="py-2">Tape measures run meters</td></tr>
+            <tr><td class="py-2 pr-3 font-medium text-ink">Setup</td><td class="py-2 pr-3">Calibration recommended (about a minute)</td><td class="py-2">None</td></tr>
+            <tr><td class="py-2 pr-3 font-medium text-ink">Extras</td><td class="py-2 pr-3">Guides, crosshair, direct measure mode, conversions</td><td class="py-2">None</td></tr>
+            <tr><td class="py-2 pr-3 font-medium text-ink">Best for</td><td class="py-2 pr-3">Quick checks, small objects, screen work</td><td class="py-2">Long spans and certified measurement</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ───────────────────────── USE CASES ───────────────────────── -->
+    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-4">
+      <span class="mono-eyebrow text-link">Use cases</span>
+      <h2 class="heading-md text-ink">Common Online Ruler Uses</h2>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-body">
+        <li class="rounded-lg border border-hairline-soft bg-canvas p-3">School and homework — measuring small objects for science and math exercises</li>
+        <li class="rounded-lg border border-hairline-soft bg-canvas p-3">Crafts, sewing and model-making — quick cm and mm checks</li>
+        <li class="rounded-lg border border-hairline-soft bg-canvas p-3">DIY — sizing screws, dowels, drill bits and small parts</li>
+        <li class="rounded-lg border border-hairline-soft bg-canvas p-3">Design and web work — checking UI element sizes in on-screen units</li>
+        <li class="rounded-lg border border-hairline-soft bg-canvas p-3">Print checking — verifying whether a printed calibration target is true to size</li>
+        <li class="rounded-lg border border-hairline-soft bg-canvas p-3">Jewelry, coins and stamps — fast millimeter reference</li>
+      </ul>
+    </section>
+
+    <FAQSection faqs={faqs} title="Online Ruler FAQ" />
+
+    <!-- ───────────────────────── RELATED ───────────────────────── -->
+    <section class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-4">
+      <span class="mono-eyebrow text-link">Keep going</span>
+      <h2 class="heading-md text-ink">Related Tools</h2>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm">
+        <li><a href="/ruler/" class="flex items-center justify-between rounded-lg border border-hairline bg-canvas p-3 text-body hover:text-ink hover:border-mute transition-colors"><span>Online Ruler — the calibrated cm, mm & inch measuring tool</span><span aria-hidden="true">→</span></a></li>
+        <li><a href="/length-converter/" class="flex items-center justify-between rounded-lg border border-hairline bg-canvas p-3 text-body hover:text-ink hover:border-mute transition-colors"><span>Length Converter — convert cm, mm, inches, feet and more</span><span aria-hidden="true">→</span></a></li>
+        <li><a href="/conversion-calculator/" class="flex items-center justify-between rounded-lg border border-hairline bg-canvas p-3 text-body hover:text-ink hover:border-mute transition-colors"><span>Unit Conversion Calculator — universal metric/imperial converter</span><span aria-hidden="true">→</span></a></li>
+        <li><a href="/square-footage-calculator/" class="flex items-center justify-between rounded-lg border border-hairline bg-canvas p-3 text-body hover:text-ink hover:border-mute transition-colors"><span>Square Footage Calculator — area from measured dimensions</span><span aria-hidden="true">→</span></a></li>
+      </ul>
+    </section>
+  </div>
+</CalculatorLayout>

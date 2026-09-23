@@ -158,3 +158,11 @@
 /love/tarot-love-calculator/               /tarot-love-calculator/               301
 /love/wedding-date-predictor-calculator/   /wedding-date-predictor-calculator/   301
 /love/couple-nickname-generator-match/     /couple-nickname-generator-match/     301
+
+# Redirects for renamed tool URLs (Online Ruler moved to /ruler/)
+/online-ruler/          /ruler/          301
+/online-ruler/guides/   /ruler/guides/   301
+
+# Legacy duplicate sitemap index filenames -> single canonical index
+/sitemap_index.xml      /sitemap.xml     301
+/sitemap-index.xml      /sitemap.xml     301

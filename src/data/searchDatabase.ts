@@ -30,11 +30,11 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
   },
   {
     "name": "Online Ruler",
-    "slug": "online-ruler",
+    "slug": "ruler",
     "category": "everyday",
     "categoryName": "Everyday",
     "icon": "📏",
-    "href": "/online-ruler/",
+    "href": "/ruler/",
     "keywords": [
       "ruler",
       "measure",
