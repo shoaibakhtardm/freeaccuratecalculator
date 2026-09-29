@@ -10,6 +10,8 @@ import { defineMiddleware } from 'astro:middleware';
 // static asset and therefore always reach this middleware in production.
 const PERMANENTLY_DELETED_PATHS = new Set([
   '/business/freelance/contractor-hourly-rate-uk-to-net-4000-per-month-outside-ir35',
+  '/business/freelance/fiverr-freelance-gig-pricing-for-3000-monthly-take-home',
+  '/business/freelance/freelance-hourly-rate-to-make-100k-a-year',
   '/business/freelance/freelance-web-developer-hourly-rate-india-to-net-1-lakh-per-month',
   '/business/freelance/upwork-freelancer-hourly-rate-to-make-5000-a-month',
   '/finance/salary/100000-in-hand-salary-india-new-regime',

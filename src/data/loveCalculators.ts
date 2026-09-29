@@ -51,7 +51,7 @@ export const LOVE_CALCULATORS: LoveCalculatorItem[] = [
     faqs: [
       {
         question: "How accurate is the love calculator by name?",
-        answer: "Our love calculator uses advanced gematria numerology and name vibration analysis, providing 99.9% algorithmic accuracy based on mathematical principles."
+        answer: "Our love calculator uses character frequency distribution, name phonetics, and algorithmic harmony matrices to provide a consistent, repeatable compatibility index for relationship exploration."
       },
       {
         question: "Is my data private when using the love calculator?",

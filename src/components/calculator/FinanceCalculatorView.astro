@@ -573,8 +573,47 @@ const isPercentageResult = calc.resultUnit === '%' || (calc.defaultResult && cal
       variables={formulaVariables}
     />
 
+    <!-- Worked Example Section -->
+    {calc.example && (
+      <WorkedExample
+        title={calc.example.title}
+        scenario={calc.example.scenario}
+        steps={calc.example.steps}
+        conclusion={calc.example.conclusion}
+      />
+    )}
+
     <!-- FAQ Section -->
     <FAQSection faqs={calc.faqs} />
+
+    <!-- Related Calculators Internal Linking Grid -->
+    {relatedCalculators && relatedCalculators.length > 0 && (
+      <section class="rounded-[20px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper">
+        <div class="flex items-center justify-between border-b border-hairline pb-4">
+          <div>
+            <h3 class="text-base sm:text-lg font-bold text-ink tracking-tight font-display">Related Calculators</h3>
+            <p class="text-xs text-mute mt-0.5">Explore companion tools and calculations in this category</p>
+          </div>
+          <span class="text-[11px] font-mono text-link font-semibold uppercase tracking-wider">Topical Network</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 pt-2">
+          {relatedCalculators.map((rel) => (
+            <a
+              href={rel.href}
+              class="group flex items-center justify-between p-3.5 rounded-xl border border-hairline bg-canvas hover:border-link hover:shadow-xs transition-all"
+            >
+              <div class="space-y-0.5">
+                <span class="text-xs sm:text-sm font-medium text-ink group-hover:text-link transition-colors block">{rel.name}</span>
+                {rel.badge && (
+                  <span class="text-[10px] font-mono text-mute px-1.5 py-0.5 rounded bg-hairline-soft inline-block">{rel.badge}</span>
+                )}
+              </div>
+              <span class="text-mute group-hover:text-link group-hover:translate-x-0.5 transition-all text-xs font-mono ml-2 shrink-0">→</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
   </div>
 
   <HistoryDrawer />

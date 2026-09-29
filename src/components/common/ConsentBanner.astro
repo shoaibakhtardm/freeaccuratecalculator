@@ -3,6 +3,7 @@
 const pathname = Astro.url.pathname;
 const isFrench = pathname.startsWith('/fr') || (Astro.currentLocale === 'fr');
 const isSpanish = pathname.includes('/es/') || (Astro.currentLocale === 'es') || pathname.startsWith('/calculadora-edad/es');
+const isPortuguese = pathname.includes('/pt') || (Astro.currentLocale === 'pt') || (Astro.props as any).lang?.startsWith('pt');
 ---
 
 <div
@@ -18,11 +19,16 @@ const isSpanish = pathname.includes('/es/') || (Astro.currentLocale === 'es') ||
       <div class="flex items-center gap-2">
         <span class="h-2 w-2 rounded-full bg-link"></span>
         <h3 id="consent-title" class="text-xs font-semibold text-ink">
-          {isSpanish ? "Privacidad y Cookies" : isFrench ? "Confidentialité & Cookies" : "Privacy & Cookies"}
+          {isPortuguese ? "Privacidade e Cookies" : isSpanish ? "Privacidad y Cookies" : isFrench ? "Confidentialité & Cookies" : "Privacy & Cookies"}
         </h3>
       </div>
       <p id="consent-desc" class="text-xs text-body leading-relaxed">
-        {isSpanish ? (
+        {isPortuguese ? (
+          <>
+            Utilizamos cookies essenciais e análises que respeitam a sua privacidade para garantir a precisão das calculadoras, em conformidade com a nossa{" "}
+            <a href="/privacy-policy/" class="text-link hover:underline">Política de Privacidade</a>.
+          </>
+        ) : isSpanish ? (
           <>
             Utilizamos cookies esenciales y análisis respetuosos con la privacidad para optimizar la precisión de las calculadoras, de conformidad con nuestra{" "}
             <a href="/privacy-policy/" class="text-link hover:underline">Política de Privacidad</a>.
@@ -47,14 +53,14 @@ const isSpanish = pathname.includes('/es/') || (Astro.currentLocale === 'es') ||
         type="button"
         class="flex-1 sm:flex-initial inline-flex items-center justify-center min-h-[44px] sm:min-h-[34px] rounded-[6px] border border-hairline bg-canvas-elevated px-3 py-2 text-xs font-medium text-ink hover:bg-hairline-soft transition-colors cursor-pointer"
       >
-        {isSpanish ? "Solo necesarias" : isFrench ? "Nécessaires uniquement" : "Necessary Only"}
+        {isPortuguese ? "Apenas necessárias" : isSpanish ? "Solo necesarias" : isFrench ? "Nécessaires uniquement" : "Necessary Only"}
       </button>
       <button
         id="consent-accept-btn"
         type="button"
         class="flex-1 sm:flex-initial inline-flex items-center justify-center min-h-[44px] sm:min-h-[34px] rounded-[6px] bg-primary px-3.5 py-2 text-xs font-medium text-on-primary hover:opacity-90 transition-opacity cursor-pointer shadow-whisper"
       >
-        {isSpanish ? "Aceptar todo" : isFrench ? "Tout accepter" : "Accept All"}
+        {isPortuguese ? "Aceitar tudo" : isSpanish ? "Aceptar todo" : isFrench ? "Tout accepter" : "Accept All"}
       </button>
     </div>
   </div>
@@ -69,13 +75,19 @@ const isSpanish = pathname.includes('/es/') || (Astro.currentLocale === 'es') ||
     const descEl = document.getElementById('consent-desc');
     if (!banner || !acceptBtn || !rejectBtn) return;
 
-    // Check client-side language if on France page or French lang, or Spanish
+    // Check client-side language
     const path = window.location.pathname;
     const docLang = document.documentElement.lang || '';
+    const isPt = path.includes('/pt') || docLang.startsWith('pt');
     const isFr = path.startsWith('/fr') || docLang.startsWith('fr');
     const isEs = path.includes('/es/') || docLang.startsWith('es') || path.startsWith('/calculadora-edad/es');
 
-    if (isEs && titleEl && descEl) {
+    if (isPt && titleEl && descEl) {
+      titleEl.textContent = 'Privacidade e Cookies';
+      descEl.innerHTML = 'Utilizamos cookies essenciais e análises que respeitam a sua privacidade para garantir a precisão das calculadoras, de conformidade com a nossa <a href="/privacy-policy/" class="text-link hover:underline">Política de Privacidade</a>.';
+      rejectBtn.textContent = 'Apenas necessárias';
+      acceptBtn.textContent = 'Aceitar tudo';
+    } else if (isEs && titleEl && descEl) {
       titleEl.textContent = 'Privacidad y Cookies';
       descEl.innerHTML = 'Utilizamos cookies esenciales y análisis respetuosos con la privacidad para optimizar la precisión de las calculadoras, de conformidad con nuestra <a href="/privacy-policy/" class="text-link hover:underline">Política de Privacidad</a>.';
       rejectBtn.textContent = 'Solo necesarias';

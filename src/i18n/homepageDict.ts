@@ -120,8 +120,8 @@ export interface HomepageStrings {
 export const HOMEPAGE_TRANSLATIONS: Record<SupportedLocale, HomepageStrings> = {
   "en": {
     "seo": {
-      "title": "Free Online Calculators – Finance, Math, Health & More | Free Accurate Calculator",
-      "description": "Free online calculators for finance, math, health, business and everyday calculations. Get fast, transparent results with documented formulas and clear explanations.",
+      "title": "Free Accurate Calculator — 100+ Precision Online Calculators",
+      "description": "Instant, 100% free online calculators for Finance, Math, Health, Tax & Everyday calculations. Zero ads, verified precision math, and instant formula breakdowns.",
       "websiteName": "Free Accurate Calculator",
       "websiteDesc": "Free online calculators for finance, health, math, business, and everyday utility."
     },

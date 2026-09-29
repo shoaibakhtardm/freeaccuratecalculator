@@ -10,12 +10,14 @@ interface Props {
   title?: string;
   isFrench?: boolean;
   isSpanish?: boolean;
+  isPortuguese?: boolean;
 }
 
-const { faqs = [], title, isFrench: propIsFrench, isSpanish: propIsSpanish } = Astro.props;
+const { faqs = [], title, isFrench: propIsFrench, isSpanish: propIsSpanish, isPortuguese: propIsPortuguese } = Astro.props;
 const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
 const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro.url.pathname.startsWith('/calculadora-edad/es'));
-const resolvedTitle = title || (isSpanish ? 'Preguntas Frecuentes' : isFrench ? 'Questions Fréquentes' : 'Frequently Asked Questions');
+const isPortuguese = propIsPortuguese ?? (Astro.url.pathname.includes('/pt/') || Astro.url.pathname.startsWith('/calculadora-salario/pt'));
+const resolvedTitle = title || (isPortuguese ? 'Perguntas Frequentes' : isSpanish ? 'Preguntas Frecuentes' : isFrench ? 'Questions Fréquentes' : 'Frequently Asked Questions');
 
 const hasFaqs = Array.isArray(faqs) && faqs.length > 0;
 
@@ -38,7 +40,7 @@ const faqSchema = hasFaqs
 {hasFaqs && (
   <section class="mt-8 rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
     <div>
-      <span class="mono-eyebrow text-link">{isSpanish ? "Base de Conocimiento" : isFrench ? "Foire Aux Questions" : "Knowledge Base"}</span>
+      <span class="mono-eyebrow text-link">{isPortuguese ? "Base de Conhecimento" : isSpanish ? "Base de Conocimiento" : isFrench ? "Foire Aux Questions" : "Knowledge Base"}</span>
       <h2 class="heading-md text-ink mt-1">{resolvedTitle}</h2>
     </div>
 

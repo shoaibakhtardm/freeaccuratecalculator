@@ -48,6 +48,26 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     ]
   },
   {
+    "name": "Palworld Breeding Calculator",
+    "slug": "palworld-breeding-calculator",
+    "category": "everyday",
+    "categoryName": "Everyday",
+    "icon": "⚡",
+    "href": "/palworld-breeding-calculator/",
+    "keywords": [
+      "palworld",
+      "breeding calculator",
+      "palworld breeding",
+      "breeding combinations",
+      "breeding chart",
+      "pals",
+      "breeding path",
+      "anubis",
+      "paldeck",
+      "breeding guide"
+    ]
+  },
+  {
     "name": "Alimony Calculator",
     "slug": "alimony-calculator",
     "category": "legal",

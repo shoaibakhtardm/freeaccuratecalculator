@@ -4,26 +4,29 @@ interface Props {
   className?: string;
   isFrench?: boolean;
   isSpanish?: boolean;
+  isPortuguese?: boolean;
 }
 
-const { className = '', isFrench: propIsFrench, isSpanish: propIsSpanish } = Astro.props;
+const { className = '', isFrench: propIsFrench, isSpanish: propIsSpanish, isPortuguese: propIsPortuguese } = Astro.props;
 const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
 const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro.url.pathname.startsWith('/calculadora-edad/es'));
+const isPortuguese = propIsPortuguese ?? (Astro.url.pathname.includes('/pt') || (Astro.props as any).lang?.startsWith('pt'));
 ---
 
 <button
   id="fac-embed-btn"
   type="button"
-  aria-label={isSpanish ? "Incrustar esta calculadora en tu sitio web" : isFrench ? "Intégrer cette calculatrice sur votre site" : "Embed this calculator on your website"}
+  aria-label={isPortuguese ? "Incorporar esta calculadora no seu site" : isSpanish ? "Incrustar esta calculadora en tu sitio web" : isFrench ? "Intégrer cette calculatrice sur votre site" : "Embed this calculator on your website"}
   class={`inline-flex items-center justify-center gap-1.5 min-h-[44px] sm:min-h-[38px] rounded-[6px] border border-hairline bg-canvas-elevated px-3 py-2 sm:py-1.5 text-xs font-medium text-ink hover:bg-hairline-soft transition-colors cursor-pointer shadow-whisper ${className}`}
-  title={isSpanish ? "Obtener código de inserción para tu blog o sitio web" : isFrench ? "Obtenir le code d'intégration pour votre site web ou blog" : "Get embed code for your blog or website"}
+  title={isPortuguese ? "Obter código de incorporação para seu site ou blog" : isSpanish ? "Obtener código de inserción para tu blog o sitio web" : isFrench ? "Obtenir le code d'intégration pour votre site web ou blog" : "Get embed code for your blog or website"}
   data-is-french={isFrench ? "true" : "false"}
   data-is-spanish={isSpanish ? "true" : "false"}
+  data-is-portuguese={isPortuguese ? "true" : "false"}
 >
   <svg class="h-3.5 w-3.5 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
   </svg>
-  <span>{isSpanish ? "Incrustar" : isFrench ? "Intégrer" : "Embed"}</span>
+  <span>{isPortuguese ? "Incorporar" : isSpanish ? "Incrustar" : isFrench ? "Intégrer" : "Embed"}</span>
 </button>
 
 <!-- Embed Code Modal Dialog -->
@@ -39,12 +42,12 @@ const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
           </svg>
         </span>
-        <h3 class="text-sm font-semibold">{isSpanish ? "Incrustar este widget de calculadora" : isFrench ? "Intégrer ce widget de calculatrice" : "Embed This Calculator Widget"}</h3>
+        <h3 class="text-sm font-semibold">{isPortuguese ? "Incorporar este widget de calculadora" : isSpanish ? "Incrustar este widget de calculadora" : isFrench ? "Intégrer ce widget de calculatrice" : "Embed This Calculator Widget"}</h3>
       </div>
       <button
         id="fac-embed-close-btn"
         type="button"
-        aria-label={isSpanish ? "Cerrar ventana" : isFrench ? "Fermer la fenêtre" : "Close embed modal"}
+        aria-label={isPortuguese ? "Fechar janela" : isSpanish ? "Cerrar ventana" : isFrench ? "Fermer la fenêtre" : "Close embed modal"}
         class="text-mute hover:text-ink text-sm p-1 rounded transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
       >
         ✕
@@ -52,7 +55,9 @@ const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro
     </div>
 
     <p class="text-xs text-mute">
-      {isSpanish
+      {isPortuguese
+        ? "Adicione esta ferramenta de cálculo rápido e sem rastreamento diretamente no seu blog ou site. Gratuito com link permanente de atribuição:"
+        : isSpanish
         ? "Añade este widget de cálculo rápido y sin rastreo directamente en tu blog o sitio web. Gratuito con enlace permanente de atribución:"
         : isFrench
         ? "Ajoutez cet outil de calcul rapide et sans aucun traçage directement sur votre blog ou site web. Gratuit avec lien d'attribution :"
@@ -71,7 +76,7 @@ const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro
 
     <div class="flex items-center justify-between gap-3 pt-2">
       <span id="fac-embed-feedback" class="text-xs text-cyan font-medium hidden">
-        {isSpanish ? "✓ ¡Código de inserción copiado!" : isFrench ? "✓ Code d'intégration copié !" : "✓ Embed code copied!"}
+        {isPortuguese ? "✓ Código de incorporação copiado!" : isSpanish ? "✓ ¡Código de inserción copiado!" : isFrench ? "✓ Code d'intégration copié !" : "✓ Embed code copied!"}
       </span>
       <div class="flex items-center gap-2 ml-auto">
         <button
@@ -79,7 +84,7 @@ const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro
           type="button"
           class="inline-flex items-center justify-center min-h-[44px] sm:min-h-[38px] rounded-[6px] bg-cyan px-4 py-2 text-xs font-semibold text-white hover:bg-cyan-hover transition-colors shadow-whisper cursor-pointer"
         >
-          {isSpanish ? "Copiar Código de Inserción" : isFrench ? "Copier le Code d'Intégration" : "Copy Embed Code"}
+          {isPortuguese ? "Copiar Código de Incorporação" : isSpanish ? "Copiar Código de Inserción" : isFrench ? "Copier le Code d'Intégration" : "Copy Embed Code"}
         </button>
       </div>
     </div>
@@ -97,14 +102,15 @@ const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro
 
     if (!btn || !modal) return;
 
+    const isPt = btn.getAttribute('data-is-portuguese') === 'true' || window.location.pathname.includes('/pt');
     const isEs = btn.getAttribute('data-is-spanish') === 'true' || window.location.pathname.includes('/es/');
     const isFr = btn.getAttribute('data-is-french') === 'true' || window.location.pathname.startsWith('/fr/');
 
     function generateEmbedCode() {
       const pageUrl = window.location.href.split('?')[0];
-      const pageTitle = document.title.split('—')[0].trim() || 'Calculadora Interactiva';
+      const pageTitle = document.title.split('—')[0].trim() || (isPt ? 'Calculadora Interativa' : 'Calculadora');
       const embedUrl = pageUrl.includes('?') ? pageUrl + '&embed=true' : pageUrl + '?embed=true';
-      const attributionText = isEs ? 'Herramienta interactiva proporcionada por' : (isFr ? 'Outil interactif fourni par' : 'Interactive tool provided by');
+      const attributionText = isPt ? 'Ferramenta interativa fornecida por' : isEs ? 'Herramienta interactiva proporcionada por' : (isFr ? 'Outil interactif fourni par' : 'Interactive tool provided by');
       return `<iframe src="${embedUrl}" width="100%" height="680" style="border:1px solid #e2e8f0; border-radius:12px; max-width:720px; display:block; margin:auto;" title="${pageTitle}"></iframe><p style="font-size:12px; text-align:center; color:#64748b; margin-top:8px;">${attributionText} <a href="${pageUrl}" target="_blank" rel="noopener" style="color:#0284c7; font-weight:600; text-decoration:underline;">Free Accurate Calculator</a></p>`;
     }
 
@@ -137,7 +143,7 @@ const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro
           setTimeout(() => feedback.classList.add('hidden'), 2500);
         }
         if (typeof window.facShowToast === 'function') {
-          window.facShowToast(isEs ? '¡Código de inserción copiado al portapapeles!' : (isFr ? 'Code d\'intégration copié dans le presse-papiers !' : 'Embed code copied to clipboard!'), 'success');
+          window.facShowToast(isPt ? 'Código de incorporação copiado para a área de transferência!' : isEs ? '¡Código de inserción copiado al portapapeles!' : (isFr ? 'Code d\'intégration copié dans le presse-papiers !' : 'Embed code copied to clipboard!'), 'success');
         }
       } catch (_) {
         codeArea.select();

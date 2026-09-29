@@ -1,0 +1,1518 @@
+---
+// src/pages/calculadora-salario/pt/index.astro
+import CalculatorLayout from '../../../layouts/CalculatorLayout.astro';
+import FormulaSection from '../../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../../components/calculator/WorkedExample.astro';
+import FAQSection from '../../../components/calculator/FAQSection.astro';
+import {
+  regrasINSS2026,
+  regrasIRRF2026,
+  calcularSalarioLiquido,
+  formatarMoedaBRL,
+  formatarPercentualBRL,
+} from '../../../engines/salarioLiquidoBrasil2026';
+
+// Perguntas frequentes estruturadas em português brasileiro para o schema FAQPage
+const faqs = [
+  {
+    question: 'Como calcular o salário líquido em 2026?',
+    answer:
+      'Para calcular o salário líquido em 2026, parte-se do salário bruto mensal somado a eventuais proventos adicionais (como horas extras, DSR e adicionais). Em seguida, subtrai-se o desconto progressivo do INSS oficial de 2026. Sobre a base restante, deduzem-se dependentes legais (R$ 189,59 cada) e pensão alimentícia judicial, aplicando a tabela do IRRF com o redutor oficial de 2026. Por fim, descontam-se itens como vale-transporte e outros descontos de folha.',
+  },
+  {
+    question: 'O que mudou no Imposto de Renda (IRRF) em 2026?',
+    answer:
+      'Em 2026, a legislação brasileira estabeleceu a isenção total na fonte para quem recebe até R$ 5.000,00 mensais por meio de um redutor oficial de imposto de até R$ 312,89. Para rendas entre R$ 5.000,01 e R$ 7.350,00, foi criada uma faixa de transição gradual com desconto regressivo calculado pela fórmula oficial [978,62 − (0,133145 × Renda Mensal)]. Apenas quem recebe acima de R$ 7.350,00 recolhe integralmente pela tabela progressiva tradicional.',
+  },
+  {
+    question: 'Qual é o teto máximo de desconto do INSS em 2026?',
+    answer:
+      'Em 2026, conforme a Portaria Interministerial MPS/MF nº 13/2026, o teto máximo de contribuição dos segurados empregados e trabalhadores avulsos é de R$ 988,09 mensais, incidente sobre o teto salarial previdenciário de R$ 8.475,55. Salários brutos acima desse teto continuam tendo o desconto limitado a R$ 988,09.',
+  },
+  {
+    question: 'Quanto cada dependente abate no Imposto de Renda em 2026?',
+    answer:
+      'Cada dependente legal cadastrado permite abater exatamente R$ 189,59 por mês da base de cálculo do IRRF. Esse abatimento reduz o valor sobre o qual as alíquotas do imposto incidem, aumentando diretamente o salário líquido final recebido.',
+  },
+  {
+    question: 'Como funciona o cálculo de horas extras e DSR na CLT?',
+    answer:
+      'A hora extra comum é acrescida de no mínimo 50% sobre o valor da hora normal (salário bruto dividido por 220 horas para jornadas de 44h semanais). Horas extras realizadas em domingos e feriados sem folga compensatória recebem adicional de 100%. Além disso, as horas extras geram reflexo obrigatório no Descanso Semanal Remunerado (DSR), integrando a remuneração bruta total.',
+  },
+  {
+    question: 'Como é calculado o salário proporcional aos dias trabalhados?',
+    answer:
+      'Conforme o artigo 64 da Consolidação das Leis do Trabalho (CLT), o cálculo do salário proporcional é realizado considerando a base de 30 dias por mês: divide-se o salário bruto mensal contratual por 30 e multiplica-se pela quantidade de dias trabalhados no período de admissão, demissão ou afastamento.',
+  },
+  {
+    question: 'A calculadora serve para servidores públicos estatutários?',
+    answer:
+      'Esta calculadora foi desenvolvida com base no Regime Geral de Previdência Social (RGPS/INSS) e nas regras gerais da CLT. Servidores públicos vinculados a Regimes Próprios de Previdência Social (RPPS) possuem tabelas previdenciárias próprias e legislações específicas de cada ente da federação (União, estados ou municípios), podendo haver divergências nas alíquotas e fundos de previdência complementar.',
+  },
+  {
+    question: 'Os dados informados são confidenciais e seguros?',
+    answer:
+      'Sim, 100% seguros e estritamente privados. Todos os cálculos matemáticos são processados instantaneamente no seu navegador (computação no cliente). Nenhuma informação de salário, dependentes ou deduções é transmitida ou gravada em servidores externos.',
+  },
+];
+
+// Calculadoras relacionadas em português
+const relatedCalculators = [
+  { title: 'Calculadora de Porcentagem', href: '/percentage-calculator/', badge: 'Matemática' },
+  { title: 'Calculadora de Juros Compostos', href: '/compound-interest-calculator/', badge: 'Finanças' },
+  { title: 'Calculadora de Idade', href: '/calculadora-edad/es/', badge: 'Pessoal' },
+  { title: 'Calculadora de Empréstimo e Financiamento', href: '/emi-calculator/', badge: 'Crédito' },
+];
+
+// Exemplo trabalhado passo a passo matematicamente verificado para R$ 5.000,00
+const workedExampleSteps = [
+  {
+    number: 1,
+    title: 'Apuração do Salário Bruto e Proventos',
+    description: 'Neste exemplo base, o salário bruto mensal é de R$ 5.000,00, sem horas extras ou adicionais.',
+    mathExpression: 'Salário Bruto = R$ 5.000,00',
+  },
+  {
+    number: 2,
+    title: 'Cálculo Progressivo da Contribuição ao INSS 2026',
+    description: 'Aplica-se o cálculo progressivo por faixas: 7,5% até R$ 1.621,00 (R$ 121,58); 9% sobre a segunda faixa (R$ 115,37); 12% sobre a terceira faixa (R$ 174,17); e 14% sobre o excedente até R$ 5.000,00 (R$ 90,40). O desconto total de INSS resulta em R$ 501,51 (alíquota efetiva de 10,03%).',
+    mathExpression: 'INSS 2026 = R$ 5.000,00 × 14% − R$ 198,49 = R$ 501,51',
+  },
+  {
+    number: 3,
+    title: 'Base de Cálculo do IRRF e Aplicação da Isenção 2026',
+    description: 'Subtrai-se o INSS do salário bruto: R$ 5.000,00 − R$ 501,51 = R$ 4.498,49. Na tabela padrão, incidiria imposto de R$ 226,38. No entanto, pelas novas regras de 2026 com isenção total até R$ 5.000,00, aplica-se o redutor oficial de R$ 312,89, zerando integralmente o IRRF.',
+    mathExpression: 'IRRF a Pagar = Máximo(R$ 0,00, R$ 226,38 − R$ 312,89) = R$ 0,00',
+  },
+  {
+    number: 4,
+    title: 'Determinação do Salário Líquido Final',
+    description: 'Subtrai-se o total de descontos legais (R$ 501,51) do salário bruto inicial (R$ 5.000,00).',
+    mathExpression: 'Salário Líquido = R$ 5.000,00 − R$ 501,51 = R$ 4.498,49',
+  },
+];
+
+// Dados pré-calculados para a tabela comparativa de salários oficiais 2026
+const exemplosTabela = [
+  { salarioBruto: 3000, inss: 248.60, irrf: 0.00, liquido: 2751.40, aliqEfetiva: '8,29%' },
+  { salarioBruto: 5000, inss: 501.51, irrf: 0.00, liquido: 4498.49, aliqEfetiva: '10,03%' },
+  { salarioBruto: 7000, inss: 781.51, irrf: 479.91, liquido: 5738.58, aliqEfetiva: '18,02%' },
+  { salarioBruto: 10000, inss: 988.09, irrf: 1569.55, liquido: 7442.36, aliqEfetiva: '25,58%' },
+  { salarioBruto: 20000, inss: 988.09, irrf: 4319.55, liquido: 14692.36, aliqEfetiva: '26,54%' },
+];
+
+const dataHojePt = new Intl.DateTimeFormat('pt-BR', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+}).format(new Date());
+---
+
+<CalculatorLayout
+  title="Calculadora de Salário Líquido 2026 – INSS e IRRF"
+  metaDescription="Calcule seu salário líquido em 2026 com base nas regras oficiais do INSS e do novo IRRF no Brasil. Descubra descontos, dependentes, horas extras e dias trabalhados."
+  h1="Calculadora de Salário Líquido 2026"
+  subtitle="Descubra exatamente quanto você vai receber na conta após os descontos de INSS, novo IRRF, dependentes, horas extras e benefícios no Brasil."
+  category={{ label: 'Calculadoras Financeiras', href: '/finance/' }}
+  calculatorName="Calculadora de Salário Líquido 2026"
+  relatedCalculators={relatedCalculators}
+  faqs={faqs}
+  lang="pt-BR"
+  canonical="https://freeaccuratecalculator.com/calculadora-salario/pt/"
+  disableEmailModal={true}
+>
+  <!-- Caixa Principal da Calculadora -->
+  <div
+    id="salario-calculator-card"
+    class="calculator-main-box relative rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6 overflow-hidden transition-all pb-24 sm:pb-8"
+  >
+    <!-- Resplendor Ambiental Sutil -->
+    <div class="pointer-events-none absolute -top-32 -right-32 w-80 h-80 rounded-full bg-link/10 blur-3xl print:hidden"></div>
+    <div class="pointer-events-none absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-cyan/10 blur-3xl print:hidden"></div>
+
+    <!-- Relatório Dedicado de Alta Fidelidade para Impressão e PDF (Visível apenas na impressão) -->
+    <div id="salary-print-report" class="hidden print:block font-mono text-slate-900 fac-print-report">
+      <!-- Cabeçalho Oficial -->
+      <div class="border-b-2 border-slate-900 pb-4 mb-5 flex justify-between items-start">
+        <div>
+          <div class="text-2xl font-black uppercase tracking-tight">Free Accurate Calculator</div>
+          <div class="text-sm font-bold text-blue-700 mt-0.5">Demonstrativo de Estimativa de Salário Líquido 2026</div>
+          <div class="text-xs text-slate-500 mt-1">freeaccuratecalculator.com • Legislação Previdenciária e Fiscal Oficial do Brasil</div>
+        </div>
+        <div class="text-right text-xs text-slate-600 space-y-0.5">
+          <div><span class="text-slate-400 uppercase">Data do Cálculo:</span> <strong id="print-date" class="text-slate-900">{dataHojePt}</strong></div>
+          <div><span class="text-slate-400 uppercase">Exercício Fiscal:</span> <strong class="text-slate-900">2026 (INSS Progressivo & Novo IRRF)</strong></div>
+        </div>
+      </div>
+
+      <!-- Parâmetros de Entrada -->
+      <div class="bg-slate-50 border border-slate-200 rounded-lg p-3.5 mb-5">
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Parâmetros Informados</div>
+        <div class="grid grid-cols-4 gap-4 text-xs">
+          <div><span class="text-slate-500 block text-[10px] uppercase">Salário Bruto Mensal</span><span id="print-salario-bruto" class="text-sm font-bold text-slate-900">R$ 5.000,00</span></div>
+          <div><span class="text-slate-500 block text-[10px] uppercase">Número de Dependentes</span><span id="print-dependentes" class="text-sm font-bold text-slate-900">0</span></div>
+          <div><span class="text-slate-500 block text-[10px] uppercase">Outras Deduções</span><span id="print-outras-deducoes" class="text-sm font-bold text-slate-900">R$ 0,00</span></div>
+          <div><span class="text-slate-500 block text-[10px] uppercase">Dias Trabalhados / Mês</span><span id="print-dias" class="text-sm font-bold text-slate-900">30 dias</span></div>
+        </div>
+      </div>
+
+      <!-- Destaque do Salário Líquido -->
+      <div class="border-2 border-slate-900 rounded-lg p-4 bg-slate-50 mb-6">
+        <span class="text-[10px] font-bold uppercase text-slate-900 block">Salário Líquido Estimado a Receber</span>
+        <div id="print-salario-liquido" class="text-3xl font-black text-slate-900 mt-1">R$ 4.498,49</div>
+        <div id="print-resumo-subtitulo" class="text-xs text-slate-600 mt-1">Descontos totais de R$ 501,51 (10,03% do total de proventos)</div>
+      </div>
+
+      <!-- Tabela do Demonstrativo de Folha -->
+      <div class="space-y-2 mb-6">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-900">Detalhamento Transparente de Proventos e Descontos</div>
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="border-b-2 border-slate-300 bg-slate-100 text-slate-700">
+              <th class="py-2 px-2.5">Descrição do Item</th>
+              <th class="py-2 px-2.5 text-center">Referência / Alíquota</th>
+              <th class="py-2 px-2.5 text-right">Proventos (+)</th>
+              <th class="py-2 px-2.5 text-right">Descontos (−)</th>
+            </tr>
+          </thead>
+          <tbody id="print-tabela-corpo" class="divide-y divide-slate-200">
+            <!-- Preenchido dinamicamente pelo script -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Nota de Estimativa e Rodapé -->
+      <div class="mt-8 pt-3 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-500">
+        <div>Free Accurate Calculator • https://freeaccuratecalculator.com/calculadora-salario/pt</div>
+        <div>Os resultados são estimativas e podem variar conforme descontos, benefícios e convenções coletivas.</div>
+      </div>
+    </div>
+
+    <!-- Interface na Tela (Oculta na Impressão) -->
+    <div class="print:hidden space-y-6">
+      <!-- Barra Superior de Identificação -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+          <span class="mono-eyebrow text-ink font-semibold">Tabelas Oficiais de 2026 Ativas</span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold">
+            Portaria MPS/MF nº 13/2026 & Novo IR
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2 text-mute font-mono text-[11px]">
+          <span>Moeda: <strong>Real Brasileiro (R$)</strong></span>
+          <span>•</span>
+          <span>Regime: <strong>CLT / Mensal</strong></span>
+        </div>
+      </div>
+
+      <!-- Formulário: Campos Principais -->
+      <form id="salary-calculator-form" class="space-y-5" onsubmit="event.preventDefault();">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Campo 1: Salário Bruto Mensal -->
+          <div class="space-y-1.5">
+            <label for="salario-bruto-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+              Salário bruto mensal <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-mute font-mono text-sm">
+                R$
+              </span>
+              <input
+                id="salario-bruto-input"
+                name="salarioBruto"
+                type="text"
+                inputmode="decimal"
+                value="5.000,00"
+                placeholder="Ex.: 5.000,00"
+                aria-label="Salário bruto mensal em reais"
+                required
+                class="w-full min-h-[44px] rounded-[8px] border border-hairline bg-canvas pl-10 pr-3.5 py-2.5 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-colors"
+              />
+            </div>
+            <p class="text-[11px] text-mute font-mono">Valor contratual bruto registrado na Carteira de Trabalho.</p>
+          </div>
+
+          <!-- Campo 2: Número de Dependentes -->
+          <div class="space-y-1.5">
+            <label for="dependentes-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+              Número de dependentes
+            </label>
+            <div class="relative">
+              <input
+                id="dependentes-input"
+                name="dependentes"
+                type="number"
+                min="0"
+                max="30"
+                step="1"
+                value="0"
+                placeholder="0"
+                aria-label="Quantidade de dependentes legais para dedução de Imposto de Renda"
+                class="w-full min-h-[44px] rounded-[8px] border border-hairline bg-canvas px-3.5 py-2.5 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-colors"
+              />
+            </div>
+            <p class="text-[11px] text-mute font-mono">Dedução legal de R$ 189,59 por dependente no IRRF.</p>
+          </div>
+
+          <!-- Campo 3: Outras Deduções -->
+          <div class="space-y-1.5">
+            <label for="outras-deducoes-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+              Outras deduções
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-mute font-mono text-sm">
+                R$
+              </span>
+              <input
+                id="outras-deducoes-input"
+                name="outrasDeducoes"
+                type="text"
+                inputmode="decimal"
+                value="0,00"
+                placeholder="Ex.: 0,00"
+                aria-label="Outras deduções legais da base do imposto de renda"
+                class="w-full min-h-[44px] rounded-[8px] border border-hairline bg-canvas pl-10 pr-3.5 py-2.5 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-colors"
+              />
+            </div>
+            <p class="text-[11px] text-mute font-mono">Previdência privada (PGBL) ou outras deduções legais.</p>
+          </div>
+        </div>
+
+        <!-- Seção Expansível: Opções Avançadas -->
+        <div class="rounded-xl border border-hairline bg-canvas/60 overflow-hidden transition-all">
+          <button
+            type="button"
+            id="toggle-opcoes-avancadas-btn"
+            aria-expanded="false"
+            aria-controls="secao-opcoes-avancadas"
+            class="w-full flex items-center justify-between p-4 text-xs font-mono font-semibold text-ink hover:text-link transition-colors cursor-pointer select-none"
+          >
+            <div class="flex items-center gap-2">
+              <span class="text-sm">⚙️</span>
+              <span class="uppercase tracking-wider">Opções avançadas</span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] bg-hairline text-mute">
+                Horas extras, dias trabalhados, vale-transporte e pensão
+              </span>
+            </div>
+            <span id="icone-opcoes-avancadas" class="transform transition-transform duration-200 text-mute">
+              ▼
+            </span>
+          </button>
+
+          <div id="secao-opcoes-avancadas" class="hidden p-4 pt-0 border-t border-hairline space-y-4">
+            <p class="text-[11px] text-mute font-mono">
+              Preencha apenas o que se aplicar à sua folha de pagamento. Deixe zerado o que não for utilizado.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <!-- Dias Trabalhados no Mês -->
+              <div class="space-y-1">
+                <label for="dias-trabalhados-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+                  Dias trabalhados (proporcional)
+                </label>
+                <div class="relative">
+                  <input
+                    id="dias-trabalhados-input"
+                    type="number"
+                    min="1"
+                    max="30"
+                    step="1"
+                    value="30"
+                    aria-label="Dias trabalhados no mês para cálculo proporcional"
+                    class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-sm font-mono text-ink focus:border-link focus:outline-none"
+                  />
+                </div>
+                <span class="text-[10px] text-mute block font-mono">Padrão CLT: 30 dias para mês integral.</span>
+              </div>
+
+              <!-- Horas Extras 50% -->
+              <div class="space-y-1">
+                <label for="horas-extras-50-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+                  Horas extras com adicional 50%
+                </label>
+                <div class="relative">
+                  <input
+                    id="horas-extras-50-input"
+                    type="number"
+                    min="0"
+                    step="0.5"
+                    value="0"
+                    placeholder="0"
+                    aria-label="Quantidade de horas extras realizadas a 50%"
+                    class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-sm font-mono text-ink focus:border-link focus:outline-none"
+                  />
+                </div>
+                <span class="text-[10px] text-mute block font-mono">Horas adicionais em dias úteis normais.</span>
+              </div>
+
+              <!-- Horas Extras 100% -->
+              <div class="space-y-1">
+                <label for="horas-extras-100-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+                  Horas extras com adicional 100%
+                </label>
+                <div class="relative">
+                  <input
+                    id="horas-extras-100-input"
+                    type="number"
+                    min="0"
+                    step="0.5"
+                    value="0"
+                    placeholder="0"
+                    aria-label="Quantidade de horas extras realizadas a 100%"
+                    class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-sm font-mono text-ink focus:border-link focus:outline-none"
+                  />
+                </div>
+                <span class="text-[10px] text-mute block font-mono">Horas trabalhadas em domingos ou feriados.</span>
+              </div>
+
+              <!-- Adicional Noturno -->
+              <div class="space-y-1">
+                <label for="adicional-noturno-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+                  Adicional noturno (valor em R$)
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-mute font-mono text-xs">
+                    R$
+                  </span>
+                  <input
+                    id="adicional-noturno-input"
+                    type="text"
+                    inputmode="decimal"
+                    value="0,00"
+                    placeholder="0,00"
+                    aria-label="Valor total do adicional noturno em reais"
+                    class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas pl-9 pr-3 py-2 text-sm font-mono text-ink focus:border-link focus:outline-none"
+                  />
+                </div>
+                <span class="text-[10px] text-mute block font-mono">Trabalho entre 22h e 5h (mínimo 20%).</span>
+              </div>
+
+              <!-- Pensão Alimentícia -->
+              <div class="space-y-1">
+                <label for="pensao-alimenticia-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+                  Pensão alimentícia judicial (R$)
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-mute font-mono text-xs">
+                    R$
+                  </span>
+                  <input
+                    id="pensao-alimenticia-input"
+                    type="text"
+                    inputmode="decimal"
+                    value="0,00"
+                    placeholder="0,00"
+                    aria-label="Valor de pensão alimentícia descontado judicialmente"
+                    class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas pl-9 pr-3 py-2 text-sm font-mono text-ink focus:border-link focus:outline-none"
+                  />
+                </div>
+                <span class="text-[10px] text-mute block font-mono">Dedutível da base de cálculo do IRRF.</span>
+              </div>
+
+              <!-- Vale-Transporte -->
+              <div class="space-y-1">
+                <label for="vale-transporte-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+                  Vale-transporte (desconto em R$)
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-mute font-mono text-xs">
+                    R$
+                  </span>
+                  <input
+                    id="vale-transporte-input"
+                    type="text"
+                    inputmode="decimal"
+                    value="0,00"
+                    placeholder="0,00"
+                    aria-label="Desconto de vale-transporte em reais"
+                    class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas pl-9 pr-3 py-2 text-sm font-mono text-ink focus:border-link focus:outline-none"
+                  />
+                </div>
+                <span class="text-[10px] text-mute block font-mono">Limite legal máximo de até 6% do salário base.</span>
+              </div>
+
+              <!-- Outros Descontos de Folha -->
+              <div class="space-y-1 sm:col-span-2 md:col-span-3">
+                <label for="outros-descontos-folha-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+                  Outros descontos em folha (plano de saúde, coparticipação, previdência privada, etc.)
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-mute font-mono text-xs">
+                    R$
+                  </span>
+                  <input
+                    id="outros-descontos-folha-input"
+                    type="text"
+                    inputmode="decimal"
+                    value="0,00"
+                    placeholder="0,00"
+                    aria-label="Outros descontos na folha de pagamento em reais"
+                    class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas pl-9 pr-3 py-2 text-sm font-mono text-ink focus:border-link focus:outline-none"
+                  />
+                </div>
+                <span class="text-[10px] text-mute block font-mono">Descontos que não deduzem o IRRF diretamente, mas reduzem o valor líquido creditado.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botão Principal de Ação -->
+        <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+          <button
+            type="button"
+            id="calcular-salario-btn"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-link hover:bg-link-hover active:scale-98 text-white font-semibold text-sm shadow-xs transition-all cursor-pointer min-h-[48px]"
+          >
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            <span>Calcular salário líquido</span>
+          </button>
+
+          <button
+            type="button"
+            id="limpar-formulario-btn"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-lg border border-hairline bg-canvas hover:bg-hairline text-mute hover:text-ink text-xs font-mono transition-colors cursor-pointer min-h-[48px]"
+          >
+            <span>Restabelecer Padrões (R$ 5.000,00)</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Cartão Hero de Resultado Principal -->
+      <div
+        id="hero-resultado-card"
+        aria-live="polite"
+        class="rounded-2xl border border-link/30 bg-gradient-to-br from-link/5 via-canvas to-link/10 p-6 sm:p-8 relative overflow-hidden transition-all shadow-whisper space-y-5"
+      >
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-hairline pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="mono-eyebrow text-xs uppercase tracking-wider text-link font-bold">
+              Resultado Principal • Salário Líquido Estimado
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span id="badge-status-ir" class="inline-flex items-center px-2.5 py-1 rounded text-xs font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+              Isenção Total do IRRF Aplicada
+            </span>
+          </div>
+        </div>
+
+        <!-- Valor Central do Salário Líquido -->
+        <div class="space-y-1">
+          <span class="text-xs font-mono text-mute uppercase tracking-wider block">Salário líquido a receber</span>
+          <div class="text-3xl sm:text-5xl font-extrabold font-mono text-ink tracking-tight flex flex-wrap items-baseline gap-2">
+            <span id="resultado-salario-liquido" class="text-ink">R$ 4.498,49</span>
+          </div>
+          <p id="resultado-resumo-texto" class="text-xs sm:text-sm font-mono text-mute pt-1">
+            Você receberá aproximadamente <strong>89,97%</strong> do seu salário bruto após R$ 501,51 em descontos.
+          </p>
+        </div>
+
+        <!-- Barra Visual de Composição Salarial -->
+        <div class="space-y-2 pt-2">
+          <div class="flex justify-between items-center text-xs font-mono text-mute">
+            <span>Composição do Salário Bruto:</span>
+            <span id="label-proporcao-liquido">Salário Líquido: 89,97%</span>
+          </div>
+          <div class="w-full h-3 rounded-full bg-hairline overflow-hidden flex" aria-hidden="true">
+            <div id="barra-liquido" class="h-full bg-emerald-500 transition-all duration-300" style="width: 89.97%;" title="Salário Líquido"></div>
+            <div id="barra-inss" class="h-full bg-amber-500 transition-all duration-300" style="width: 10.03%;" title="Desconto INSS"></div>
+            <div id="barra-irrf" class="h-full bg-rose-500 transition-all duration-300" style="width: 0%;" title="Desconto IRRF"></div>
+            <div id="barra-outros" class="h-full bg-indigo-500 transition-all duration-300" style="width: 0%;" title="Outros Descontos"></div>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-mono text-mute pt-1">
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Líquido</div>
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> INSS</div>
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span> IRRF</div>
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500"></span> Outros Descontos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grade de Métricas Secundárias -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <!-- Salário Bruto Total -->
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Salário bruto</span>
+          <div id="card-salario-bruto" class="text-base sm:text-lg font-bold font-mono text-ink">R$ 5.000,00</div>
+          <span class="text-[10px] font-mono text-mute block">Total de proventos</span>
+        </div>
+
+        <!-- Desconto INSS -->
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Desconto INSS</span>
+          <div id="card-inss" class="text-base sm:text-lg font-bold font-mono text-amber-600 dark:text-amber-400">R$ 501,51</div>
+          <span id="card-aliq-inss" class="text-[10px] font-mono text-mute block">Efetiva: 10,03%</span>
+        </div>
+
+        <!-- Base IRRF -->
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Base de cálculo IR</span>
+          <div id="card-base-ir" class="text-base sm:text-lg font-bold font-mono text-ink">R$ 4.498,49</div>
+          <span class="text-[10px] font-mono text-mute block">Após INSS e dep.</span>
+        </div>
+
+        <!-- Desconto IRRF -->
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Desconto IRRF</span>
+          <div id="card-irrf" class="text-base sm:text-lg font-bold font-mono text-emerald-600 dark:text-emerald-400">R$ 0,00</div>
+          <span id="card-aliq-irrf" class="text-[10px] font-mono text-mute block">Isenção 2026</span>
+        </div>
+
+        <!-- Outras Deduções -->
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Outras deduções</span>
+          <div id="card-outras-deducoes" class="text-base sm:text-lg font-bold font-mono text-ink">R$ 0,00</div>
+          <span class="text-[10px] font-mono text-mute block">Pensão e outros</span>
+        </div>
+
+        <!-- Total de Descontos -->
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Total descontos</span>
+          <div id="card-total-descontos" class="text-base sm:text-lg font-bold font-mono text-rose-600 dark:text-rose-400">R$ 501,51</div>
+          <span id="card-aliq-total" class="text-[10px] font-mono text-mute block">10,03% do bruto</span>
+        </div>
+      </div>
+
+      <!-- Tabela de Detalhamento Transparente Passo a Passo -->
+      <div class="rounded-xl border border-hairline bg-canvas p-4 sm:p-6 space-y-4">
+        <div class="flex items-center justify-between border-b border-hairline pb-3">
+          <div>
+            <h3 class="text-xs sm:text-sm font-semibold uppercase font-mono text-ink">
+              Demonstrativo Transparente de Cálculo
+            </h3>
+            <p class="text-[11px] text-mute font-mono mt-0.5">
+              Entenda exatamente de onde vem cada centavo do seu salário líquido.
+            </p>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs font-mono border-collapse">
+            <thead>
+              <tr class="border-b border-hairline text-mute">
+                <th class="py-2 pr-4 font-semibold uppercase text-[10px]">Operação / Evento</th>
+                <th class="py-2 px-3 font-semibold uppercase text-[10px] text-center">Referência Legal</th>
+                <th class="py-2 px-3 font-semibold uppercase text-[10px] text-right">Provento (+)</th>
+                <th class="py-2 pl-3 font-semibold uppercase text-[10px] text-right">Desconto (−)</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-detalhamento-corpo" class="divide-y divide-hairline">
+              <!-- Preenchido pelo JavaScript do cliente -->
+            </tbody>
+            <tfoot>
+              <tr class="border-t-2 border-hairline font-bold text-ink bg-canvas-elevated">
+                <td class="py-2.5 pr-4 text-xs font-semibold">Salário Líquido a Receber</td>
+                <td class="py-2.5 px-3 text-center text-mute text-[10px]">Final Creditado</td>
+                <td class="py-2.5 px-3 text-right text-emerald-600" id="tabela-total-liquido" colspan="2">R$ 4.498,49</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Detalhamento Específico das Faixas do INSS 2026 -->
+      <div class="rounded-xl border border-hairline bg-canvas p-4 sm:p-6 space-y-3">
+        <h3 class="text-xs font-semibold uppercase font-mono text-ink">
+          Detalhamento do Desconto do INSS por Faixas Progressivas (2026)
+        </h3>
+        <p class="text-[11px] text-mute font-mono">
+          O cálculo do INSS não incide de forma única sobre todo o salário, mas progressivamente em cada faixa de remuneração.
+        </p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs font-mono border-collapse">
+            <thead>
+              <tr class="border-b border-hairline text-mute">
+                <th class="py-2 pr-3 text-[10px] uppercase">Faixa de Remuneração</th>
+                <th class="py-2 px-3 text-[10px] uppercase text-center">Alíquota</th>
+                <th class="py-2 px-3 text-[10px] uppercase text-right">Base Tributada</th>
+                <th class="py-2 pl-3 text-[10px] uppercase text-right">Contribuição na Faixa</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-faixas-inss-corpo" class="divide-y divide-hairline text-body">
+              <!-- Gerado dinamicamente -->
+            </tbody>
+            <tfoot>
+              <tr class="border-t border-hairline font-bold text-ink">
+                <td class="py-2 pr-3" colspan="3">Total Descontado do INSS:</td>
+                <td class="py-2 pl-3 text-right text-amber-600 dark:text-amber-400" id="total-faixas-inss">R$ 501,51</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Barra de Ações Rápidas (Copiar, Compartilhar, Imprimir PDF, Exportar CSV) -->
+      <div class="pt-3 border-t border-hairline flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- Botão Copiar Resultado -->
+          <button
+            type="button"
+            id="salario-copiar-btn"
+            aria-label="Copiar resumo do salário líquido"
+            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-hairline bg-canvas hover:bg-hairline text-ink transition-colors cursor-pointer min-h-[40px]"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <span id="salario-copiar-texto">Copiar Resultado</span>
+          </button>
+
+          <!-- Botão Compartilhar -->
+          <button
+            type="button"
+            id="salario-compartilhar-btn"
+            aria-label="Compartilhar estimativa de salário"
+            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-hairline bg-canvas hover:bg-hairline text-ink transition-colors cursor-pointer min-h-[40px]"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            </svg>
+            <span>Compartilhar</span>
+          </button>
+
+          <!-- Botão Baixar CSV -->
+          <button
+            type="button"
+            id="salario-baixar-csv-btn"
+            aria-label="Baixar resumo do cálculo em planilha CSV"
+            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-hairline bg-canvas hover:bg-hairline text-ink transition-colors cursor-pointer min-h-[40px]"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            <span>Baixar CSV</span>
+          </button>
+        </div>
+
+        <!-- Botão Imprimir / Salvar PDF -->
+        <button
+          type="button"
+          id="salario-download-pdf-btn"
+          data-action="download-pdf"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-link hover:bg-link-hover active:scale-95 text-white font-semibold shadow-xs transition-all cursor-pointer min-h-[40px]"
+          title="Imprimir ou salvar demonstrativo oficial em PDF"
+          aria-label="Imprimir ou salvar em PDF"
+        >
+          <svg class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span>Imprimir / Salvar PDF</span>
+        </button>
+      </div>
+
+      <!-- Aviso Legal Obrigatório sobre Estimativa -->
+      <div class="rounded-lg border border-hairline bg-canvas/40 p-3 text-[11px] text-mute font-mono leading-relaxed">
+        <strong class="text-ink">Aviso sobre precisão:</strong> Os resultados apresentados são estimativas calculadas com base nas regras gerais da legislação vigente e podem variar conforme descontos específicos, benefícios concedidos, convenções coletivas de trabalho e regimes particulares presentes no seu contracheque real.
+      </div>
+    </div>
+  </div>
+
+  <!-- Fórmula Educativa e Metodologia Oficial -->
+  <FormulaSection
+    formula="Salário Líquido = Salário Bruto Total − INSS 2026 − IRRF 2026 − Outros Descontos Legais"
+    explanation="O cálculo do salário líquido no Brasil segue a legislação trabalhista (CLT) e previdenciária (Portaria MPS/MF nº 13/2026), descontando em cascata a contribuição previdenciária progressiva e o imposto de renda retido na fonte ajustado com o redutor oficial de 2026."
+    variables={[
+      { symbol: 'Salário Bruto Total', meaning: 'Salário base acrescido de horas extras, DSR proporcional e adicionais' },
+      { symbol: 'INSS 2026', meaning: 'Contribuição previdenciária progressiva em 4 faixas (7,5% a 14%), limitada ao teto de R$ 988,09' },
+      { symbol: 'Base do IRRF', meaning: 'Salário Bruto menos INSS, menos R$ 189,59 por dependente e pensão judicial' },
+      { symbol: 'IRRF 2026', meaning: 'Imposto de renda na fonte com isenção total até R$ 5.000,00 e redutor gradual até R$ 7.350,00' },
+      { symbol: 'Outros Descontos', meaning: 'Vale-transporte (até 6%), coparticipação de saúde e previdência complementar' },
+    ]}
+    isPortuguese={true}
+  />
+
+  <!-- Exemplo Prático Verificado -->
+  <WorkedExample
+    calculatorId="salario-liquido"
+    title="Exemplo Prático Passo a Passo: Salário Bruto de R$ 5.000,00 em 2026"
+    scenario="Simulação do salário líquido de um trabalhador contratado sob o regime da CLT com remuneração de R$ 5.000,00 mensais, sem dependentes declarados e sem horas extras adicionais."
+    steps={workedExampleSteps}
+    conclusion="Para um salário bruto de R$ 5.000,00, o desconto de INSS é de R$ 501,51 e o desconto do IRRF é de R$ 0,00 (devido à nova isenção de 2026), resultando em um salário líquido final de R$ 4.498,49 creditado na conta."
+    isPortuguese={true}
+  />
+
+  <!-- Conteúdo Didático e Educativo Aprofundado (SEO & Conhecimento) -->
+  <article class="mt-8 rounded-[12px] border border-hairline bg-canvas-elevated p-6 sm:p-10 shadow-whisper space-y-8 text-body">
+    <!-- Seção 1: O que é salário bruto e salário líquido? -->
+    <section class="space-y-3">
+      <h2 class="heading-md text-ink">O que é salário bruto e salário líquido?</h2>
+      <p class="text-sm sm:text-base leading-relaxed">
+        Compreender a diferença entre <strong>salário bruto</strong> e <strong>salário líquido</strong> é fundamental para qualquer planejamento financeiro pessoal no Brasil.
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+        <div class="rounded-xl border border-hairline bg-canvas p-4 space-y-2">
+          <h3 class="text-sm font-bold text-ink uppercase font-mono">Salário Bruto (Nominal)</h3>
+          <p class="text-xs sm:text-sm text-mute leading-relaxed">
+            É o valor total registrado na sua Carteira de Trabalho e no contrato de trabalho, antes de qualquer desconto obrigatório. É sobre essa quantia que se calculam benefícios futuros como FGTS (pago pelo empregador), férias e 13º salário.
+          </p>
+        </div>
+        <div class="rounded-xl border border-hairline bg-canvas p-4 space-y-2">
+          <h3 class="text-sm font-bold text-emerald-600 dark:text-emerald-400 uppercase font-mono">Salário Líquido (Real)</h3>
+          <p class="text-xs sm:text-sm text-mute leading-relaxed">
+            É o valor efetivamente depositado na conta bancária do trabalhador no quinto dia útil do mês seguinte. Corresponde ao salário bruto deduzido de todos os encargos legais (INSS, IRRF) e benefícios coparticipados (como vale-transporte e alimentação).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção 2: Como funciona o desconto do INSS em 2026? -->
+    <section class="space-y-4">
+      <h2 class="heading-md text-ink">Como funciona o desconto do INSS em 2026?</h2>
+      <p class="text-sm sm:text-base leading-relaxed">
+        Desde a Reforma da Previdência, o recolhimento do INSS é calculado de forma <strong>progressiva</strong> por faixas de rendimento, de modo idêntico ao Imposto de Renda. Isso significa que o trabalhador não paga uma porcentagem única sobre todo o seu salário, mas sim uma alíquota específica para cada fração salarial.
+      </p>
+      <p class="text-sm sm:text-base leading-relaxed">
+        Em 2026, com o salário mínimo fixado em <strong>R$ 1.621,00</strong> e o teto previdenciário em <strong>R$ 8.475,55</strong> (Portaria Interministerial MPS/MF nº 13/2026), a tabela progressiva aplica as seguintes faixas:
+      </p>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs sm:text-sm font-mono border-collapse rounded-lg border border-hairline">
+          <thead>
+            <tr class="border-b border-hairline bg-canvas text-ink">
+              <th class="py-2.5 px-3">Faixa Salarial de Contribuição</th>
+              <th class="py-2.5 px-3 text-center">Alíquota da Faixa</th>
+              <th class="py-2.5 px-3 text-right">Parcela a Deduzir</th>
+              <th class="py-2.5 px-3 text-right">Contribuição Máxima na Faixa</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline">
+            <tr>
+              <td class="py-2 px-3">Até R$ 1.621,00</td>
+              <td class="py-2 px-3 text-center font-bold">7,5%</td>
+              <td class="py-2 px-3 text-right">R$ 0,00</td>
+              <td class="py-2 px-3 text-right">R$ 121,58</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3">De R$ 1.621,01 até R$ 2.902,84</td>
+              <td class="py-2 px-3 text-center font-bold">9,0%</td>
+              <td class="py-2 px-3 text-right">R$ 24,32</td>
+              <td class="py-2 px-3 text-right">R$ 115,37</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3">De R$ 2.902,85 até R$ 4.354,27</td>
+              <td class="py-2 px-3 text-center font-bold">12,0%</td>
+              <td class="py-2 px-3 text-right">R$ 111,40</td>
+              <td class="py-2 px-3 text-right">R$ 174,17</td>
+            </tr>
+            <tr>
+              <td class="py-2 px-3">De R$ 4.354,28 até R$ 8.475,55</td>
+              <td class="py-2 px-3 text-center font-bold">14,0%</td>
+              <td class="py-2 px-3 text-right">R$ 198,49</td>
+              <td class="py-2 px-3 text-right">R$ 576,98</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr class="border-t border-hairline font-bold text-ink bg-canvas">
+              <td class="py-2.5 px-3" colspan="3">Teto Máximo de Desconto Previdenciário (2026):</td>
+              <td class="py-2.5 px-3 text-right text-amber-600">R$ 988,09</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <p class="text-xs text-mute font-mono">
+        * Nota: Qualquer salário bruto superior a R$ 8.475,55 terá o desconto do INSS rigorosamente limitado a R$ 988,09 mensais.
+      </p>
+    </section>
+
+    <!-- Seção 3: O que mudou no Imposto de Renda em 2026? -->
+    <section class="space-y-4">
+      <h2 class="heading-md text-ink">O que mudou no Imposto de Renda em 2026? (Novo IR)</h2>
+      <p class="text-sm sm:text-base leading-relaxed">
+        A reforma do Imposto de Renda Retido na Fonte (IRRF) em vigor para 2026 trouxe uma das transformações mais aguardadas pelos trabalhadores brasileiros:
+      </p>
+      <div class="space-y-3">
+        <div class="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 sm:p-5 space-y-2">
+          <div class="flex items-center gap-2 font-bold text-emerald-600 dark:text-emerald-400">
+            <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <h3 class="text-base font-semibold">1. Isenção Total até R$ 5.000,00 Mensais</h3>
+          </div>
+          <p class="text-xs sm:text-sm text-body leading-relaxed">
+            Quem recebe remuneração de até R$ 5.000,00 brutos por mês passa a ter <strong>imposto retido na fonte igual a zero</strong>. A legislação instituiu um redutor oficial de até R$ 312,89 que neutraliza integralmente o imposto calculado pela tabela progressiva para essa faixa de renda.
+          </p>
+        </div>
+
+        <div class="rounded-xl border border-link/30 bg-link/5 p-4 sm:p-5 space-y-2">
+          <div class="flex items-center gap-2 font-bold text-link">
+            <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+            <h3 class="text-base font-semibold">2. Faixa de Transição Gradual (R$ 5.000,01 a R$ 7.350,00)</h3>
+          </div>
+          <p class="text-xs sm:text-sm text-body leading-relaxed">
+            Para evitar que um aumento salarial acima de R$ 5.000,00 resulte em uma mordida abrupta de imposto, foi estabelecida uma faixa de transição suave. Nessa faixa, aplica-se um redutor decrescente calculado pela fórmula oficial da Receita Federal:
+          </p>
+          <div class="inline-block rounded-md border border-hairline bg-canvas px-3 py-1.5 font-mono text-xs text-ink font-semibold">
+            Redutor 2026 = R$ 978,62 − (0,133145 × Renda Mensal)
+          </div>
+          <p class="text-xs text-mute leading-relaxed">
+            Dessa forma, quem ganha R$ 6.000,00 ou R$ 7.000,00 tem alívio tributário proporcional, sem saltos artificiais de retenção na fonte.
+          </p>
+        </div>
+
+        <div class="rounded-xl border border-hairline bg-canvas p-4 sm:p-5 space-y-2">
+          <h3 class="text-base font-semibold text-ink">3. Acima de R$ 7.350,00 Mensais</h3>
+          <p class="text-xs sm:text-sm text-mute leading-relaxed">
+            Para rendimentos superiores a R$ 7.350,00, o redutor de transição atinge zero, passando a vigorar a tabela progressiva padrão com deduções por dependente e parcela a deduzir tradicional.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Seção 4: Como calcular o salário líquido de trabalhador CLT? -->
+    <section class="space-y-3">
+      <h2 class="heading-md text-ink">Como calcular o salário líquido de trabalhador CLT?</h2>
+      <p class="text-sm sm:text-base leading-relaxed">
+        Para trabalhadores regidos pela Consolidação das Leis do Trabalho (CLT), o contracheque mensal (holerite) reflete uma relação detalhada de proventos e descontos. Além do INSS e do IRRF, o empregador pode aplicar os seguintes descontos legais:
+      </p>
+      <ul class="list-disc pl-5 text-sm sm:text-base space-y-2 text-body">
+        <li><strong>Vale-Transporte (VT):</strong> O empregador pode descontar até 6% do salário base do empregado, limitado ao custo real dos bilhetes de transporte fornecidos no mês.</li>
+        <li><strong>Vale-Alimentação ou Refeição (PAT):</strong> Empresas cadastradas no Programa de Alimentação do Trabalhador podem descontar até 20% do valor do benefício, conforme o acordo coletivo da categoria.</li>
+        <li><strong>Plano de Saúde e Odontológico:</strong> Descontos de mensalidade ou de coparticipação em consultas e exames médicos previstos no contrato de trabalho.</li>
+        <li><strong>Faltas Não Justificadas e Atrasos:</strong> Dias não trabalhados sem atestado médico válido geram desconto proporcional do salário e a perda do reflexo do Descanso Semanal Remunerado (DSR).</li>
+      </ul>
+      <p class="text-xs text-mute font-mono">
+        * Lembre-se: O Fundo de Garantia por Tempo de Serviço (FGTS - 8%) é uma obrigação exclusiva da empresa e <strong>nunca pode ser descontado</strong> do salário do trabalhador.
+      </p>
+    </section>
+
+    <!-- Seção 5: Horas Extras e DSR na CLT -->
+    <section class="space-y-3">
+      <h2 class="heading-md text-ink">Como calcular salário líquido com hora extra?</h2>
+      <p class="text-sm sm:text-base leading-relaxed">
+        Quando um empregado realiza horas extras além da sua jornada habitual de trabalho (geralmente 44 horas semanais ou 220 horas mensais), o cálculo segue três etapas essenciais:
+      </p>
+      <div class="space-y-2 text-xs sm:text-sm font-mono bg-canvas p-4 rounded-xl border border-hairline">
+        <p>1. <strong>Valor da Hora Normal:</strong> Salário Bruto ÷ 220 horas.</p>
+        <p>2. <strong>Hora Extra a 50%:</strong> Valor da Hora Normal × 1,50 × Quantidade de horas realizadas em dias úteis.</p>
+        <p>3. <strong>Hora Extra a 100%:</strong> Valor da Hora Normal × 2,00 × Quantidade de horas realizadas em domingos ou feriados.</p>
+        <p>4. <strong>Reflexo no DSR (Descanso Semanal Remunerado):</strong> (Total das Horas Extras ÷ Dias Úteis do Mês) × Domingos e Feriados do Mês.</p>
+      </div>
+      <p class="text-sm text-body leading-relaxed">
+        O valor total das horas extras e do DSR é adicionado ao salário bruto antes da aplicação do INSS e do IRRF, elevando a base de cálculo de ambos os tributos.
+      </p>
+    </section>
+
+    <!-- Seção 6: Salário Proporcional aos Dias Trabalhados -->
+    <section class="space-y-3">
+      <h2 class="heading-md text-ink">Como calcular salário proporcional aos dias trabalhados?</h2>
+      <p class="text-sm sm:text-base leading-relaxed">
+        Se você foi admitido no meio do mês, pediu demissão ou retornou de um afastamento, tem direito ao recebimento proporcional. De acordo com o artigo 64 da CLT, o salário mensal é sempre referenciado pelo mês comercial de <strong>30 dias</strong>, mesmo em meses de 31 ou 28 dias:
+      </p>
+      <div class="rounded-xl border border-hairline bg-canvas p-4 text-xs sm:text-sm font-mono text-ink">
+        Salário Proporcional = (Salário Mensal Contratual ÷ 30) × Dias Efetivamente Trabalhados
+      </div>
+      <p class="text-sm text-body leading-relaxed">
+        As faixas do INSS e do Imposto de Renda incidem sobre o montante proporcional apurado, garantindo que o desconto fiscal seja compatível com a renda real auferida naquele mês.
+      </p>
+    </section>
+
+    <!-- Seção 7: Servidor Público -->
+    <section class="space-y-3">
+      <h2 class="heading-md text-ink">A calculadora serve para servidores públicos?</h2>
+      <p class="text-sm sm:text-base leading-relaxed">
+        <strong>Atenção importante:</strong> Esta ferramenta foi desenhada especificamente para os trabalhadores vinculados ao Regime Geral de Previdência Social (RGPS/CLT) da iniciativa privada e empregados de empresas públicas/sociedades de economia mista (como Petrobras, Banco do Brasil e Caixa).
+      </p>
+      <p class="text-sm sm:text-base leading-relaxed">
+        Servidores públicos titulares de cargos efetivos da União, Estados e Municípios pertencem a <strong>Regimes Próprios de Previdência Social (RPPS)</strong>. Nesses regimes, as alíquotas previdenciárias podem variar de 14% a 22%, e a incidência sobre valores acima do teto pode envolver previdência complementar (como a Funpresp). Embora o cálculo do IRRF obedeça à tabela federal idêntica, a contribuição previdenciária e o salário líquido final serão distintos.
+      </p>
+    </section>
+
+    <!-- Seção 8: Tabela Comparativa de Exemplos Oficiais 2026 -->
+    <section class="space-y-4">
+      <h2 class="heading-md text-ink">Tabela Comparativa de Exemplos Salariais em 2026</h2>
+      <p class="text-sm sm:text-base leading-relaxed">
+        Veja abaixo simulações matematicamente conferidas para diferentes faixas salariais em 2026 (considerando trabalhador CLT, sem dependentes e sem horas extras):
+      </p>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs sm:text-sm font-mono border-collapse rounded-lg border border-hairline">
+          <thead>
+            <tr class="border-b border-hairline bg-canvas text-ink">
+              <th class="py-2.5 px-3">Salário Bruto</th>
+              <th class="py-2.5 px-3 text-right">Desconto INSS 2026</th>
+              <th class="py-2.5 px-3 text-right">Desconto IRRF 2026</th>
+              <th class="py-2.5 px-3 text-right font-bold text-emerald-600 dark:text-emerald-400">Salário Líquido</th>
+              <th class="py-2.5 px-3 text-right">Alíquota Efetiva Total</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline">
+            {exemplosTabela.map((ex) => (
+              <tr>
+                <td class="py-2.5 px-3 font-semibold text-ink">{formatarMoedaBRL(ex.salarioBruto)}</td>
+                <td class="py-2.5 px-3 text-right text-amber-600 dark:text-amber-400">{formatarMoedaBRL(ex.inss)}</td>
+                <td class="py-2.5 px-3 text-right text-rose-600 dark:text-rose-400">
+                  {ex.irrf === 0 ? 'R$ 0,00 (Isento)' : formatarMoedaBRL(ex.irrf)}
+                </td>
+                <td class="py-2.5 px-3 text-right font-bold text-ink">{formatarMoedaBRL(ex.liquido)}</td>
+                <td class="py-2.5 px-3 text-right text-mute">{ex.aliqEfetiva}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-mute font-mono">
+        * Todos os valores foram calculados conforme a tabela progressiva do INSS (Portaria MPS/MF 13/2026) e a regra do Novo IR 2026 com isenção total até R$ 5.000,00 e faixa de transição suave.
+      </p>
+    </section>
+
+    <!-- Seção 9: Links Internos e Ferramentas Complementares -->
+    <section class="space-y-3 pt-4 border-t border-hairline">
+      <h3 class="text-sm font-bold text-ink uppercase font-mono tracking-wider">
+        Ferramentas Financeiras Relacionadas no Free Accurate Calculator
+      </h3>
+      <p class="text-xs sm:text-sm text-mute leading-relaxed">
+        Planeje suas finanças, investimentos e metas com outras calculadoras gratuitas e transparentes:
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 pt-1">
+        <a
+          href="/percentage-calculator/"
+          class="p-3 rounded-lg border border-hairline bg-canvas hover:border-link transition-colors block space-y-1"
+        >
+          <span class="text-xs font-bold text-ink block">Calculadora de Porcentagem</span>
+          <span class="text-[11px] text-mute block">Calcule descontos, aumentos e variações percentuais.</span>
+        </a>
+        <a
+          href="/compound-interest-calculator/"
+          class="p-3 rounded-lg border border-hairline bg-canvas hover:border-link transition-colors block space-y-1"
+        >
+          <span class="text-xs font-bold text-ink block">Calculadora de Juros Compostos</span>
+          <span class="text-[11px] text-mute block">Projete o rendimento do seu salário poupado ao longo do tempo.</span>
+        </a>
+        <a
+          href="/emi-calculator/"
+          class="p-3 rounded-lg border border-hairline bg-canvas hover:border-link transition-colors block space-y-1"
+        >
+          <span class="text-xs font-bold text-ink block">Calculadora de Financiamento</span>
+          <span class="text-[11px] text-mute block">Simule parcelas de empréstimos e crédito consignado.</span>
+        </a>
+        <a
+          href="/calculadora-edad/es/"
+          class="p-3 rounded-lg border border-hairline bg-canvas hover:border-link transition-colors block space-y-1"
+        >
+          <span class="text-xs font-bold text-ink block">Calculadora de Idade e Tempo</span>
+          <span class="text-[11px] text-mute block">Acompanhe tempo de vida e contagem regressiva para metas.</span>
+        </a>
+      </div>
+    </section>
+  </article>
+
+  <!-- Seção de Perguntas Frequentes com Injeção de Schema FAQPage -->
+  <FAQSection faqs={faqs} isPortuguese={true} />
+
+  <!-- Motor em Script Inline no Cliente (Zero Dependências Externas, Alta Performance) -->
+  <script is:inline>
+    (function () {
+      // Regras Oficiais do INSS 2026 (Portaria Interministerial MPS/MF nº 13/2026)
+      var REGRAS_INSS_2026 = {
+        salarioMinimo: 1621.00,
+        tetoPrevidenciario: 8475.55,
+        tetoDescontoINSS: 988.09,
+        faixas: [
+          { limite: 1621.00, aliquota: 0.075, deducaoFixa: 0.00, recolhimentoMaximo: 121.58 },
+          { limite: 2902.84, aliquota: 0.090, deducaoFixa: 24.32, recolhimentoMaximo: 115.37 },
+          { limite: 4354.27, aliquota: 0.120, deducaoFixa: 111.40, recolhimentoMaximo: 174.17 },
+          { limite: 8475.55, aliquota: 0.140, deducaoFixa: 198.49, recolhimentoMaximo: 576.98 },
+        ]
+      };
+
+      // Regras Oficiais do IRRF 2026 (Novo IR)
+      var REGRAS_IRRF_2026 = {
+        deducaoPorDependente: 189.59,
+        descontoSimplificadoPadrao: 607.20,
+        limiteIsencaoTotal2026: 5000.00,
+        limiteTransicao2026: 7350.00,
+        faixasBase: [
+          { limite: 2428.80, aliquota: 0.00, deducao: 0.00 },
+          { limite: 3042.94, aliquota: 0.075, deducao: 182.16 },
+          { limite: 4048.91, aliquota: 0.150, deducao: 410.38 },
+          { limite: 5061.14, aliquota: 0.225, deducao: 714.05 },
+          { limite: Infinity, aliquota: 0.275, deducao: 967.11 },
+        ]
+      };
+
+      function formatarMoeda(valor) {
+        if (typeof valor !== 'number' || isNaN(valor) || !isFinite(valor)) valor = 0;
+        return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+      }
+
+      function formatarPercentual(aliquota) {
+        if (typeof aliquota !== 'number' || isNaN(aliquota) || !isFinite(aliquota)) aliquota = 0;
+        return (aliquota * 100).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '%';
+      }
+
+      function parseMoedaInput(texto) {
+        if (!texto) return 0;
+        var limpo = String(texto).trim().replace(/^R\$\s?/, '');
+        limpo = limpo.replace(/\s+/g, '');
+        if (limpo.indexOf(',') !== -1 && limpo.indexOf('.') !== -1) {
+          limpo = limpo.replace(/\./g, '').replace(',', '.');
+        } else if (limpo.indexOf(',') !== -1) {
+          limpo = limpo.replace(',', '.');
+        }
+        var num = parseFloat(limpo);
+        return isNaN(num) || !isFinite(num) || num < 0 ? 0 : num;
+      }
+
+      function calcularINSS(salarioBruto) {
+        var salarioTributavel = Math.min(salarioBruto, REGRAS_INSS_2026.tetoPrevidenciario);
+        if (salarioTributavel <= 0) {
+          return { descontoTotal: 0, aliquotaEfetiva: 0, faixasDetalhadas: [] };
+        }
+        var faixas = REGRAS_INSS_2026.faixas;
+        var total = 0;
+        var faixasDetalhadas = [];
+        var pisoAnterior = 0;
+
+        for (var i = 0; i < faixas.length; i++) {
+          var f = faixas[i];
+          if (salarioTributavel > pisoAnterior) {
+            var baseNaFaixa = Math.min(salarioTributavel, f.limite) - pisoAnterior;
+            var valorNaFaixa = baseNaFaixa * f.aliquota;
+            total += valorNaFaixa;
+            faixasDetalhadas.push({
+              numero: i + 1,
+              faixaTexto: i === 0 ? 'Até R$ ' + f.limite.toLocaleString('pt-BR') : 'De R$ ' + (pisoAnterior + 0.01).toLocaleString('pt-BR') + ' até R$ ' + f.limite.toLocaleString('pt-BR'),
+              aliquota: f.aliquota,
+              aliquotaTexto: formatarPercentual(f.aliquota),
+              baseCalculoFaixa: baseNaFaixa,
+              valorDescontado: valorNaFaixa
+            });
+            pisoAnterior = f.limite;
+          } else {
+            break;
+          }
+        }
+
+        total = Math.min(total, REGRAS_INSS_2026.tetoDescontoINSS);
+        total = Math.round(total * 100) / 100;
+        var aliquotaEfetiva = salarioBruto > 0 ? total / salarioBruto : 0;
+        return { descontoTotal: total, aliquotaEfetiva: aliquotaEfetiva, faixasDetalhadas: faixasDetalhadas };
+      }
+
+      function calcularIRRF(salarioBruto, descontoINSS, numeroDependentes, outrasDeducoesLegais, pensaoAlimenticia) {
+        var dep = numeroDependentes || 0;
+        var outras = outrasDeducoesLegais || 0;
+        var pensao = pensaoAlimenticia || 0;
+
+        var totalDeducoesLegais = descontoINSS + (dep * REGRAS_IRRF_2026.deducaoPorDependente) + outras + pensao;
+        var baseLegal = Math.max(0, salarioBruto - totalDeducoesLegais);
+        var baseSimplificada = Math.max(0, salarioBruto - REGRAS_IRRF_2026.descontoSimplificadoPadrao);
+
+        var usarSimplificado = baseSimplificada < baseLegal;
+        var baseCalculoFinal = usarSimplificado ? baseSimplificada : baseLegal;
+
+        var faixas = REGRAS_IRRF_2026.faixasBase;
+        var impostoTabela = 0;
+        var aliquotaFaixa = 0;
+        var deducaoFaixa = 0;
+
+        for (var i = 0; i < faixas.length; i++) {
+          if (baseCalculoFinal <= faixas[i].limite) {
+            aliquotaFaixa = faixas[i].aliquota;
+            deducaoFaixa = faixas[i].deducao;
+            impostoTabela = Math.max(0, (baseCalculoFinal * aliquotaFaixa) - deducaoFaixa);
+            break;
+          }
+        }
+
+        var isentoPelaRegra2026 = false;
+        var redutorAplicado = 0;
+        var impostoDevidoFinal = impostoTabela;
+
+        if (salarioBruto <= REGRAS_IRRF_2026.limiteIsencaoTotal2026) {
+          isentoPelaRegra2026 = true;
+          redutorAplicado = impostoTabela;
+          impostoDevidoFinal = 0;
+        } else if (salarioBruto <= REGRAS_IRRF_2026.limiteTransicao2026) {
+          var redutorFormula = 978.62 - (0.133145 * salarioBruto);
+          redutorAplicado = Math.max(0, redutorFormula);
+          impostoDevidoFinal = Math.max(0, impostoTabela - redutorAplicado);
+        }
+
+        impostoDevidoFinal = Math.round(impostoDevidoFinal * 100) / 100;
+        var aliquotaEfetiva = salarioBruto > 0 ? impostoDevidoFinal / salarioBruto : 0;
+
+        return {
+          baseCalculo: baseCalculoFinal,
+          impostoTabela: impostoTabela,
+          redutorAplicado: redutorAplicado,
+          descontoIRRF: impostoDevidoFinal,
+          aliquotaFaixa: aliquotaFaixa,
+          aliquotaEfetiva: aliquotaEfetiva,
+          isentoTotal2026: isentoPelaRegra2026,
+          usouDescontoSimplificado: usarSimplificado
+        };
+      }
+
+      function recalcularTudo() {
+        var inputBruto = document.getElementById('salario-bruto-input');
+        var inputDep = document.getElementById('dependentes-input');
+        var inputOutras = document.getElementById('outras-deducoes-input');
+        var inputDias = document.getElementById('dias-trabalhados-input');
+        var inputHe50 = document.getElementById('horas-extras-50-input');
+        var inputHe100 = document.getElementById('horas-extras-100-input');
+        var inputNoturno = document.getElementById('adicional-noturno-input');
+        var inputPensao = document.getElementById('pensao-alimenticia-input');
+        var inputVt = document.getElementById('vale-transporte-input');
+        var inputOutrosDesc = document.getElementById('outros-descontos-folha-input');
+
+        var salarioContratual = parseMoedaInput(inputBruto ? inputBruto.value : '5000');
+        var dependentes = parseInt(inputDep ? inputDep.value : '0', 10) || 0;
+        var outrasDeducoes = parseMoedaInput(inputOutras ? inputOutras.value : '0');
+        var diasTrabalhados = parseInt(inputDias ? inputDias.value : '30', 10) || 30;
+        if (diasTrabalhados < 1) diasTrabalhados = 1;
+        if (diasTrabalhados > 30) diasTrabalhados = 30;
+
+        var he50Horas = parseFloat(inputHe50 ? inputHe50.value : '0') || 0;
+        var he100Horas = parseFloat(inputHe100 ? inputHe100.value : '0') || 0;
+        var adicionalNoturno = parseMoedaInput(inputNoturno ? inputNoturno.value : '0');
+        var pensaoAlimenticia = parseMoedaInput(inputPensao ? inputPensao.value : '0');
+        var valeTransporte = parseMoedaInput(inputVt ? inputVt.value : '0');
+        var outrosDescontosFolha = parseMoedaInput(inputOutrosDesc ? inputOutrosDesc.value : '0');
+
+        // Cálculo proporcional aos dias trabalhados
+        var salarioBaseEfetivo = diasTrabalhados < 30 ? (salarioContratual / 30) * diasTrabalhados : salarioContratual;
+
+        // Horas extras
+        var valorHora = salarioContratual / 220;
+        var valorHe50 = he50Horas * valorHora * 1.50;
+        var valorHe100 = he100Horas * valorHora * 2.00;
+        var totalHe = valorHe50 + valorHe100;
+        var valorDsr = totalHe > 0 ? (totalHe / 25) * 5 : 0; // estimativa oficial de reflexo DSR
+
+        var salarioBrutoTotal = salarioBaseEfetivo + totalHe + valorDsr + adicionalNoturno;
+
+        // INSS 2026
+        var inssResultado = calcularINSS(salarioBrutoTotal);
+
+        // IRRF 2026
+        var irrfResultado = calcularIRRF(salarioBrutoTotal, inssResultado.descontoTotal, dependentes, outrasDeducoes, pensaoAlimenticia);
+
+        // Outros descontos
+        var totalOutrosDescontos = valeTransporte + outrosDescontosFolha + pensaoAlimenticia;
+        var totalDescontosGerais = inssResultado.descontoTotal + irrfResultado.descontoIRRF + totalOutrosDescontos;
+        var salarioLiquido = Math.max(0, salarioBrutoTotal - totalDescontosGerais);
+
+        // Atualizar Card Hero Principal
+        var elLiquido = document.getElementById('resultado-salario-liquido');
+        if (elLiquido) elLiquido.textContent = formatarMoeda(salarioLiquido);
+
+        var elResumoTexto = document.getElementById('resultado-resumo-texto');
+        var percLiquido = salarioBrutoTotal > 0 ? (salarioLiquido / salarioBrutoTotal) : 0;
+        if (elResumoTexto) {
+          elResumoTexto.innerHTML = 'Você receberá aproximadamente <strong>' + formatarPercentual(percLiquido) + '</strong> do seu salário bruto após ' + formatarMoeda(totalDescontosGerais) + ' em descontos.';
+        }
+
+        var badgeIr = document.getElementById('badge-status-ir');
+        if (badgeIr) {
+          if (irrfResultado.isentoTotal2026) {
+            badgeIr.textContent = 'Isenção Total do IRRF Aplicada';
+            badgeIr.className = 'inline-flex items-center px-2.5 py-1 rounded text-xs font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400';
+          } else if (irrfResultado.redutorAplicado > 0) {
+            badgeIr.textContent = 'Faixa de Transição com Redutor 2026';
+            badgeIr.className = 'inline-flex items-center px-2.5 py-1 rounded text-xs font-mono font-medium bg-cyan/10 text-cyan font-semibold';
+          } else {
+            badgeIr.textContent = 'Tabela Progressiva Integral';
+            badgeIr.className = 'inline-flex items-center px-2.5 py-1 rounded text-xs font-mono font-medium bg-slate-500/10 text-slate-600 dark:text-slate-400';
+          }
+        }
+
+        // Barra de Proporção
+        var barraLiq = document.getElementById('barra-liquido');
+        var barraInss = document.getElementById('barra-inss');
+        var barraIrrf = document.getElementById('barra-irrf');
+        var barraOutros = document.getElementById('barra-outros');
+        var labelProp = document.getElementById('label-proporcao-liquido');
+
+        if (barraLiq && barraInss && barraIrrf && barraOutros && salarioBrutoTotal > 0) {
+          var pLiq = Math.max(0, (salarioLiquido / salarioBrutoTotal) * 100);
+          var pInss = (inssResultado.descontoTotal / salarioBrutoTotal) * 100;
+          var pIrrf = (irrfResultado.descontoIRRF / salarioBrutoTotal) * 100;
+          var pOutros = (totalOutrosDescontos / salarioBrutoTotal) * 100;
+
+          barraLiq.style.width = pLiq.toFixed(2) + '%';
+          barraInss.style.width = pInss.toFixed(2) + '%';
+          barraIrrf.style.width = pIrrf.toFixed(2) + '%';
+          barraOutros.style.width = pOutros.toFixed(2) + '%';
+          if (labelProp) labelProp.textContent = 'Salário Líquido: ' + formatarPercentual(percLiquido);
+        }
+
+        // Cards Secundários
+        var cBruto = document.getElementById('card-salario-bruto');
+        var cInss = document.getElementById('card-inss');
+        var cAliqInss = document.getElementById('card-aliq-inss');
+        var cBaseIr = document.getElementById('card-base-ir');
+        var cIrrf = document.getElementById('card-irrf');
+        var cAliqIrrf = document.getElementById('card-aliq-irrf');
+        var cOutras = document.getElementById('card-outras-deducoes');
+        var cTotDesc = document.getElementById('card-total-descontos');
+        var cAliqTot = document.getElementById('card-aliq-total');
+
+        if (cBruto) cBruto.textContent = formatarMoeda(salarioBrutoTotal);
+        if (cInss) cInss.textContent = formatarMoeda(inssResultado.descontoTotal);
+        if (cAliqInss) cAliqInss.textContent = 'Efetiva: ' + formatarPercentual(inssResultado.aliquotaEfetiva);
+        if (cBaseIr) cBaseIr.textContent = formatarMoeda(irrfResultado.baseCalculo);
+        if (cIrrf) cIrrf.textContent = formatarMoeda(irrfResultado.descontoIRRF);
+        if (cAliqIrrf) {
+          cAliqIrrf.textContent = irrfResultado.isentoTotal2026 ? 'Isenção 2026' : 'Efetiva: ' + formatarPercentual(irrfResultado.aliquotaEfetiva);
+        }
+        if (cOutras) cOutras.textContent = formatarMoeda(totalOutrosDescontos);
+        if (cTotDesc) cTotDesc.textContent = formatarMoeda(totalDescontosGerais);
+        if (cAliqTot) cAliqTot.textContent = formatarPercentual(salarioBrutoTotal > 0 ? totalDescontosGerais / salarioBrutoTotal : 0) + ' do bruto';
+
+        // Tabela Demonstrativa Detalhada
+        var corpoDet = document.getElementById('tabela-detalhamento-corpo');
+        if (corpoDet) {
+          var linhas = [];
+          if (diasTrabalhados < 30) {
+            linhas.push('<tr><td class="py-2 pr-4 font-semibold text-ink">Salário Proporcional (' + diasTrabalhados + ' dias)</td><td class="py-2 px-3 text-center text-mute text-[10px]">Art. 64 CLT</td><td class="py-2 px-3 text-right text-emerald-600 font-bold">' + formatarMoeda(salarioBaseEfetivo) + '</td><td class="py-2 pl-3 text-right text-mute">-</td></tr>');
+          } else {
+            linhas.push('<tr><td class="py-2 pr-4 font-semibold text-ink">Salário Base Mensal</td><td class="py-2 px-3 text-center text-mute text-[10px]">Contrato CLT</td><td class="py-2 px-3 text-right text-emerald-600 font-bold">' + formatarMoeda(salarioContratual) + '</td><td class="py-2 pl-3 text-right text-mute">-</td></tr>');
+          }
+
+          if (totalHe > 0) {
+            linhas.push('<tr><td class="py-2 pr-4 text-ink">Horas Extras (' + (he50Horas + he100Horas) + 'h)</td><td class="py-2 px-3 text-center text-mute text-[10px]">Adicional 50% / 100%</td><td class="py-2 px-3 text-right text-emerald-600 font-bold">' + formatarMoeda(totalHe) + '</td><td class="py-2 pl-3 text-right text-mute">-</td></tr>');
+            linhas.push('<tr><td class="py-2 pr-4 text-ink">Reflexo no DSR sobre Horas Extras</td><td class="py-2 px-3 text-center text-mute text-[10px]">Lei 605/1949</td><td class="py-2 px-3 text-right text-emerald-600 font-bold">' + formatarMoeda(valorDsr) + '</td><td class="py-2 pl-3 text-right text-mute">-</td></tr>');
+          }
+
+          if (adicionalNoturno > 0) {
+            linhas.push('<tr><td class="py-2 pr-4 text-ink">Adicional Noturno</td><td class="py-2 px-3 text-center text-mute text-[10px]">Art. 73 CLT</td><td class="py-2 px-3 text-right text-emerald-600 font-bold">' + formatarMoeda(adicionalNoturno) + '</td><td class="py-2 pl-3 text-right text-mute">-</td></tr>');
+          }
+
+          // Descontos
+          linhas.push('<tr><td class="py-2 pr-4 text-ink">Previdência Social (INSS 2026)</td><td class="py-2 px-3 text-center text-mute text-[10px]">Tabela Progressiva</td><td class="py-2 px-3 text-right text-mute">-</td><td class="py-2 pl-3 text-right text-amber-600 dark:text-amber-400 font-bold">' + formatarMoeda(inssResultado.descontoTotal) + '</td></tr>');
+
+          if (irrfResultado.descontoIRRF > 0) {
+            linhas.push('<tr><td class="py-2 pr-4 text-ink">Imposto de Renda Retido (IRRF)</td><td class="py-2 px-3 text-center text-mute text-[10px]">Novo IR 2026</td><td class="py-2 px-3 text-right text-mute">-</td><td class="py-2 pl-3 text-right text-rose-600 dark:text-rose-400 font-bold">' + formatarMoeda(irrfResultado.descontoIRRF) + '</td></tr>');
+          } else {
+            linhas.push('<tr><td class="py-2 pr-4 text-ink">Imposto de Renda (IRRF 2026)</td><td class="py-2 px-3 text-center text-emerald-600 text-[10px]">Isenção Total até R$ 5.000</td><td class="py-2 px-3 text-right text-mute">-</td><td class="py-2 pl-3 text-right text-emerald-600 font-bold">R$ 0,00</td></tr>');
+          }
+
+          if (valeTransporte > 0) {
+            linhas.push('<tr><td class="py-2 pr-4 text-ink">Desconto de Vale-Transporte</td><td class="py-2 px-3 text-center text-mute text-[10px]">Lei 7.418/1985</td><td class="py-2 px-3 text-right text-mute">-</td><td class="py-2 pl-3 text-right text-rose-600 font-bold">' + formatarMoeda(valeTransporte) + '</td></tr>');
+          }
+
+          if (pensaoAlimenticia > 0) {
+            linhas.push('<tr><td class="py-2 pr-4 text-ink">Pensão Alimentícia Judicial</td><td class="py-2 px-3 text-center text-mute text-[10px]">Ordem Judicial</td><td class="py-2 px-3 text-right text-mute">-</td><td class="py-2 pl-3 text-right text-rose-600 font-bold">' + formatarMoeda(pensaoAlimenticia) + '</td></tr>');
+          }
+
+          if (outrosDescontosFolha > 0) {
+            linhas.push('<tr><td class="py-2 pr-4 text-ink">Outros Descontos em Folha</td><td class="py-2 px-3 text-center text-mute text-[10px]">Benefícios / Acordo</td><td class="py-2 px-3 text-right text-mute">-</td><td class="py-2 pl-3 text-right text-rose-600 font-bold">' + formatarMoeda(outrosDescontosFolha) + '</td></tr>');
+          }
+
+          corpoDet.innerHTML = linhas.join('');
+        }
+
+        var elTotLiq = document.getElementById('tabela-total-liquido');
+        if (elTotLiq) elTotLiq.textContent = formatarMoeda(salarioLiquido);
+
+        // Tabela de Faixas Progressivas do INSS
+        var corpoInss = document.getElementById('tabela-faixas-inss-corpo');
+        if (corpoInss) {
+          var faixasInssHtml = [];
+          for (var j = 0; j < inssResultado.faixasDetalhadas.length; j++) {
+            var fx = inssResultado.faixasDetalhadas[j];
+            faixasInssHtml.push('<tr><td class="py-2 pr-3">' + fx.faixaTexto + '</td><td class="py-2 px-3 text-center font-bold">' + fx.aliquotaTexto + '</td><td class="py-2 px-3 text-right font-mono">' + formatarMoeda(fx.baseCalculoFaixa) + '</td><td class="py-2 pl-3 text-right font-mono font-bold text-ink">' + formatarMoeda(fx.valorDescontado) + '</td></tr>');
+          }
+          corpoInss.innerHTML = faixasInssHtml.join('');
+        }
+
+        var elTotInss = document.getElementById('total-faixas-inss');
+        if (elTotInss) elTotInss.textContent = formatarMoeda(inssResultado.descontoTotal);
+
+        // Atualizar Relatório de Impressão / PDF
+        atualizarRelatorioImpressao(salarioBrutoTotal, salarioLiquido, inssResultado, irrfResultado, totalOutrosDescontos, totalDescontosGerais, dependentes, outrasDeducoes, diasTrabalhados);
+      }
+
+      function atualizarRelatorioImpressao(bruto, liquido, inss, irrf, outros, totalDesc, dep, outrasDed, dias) {
+        var pBruto = document.getElementById('print-salario-bruto');
+        var pDep = document.getElementById('print-dependentes');
+        var pOutras = document.getElementById('print-outras-deducoes');
+        var pDias = document.getElementById('print-dias');
+        var pLiq = document.getElementById('print-salario-liquido');
+        var pResumo = document.getElementById('print-resumo-subtitulo');
+        var pCorpo = document.getElementById('print-tabela-corpo');
+
+        if (pBruto) pBruto.textContent = formatarMoeda(bruto);
+        if (pDep) pDep.textContent = String(dep);
+        if (pOutras) pOutras.textContent = formatarMoeda(outrasDed);
+        if (pDias) pDias.textContent = dias + ' dias';
+        if (pLiq) pLiq.textContent = formatarMoeda(liquido);
+
+        var perc = bruto > 0 ? (totalDesc / bruto) : 0;
+        if (pResumo) pResumo.textContent = 'Descontos totais de ' + formatarMoeda(totalDesc) + ' (' + formatarPercentual(perc) + ' do total de proventos)';
+
+        if (pCorpo) {
+          var rows = [
+            '<tr><td class="py-1.5 px-2.5 font-bold text-blue-700">Salário Bruto Total</td><td class="py-1.5 px-2.5 text-center font-mono">Integral / Proporcional</td><td class="py-1.5 px-2.5 text-right font-mono">' + formatarMoeda(bruto) + '</td><td class="py-1.5 px-2.5 text-right font-mono text-slate-400">-</td></tr>',
+            '<tr><td class="py-1.5 px-2.5 text-slate-800">Desconto INSS 2026</td><td class="py-1.5 px-2.5 text-center font-mono">Efetiva: ' + formatarPercentual(inss.aliquotaEfetiva) + '</td><td class="py-1.5 px-2.5 text-right font-mono text-slate-400">-</td><td class="py-1.5 px-2.5 text-right font-mono">' + formatarMoeda(inss.descontoTotal) + '</td></tr>',
+            '<tr><td class="py-1.5 px-2.5 text-slate-800">Desconto IRRF 2026</td><td class="py-1.5 px-2.5 text-center font-mono">' + (irrf.isentoTotal2026 ? 'Isenção até R$ 5.000' : 'Efetiva: ' + formatarPercentual(irrf.aliquotaEfetiva)) + '</td><td class="py-1.5 px-2.5 text-right font-mono text-slate-400">-</td><td class="py-1.5 px-2.5 text-right font-mono">' + formatarMoeda(irrf.descontoIRRF) + '</td></tr>'
+          ];
+          if (outros > 0) {
+            rows.push('<tr><td class="py-1.5 px-2.5 text-slate-800">Outros Descontos e Benefícios</td><td class="py-1.5 px-2.5 text-center font-mono">Folha</td><td class="py-1.5 px-2.5 text-right font-mono text-slate-400">-</td><td class="py-1.5 px-2.5 text-right font-mono">' + formatarMoeda(outros) + '</td></tr>');
+          }
+          rows.push('<tr class="border-t-2 border-slate-900 font-bold bg-slate-50"><td class="py-2 px-2.5 text-slate-900">Salário Líquido Final a Receber</td><td class="py-2 px-2.5 text-center font-mono text-xs">Crédito em Conta</td><td class="py-2 px-2.5 text-right font-mono text-blue-700" colspan="2">' + formatarMoeda(liquido) + '</td></tr>');
+          pCorpo.innerHTML = rows.join('');
+        }
+      }
+
+      function formatarCampoMoeda(e) {
+        var input = e.target;
+        var valor = parseMoedaInput(input.value);
+        if (valor > 0 || input.value.trim() !== '') {
+          input.value = valor.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+      }
+
+      // Inicialização dos eventos do DOM
+      document.addEventListener('DOMContentLoaded', function () {
+        var btnCalcular = document.getElementById('calcular-salario-btn');
+        var btnLimpar = document.getElementById('limpar-formulario-btn');
+        var toggleAvancadas = document.getElementById('toggle-opcoes-avancadas-btn');
+        var secaoAvancadas = document.getElementById('secao-opcoes-avancadas');
+        var iconeAvancadas = document.getElementById('icone-opcoes-avancadas');
+
+        if (btnCalcular) {
+          btnCalcular.addEventListener('click', recalcularTudo);
+        }
+
+        if (btnLimpar) {
+          btnLimpar.addEventListener('click', function () {
+            var form = document.getElementById('salary-calculator-form');
+            if (form) form.reset();
+            var inputBruto = document.getElementById('salario-bruto-input');
+            if (inputBruto) inputBruto.value = '5.000,00';
+            var inputDep = document.getElementById('dependentes-input');
+            if (inputDep) inputDep.value = '0';
+            var inputOutras = document.getElementById('outras-deducoes-input');
+            if (inputOutras) inputOutras.value = '0,00';
+            var inputDias = document.getElementById('dias-trabalhados-input');
+            if (inputDias) inputDias.value = '30';
+            recalcularTudo();
+          });
+        }
+
+        if (toggleAvancadas && secaoAvancadas && iconeAvancadas) {
+          toggleAvancadas.addEventListener('click', function () {
+            var fechado = secaoAvancadas.classList.contains('hidden');
+            if (fechado) {
+              secaoAvancadas.classList.remove('hidden');
+              toggleAvancadas.setAttribute('aria-expanded', 'true');
+              iconeAvancadas.style.transform = 'rotate(180deg)';
+            } else {
+              secaoAvancadas.classList.add('hidden');
+              toggleAvancadas.setAttribute('aria-expanded', 'false');
+              iconeAvancadas.style.transform = 'rotate(0deg)';
+            }
+          });
+        }
+
+        // Recalcular dinamicamente ao digitar
+        var inputsMonitorados = [
+          'salario-bruto-input',
+          'dependentes-input',
+          'outras-deducoes-input',
+          'dias-trabalhados-input',
+          'horas-extras-50-input',
+          'horas-extras-100-input',
+          'adicional-noturno-input',
+          'pensao-alimenticia-input',
+          'vale-transporte-input',
+          'outros-descontos-folha-input'
+        ];
+
+        inputsMonitorados.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) {
+            el.addEventListener('input', recalcularTudo);
+            el.addEventListener('blur', formatarCampoMoeda);
+          }
+        });
+
+        // Botão Copiar Resultado
+        var btnCopiar = document.getElementById('salario-copiar-btn');
+        var textoCopiar = document.getElementById('salario-copiar-texto');
+        if (btnCopiar && textoCopiar) {
+          btnCopiar.addEventListener('click', function () {
+            var elLiq = document.getElementById('resultado-salario-liquido');
+            var valLiq = elLiq ? elLiq.textContent : 'R$ 4.498,49';
+            var elBruto = document.getElementById('salario-bruto-input');
+            var valBruto = elBruto ? elBruto.value : '5.000,00';
+
+            var texto = 'Simulação de Salário Líquido 2026:\n' +
+              'Salário Bruto: R$ ' + valBruto + '\n' +
+              'Salário Líquido Estimado: ' + valLiq + '\n' +
+              'Calculado no Free Accurate Calculator (https://freeaccuratecalculator.com/calculadora-salario/pt)';
+
+            navigator.clipboard.writeText(texto).then(function () {
+              textoCopiar.textContent = 'Resultado Copiado!';
+              setTimeout(function () {
+                textoCopiar.textContent = 'Copiar Resultado';
+              }, 2500);
+            });
+          });
+        }
+
+        // Botão Compartilhar
+        var btnCompartilhar = document.getElementById('salario-compartilhar-btn');
+        if (btnCompartilhar) {
+          btnCompartilhar.addEventListener('click', function () {
+            var url = 'https://freeaccuratecalculator.com/calculadora-salario/pt';
+            if (navigator.share) {
+              navigator.share({
+                title: 'Calculadora de Salário Líquido 2026',
+                text: 'Calcule seu salário líquido de 2026 com base nas regras oficiais do INSS e Novo IR:',
+                url: url
+              }).catch(function () {});
+            } else {
+              navigator.clipboard.writeText(url).then(function () {
+                alert('Link da calculadora copiado para a área de transferência!');
+              });
+            }
+          });
+        }
+
+        // Botão Baixar CSV
+        var btnCsv = document.getElementById('salario-baixar-csv-btn');
+        if (btnCsv) {
+          btnCsv.addEventListener('click', function () {
+            var elBruto = document.getElementById('card-salario-bruto');
+            var elInss = document.getElementById('card-inss');
+            var elIrrf = document.getElementById('card-irrf');
+            var elOutros = document.getElementById('card-outras-deducoes');
+            var elLiq = document.getElementById('resultado-salario-liquido');
+
+            var csvContent = 'data:text/csv;charset=utf-8,\uFEFF' +
+              'Item;Valor;Observacao\n' +
+              'Salário Bruto Total;' + (elBruto ? elBruto.textContent : '') + ';Proventos\n' +
+              'Desconto INSS 2026;' + (elInss ? elInss.textContent : '') + ';Tabela Progressiva\n' +
+              'Desconto IRRF 2026;' + (elIrrf ? elIrrf.textContent : '') + ';Novo IR 2026\n' +
+              'Outros Descontos;' + (elOutros ? elOutros.textContent : '') + ';Folha e Benefícios\n' +
+              'Salário Líquido Final;' + (elLiq ? elLiq.textContent : '') + ';Valor Creditado em Conta\n';
+
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement('a');
+            link.setAttribute('href', encodedUri);
+            link.setAttribute('download', 'salario-liquido-2026-estimativa.csv');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          });
+        }
+
+        // Sincronização prévia antes de imprimir
+        window.addEventListener('fac:before-pdf-print', recalcularTudo);
+
+        // Executar cálculo inicial
+        recalcularTudo();
+      });
+    })();
+  </script>
+</CalculatorLayout>

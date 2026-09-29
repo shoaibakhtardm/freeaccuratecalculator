@@ -75,8 +75,11 @@ const {
 const siteOrigin = 'https://freeaccuratecalculator.com';
 const pathname = Astro.url.pathname;
 const normalizedPathname = pathname.endsWith('/') ? pathname : `${pathname}/`;
-// Use explicit canonical if provided, otherwise auto-compute from URL
-const canonicalUrl = canonicalProp || `${siteOrigin}${normalizedPathname}`;
+// Use explicit canonical if provided, otherwise auto-compute from URL with trailing slash enforcement
+const canonicalUrlRaw = canonicalProp || `${siteOrigin}${normalizedPathname}`;
+const canonicalUrl = canonicalUrlRaw.startsWith(siteOrigin) && !canonicalUrlRaw.endsWith('/') && !/\.[a-zA-Z0-9]+$/.test(canonicalUrlRaw)
+  ? `${canonicalUrlRaw}/`
+  : canonicalUrlRaw;
 
 // Map internal category to standard Schema.org ApplicationCategory
 let appCategory = 'UtilityApplication';
@@ -93,6 +96,10 @@ if (catKey.includes('finance') || catKey.includes('business') || catKey.includes
   appCategory = 'LifestyleApplication';
 }
 
+const isFrench = lang?.startsWith('fr') || Astro.url.pathname.startsWith('/fr/');
+const isSpanish = lang?.startsWith('es') || Astro.url.pathname.includes('/es/') || Astro.url.pathname.startsWith('/calculadora-edad/es');
+const isPortuguese = lang?.startsWith('pt') || Astro.url.pathname.includes('/pt');
+
 // Auto-generate WebApplication & SoftwareApplication Schema.org structured data
 const softwareAppSchema = {
   '@context': 'https://schema.org',
@@ -107,7 +114,7 @@ const softwareAppSchema = {
   offers: {
     '@type': 'Offer',
     price: '0.00',
-    priceCurrency: 'USD',
+    priceCurrency: isPortuguese ? 'BRL' : isFrench || isSpanish ? 'EUR' : 'USD',
   },
   author: {
     '@type': 'Organization',
@@ -129,8 +136,6 @@ if (faqSchema) {
 }
 
 const combinedSchemas = [softwareAppSchema, ...extraSchemas];
-const isFrench = lang?.startsWith('fr') || Astro.url.pathname.startsWith('/fr/');
-const isSpanish = lang?.startsWith('es') || Astro.url.pathname.includes('/es/') || Astro.url.pathname.startsWith('/calculadora-edad/es');
 ---
 
 <Layout
@@ -155,6 +160,7 @@ const isSpanish = lang?.startsWith('es') || Astro.url.pathname.includes('/es/') 
       <Breadcrumbs
         isFrench={isFrench}
         isSpanish={isSpanish}
+        isPortuguese={isPortuguese}
         items={[
           { label: category.label, href: category.href },
           { label: calculatorName },
@@ -173,7 +179,7 @@ const isSpanish = lang?.startsWith('es') || Astro.url.pathname.includes('/es/') 
             <span class="mono-eyebrow text-link">{category.label}</span>
             <span class="h-1 w-1 rounded-full bg-faint"></span>
             <span class:list={['text-[11px] font-mono text-mute', compactMobileHeader && 'hidden sm:inline']}>
-              {isSpanish ? "Motor 100% en el Cliente y Privado" : isFrench ? "Moteur 100% Côté Client & Privé" : "Instant Client-Side Engine"}
+              {isPortuguese ? "Motor 100% no Cliente e Privado" : isSpanish ? "Motor 100% en el Cliente y Privado" : isFrench ? "Moteur 100% Côté Client & Privé" : "Instant Client-Side Engine"}
             </span>
           </div>
           <h1 class:list={['text-ink', compactMobileHeader ? 'text-xl sm:text-2xl md:display-hero font-semibold tracking-tight' : 'display-hero']}>{h1}</h1>
@@ -181,8 +187,8 @@ const isSpanish = lang?.startsWith('es') || Astro.url.pathname.includes('/es/') 
         </div>
 
         <div class:list={['items-center gap-2 shrink-0', compactMobileHeader ? 'hidden sm:flex' : 'flex']}>
-          <EmbedButton isFrench={isFrench} isSpanish={isSpanish} />
-          <ShareButton isFrench={isFrench} isSpanish={isSpanish} />
+          <EmbedButton isFrench={isFrench} isSpanish={isSpanish} isPortuguese={isPortuguese} />
+          <ShareButton isFrench={isFrench} isSpanish={isSpanish} isPortuguese={isPortuguese} />
         </div>
       </div>
 
@@ -194,7 +200,7 @@ const isSpanish = lang?.startsWith('es') || Astro.url.pathname.includes('/es/') 
           <slot />
 
           <!-- Calculator Result Sharing Component -->
-          <ShareResult calculatorTitle={calculatorName} isFrench={isFrench} isSpanish={isSpanish} />
+          <ShareResult calculatorTitle={calculatorName} isFrench={isFrench} isSpanish={isSpanish} isPortuguese={isPortuguese} />
 
           <!-- Native in-content ad slot between calculator and educational content -->
           <AdSlot slotType="in-content" slotId="CALC-INCONTENT-01" />
@@ -204,9 +210,9 @@ const isSpanish = lang?.startsWith('es') || Astro.url.pathname.includes('/es/') 
 
           <!-- Embed Mode Attribution Watermark (Visible only when in fac-embed-view) -->
           <div class="hidden fac-embed-watermark text-center text-xs text-mute py-3 border-t border-hairline font-mono">
-            {isSpanish ? "⚡ Herramienta interactiva proporcionada por" : isFrench ? "⚡ Outil interactif fourni par" : "⚡ Interactive tool provided by"}{' '}
+            {isPortuguese ? "⚡ Ferramenta interativa fornecida por" : isSpanish ? "⚡ Herramienta interactiva proporcionada por" : isFrench ? "⚡ Outil interactif fourni par" : "⚡ Interactive tool provided by"}{' '}
             <a href={canonicalUrl} target="_blank" rel="noopener" class="text-link font-semibold hover:underline">Free Accurate Calculator</a>
-            {' '}• {isSpanish ? "100% Gratuito y Privado" : isFrench ? "100% Gratuit & Confidentiel" : "100% Free & Private"}
+            {' '}• {isPortuguese ? "100% Gratuito e Privado" : isSpanish ? "100% Gratuito y Privado" : isFrench ? "100% Gratuit & Confidentiel" : "100% Free & Private"}
           </div>
         </div>
 
@@ -218,7 +224,7 @@ const isSpanish = lang?.startsWith('es') || Astro.url.pathname.includes('/es/') 
 
             {relatedCalculators.length > 0 && (
               <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-5 shadow-whisper space-y-3">
-                <h3 class="mono-eyebrow text-ink">{isSpanish ? "Calculadoras Relacionadas" : isFrench ? "Calculatrices Similaires" : "Related Calculators"}</h3>
+                <h3 class="mono-eyebrow text-ink">{isPortuguese ? "Calculadoras Relacionadas" : isSpanish ? "Calculadoras Relacionadas" : isFrench ? "Calculatrices Similaires" : "Related Calculators"}</h3>
                 <ul class="space-y-2">
                   {relatedCalculators.map((rel) => (
                     <li>
@@ -245,10 +251,12 @@ const isSpanish = lang?.startsWith('es') || Astro.url.pathname.includes('/es/') 
                 <svg class="h-3.5 w-3.5 text-link" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
-                <span>{isSpanish ? "Verificado Matemáticamente" : isFrench ? "Vérifié Mathématiquement" : "Mathematically Verified"}</span>
+                <span>{isPortuguese ? "Verificado Matematicamente" : isSpanish ? "Verificado Matemáticamente" : isFrench ? "Vérifié Mathématiquement" : "Mathematically Verified"}</span>
               </div>
               <p class="text-[11px] leading-relaxed">
-                {isSpanish
+                {isPortuguese
+                  ? "Fórmulas conferidas com base na legislação oficial de 2026. Os resultados são calculados instantaneamente no seu navegador com total privacidade."
+                  : isSpanish
                   ? "Fórmulas verificadas con modelos de referencia estándar. Los resultados se calculan al instante en tu navegador con total privacidad y sin latencia."
                   : isFrench
                   ? "Formules rigoureusement conformes aux normes et modèles de référence. Calculs instantanés dans votre navigateur sans latence et en toute confidentialité."
@@ -262,5 +270,5 @@ const isSpanish = lang?.startsWith('es') || Astro.url.pathname.includes('/es/') 
   )}
 
   <!-- Smart Email Capture Modal (Triggers non-intrusively after 2 calculations) -->
-  {!disableEmailModal && <SmartEmailModal isFrench={isFrench} isSpanish={isSpanish} />}
+  {!disableEmailModal && <SmartEmailModal isFrench={isFrench} isSpanish={isSpanish} isPortuguese={isPortuguese} />}
 </Layout>

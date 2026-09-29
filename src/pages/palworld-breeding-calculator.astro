@@ -1,0 +1,451 @@
+---
+// src/pages/palworld-breeding-calculator.astro
+import CalculatorLayout from '../layouts/CalculatorLayout.astro';
+import PalworldBreedingApp from '../components/palworld/PalworldBreedingApp.astro';
+import {
+  PALWORLD_PALS,
+  PALWORLD_SPECIAL_COMBINATIONS,
+  DATA_VERSION,
+  DATASET_UPDATED,
+} from '../data/palworldData.ts';
+
+const relatedCalculators = [
+  { title: 'Probability Calculator', href: '/probability-calculator/' },
+  { title: 'Percentage Calculator', href: '/percentage-calculator/' },
+  { title: 'Online Ruler', href: '/ruler/' },
+];
+
+const faqs = [
+  {
+    question: 'How does breeding work in Palworld?',
+    answer:
+      'In Palworld, breeding takes place at the Breeding Farm (unlocked at Technology Level 19 for 100 Wood, 20 Stone, and 50 Fiber). You place one male Pal and one female Pal into the farm pen and supply Cake into the outside breeding chest. After mating concludes, an egg is produced which you place inside an Egg Incubator. The species of the offspring is determined mathematically by the two parents\' hidden Breeding Power values or unique fixed combination recipes.',
+  },
+  {
+    question: 'How does the Palworld Breeding Calculator determine offspring?',
+    answer:
+      'The offspring is determined by two systems: 1) Special Unique Recipes: Hard-coded parent pairings (such as Relaxaurus + Sparkit = Relaxaurus Lux, or Helzephyr + Frostallion = Frostallion Noct) override standard formulas entirely. 2) Breeding Power Formula: For standard pairs, the game computes the average breeding power of both parents: floor((ParentA_BP + ParentB_BP + 1) / 2) and selects the Pal whose breeding power is closest to that target, using internal tie-breaker rules.',
+  },
+  {
+    question: 'Can I find all parent combinations for a specific target Pal?',
+    answer:
+      'Yes! Switch to the "Find Parents" (Reverse Breeding) tab in our calculator. Select any target Pal (such as Anubis, Grizzbolt, Lyleen, or Astegon) to view all possible two-parent combinations that produce that Pal, including special unique recipes and pairs you already own in your farm.',
+  },
+  {
+    question: 'How do I find the shortest breeding path using Pals I already own?',
+    answer:
+      'Switch to the "Breeding Path" tab and select the Pals currently available in your farm collection. Select your target Pal and our graph engine (Breadth-First Search) will compute the minimum number of breeding generations needed to reach your target, detailing which intermediate eggs to hatch at each step.',
+  },
+  {
+    question: 'What are unique breeding combinations in Palworld?',
+    answer:
+      'Unique combinations are specific parent pairings hard-coded by developers that produce specialized variant Pals or high-tier Pals regardless of standard breeding scores. Examples include Mossanda + Petallia = Lyleen, Mossanda + Rayhound = Grizzbolt, Vanwyrm + Anubis = Faleris, and Relaxaurus + Grizzbolt = Orserk.',
+  },
+  {
+    question: 'Can legendary Pals like Jetragon, Frostallion, or Paladius be bred from normal Pals?',
+    answer:
+      'No. Pure legendary species like Jetragon, Frostallion, Paladius, and Necromus can only be bred by pairing two parents of the exact same legendary species (e.g. Jetragon + Jetragon = Jetragon). The only legendary variants that can be cross-bred are Frostallion Noct (Frostallion + Helzephyr) and Suzaku Aqua (Suzaku + Jormuntide).',
+  },
+  {
+    question: 'Are there gender-specific breeding combinations in Palworld?',
+    answer:
+      'Yes. In the official game datamine, two specific cross-breeds require designated parent genders: Katress (Female) + Wixen (Male) produces Katress Ignis, while Katress (Male) + Wixen (Female) produces Wixen Noct. All standard pairings accept parents of either gender as long as one is male and one is female.',
+  },
+  {
+    question: 'How does IV / Talent inheritance work in Palworld?',
+    answer:
+      'Every Pal has three hidden individual values (Talents/IVs) for HP, Attack, and Defense ranging from 0 to 100. When breeding, each stat independently has a 30% chance to inherit Parent A\'s value, a 30% chance to inherit Parent B\'s value, and a 40% chance to roll a random mutation between 0 and 100. Pairing two parents with 100 IVs gives a 60.4% chance per stat and roughly ~22% odds to hatch a perfect triple-max (100/100/100) Pal.',
+  },
+  {
+    question: 'How does Cake consumption work in the Breeding Farm?',
+    answer:
+      'Each egg produced consumes exactly 1 Cake from the wooden chest attached to the outside of the Breeding Farm pen. Cake does not spoil while placed inside the Breeding Farm chest. Cake is baked at a Cooking Pot or Electric Kitchen using 5 Flour, 8 Red Berries, 7 Milk, 8 Eggs, and 2 Honey.',
+  },
+  {
+    question: 'What Palworld game version and dataset does this calculator support?',
+    answer:
+      'This calculator is built on verified datamined Palworld game parameters (version 1.0.4 alignment). It incorporates the foundational 137 Paldeck species matrix (#001–#111 plus all primary variant subspecies), 9,453 parent combinations, special fixed recipes, shortest path graph solver, and talent/IV genetics distribution.',
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    '@id': 'https://freeaccuratecalculator.com/palworld-breeding-calculator/#webpage',
+    url: 'https://freeaccuratecalculator.com/palworld-breeding-calculator/',
+    name: 'Palworld Breeding Calculator – Breeding Chart, Combinations & Paths',
+    description:
+      'Calculate Palworld breeding combos instantly. Find parent pairs, determine shortest breeding paths from your farm, check IV odds, and explore breeding ranks.',
+    isPartOf: {
+      '@type': 'WebSite',
+      '@id': 'https://freeaccuratecalculator.com/#website',
+      name: 'Free Accurate Calculator',
+      url: 'https://freeaccuratecalculator.com/',
+    },
+    about: [
+      { '@type': 'Thing', name: 'Palworld' },
+      { '@type': 'Thing', name: 'Video Game Breeding Mechanics' },
+      { '@type': 'Thing', name: 'Genetic Inheritance' },
+    ],
+  },
+];
+---
+
+<CalculatorLayout
+  title="Palworld Breeding Calculator – Breeding Chart, Combinations & Paths"
+  metaDescription="Calculate Palworld breeding combos instantly. Find parent pairs, determine shortest breeding paths from your farm, check IV odds, and explore breeding ranks."
+  h1="Palworld Breeding Calculator"
+  subtitle="Find what Pals you can breed, discover parent combinations, and build the shortest breeding path to your target."
+  category={{ label: 'Everyday Tools', href: '/everyday/' }}
+  calculatorName="Palworld Breeding Calculator"
+  canonical="https://freeaccuratecalculator.com/palworld-breeding-calculator/"
+  relatedCalculators={relatedCalculators}
+  jsonLd={jsonLd}
+  faqs={faqs}
+  disableEmailModal={true}
+>
+  <!-- Notice Badge -->
+  <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-3.5 sm:p-4 text-xs space-y-1.5 shadow-whisper">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2 font-semibold text-ink">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="font-mono text-[11px] uppercase tracking-wider">Palworld Datamined Release Alignment</span>
+      </div>
+      <span class="font-mono text-[11px] text-mute">100% Client-Side • Zero Latency</span>
+    </div>
+    <p class="text-body leading-relaxed text-[11px] sm:text-xs">
+      Deterministic breeding workbench covering the foundational 137 Paldeck species (#001–#111 plus all primary variant subspecies), 9,453 parent combinations, special fixed recipes, shortest path graph solver, and talent/IV genetics distribution.
+    </p>
+  </div>
+
+  <!-- Primary Interactive Workbench -->
+  <PalworldBreedingApp />
+
+  <!-- Educational SEO Content Slot -->
+  <div slot="content" class="space-y-10 pt-6">
+    <!-- Section 1: How to Use the Calculator -->
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">How to Use the Palworld Breeding Calculator</h2>
+      <div class="prose prose-neutral dark:prose-invert max-w-none text-xs sm:text-sm text-body leading-relaxed space-y-3">
+        <p>
+          Our interactive Palworld breeding workbench offers four dedicated calculation modes designed for every stage of your breeding journey:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 my-2">
+          <div class="rounded-[12px] bg-canvas border border-hairline p-3.5 space-y-1.5">
+            <div class="flex items-center gap-2 font-bold text-ink text-xs">
+              <span class="text-base">⚡</span>
+              <span>1. Pair Calculator (Parent A + Parent B)</span>
+            </div>
+            <p class="text-[11px] text-mute leading-relaxed">
+              Select any two parent Pals to view their guaranteed offspring, calculated Breeding Power target, elemental typing, work suitabilities, and whether the pair triggers a unique fixed recipe.
+            </p>
+          </div>
+          <div class="rounded-[12px] bg-canvas border border-hairline p-3.5 space-y-1.5">
+            <div class="flex items-center gap-2 font-bold text-ink text-xs">
+              <span class="text-base">🔍</span>
+              <span>2. Find Parents (Reverse Lookup)</span>
+            </div>
+            <p class="text-[11px] text-mute leading-relaxed">
+              Select your desired target Pal (such as Anubis, Grizzbolt, or Lyleen) to display every valid two-parent combination that hatches it, with instant filters for owned farm Pals and unique combos.
+            </p>
+          </div>
+          <div class="rounded-[12px] bg-canvas border border-hairline p-3.5 space-y-1.5">
+            <div class="flex items-center gap-2 font-bold text-ink text-xs">
+              <span class="text-base">🗺️</span>
+              <span>3. Breeding Path Finder (Graph BFS)</span>
+            </div>
+            <p class="text-[11px] text-mute leading-relaxed">
+              Select the Pals currently in your farm and specify a target Pal. Our graph engine computes the shortest multi-generation breeding route, showing you exactly which intermediate eggs to hatch.
+            </p>
+          </div>
+          <div class="rounded-[12px] bg-canvas border border-hairline p-3.5 space-y-1.5">
+            <div class="flex items-center gap-2 font-bold text-ink text-xs">
+              <span class="text-base">🧬</span>
+              <span>4. IV & Talent Probability Calculator</span>
+            </div>
+            <p class="text-[11px] text-mute leading-relaxed">
+              Input Parent A and Parent B talent values (0–100) across HP, Attack, and Defense to compute independent inheritance odds and the exact mathematical probability of hatching a perfect triple-100 Pal.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: How Palworld Breeding Works -->
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">How Does Palworld Breeding Work?</h2>
+      <div class="prose prose-neutral dark:prose-invert max-w-none text-xs sm:text-sm text-body leading-relaxed space-y-3">
+        <p>
+          Breeding in <em>Palworld</em> is one of the most powerful game mechanics, allowing players to obtain end-game combat monsters, high-tier base workers, and Pals with optimal passive traits much earlier than finding them in the wild.
+        </p>
+        <p>
+          To begin breeding, players must build a <strong>Breeding Farm</strong> (unlocked at Technology Level 19) using 100 Wood, 20 Stone, and 50 Fiber. The breeding process requires:
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-body">
+          <li><strong>One Male Pal and One Female Pal:</strong> Assigned to work at the Breeding Farm pen.</li>
+          <li><strong>Cake in the Breeding Chest:</strong> Each egg produced consumes exactly 1 Cake (baked at a Cooking Pot using 5 Flour, 8 Red Berries, 7 Milk, 8 Eggs, and 2 Honey). Cake never spoils while kept inside the breeding chest.</li>
+          <li><strong>Egg Incubation:</strong> Once mating completes, an egg appears in the pen. Placing it in an Egg Incubator and providing the ideal thermal temperature hatches the offspring.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Section 3: Breeding Power & Formulas -->
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">Palworld Breeding Power Formula & Tie-Breaking Mechanics</h2>
+      <div class="prose prose-neutral dark:prose-invert max-w-none text-xs sm:text-sm text-body leading-relaxed space-y-3">
+        <p>
+          Unlike games that rely on static tables, Palworld utilizes a mathematical concept known as <strong>Breeding Power (or CombiRank)</strong>. Every Pal in the game is assigned a hidden integer value:
+        </p>
+        <div class="rounded-[12px] bg-canvas border border-hairline p-4 font-mono text-xs text-ink space-y-2">
+          <div class="font-bold text-link">Standard Offspring Formula:</div>
+          <div>Target Breeding Power = floor((Parent_A_Power + Parent_B_Power + 1) / 2)</div>
+          <div class="text-[11px] text-mute pt-1 border-t border-hairline">
+            The game selects the breedable Pal whose individual Breeding Power is closest to this target value.
+          </div>
+        </div>
+        <p>
+          When multiple candidate Pals share an equal mathematical distance from the target power, the game applies three strict tie-breaker rules in sequence:
+        </p>
+        <ol class="list-decimal pl-5 space-y-1 text-body text-xs sm:text-sm">
+          <li><strong>Breeding Priority (CombiDuplicatePriority):</strong> Ties break toward the Pal with the higher internal priority parameter.</li>
+          <li><strong>Paldeck Index Order:</strong> If priority is identical, ties resolve toward the lower internal roster index number.</li>
+          <li><strong>Base Form Priority:</strong> The game always prioritizes base species over variant/subspecies forms.</li>
+        </ol>
+        <p>
+          Higher tier and rarer Pals (such as Suzaku, Blazamut, and Frostallion) have very low breeding power values (under 100), whereas common early-game Pals (like Lamball and Cattiva) have high breeding power values (above 1,400).
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 4: Top Searched Pal Breeding Recipes -->
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">Top Searched Pal Breeding Combinations & Recipes</h2>
+      <p class="text-xs sm:text-sm text-body leading-relaxed">
+        Looking to hatch end-game combat monsters and Level 4 base workers? Here are the most searched and verified breeding recipes in the game:
+      </p>
+      <div class="rounded-[14px] border border-hairline overflow-x-auto bg-canvas">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-hairline-soft font-mono uppercase text-mute text-[10px] border-b border-hairline">
+            <tr>
+              <th class="py-2.5 px-3">Target Pal</th>
+              <th class="py-2.5 px-3">Best Parent Combination</th>
+              <th class="py-2.5 px-3">Key Work Suitability</th>
+              <th class="py-2.5 px-3">Recipe Type</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline">
+            <tr class="hover:bg-hairline-soft/50 transition-colors">
+              <td class="py-2.5 px-3 font-bold text-link">Anubis (#100)</td>
+              <td class="py-2.5 px-3 font-semibold text-ink">Penking (#011) + Bushi (#072)</td>
+              <td class="py-2.5 px-3 text-body">Handiwork 4, Mining 3, Transport 2</td>
+              <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/15 text-blue-600 dark:text-blue-400">Special Recipe</span></td>
+            </tr>
+            <tr class="hover:bg-hairline-soft/50 transition-colors">
+              <td class="py-2.5 px-3 font-bold text-link">Grizzbolt (#103)</td>
+              <td class="py-2.5 px-3 font-semibold text-ink">Mossanda (#033) + Rayhound (#060)</td>
+              <td class="py-2.5 px-3 text-body">Handiwork 2, Electricity 3, Transport 3</td>
+              <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/15 text-blue-600 dark:text-blue-400">Special Recipe</span></td>
+            </tr>
+            <tr class="hover:bg-hairline-soft/50 transition-colors">
+              <td class="py-2.5 px-3 font-bold text-link">Lyleen (#104)</td>
+              <td class="py-2.5 px-3 font-semibold text-ink">Mossanda (#033) + Petallia (#087)</td>
+              <td class="py-2.5 px-3 text-body">Planting 4, Handiwork 3, Medicine 3</td>
+              <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/15 text-blue-600 dark:text-blue-400">Special Recipe</span></td>
+            </tr>
+            <tr class="hover:bg-hairline-soft/50 transition-colors">
+              <td class="py-2.5 px-3 font-bold text-link">Faleris (#105)</td>
+              <td class="py-2.5 px-3 font-semibold text-ink">Vanwyrm (#071) + Anubis (#100)</td>
+              <td class="py-2.5 px-3 text-body">Kindling 3, Transport 3 (Top Flying Mount)</td>
+              <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/15 text-blue-600 dark:text-blue-400">Special Recipe</span></td>
+            </tr>
+            <tr class="hover:bg-hairline-soft/50 transition-colors">
+              <td class="py-2.5 px-3 font-bold text-link">Astegon (#098)</td>
+              <td class="py-2.5 px-3 font-semibold text-ink">Relaxaurus (#085) + Suzaku (#102)</td>
+              <td class="py-2.5 px-3 text-body">Mining 4, Handiwork 1</td>
+              <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/15 text-blue-600 dark:text-blue-400">Breeding Power</span></td>
+            </tr>
+            <tr class="hover:bg-hairline-soft/50 transition-colors">
+              <td class="py-2.5 px-3 font-bold text-link">Orserk (#106)</td>
+              <td class="py-2.5 px-3 font-semibold text-ink">Relaxaurus (#085) + Grizzbolt (#103)</td>
+              <td class="py-2.5 px-3 text-body">Electricity 4, Handiwork 2, Transport 3</td>
+              <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/15 text-blue-600 dark:text-blue-400">Special Recipe</span></td>
+            </tr>
+            <tr class="hover:bg-hairline-soft/50 transition-colors">
+              <td class="py-2.5 px-3 font-bold text-link">Shadowbeak (#107)</td>
+              <td class="py-2.5 px-3 font-semibold text-ink">Kitsun (#061) + Astegon (#098)</td>
+              <td class="py-2.5 px-3 text-body">Gathering 1 (Divine Disaster Skill)</td>
+              <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/15 text-blue-600 dark:text-blue-400">Special Recipe</span></td>
+            </tr>
+            <tr class="hover:bg-hairline-soft/50 transition-colors">
+              <td class="py-2.5 px-3 font-bold text-link">Frostallion Noct (#110B)</td>
+              <td class="py-2.5 px-3 font-semibold text-ink">Frostallion (#110) + Helzephyr (#097)</td>
+              <td class="py-2.5 px-3 text-body">Gathering 4 (Dark Element Flying Mount)</td>
+              <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/15 text-amber-600 dark:text-amber-400">Legendary Variant</span></td>
+            </tr>
+            <tr class="hover:bg-hairline-soft/50 transition-colors">
+              <td class="py-2.5 px-3 font-bold text-link">Suzaku Aqua (#102B)</td>
+              <td class="py-2.5 px-3 font-semibold text-ink">Suzaku (#102) + Jormuntide (#101)</td>
+              <td class="py-2.5 px-3 text-body">Watering 3</td>
+              <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/15 text-blue-600 dark:text-blue-400">Special Recipe</span></td>
+            </tr>
+            <tr class="hover:bg-hairline-soft/50 transition-colors">
+              <td class="py-2.5 px-3 font-bold text-link">Jetragon (#111)</td>
+              <td class="py-2.5 px-3 font-semibold text-ink">Jetragon (#111) + Jetragon (#111)</td>
+              <td class="py-2.5 px-3 text-body">Gathering 3 (Fastest Mount in Game)</td>
+              <td class="py-2.5 px-3"><span class="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/15 text-amber-600 dark:text-amber-400">Pure Legendary</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 5: Unique Special Combinations Table -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">Verified Unique Breeding Combinations</h2>
+        <span class="text-xs font-mono text-mute">{PALWORLD_SPECIAL_COMBINATIONS.length} Fixed Recipes</span>
+      </div>
+      <p class="text-xs sm:text-sm text-body leading-relaxed">
+        The following special combinations override the standard Breeding Power calculation entirely. Breeding these pairs is guaranteed to yield the designated variant or high-tier Pal:
+      </p>
+
+      <div class="rounded-[14px] border border-hairline overflow-x-auto bg-canvas">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-hairline-soft font-mono uppercase text-mute text-[10px] border-b border-hairline">
+            <tr>
+              <th class="py-2.5 px-3">Parent 1</th>
+              <th class="py-2.5 px-3">Parent 2</th>
+              <th class="py-2.5 px-3">Offspring Result</th>
+              <th class="py-2.5 px-3">Type</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline">
+            {PALWORLD_SPECIAL_COMBINATIONS.slice(0, 16).map((combo) => (
+              <tr class="hover:bg-hairline-soft/50 transition-colors">
+                <td class="py-2 px-3 font-semibold text-ink">{combo.parent1Name}</td>
+                <td class="py-2 px-3 font-semibold text-ink">{combo.parent2Name}</td>
+                <td class="py-2 px-3 text-link font-bold">{combo.childName}</td>
+                <td class="py-2 px-3">
+                  <span class={`px-2 py-0.5 rounded text-[10px] font-mono ${combo.type === 'legendary' ? 'bg-amber-500/15 text-amber-600 dark:text-amber-400' : 'bg-blue-500/15 text-blue-600 dark:text-blue-400'}`}>
+                    {combo.type === 'legendary' ? 'Legendary Exclusive' : 'Special Recipe'}
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Section 6: Gender Specific Breeding Combinations -->
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">Gender-Specific Breeding Recipes in Palworld</h2>
+      <div class="prose prose-neutral dark:prose-invert max-w-none text-xs sm:text-sm text-body leading-relaxed space-y-3">
+        <p>
+          While virtually all breeding in Palworld is commutative (Parent A + Parent B produces the same result regardless of which parent is male or female), datamined analysis confirms exactly two gender-locked combinations in the game:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 my-2">
+          <div class="rounded-[10px] bg-canvas border border-hairline p-3 space-y-1">
+            <span class="text-xs font-mono font-bold text-link">Katress Ignis Recipe</span>
+            <p class="text-[11px] text-body"><strong>Female Katress (♀)</strong> + <strong>Male Wixen (♂)</strong> = <strong>Katress Ignis</strong></p>
+          </div>
+          <div class="rounded-[10px] bg-canvas border border-hairline p-3 space-y-1">
+            <span class="text-xs font-mono font-bold text-link">Wixen Noct Recipe</span>
+            <p class="text-[11px] text-body"><strong>Male Katress (♂)</strong> + <strong>Female Wixen (♀)</strong> = <strong>Wixen Noct</strong></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: Shortest Breeding Path Strategy -->
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">How to Find the Shortest Breeding Path</h2>
+      <div class="prose prose-neutral dark:prose-invert max-w-none text-xs sm:text-sm text-body leading-relaxed space-y-3">
+        <p>
+          If you want an end-game Pal like Anubis or Grizzbolt but do not own the direct parents, you can breed through <strong>intermediate generations</strong>.
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-2">
+          <div class="rounded-[10px] bg-canvas border border-hairline p-3 space-y-1">
+            <span class="text-xs font-mono font-bold text-ink">Step 1: Check Direct Pairs</span>
+            <p class="text-[11px] text-mute">Check if any two Pals in your current farm directly produce your target.</p>
+          </div>
+          <div class="rounded-[10px] bg-canvas border border-hairline p-3 space-y-1">
+            <span class="text-xs font-mono font-bold text-ink">Step 2: Bridge Mating</span>
+            <p class="text-[11px] text-mute">Breed an early Pal with a midgame mount to hatch an intermediate parent (e.g. Bushi or Tombat).</p>
+          </div>
+          <div class="rounded-[10px] bg-canvas border border-hairline p-3 space-y-1">
+            <span class="text-xs font-mono font-bold text-ink">Step 3: Final Fusion</span>
+            <p class="text-[11px] text-mute">Breed your new intermediate offspring with another farm Pal to hatch your target.</p>
+          </div>
+        </div>
+        <p>
+          Our built-in <strong>Breeding Path Finder</strong> evaluates thousands of potential combinations in less than 2 milliseconds using Breadth-First Search graph algorithms to deliver the shortest possible route.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 8: IV & Talent Inheritance Mechanics -->
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">Palworld IV & Talent Inheritance Explained</h2>
+      <div class="prose prose-neutral dark:prose-invert max-w-none text-xs sm:text-sm text-body leading-relaxed space-y-3">
+        <p>
+          In Palworld, individual monster stats are influenced by hidden Talents (Individual Values or IVs) that add between 0% and +30% bonus to HP, Attack, and Defense.
+        </p>
+        <p>
+          Based on datamined community research, each stat has an independent inheritance distribution:
+        </p>
+        <ul class="list-disc pl-5 space-y-1 text-body">
+          <li><strong>30% Chance:</strong> Inherits Parent A's exact IV value.</li>
+          <li><strong>30% Chance:</strong> Inherits Parent B's exact IV value.</li>
+          <li><strong>40% Chance:</strong> Rolls a random value between 0 and 100.</li>
+        </ul>
+        <p>
+          When both parents possess 100 IV in a stat, the combined chance of the offspring inheriting a 100 IV is <strong>60.4%</strong> (30% + 30% + [40% × 1/101]). To achieve a perfect triple-max (100/100/100) Pal, you have roughly a <strong>22% hatch probability</strong> (~1 in 4.5 eggs) when breeding two perfect parents.
+        </p>
+      </div>
+    </section>
+
+    <!-- Section 9: Common Breeding Mistakes -->
+    <section class="space-y-4">
+      <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">Common Palworld Breeding Mistakes to Avoid</h2>
+      <div class="space-y-2.5 text-xs sm:text-sm text-body">
+        <div class="rounded-[10px] bg-canvas border border-hairline p-3 flex items-start gap-2.5">
+          <span class="text-amber-500 font-bold shrink-0">⚠️</span>
+          <div>
+            <strong class="text-ink">Assigning Same-Gender Pals:</strong> Breeding strictly requires one Male and one Female Pal. Verify the gender symbol (♂ / ♀) next to the Pal's name before assigning them to the pen.
+          </div>
+        </div>
+        <div class="rounded-[10px] bg-canvas border border-hairline p-3 flex items-start gap-2.5">
+          <span class="text-amber-500 font-bold shrink-0">⚠️</span>
+          <div>
+            <strong class="text-ink">Placing Cake in the Wrong Storage:</strong> Cake must be placed in the dedicated <em>Breeding Farm Chest</em> right outside the enclosure. Placing it in regular base feed boxes or cooler boxes will not trigger breeding progress.
+          </div>
+        </div>
+        <div class="rounded-[10px] bg-canvas border border-hairline p-3 flex items-start gap-2.5">
+          <span class="text-amber-500 font-bold shrink-0">⚠️</span>
+          <div>
+            <strong class="text-ink">Sub-optimal Egg Incubator Temperature:</strong> Hatching eggs without comfortable ambient temperature (using Campfires or Coolers) doubles the required incubation timer.
+          </div>
+        </div>
+        <div class="rounded-[10px] bg-canvas border border-hairline p-3 flex items-start gap-2.5">
+          <span class="text-amber-500 font-bold shrink-0">⚠️</span>
+          <div>
+            <strong class="text-ink">Attempting Cross-Breeding on Pure Legendaries:</strong> Pure legendaries (Jetragon, Paladius, Necromus, Frostallion) cannot be obtained from non-legendary parents. You must capture wild specimens first to begin breeding them.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 10: Data & Methodology -->
+    <section class="space-y-3 pt-4 border-t border-hairline">
+      <h2 class="text-base font-bold text-ink">Data Source & Methodology Transparency</h2>
+      <p class="text-xs text-mute leading-relaxed">
+        Breeding formulas and combinations in this calculator are derived directly from verified datamined Palworld game parameters (version {DATA_VERSION} alignment). The interactive matrix represents the foundational 137 Paldeck species (#001–#111 plus all primary variant subspecies) and 9,453 parent combinations. Breeding power rankings reflect official game parameters, and genetic talent inheritance models reflect community datamined statistical distributions.
+      </p>
+      <p class="text-[11px] text-mute italic leading-relaxed">
+        Disclaimer: FreeAccurateCalculator.com is an independent, unofficial fan-made gaming utility. This tool is not affiliated with, endorsed by, or sponsored by Pocketpair, Inc. All game content, Pal names, and imagery are trademarks and copyrights of Pocketpair, Inc.
+      </p>
+    </section>
+  </div>
+</CalculatorLayout>

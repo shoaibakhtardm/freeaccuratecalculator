@@ -7,11 +7,14 @@ export interface Props {
 
 const { className = '', href } = Astro.props;
 const currentLocale = Astro.currentLocale || 'en';
+const isPortuguese = currentLocale === 'pt' || Astro.url.pathname.includes('/pt');
 const isSpanish = currentLocale === 'es' || Astro.url.pathname.includes('/es/') || Astro.url.pathname.startsWith('/calculadora-edad/es');
 const isFrench = currentLocale === 'fr' || Astro.url.pathname.startsWith('/fr/');
 const defaultHref = currentLocale === 'en' ? '/' : `/${currentLocale}/`;
 const targetHref = href || defaultHref;
-const logoAria = isSpanish
+const logoAria = isPortuguese
+  ? "Free Accurate Calculator - Voltar para a página inicial"
+  : isSpanish
   ? "Free Accurate Calculator - Volver a la página de inicio"
   : isFrench
   ? "Free Accurate Calculator - Retour à l'accueil"

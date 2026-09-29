@@ -136,4 +136,34 @@ test('Categorized Sitemap and Discovery Audit', async (t) => {
     const missing = validRoutes.filter((r) => !sitemapUrls.has(r));
     assert.equal(missing.length, 0, `Pages missing from sitemap.xml: ${missing.join(', ')}`);
   });
+
+  await t.test('100% compiled HTML pages have canonical tags matching their exact sitemap URLs with trailing slash', () => {
+    if (!fs.existsSync(DIST_DIR)) return;
+
+    function getAllHtml(dir) {
+      let files = [];
+      for (const item of fs.readdirSync(dir)) {
+        const full = path.join(dir, item);
+        const stat = fs.statSync(full);
+        if (stat.isDirectory()) files = files.concat(getAllHtml(full));
+        else if (full.endsWith('.html')) files.push(full);
+      }
+      return files;
+    }
+
+    const htmlFiles = getAllHtml(DIST_DIR);
+    for (const f of htmlFiles) {
+      const rel = path.relative(DIST_DIR, f).split(path.sep).join('/');
+      if (rel === '404.html') continue;
+      const content = fs.readFileSync(f, 'utf-8');
+      const match = content.match(/<link rel="canonical" href="([^"]+)"/);
+      assert.ok(match, `${rel} must have a <link rel="canonical"> tag`);
+      const href = match[1];
+      assert.ok(href.startsWith('https://freeaccuratecalculator.com/'), `${rel} canonical must use production domain: ${href}`);
+      assert.ok(href.endsWith('/'), `${rel} canonical must end with trailing slash: ${href}`);
+      const expectedPath = rel === 'index.html' ? '' : rel.replace(/index\.html$/, '');
+      const expectedCanonical = `https://freeaccuratecalculator.com/${expectedPath}`;
+      assert.equal(href, expectedCanonical, `${rel} canonical tag (${href}) does not match expected route path (${expectedCanonical})`);
+    }
+  });
 });

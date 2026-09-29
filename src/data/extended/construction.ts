@@ -75,7 +75,7 @@ export const constructionCalculators: CalculatorEntry[] = [
   {
     id: 'paint-calculator',
     category: 'construction',
-    name: 'Paint Coverage Estimator',
+    name: 'Paint Calculator',
     title: 'Free Paint Calculator — Gallons Needed & Wall Surface Coverage',
     description: 'Calculate paint gallons required for interior rooms and exterior walls accounting for doors, windows, and multiple coat applications.',
     badge: 'Coverage Formula',

@@ -487,8 +487,8 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
     id: 'compound-interest-calculator',
     category: 'finance',
     name: 'Compound Interest Calculator',
-    title: 'Compound Interest Calculator — Exponential Investment Growth',
-    description: 'Calculate compound interest growth on investments with regular contributions and flexible compounding frequencies.',
+    title: 'Compound Interest Calculator — Free Daily & Monthly Investment Growth',
+    description: 'Free compound interest calculator. Calculate future investment growth with regular monthly deposits, daily, monthly or annual compounding, and interactive breakdown.',
     badge: 'High-Demand',
     badgeColor: 'text-cyan border-cyan/30 bg-cyan/10',
     formula: {

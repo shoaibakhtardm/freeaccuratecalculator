@@ -1,0 +1,1647 @@
+---
+// src/components/palworld/PalworldBreedingApp.astro
+import {
+  PALWORLD_PALS,
+  PALWORLD_SPECIAL_COMBINATIONS,
+  DATA_VERSION,
+  DATASET_UPDATED,
+} from '../../data/palworldData.ts';
+
+// Pre-serialize full Pal dataset to embed cleanly for instant client-side execution
+const palsJson = JSON.stringify(
+  PALWORLD_PALS.map((p) => ({
+    id: p.id,
+    name: p.name,
+    slug: p.slug,
+    palDexNo: p.palDexNo,
+    elements: p.elements,
+    breedingPower: p.breedingPower,
+    rarity: p.rarity,
+    hp: p.hp,
+    attack: p.attack,
+    defense: p.defense,
+    image: p.image,
+    description: p.description,
+    isSpecial: p.isSpecial,
+  }))
+);
+
+const specialCombosJson = JSON.stringify(PALWORLD_SPECIAL_COMBINATIONS);
+---
+
+<div id="palworld-app" class="space-y-6">
+  <!-- Top Navigation & Mode Switcher -->
+  <div class="rounded-[16px] border border-hairline bg-canvas-elevated p-2 shadow-whisper">
+    <div class="flex flex-wrap items-center justify-between gap-2" role="tablist" aria-label="Breeding Modes">
+      <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+        <button
+          type="button"
+          role="tab"
+          id="tab-btn-pair"
+          data-mode="pair"
+          aria-selected="true"
+          aria-controls="panel-pair"
+          class="mode-tab-btn active inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] text-xs sm:text-sm font-semibold transition-all cursor-pointer min-h-[44px]"
+        >
+          <span class="text-base">⚡</span>
+          <span>Pair Calculator</span>
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-btn-reverse"
+          data-mode="reverse"
+          aria-selected="false"
+          aria-controls="panel-reverse"
+          class="mode-tab-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] text-xs sm:text-sm font-medium text-mute hover:text-ink hover:bg-hairline-soft transition-all cursor-pointer min-h-[44px]"
+        >
+          <span class="text-base">🔍</span>
+          <span>Find Parents</span>
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-btn-path"
+          data-mode="path"
+          aria-selected="false"
+          aria-controls="panel-path"
+          class="mode-tab-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] text-xs sm:text-sm font-medium text-mute hover:text-ink hover:bg-hairline-soft transition-all cursor-pointer min-h-[44px]"
+        >
+          <span class="text-base">🗺️</span>
+          <span>Breeding Path</span>
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-btn-iv"
+          data-mode="iv"
+          aria-selected="false"
+          aria-controls="panel-iv"
+          class="mode-tab-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] text-xs sm:text-sm font-medium text-mute hover:text-ink hover:bg-hairline-soft transition-all cursor-pointer min-h-[44px]"
+        >
+          <span class="text-base">🧬</span>
+          <span>IVs & Talents</span>
+        </button>
+        <button
+          type="button"
+          role="tab"
+          id="tab-btn-database"
+          data-mode="database"
+          aria-selected="false"
+          aria-controls="panel-database"
+          class="mode-tab-btn inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] text-xs sm:text-sm font-medium text-mute hover:text-ink hover:bg-hairline-soft transition-all cursor-pointer min-h-[44px]"
+        >
+          <span class="text-base">📖</span>
+          <span>Paldeck ({PALWORLD_PALS.length})</span>
+        </button>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="flex items-center gap-2 px-2 py-1 text-xs">
+        <span class="hidden md:inline-flex items-center gap-1 text-[11px] font-mono text-mute bg-hairline-soft px-2 py-1 rounded">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          v{DATA_VERSION} • {DATASET_UPDATED}
+        </span>
+        <button
+          type="button"
+          id="btn-copy-share-url"
+          class="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-[8px] border border-hairline bg-canvas text-xs font-medium text-mute hover:text-ink hover:border-mute transition-colors cursor-pointer min-h-[36px]"
+          title="Copy shareable link"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+          </svg>
+          <span id="copy-url-label">Share Plan</span>
+        </button>
+        <button
+          type="button"
+          id="btn-reset-app"
+          class="inline-flex items-center gap-1 px-2 py-1.5 rounded-[8px] text-mute hover:text-ink hover:bg-hairline-soft transition-colors cursor-pointer min-h-[36px]"
+          title="Reset Calculator"
+        >
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span class="sr-only sm:not-sr-only">Reset</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 1: PAIR CALCULATOR (Instant Answer) -->
+  <div id="panel-pair" role="tabpanel" aria-labelledby="tab-btn-pair" class="space-y-6">
+    <div class="rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-6 shadow-whisper relative overflow-hidden">
+      <!-- Glow ambient accent -->
+      <div class="pointer-events-none absolute -top-24 -right-24 w-72 h-72 rounded-full bg-link/10 blur-3xl"></div>
+      <div class="pointer-events-none absolute -bottom-24 -left-24 w-72 h-72 rounded-full bg-emerald-500/10 blur-3xl"></div>
+
+      <!-- Selector Grid: Parent A + Parent B -->
+      <div class="grid grid-cols-1 md:grid-cols-11 gap-4 items-center">
+        <!-- Parent A Slot -->
+        <div class="md:col-span-5">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label for="btn-parent-a" class="text-xs font-mono font-semibold uppercase tracking-wider text-mute flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                Parent Pal 1
+              </label>
+              <button type="button" class="btn-clear-slot text-[11px] font-mono text-mute hover:text-ink cursor-pointer" data-slot="a">Clear</button>
+            </div>
+            <button
+              type="button"
+              id="btn-parent-a"
+              class="w-full text-left rounded-[14px] border-2 border-hairline hover:border-link bg-canvas p-3.5 transition-all duration-200 cursor-pointer flex items-center justify-between gap-3 group min-h-[72px]"
+            >
+              <div class="flex items-center gap-3 min-w-0">
+                <img id="img-parent-a" src="https://static.wikia.nocookie.net/palworld/images/b/be/Penking_menu.png/" alt="Penking" class="w-12 h-12 rounded-[10px] bg-canvas-elevated border border-hairline object-contain p-1 shrink-0" loading="eager" />
+                <div class="min-w-0">
+                  <div class="flex items-center gap-1.5">
+                    <span id="name-parent-a" class="font-bold text-ink text-sm sm:text-base truncate">Penking</span>
+                    <span id="num-parent-a" class="text-[10px] font-mono text-mute px-1.5 py-0.5 rounded bg-hairline-soft shrink-0">#011</span>
+                  </div>
+                  <div id="types-parent-a" class="flex items-center gap-1 mt-1 text-[11px]">
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-blue-500/15 text-blue-600 dark:text-blue-400">Water</span>
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-cyan-500/15 text-cyan-600 dark:text-cyan-400">Ice</span>
+                  </div>
+                </div>
+              </div>
+              <span class="text-xs font-mono text-link group-hover:underline shrink-0">Change ▾</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Center Operator & Swap Button -->
+        <div class="md:col-span-1 flex flex-col items-center justify-center my-1 md:my-0">
+          <button
+            type="button"
+            id="btn-swap-parents"
+            class="w-10 h-10 rounded-full border border-hairline bg-canvas hover:bg-hairline-soft flex items-center justify-center text-mute hover:text-ink transition-transform active:scale-95 cursor-pointer shadow-sm"
+            title="Swap Parents"
+            aria-label="Swap Parent 1 and Parent 2"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Parent B Slot -->
+        <div class="md:col-span-5">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <label for="btn-parent-b" class="text-xs font-mono font-semibold uppercase tracking-wider text-mute flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+                Parent Pal 2
+              </label>
+              <button type="button" class="btn-clear-slot text-[11px] font-mono text-mute hover:text-ink cursor-pointer" data-slot="b">Clear</button>
+            </div>
+            <button
+              type="button"
+              id="btn-parent-b"
+              class="w-full text-left rounded-[14px] border-2 border-hairline hover:border-link bg-canvas p-3.5 transition-all duration-200 cursor-pointer flex items-center justify-between gap-3 group min-h-[72px]"
+            >
+              <div class="flex items-center gap-3 min-w-0">
+                <img id="img-parent-b" src="https://static.wikia.nocookie.net/palworld/images/d/df/Bushi_menu.png/" alt="Bushi" class="w-12 h-12 rounded-[10px] bg-canvas-elevated border border-hairline object-contain p-1 shrink-0" loading="eager" />
+                <div class="min-w-0">
+                  <div class="flex items-center gap-1.5">
+                    <span id="name-parent-b" class="font-bold text-ink text-sm sm:text-base truncate">Bushi</span>
+                    <span id="num-parent-b" class="text-[10px] font-mono text-mute px-1.5 py-0.5 rounded bg-hairline-soft shrink-0">#072</span>
+                  </div>
+                  <div id="types-parent-b" class="flex items-center gap-1 mt-1 text-[11px]">
+                    <span class="px-1.5 py-0.5 rounded text-[10px] font-medium bg-orange-500/15 text-orange-600 dark:text-orange-400">Fire</span>
+                  </div>
+                </div>
+              </div>
+              <span class="text-xs font-mono text-link group-hover:underline shrink-0">Change ▾</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Preset Picks -->
+      <div class="mt-4 pt-3 border-t border-hairline flex flex-wrap items-center gap-2 text-xs">
+        <span class="text-mute font-mono text-[11px]">Popular Pairs:</span>
+        <button type="button" class="btn-preset-pair text-[11px] px-2 py-1 rounded bg-canvas border border-hairline hover:border-link text-body hover:text-ink transition-colors cursor-pointer" data-p1="011" data-p2="072">Penking + Bushi (Anubis)</button>
+        <button type="button" class="btn-preset-pair text-[11px] px-2 py-1 rounded bg-canvas border border-hairline hover:border-link text-body hover:text-ink transition-colors cursor-pointer" data-p1="085" data-p2="007">Relaxaurus + Sparkit (Lux)</button>
+        <button type="button" class="btn-preset-pair text-[11px] px-2 py-1 rounded bg-canvas border border-hairline hover:border-link text-body hover:text-ink transition-colors cursor-pointer" data-p1="097" data-p2="110">Helzephyr + Frostallion</button>
+        <button type="button" class="btn-preset-pair text-[11px] px-2 py-1 rounded bg-canvas border border-hairline hover:border-link text-body hover:text-ink transition-colors cursor-pointer" data-p1="033" data-p2="060">Mossanda + Rayhound</button>
+      </div>
+    </div>
+
+    <!-- RESULT CARD: THE DOMINANT ANSWER -->
+    <div id="result-child-card" class="rounded-[20px] border-2 border-hairline bg-canvas-elevated p-6 sm:p-8 shadow-whisper space-y-6 transition-all duration-300">
+      <div class="flex items-center justify-between border-b border-hairline pb-4">
+        <div class="flex items-center gap-2">
+          <span class="mono-eyebrow text-link">OFFSPRING RESULT</span>
+          <span class="text-xs text-mute font-mono">• 100% Deterministic Match</span>
+        </div>
+        <div id="result-special-badge" class="hidden items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 text-xs font-semibold">
+          <span>⭐</span>
+          <span>Unique Breeding Combo</span>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+        <div class="relative shrink-0">
+          <div class="w-32 h-32 sm:w-36 sm:h-36 rounded-[18px] bg-canvas border-2 border-hairline p-2 flex items-center justify-center relative overflow-hidden shadow-inner">
+            <div id="result-child-glow" class="pointer-events-none absolute inset-0 bg-amber-500/10 blur-xl"></div>
+            <img
+              id="result-child-img"
+              src="https://static.wikia.nocookie.net/palworld/images/6/64/Anubis_menu.png/"
+              alt="Anubis"
+              class="w-full h-full object-contain relative z-10 transition-transform duration-300 hover:scale-105"
+              loading="eager"
+            />
+          </div>
+        </div>
+
+        <div class="space-y-3 flex-1 text-center sm:text-left min-w-0">
+          <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+            <h2 id="result-child-name" class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">Anubis</h2>
+            <span id="result-child-number" class="text-xs font-mono px-2 py-0.5 rounded-full bg-hairline text-mute font-semibold">#100</span>
+          </div>
+
+          <div id="result-child-types" class="flex flex-wrap items-center justify-center sm:justify-start gap-1.5">
+            <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-600/15 text-amber-700 dark:text-amber-300">Ground</span>
+          </div>
+
+          <p id="result-child-desc" class="text-xs sm:text-sm text-body leading-relaxed max-w-xl">
+            One of the most sought-after Pals in Palworld, renowned for Level 4 Handiwork and incredible combat strength.
+          </p>
+
+          <!-- Breeding Power Computation Metric -->
+          <div class="rounded-[10px] bg-canvas border border-hairline p-3 text-xs space-y-1 font-mono">
+            <div class="flex flex-wrap items-center justify-between text-mute">
+              <span>Breeding Power Equation:</span>
+              <span id="result-child-bp" class="text-ink font-semibold">Breeding Score: 570</span>
+            </div>
+            <div id="result-child-math" class="text-[11px] text-body">
+              (Penking 2070 + Bushi 1560) ÷ 2 = Target 1815 → Special Combination Override
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-hairline">
+        <button
+          type="button"
+          id="btn-goto-reverse-from-child"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] bg-link text-white text-xs sm:text-sm font-semibold hover:bg-link-deep transition-colors cursor-pointer shadow-sm min-h-[44px]"
+        >
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+          <span>Find All Parents for <span id="btn-child-target-name">Anubis</span></span>
+        </button>
+
+        <button
+          type="button"
+          id="btn-goto-path-from-child"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] border border-hairline bg-canvas hover:bg-hairline-soft text-xs sm:text-sm font-medium text-ink transition-colors cursor-pointer min-h-[44px]"
+        >
+          <svg class="w-4 h-4 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+          </svg>
+          <span>Build Breeding Route</span>
+        </button>
+
+        <button
+          type="button"
+          id="btn-toggle-owned-from-child"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-[10px] border border-hairline bg-canvas hover:bg-hairline-soft text-xs sm:text-sm font-medium text-mute hover:text-ink transition-colors cursor-pointer min-h-[44px]"
+        >
+          <span class="text-emerald-500">✔</span>
+          <span id="btn-owned-label">Add to My Farm</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: REVERSE BREEDING (Find Parents for Target Pal) -->
+  <div id="panel-reverse" role="tabpanel" aria-labelledby="tab-btn-reverse" class="hidden space-y-6">
+    <div class="rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-6 shadow-whisper space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h3 class="text-lg font-bold text-ink">Reverse Breeding Lookup</h3>
+          <p class="text-xs text-mute">Select any target Pal to discover every possible 2-parent breeding combination in the game.</p>
+        </div>
+
+        <!-- Target Selector Button -->
+        <button
+          type="button"
+          id="btn-reverse-target"
+          class="inline-flex items-center justify-between gap-3 px-4 py-2.5 rounded-[12px] border-2 border-link/40 bg-canvas hover:border-link transition-colors cursor-pointer min-h-[48px] shrink-0"
+        >
+          <div class="flex items-center gap-2.5">
+            <img id="img-reverse-target" src="https://static.wikia.nocookie.net/palworld/images/6/64/Anubis_menu.png/" alt="Target" class="w-8 h-8 rounded-[8px] bg-canvas-elevated object-contain" />
+            <div class="text-left">
+              <div class="text-xs font-bold text-ink" id="name-reverse-target">Anubis</div>
+              <div class="text-[10px] font-mono text-mute" id="num-reverse-target">#100 • Ground</div>
+            </div>
+          </div>
+          <span class="text-xs text-link font-medium">Select Pal ▾</span>
+        </button>
+      </div>
+
+      <!-- Filters Row -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-hairline">
+        <div class="flex flex-wrap items-center gap-2">
+          <button type="button" class="btn-reverse-filter active px-2.5 py-1.5 rounded-[8px] text-xs font-semibold cursor-pointer" data-filter="all">All Combinations (<span id="count-all-combos">0</span>)</button>
+          <button type="button" class="btn-reverse-filter px-2.5 py-1.5 rounded-[8px] text-xs font-medium text-mute hover:text-ink hover:bg-hairline cursor-pointer" data-filter="special">⭐ Unique Combos (<span id="count-special-combos">0</span>)</button>
+          <button type="button" class="btn-reverse-filter px-2.5 py-1.5 rounded-[8px] text-xs font-medium text-mute hover:text-ink hover:bg-hairline cursor-pointer" data-filter="owned">✅ I Own Both (<span id="count-owned-combos">0</span>)</button>
+        </div>
+
+        <div class="relative w-full sm:w-64">
+          <input
+            type="text"
+            id="input-reverse-search"
+            placeholder="Filter parents (e.g. Bushi)..."
+            class="w-full rounded-[8px] border border-hairline bg-canvas px-3 py-1.5 text-xs text-ink placeholder-mute focus:outline-none focus:border-link"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Parent Pairs Results Grid -->
+    <div id="container-reverse-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+      <!-- Injected dynamically via client script -->
+    </div>
+  </div>
+
+  <!-- PANEL 3: BREEDING PATH & FARM PLANNER -->
+  <div id="panel-path" role="tabpanel" aria-labelledby="tab-btn-path" class="hidden space-y-6">
+    <div class="rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-6 shadow-whisper space-y-5">
+      <div>
+        <h3 class="text-lg font-bold text-ink">Shortest Breeding Path Finder (Graph BFS Engine)</h3>
+        <p class="text-xs text-body leading-relaxed">
+          Tell us which Pals you currently own in your Paldeck. Our graph algorithm will compute the minimum breeding generations needed to produce your target Pal.
+        </p>
+      </div>
+
+      <!-- Farm / Owned Pals Management -->
+      <div class="rounded-[14px] bg-canvas border border-hairline p-4 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-mono font-bold text-ink uppercase tracking-wider">Pals in Your Farm (<span id="count-owned-pals">0</span>)</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button type="button" id="btn-load-starter-pack" class="text-[11px] font-mono text-link hover:underline cursor-pointer">+ Starter Pack</button>
+            <span class="text-mute text-xs">•</span>
+            <button type="button" id="btn-clear-owned-pals" class="text-[11px] font-mono text-mute hover:text-red-500 cursor-pointer">Clear All</button>
+          </div>
+        </div>
+
+        <!-- Owned Pal Chips -->
+        <div id="container-owned-chips" class="flex flex-wrap gap-1.5 min-h-[40px] items-center">
+          <span class="text-xs text-mute italic">No Pals added yet. Click "+ Add Pal" or load the Starter Pack below.</span>
+        </div>
+
+        <!-- Add Pal Input Button -->
+        <div class="pt-2 flex items-center gap-2">
+          <button
+            type="button"
+            id="btn-open-add-owned-modal"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] border border-dashed border-hairline hover:border-link bg-canvas-elevated text-xs font-medium text-mute hover:text-ink transition-colors cursor-pointer min-h-[36px]"
+          >
+            <span>+</span>
+            <span>Add Pal to Collection</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Target Selection & Route Controls -->
+      <div class="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center pt-2">
+        <div class="sm:col-span-6 space-y-1.5">
+          <label for="btn-path-target" class="text-xs font-mono font-semibold uppercase text-mute">Desired Target Pal</label>
+          <button
+            type="button"
+            id="btn-path-target"
+            class="w-full text-left rounded-[12px] border border-hairline hover:border-link bg-canvas p-3 flex items-center justify-between cursor-pointer min-h-[52px]"
+          >
+            <div class="flex items-center gap-2.5">
+              <img id="img-path-target" src="https://static.wikia.nocookie.net/palworld/images/6/64/Anubis_menu.png/" alt="Target" class="w-8 h-8 rounded-[8px] bg-canvas-elevated object-contain" />
+              <div>
+                <div class="text-xs font-bold text-ink" id="name-path-target">Anubis</div>
+                <div class="text-[10px] font-mono text-mute" id="num-path-target">#100 • Ground</div>
+              </div>
+            </div>
+            <span class="text-xs text-link">Change Target ▾</span>
+          </button>
+        </div>
+
+        <div class="sm:col-span-3 space-y-1.5">
+          <label for="select-max-depth" class="text-xs font-mono font-semibold uppercase text-mute">Max Generations</label>
+          <select
+            id="select-max-depth"
+            class="w-full rounded-[12px] border border-hairline bg-canvas px-3 py-2.5 text-xs text-ink focus:outline-none focus:border-link cursor-pointer min-h-[52px]"
+          >
+            <option value="1">1 Step (Direct combo only)</option>
+            <option value="2">2 Generations</option>
+            <option value="3" selected>3 Generations (Balanced)</option>
+            <option value="4">4 Generations (Deep search)</option>
+          </select>
+        </div>
+
+        <div class="sm:col-span-3 flex items-end">
+          <button
+            type="button"
+            id="btn-compute-route"
+            class="w-full rounded-[12px] bg-link text-white font-semibold text-xs sm:text-sm py-3 hover:bg-link-deep transition-colors cursor-pointer shadow-sm min-h-[52px] flex items-center justify-center gap-2"
+          >
+            <span>⚡</span>
+            <span>Compute Path</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Route Output Workbench -->
+    <div id="container-path-results" class="space-y-4">
+      <!-- Injected dynamically via client script -->
+    </div>
+  </div>
+
+  <!-- PANEL 4: IV & TALENT INHERITANCE CALCULATOR -->
+  <div id="panel-iv" role="tabpanel" aria-labelledby="tab-btn-iv" class="hidden space-y-6">
+    <div class="rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-6 shadow-whisper space-y-6">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="mono-eyebrow text-link">GENETIC INHERITANCE</span>
+          <span class="text-[11px] font-mono text-mute bg-hairline-soft px-2 py-0.5 rounded">Datamined Mechanics</span>
+        </div>
+        <h3 class="text-lg sm:text-xl font-bold text-ink mt-1">Palworld IV / Talent Inheritance Calculator</h3>
+        <p class="text-xs sm:text-sm text-body leading-relaxed mt-1">
+          Every Pal possesses 3 hidden Individual Values (IVs/Talents) for HP, Attack, and Defense ranging from 0 to 100.
+          Offspring have a <strong class="text-ink">30% chance</strong> to inherit Parent A's stat, <strong class="text-ink">30% chance</strong> to inherit Parent B's stat, and a <strong class="text-ink">40% chance</strong> of a random mutation roll.
+        </p>
+      </div>
+
+      <!-- IV Inputs Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Parent A IVs -->
+        <div class="rounded-[14px] bg-canvas border border-hairline p-4 space-y-4">
+          <div class="flex items-center justify-between border-b border-hairline pb-2">
+            <span class="font-bold text-ink text-sm">Parent Pal 1 Talents</span>
+            <div class="flex items-center gap-1">
+              <button type="button" class="btn-preset-iv text-[10px] font-mono px-2 py-0.5 rounded bg-hairline-soft hover:bg-hairline cursor-pointer" data-parent="a" data-val="100">All 100</button>
+              <button type="button" class="btn-preset-iv text-[10px] font-mono px-2 py-0.5 rounded bg-hairline-soft hover:bg-hairline cursor-pointer" data-parent="a" data-val="50">All 50</button>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div>
+              <div class="flex justify-between font-mono mb-1">
+                <span>HP IV (0-100):</span>
+                <span id="val-iv-a-hp" class="font-bold text-link">100</span>
+              </div>
+              <input type="range" id="slider-iv-a-hp" min="0" max="100" value="100" class="w-full accent-link cursor-pointer" />
+            </div>
+
+            <div>
+              <div class="flex justify-between font-mono mb-1">
+                <span>Attack IV (0-100):</span>
+                <span id="val-iv-a-atk" class="font-bold text-link">100</span>
+              </div>
+              <input type="range" id="slider-iv-a-atk" min="0" max="100" value="100" class="w-full accent-link cursor-pointer" />
+            </div>
+
+            <div>
+              <div class="flex justify-between font-mono mb-1">
+                <span>Defense IV (0-100):</span>
+                <span id="val-iv-a-def" class="font-bold text-link">100</span>
+              </div>
+              <input type="range" id="slider-iv-a-def" min="0" max="100" value="100" class="w-full accent-link cursor-pointer" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Parent B IVs -->
+        <div class="rounded-[14px] bg-canvas border border-hairline p-4 space-y-4">
+          <div class="flex items-center justify-between border-b border-hairline pb-2">
+            <span class="font-bold text-ink text-sm">Parent Pal 2 Talents</span>
+            <div class="flex items-center gap-1">
+              <button type="button" class="btn-preset-iv text-[10px] font-mono px-2 py-0.5 rounded bg-hairline-soft hover:bg-hairline cursor-pointer" data-parent="b" data-val="100">All 100</button>
+              <button type="button" class="btn-preset-iv text-[10px] font-mono px-2 py-0.5 rounded bg-hairline-soft hover:bg-hairline cursor-pointer" data-parent="b" data-val="50">All 50</button>
+            </div>
+          </div>
+
+          <div class="space-y-3 text-xs">
+            <div>
+              <div class="flex justify-between font-mono mb-1">
+                <span>HP IV (0-100):</span>
+                <span id="val-iv-b-hp" class="font-bold text-link">100</span>
+              </div>
+              <input type="range" id="slider-iv-b-hp" min="0" max="100" value="100" class="w-full accent-link cursor-pointer" />
+            </div>
+
+            <div>
+              <div class="flex justify-between font-mono mb-1">
+                <span>Attack IV (0-100):</span>
+                <span id="val-iv-b-atk" class="font-bold text-link">100</span>
+              </div>
+              <input type="range" id="slider-iv-b-atk" min="0" max="100" value="100" class="w-full accent-link cursor-pointer" />
+            </div>
+
+            <div>
+              <div class="flex justify-between font-mono mb-1">
+                <span>Defense IV (0-100):</span>
+                <span id="val-iv-b-def" class="font-bold text-link">100</span>
+              </div>
+              <input type="range" id="slider-iv-b-def" min="0" max="100" value="100" class="w-full accent-link cursor-pointer" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Probabilities Output Result -->
+      <div class="rounded-[16px] bg-canvas border-2 border-hairline p-5 space-y-4">
+        <h4 class="text-sm font-bold text-ink">Offspring Stat Inheritance Probabilities</h4>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <!-- HP Odds -->
+          <div class="rounded-[10px] bg-canvas-elevated p-3 border border-hairline text-center space-y-1">
+            <span class="text-xs text-mute font-mono uppercase">HP Max (100) Odds</span>
+            <div id="odds-iv-hp" class="text-2xl font-black text-ink">60.4%</div>
+            <p class="text-[11px] text-mute">30% (P1) + 30% (P2) + 0.4% (Roll)</p>
+          </div>
+
+          <!-- Attack Odds -->
+          <div class="rounded-[10px] bg-canvas-elevated p-3 border border-hairline text-center space-y-1">
+            <span class="text-xs text-mute font-mono uppercase">Attack Max (100) Odds</span>
+            <div id="odds-iv-atk" class="text-2xl font-black text-ink">60.4%</div>
+            <p class="text-[11px] text-mute">30% (P1) + 30% (P2) + 0.4% (Roll)</p>
+          </div>
+
+          <!-- Defense Odds -->
+          <div class="rounded-[10px] bg-canvas-elevated p-3 border border-hairline text-center space-y-1">
+            <span class="text-xs text-mute font-mono uppercase">Defense Max (100) Odds</span>
+            <div id="odds-iv-def" class="text-2xl font-black text-ink">60.4%</div>
+            <p class="text-[11px] text-mute">30% (P1) + 30% (P2) + 0.4% (Roll)</p>
+          </div>
+        </div>
+
+        <!-- Triple 100 Combined Odds -->
+        <div class="rounded-[12px] bg-link/10 border border-link/30 p-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+          <div>
+            <div class="text-xs font-mono uppercase font-bold text-link">Triple-Max (100/100/100) Egg Hatch Probability</div>
+            <p id="odds-iv-summary" class="text-xs text-body mt-0.5">Outstanding breeding pair! Over 20% chance to hatch a perfect 100/100/100 IV Pal.</p>
+          </div>
+          <div class="shrink-0">
+            <span id="odds-iv-triple" class="text-3xl font-black text-link">22.0%</span>
+            <div class="text-[10px] font-mono text-mute">~1 in 4.5 eggs</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 5: PALDECK DATABASE (All 137 Pals) -->
+  <div id="panel-database" role="tabpanel" aria-labelledby="tab-btn-database" class="hidden space-y-6">
+    <div class="rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-6 shadow-whisper space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h3 class="text-lg font-bold text-ink">Palworld Breeding Database</h3>
+          <p class="text-xs text-mute">Explore all 137 Pals, their breeding power ratings, elements, and unique variants.</p>
+        </div>
+
+        <div class="relative w-full sm:w-72">
+          <input
+            type="text"
+            id="input-database-search"
+            placeholder="Search Pal by name or #..."
+            class="w-full rounded-[10px] border border-hairline bg-canvas px-3.5 py-2 text-xs text-ink placeholder-mute focus:outline-none focus:border-link"
+          />
+        </div>
+      </div>
+
+      <!-- Element Filter Chips -->
+      <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-hairline">
+        <button type="button" class="btn-element-filter active px-2.5 py-1 rounded-[6px] text-xs font-semibold cursor-pointer" data-elem="all">All Elements</button>
+        <button type="button" class="btn-element-filter px-2 py-1 rounded-[6px] text-xs font-medium bg-slate-500/10 hover:bg-slate-500/20 text-slate-700 dark:text-slate-300 cursor-pointer" data-elem="neutral">Neutral</button>
+        <button type="button" class="btn-element-filter px-2 py-1 rounded-[6px] text-xs font-medium bg-orange-500/10 hover:bg-orange-500/20 text-orange-700 dark:text-orange-300 cursor-pointer" data-elem="fire">Fire</button>
+        <button type="button" class="btn-element-filter px-2 py-1 rounded-[6px] text-xs font-medium bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-blue-300 cursor-pointer" data-elem="water">Water</button>
+        <button type="button" class="btn-element-filter px-2 py-1 rounded-[6px] text-xs font-medium bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 cursor-pointer" data-elem="grass">Grass</button>
+        <button type="button" class="btn-element-filter px-2 py-1 rounded-[6px] text-xs font-medium bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 cursor-pointer" data-elem="electric">Electric</button>
+        <button type="button" class="btn-element-filter px-2 py-1 rounded-[6px] text-xs font-medium bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-700 dark:text-cyan-300 cursor-pointer" data-elem="ice">Ice</button>
+        <button type="button" class="btn-element-filter px-2 py-1 rounded-[6px] text-xs font-medium bg-amber-700/10 hover:bg-amber-700/20 text-amber-800 dark:text-amber-300 cursor-pointer" data-elem="ground">Ground</button>
+        <button type="button" class="btn-element-filter px-2 py-1 rounded-[6px] text-xs font-medium bg-purple-500/10 hover:bg-purple-500/20 text-purple-700 dark:text-purple-300 cursor-pointer" data-elem="dark">Dark</button>
+        <button type="button" class="btn-element-filter px-2 py-1 rounded-[6px] text-xs font-medium bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 cursor-pointer" data-elem="dragon">Dragon</button>
+      </div>
+    </div>
+
+    <!-- Database Cards Grid -->
+    <div id="container-database-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+      <!-- Injected dynamically via client script -->
+    </div>
+  </div>
+
+  <!-- UNIVERSAL PAL SELECTION MODAL / COMMAND PALETTE -->
+  <div id="pal-selection-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-canvas-elevated border border-hairline rounded-[20px] shadow-2xl w-full max-w-xl max-h-[85vh] flex flex-col overflow-hidden animate-scale-up">
+      <!-- Modal Header -->
+      <div class="p-4 border-b border-hairline flex items-center justify-between gap-3">
+        <div>
+          <h3 id="modal-title" class="font-bold text-ink text-base">Select a Pal</h3>
+          <p class="text-xs text-mute">Search by Pal name, number (#001), or element</p>
+        </div>
+        <button
+          type="button"
+          id="btn-close-modal"
+          class="w-8 h-8 rounded-full border border-hairline bg-canvas hover:bg-hairline flex items-center justify-center text-mute hover:text-ink cursor-pointer"
+          aria-label="Close modal"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Search Input in Modal -->
+      <div class="p-3 border-b border-hairline bg-canvas">
+        <div class="relative">
+          <input
+            type="text"
+            id="modal-search-input"
+            placeholder="Type Pal name (e.g. Anubis, Jetragon)..."
+            class="w-full rounded-[10px] border border-hairline bg-canvas-elevated px-4 py-2.5 text-sm text-ink placeholder-mute focus:outline-none focus:border-link font-medium"
+            autocomplete="off"
+          />
+          <span class="absolute right-3 top-2.5 text-xs text-mute font-mono">ESC to close</span>
+        </div>
+
+        <!-- Quick filter chips in modal -->
+        <div class="flex flex-wrap gap-1 mt-2 text-[11px]">
+          <button type="button" class="btn-modal-elem-filter active px-2 py-0.5 rounded bg-hairline text-ink font-semibold" data-elem="all">All</button>
+          <button type="button" class="btn-modal-elem-filter px-2 py-0.5 rounded bg-canvas text-mute hover:text-ink" data-elem="fire">Fire</button>
+          <button type="button" class="btn-modal-elem-filter px-2 py-0.5 rounded bg-canvas text-mute hover:text-ink" data-elem="water">Water</button>
+          <button type="button" class="btn-modal-elem-filter px-2 py-0.5 rounded bg-canvas text-mute hover:text-ink" data-elem="grass">Grass</button>
+          <button type="button" class="btn-modal-elem-filter px-2 py-0.5 rounded bg-canvas text-mute hover:text-ink" data-elem="electric">Electric</button>
+          <button type="button" class="btn-modal-elem-filter px-2 py-0.5 rounded bg-canvas text-mute hover:text-ink" data-elem="ice">Ice</button>
+          <button type="button" class="btn-modal-elem-filter px-2 py-0.5 rounded bg-canvas text-mute hover:text-ink" data-elem="ground">Ground</button>
+          <button type="button" class="btn-modal-elem-filter px-2 py-0.5 rounded bg-canvas text-mute hover:text-ink" data-elem="dark">Dark</button>
+          <button type="button" class="btn-modal-elem-filter px-2 py-0.5 rounded bg-canvas text-mute hover:text-ink" data-elem="dragon">Dragon</button>
+        </div>
+      </div>
+
+      <!-- Modal Pal List Container -->
+      <div id="modal-pal-list" class="p-3 overflow-y-auto flex-1 grid grid-cols-1 sm:grid-cols-2 gap-2 focus:outline-none" tabindex="0">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .mode-tab-btn.active {
+    background-color: var(--color-ink);
+    color: var(--color-canvas);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  .btn-reverse-filter.active,
+  .btn-element-filter.active {
+    background-color: var(--color-ink);
+    color: var(--color-canvas);
+  }
+  @keyframes scaleUp {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  .animate-scale-up {
+    animation: scaleUp 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+</style>
+
+<!-- Data bridge for client script -->
+<script id="palworld-embedded-data" type="application/json" set:html={palsJson}></script>
+<script id="palworld-embedded-specials" type="application/json" set:html={specialCombosJson}></script>
+
+<script>
+  import {
+    calculateChild,
+    findParentCombinations,
+    findShortestBreedingPath,
+    calculateIVInheritance,
+    searchPals,
+    getPalById,
+    getAllPals,
+    getSpecialCombinations,
+    type Pal,
+  } from '../../engines/palworldBreedingEngine.ts';
+
+  // State Management
+  const STORAGE_KEY = 'fac_palworld_breeding_v1';
+  let state = {
+    mode: 'pair',
+    parentAId: '011', // Penking default
+    parentBId: '072', // Bushi default
+    reverseTargetId: '100', // Anubis default
+    pathTargetId: '100', // Anubis default
+    ownedPalIds: ['001', '002', '003', '005', '011', '014', '038'], // starter farm
+    maxDepth: 3,
+    activeModalSlot: null as 'a' | 'b' | 'reverse' | 'path' | 'owned' | null,
+    reverseFilter: 'all' as 'all' | 'special' | 'owned',
+    reverseSearch: '',
+    dbElement: 'all',
+    dbSearch: '',
+  };
+
+  // Load from localStorage if available
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed.ownedPalIds && Array.isArray(parsed.ownedPalIds)) {
+        state.ownedPalIds = parsed.ownedPalIds;
+      }
+      if (parsed.parentAId && getPalById(parsed.parentAId)) state.parentAId = parsed.parentAId;
+      if (parsed.parentBId && getPalById(parsed.parentBId)) state.parentBId = parsed.parentBId;
+    }
+  } catch (e) {
+    console.warn('LocalStorage unavailable or corrupted', e);
+  }
+
+  // Read URL search params
+  const urlParams = new URLSearchParams(window.location.search);
+  const p1Param = urlParams.get('p1') || urlParams.get('parent1');
+  const p2Param = urlParams.get('p2') || urlParams.get('parent2');
+  const targetParam = urlParams.get('target');
+  const modeParam = urlParams.get('mode');
+
+  if (p1Param && getPalById(p1Param)) state.parentAId = p1Param;
+  if (p2Param && getPalById(p2Param)) state.parentBId = p2Param;
+  if (targetParam && getPalById(targetParam)) {
+    state.reverseTargetId = targetParam;
+    state.pathTargetId = targetParam;
+  }
+  if (modeParam && ['pair', 'reverse', 'path', 'iv', 'database'].includes(modeParam)) {
+    state.mode = modeParam;
+  }
+
+  function saveState() {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          ownedPalIds: state.ownedPalIds,
+          parentAId: state.parentAId,
+          parentBId: state.parentBId,
+        })
+      );
+    } catch (e) {}
+  }
+
+  // Element Color Helpers
+  function getElementBadge(elem: string) {
+    const e = elem.toLowerCase();
+    const map: Record<string, string> = {
+      neutral: 'bg-slate-500/15 text-slate-700 dark:text-slate-300',
+      fire: 'bg-orange-500/15 text-orange-700 dark:text-orange-400',
+      water: 'bg-blue-500/15 text-blue-700 dark:text-blue-400',
+      grass: 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-400',
+      electric: 'bg-amber-500/15 text-amber-700 dark:text-amber-400',
+      ice: 'bg-cyan-500/15 text-cyan-700 dark:text-cyan-400',
+      ground: 'bg-amber-700/15 text-amber-800 dark:text-amber-300',
+      dark: 'bg-purple-500/15 text-purple-700 dark:text-purple-400',
+      dragon: 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-400',
+    };
+    return map[e] || 'bg-hairline text-ink';
+  }
+
+  // DOM Elements
+  const tabButtons = document.querySelectorAll('.mode-tab-btn');
+  const panels = {
+    pair: document.getElementById('panel-pair'),
+    reverse: document.getElementById('panel-reverse'),
+    path: document.getElementById('panel-path'),
+    iv: document.getElementById('panel-iv'),
+    database: document.getElementById('panel-database'),
+  };
+
+  // Switch Mode
+  function setMode(mode: string) {
+    state.mode = mode;
+    tabButtons.forEach((btn) => {
+      const active = btn.getAttribute('data-mode') === mode;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
+
+    Object.entries(panels).forEach(([m, panel]) => {
+      if (!panel) return;
+      if (m === mode) {
+        panel.classList.remove('hidden');
+      } else {
+        panel.classList.add('hidden');
+      }
+    });
+
+    if (mode === 'reverse') renderReverseResults();
+    if (mode === 'path') renderPathResults();
+    if (mode === 'database') renderDatabaseGrid();
+  }
+
+  tabButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const m = btn.getAttribute('data-mode');
+      if (m) setMode(m);
+    });
+  });
+
+  // Render Pair Calculator
+  function renderPairCalculator() {
+    const palA = getPalById(state.parentAId);
+    const palB = getPalById(state.parentBId);
+
+    if (palA) {
+      const img = document.getElementById('img-parent-a') as HTMLImageElement;
+      const name = document.getElementById('name-parent-a');
+      const num = document.getElementById('num-parent-a');
+      const types = document.getElementById('types-parent-a');
+      if (img) { img.src = palA.image; img.alt = palA.name; }
+      if (name) name.textContent = palA.name;
+      if (num) num.textContent = `#${palA.palDexNo}`;
+      if (types) {
+        types.innerHTML = palA.elements
+          .map((el) => `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium capitalize ${getElementBadge(el)}">${el}</span>`)
+          .join('');
+      }
+    }
+
+    if (palB) {
+      const img = document.getElementById('img-parent-b') as HTMLImageElement;
+      const name = document.getElementById('name-parent-b');
+      const num = document.getElementById('num-parent-b');
+      const types = document.getElementById('types-parent-b');
+      if (img) { img.src = palB.image; img.alt = palB.name; }
+      if (name) name.textContent = palB.name;
+      if (num) num.textContent = `#${palB.palDexNo}`;
+      if (types) {
+        types.innerHTML = palB.elements
+          .map((el) => `<span class="px-1.5 py-0.5 rounded text-[10px] font-medium capitalize ${getElementBadge(el)}">${el}</span>`)
+          .join('');
+      }
+    }
+
+    // Compute Offspring
+    if (palA && palB) {
+      const result = calculateChild(palA.id, palB.id);
+      if (result && result.child) {
+        const child = result.child;
+        const resImg = document.getElementById('result-child-img') as HTMLImageElement;
+        const resName = document.getElementById('result-child-name');
+        const resNum = document.getElementById('result-child-number');
+        const resTypes = document.getElementById('result-child-types');
+        const resDesc = document.getElementById('result-child-desc');
+        const resBp = document.getElementById('result-child-bp');
+        const resMath = document.getElementById('result-child-math');
+        const resSpecial = document.getElementById('result-special-badge');
+        const btnChildName = document.getElementById('btn-child-target-name');
+        const btnOwnedLabel = document.getElementById('btn-owned-label');
+
+        if (resImg) { resImg.src = child.image; resImg.alt = child.name; }
+        if (resName) resName.textContent = child.name;
+        if (resNum) resNum.textContent = `#${child.palDexNo}`;
+        if (btnChildName) btnChildName.textContent = child.name;
+
+        if (resTypes) {
+          resTypes.innerHTML = child.elements
+            .map((el) => `<span class="px-2.5 py-1 rounded-md text-xs font-semibold capitalize ${getElementBadge(el)}">${el}</span>`)
+            .join('');
+        }
+
+        if (resDesc) {
+          resDesc.textContent = child.description || `Offspring of ${palA.name} and ${palB.name}.`;
+        }
+
+        if (resBp) resBp.textContent = `Breeding Score: ${child.breedingPower}`;
+
+        if (resMath) {
+          if (result.isSpecial) {
+            resMath.innerHTML = `<strong>Special Combination Recipe:</strong> ${palA.name} + ${palB.name} overrides the breeding formula to produce ${child.name}.`;
+          } else {
+            resMath.innerHTML = `(${palA.name} ${palA.breedingPower} + ${palB.name} ${palB.breedingPower}) ÷ 2 = Target ${result.calculatedPowerTarget} → Closest Match: <strong>${child.name}</strong> (${child.breedingPower})`;
+          }
+        }
+
+        if (resSpecial) {
+          if (result.isSpecial) {
+            resSpecial.classList.remove('hidden');
+            resSpecial.classList.add('inline-flex');
+          } else {
+            resSpecial.classList.add('hidden');
+            resSpecial.classList.remove('inline-flex');
+          }
+        }
+
+        if (btnOwnedLabel) {
+          const isOwned = state.ownedPalIds.includes(child.id);
+          btnOwnedLabel.textContent = isOwned ? 'Owned in Farm' : 'Add to My Farm';
+        }
+      }
+    }
+  }
+
+  // Swap Parents
+  document.getElementById('btn-swap-parents')?.addEventListener('click', () => {
+    const tmp = state.parentAId;
+    state.parentAId = state.parentBId;
+    state.parentBId = tmp;
+    saveState();
+    renderPairCalculator();
+  });
+
+  // Presets in Pair Calculator
+  document.querySelectorAll('.btn-preset-pair').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const p1 = btn.getAttribute('data-p1');
+      const p2 = btn.getAttribute('data-p2');
+      if (p1 && p2) {
+        state.parentAId = p1;
+        state.parentBId = p2;
+        saveState();
+        renderPairCalculator();
+      }
+    });
+  });
+
+  // Result Card Action: Goto Reverse Lookup
+  document.getElementById('btn-goto-reverse-from-child')?.addEventListener('click', () => {
+    const res = calculateChild(state.parentAId, state.parentBId);
+    if (res?.child) {
+      state.reverseTargetId = res.child.id;
+      setMode('reverse');
+      renderReverseHeader();
+      renderReverseResults();
+    }
+  });
+
+  // Result Card Action: Goto Path Route
+  document.getElementById('btn-goto-path-from-child')?.addEventListener('click', () => {
+    const res = calculateChild(state.parentAId, state.parentBId);
+    if (res?.child) {
+      state.pathTargetId = res.child.id;
+      setMode('path');
+      renderPathHeader();
+      renderPathResults();
+    }
+  });
+
+  // Result Card Action: Toggle Owned
+  document.getElementById('btn-toggle-owned-from-child')?.addEventListener('click', () => {
+    const res = calculateChild(state.parentAId, state.parentBId);
+    if (res?.child) {
+      const id = res.child.id;
+      if (state.ownedPalIds.includes(id)) {
+        state.ownedPalIds = state.ownedPalIds.filter((x) => x !== id);
+      } else {
+        state.ownedPalIds.push(id);
+      }
+      saveState();
+      renderPairCalculator();
+      renderOwnedChips();
+    }
+  });
+
+  // REVERSE BREEDING PANEL
+  function renderReverseHeader() {
+    const pal = getPalById(state.reverseTargetId);
+    if (!pal) return;
+    const img = document.getElementById('img-reverse-target') as HTMLImageElement;
+    const name = document.getElementById('name-reverse-target');
+    const num = document.getElementById('num-reverse-target');
+    if (img) { img.src = pal.image; img.alt = pal.name; }
+    if (name) name.textContent = pal.name;
+    if (num) num.textContent = `#${pal.palDexNo} • ${pal.elements.join(', ')}`;
+  }
+
+  function renderReverseResults() {
+    renderReverseHeader();
+    const container = document.getElementById('container-reverse-results');
+    if (!container) return;
+
+    const allPairs = findParentCombinations(state.reverseTargetId, {
+      ownedPalIds: state.ownedPalIds,
+    });
+
+    const specialCount = allPairs.filter((p) => p.isSpecial).length;
+    const ownedCount = allPairs.filter((p) => p.bothOwned).length;
+
+    const countAll = document.getElementById('count-all-combos');
+    const countSpecial = document.getElementById('count-special-combos');
+    const countOwned = document.getElementById('count-owned-combos');
+
+    if (countAll) countAll.textContent = String(allPairs.length);
+    if (countSpecial) countSpecial.textContent = String(specialCount);
+    if (countOwned) countOwned.textContent = String(ownedCount);
+
+    let filtered = allPairs;
+    if (state.reverseFilter === 'special') {
+      filtered = allPairs.filter((p) => p.isSpecial);
+    } else if (state.reverseFilter === 'owned') {
+      filtered = allPairs.filter((p) => p.bothOwned);
+    }
+
+    if (state.reverseSearch) {
+      const q = state.reverseSearch.toLowerCase().trim();
+      filtered = filtered.filter(
+        (p) =>
+          p.parent1.name.toLowerCase().includes(q) ||
+          p.parent2.name.toLowerCase().includes(q)
+      );
+    }
+
+    if (filtered.length === 0) {
+      container.innerHTML = `
+        <div class="col-span-full rounded-[14px] bg-canvas border border-hairline p-8 text-center space-y-2">
+          <p class="text-sm font-semibold text-ink">No combinations found with current filter</p>
+          <p class="text-xs text-mute">Try switching back to "All Combinations" or clearing your search query.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = filtered
+      .map(
+        (item) => `
+        <div class="rounded-[14px] border border-hairline bg-canvas p-3 hover:border-link transition-colors space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-mono ${item.bothOwned ? 'text-emerald-500 font-bold' : 'text-mute'}">
+              ${item.bothOwned ? '✅ Both in Farm' : 'Breeding Pair'}
+            </span>
+            ${item.isSpecial ? '<span class="text-[10px] font-semibold px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-600 dark:text-amber-400">⭐ Unique Combo</span>' : ''}
+          </div>
+
+          <div class="flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2 min-w-0">
+              <img src="${item.parent1.image}" alt="${item.parent1.name}" class="w-9 h-9 rounded-[8px] bg-canvas-elevated object-contain p-0.5 shrink-0" loading="lazy" />
+              <div class="min-w-0">
+                <div class="text-xs font-bold text-ink truncate">${item.parent1.name}</div>
+                <div class="text-[10px] font-mono text-mute">#${item.parent1.palDexNo}</div>
+              </div>
+            </div>
+
+            <span class="text-mute font-bold text-xs shrink-0">+</span>
+
+            <div class="flex items-center gap-2 min-w-0">
+              <img src="${item.parent2.image}" alt="${item.parent2.name}" class="w-9 h-9 rounded-[8px] bg-canvas-elevated object-contain p-0.5 shrink-0" loading="lazy" />
+              <div class="min-w-0">
+                <div class="text-xs font-bold text-ink truncate">${item.parent2.name}</div>
+                <div class="text-[10px] font-mono text-mute">#${item.parent2.palDexNo}</div>
+              </div>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="btn-select-pair-from-reverse w-full py-1.5 rounded-[8px] bg-hairline-soft hover:bg-link hover:text-white text-xs font-medium text-ink transition-colors cursor-pointer text-center"
+            data-p1="${item.parent1.id}"
+            data-p2="${item.parent2.id}"
+          >
+            Calculate This Pair →
+          </button>
+        </div>
+      `
+      )
+      .join('');
+
+    // Attach click listeners to "Calculate This Pair"
+    container.querySelectorAll('.btn-select-pair-from-reverse').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const p1 = btn.getAttribute('data-p1');
+        const p2 = btn.getAttribute('data-p2');
+        if (p1 && p2) {
+          state.parentAId = p1;
+          state.parentBId = p2;
+          saveState();
+          setMode('pair');
+          renderPairCalculator();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    });
+  }
+
+  // Reverse Filter Buttons
+  document.querySelectorAll('.btn-reverse-filter').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.btn-reverse-filter').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.getAttribute('data-filter') as any;
+      if (f) {
+        state.reverseFilter = f;
+        renderReverseResults();
+      }
+    });
+  });
+
+  document.getElementById('input-reverse-search')?.addEventListener('input', (e) => {
+    state.reverseSearch = (e.target as HTMLInputElement).value;
+    renderReverseResults();
+  });
+
+  // BREEDING PATH & PLANNER PANEL
+  function renderPathHeader() {
+    const pal = getPalById(state.pathTargetId);
+    if (!pal) return;
+    const img = document.getElementById('img-path-target') as HTMLImageElement;
+    const name = document.getElementById('name-path-target');
+    const num = document.getElementById('num-path-target');
+    if (img) { img.src = pal.image; img.alt = pal.name; }
+    if (name) name.textContent = pal.name;
+    if (num) num.textContent = `#${pal.palDexNo} • ${pal.elements.join(', ')}`;
+  }
+
+  function renderOwnedChips() {
+    const container = document.getElementById('container-owned-chips');
+    const countEl = document.getElementById('count-owned-pals');
+    if (!container) return;
+
+    if (countEl) countEl.textContent = String(state.ownedPalIds.length);
+
+    if (state.ownedPalIds.length === 0) {
+      container.innerHTML = `<span class="text-xs text-mute italic">No Pals added yet. Click "+ Add Pal to Collection" or load the Starter Pack.</span>`;
+      return;
+    }
+
+    container.innerHTML = state.ownedPalIds
+      .map((id) => {
+        const pal = getPalById(id);
+        if (!pal) return '';
+        return `
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-canvas-elevated border border-hairline text-xs font-medium text-ink shadow-whisper">
+            <img src="${pal.image}" alt="" class="w-4 h-4 rounded-full object-contain" />
+            <span>${pal.name}</span>
+            <button type="button" class="btn-remove-owned text-mute hover:text-red-500 font-bold ml-0.5 cursor-pointer" data-id="${id}">×</button>
+          </span>
+        `;
+      })
+      .join('');
+
+    container.querySelectorAll('.btn-remove-owned').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const id = btn.getAttribute('data-id');
+        if (id) {
+          state.ownedPalIds = state.ownedPalIds.filter((x) => x !== id);
+          saveState();
+          renderOwnedChips();
+        }
+      });
+    });
+  }
+
+  // Load Starter Pack
+  document.getElementById('btn-load-starter-pack')?.addEventListener('click', () => {
+    state.ownedPalIds = ['001', '002', '003', '004', '005', '006', '007', '011', '014', '020', '026', '038'];
+    saveState();
+    renderOwnedChips();
+  });
+
+  // Clear Owned Pals
+  document.getElementById('btn-clear-owned-pals')?.addEventListener('click', () => {
+    state.ownedPalIds = [];
+    saveState();
+    renderOwnedChips();
+  });
+
+  function renderPathResults() {
+    renderPathHeader();
+    renderOwnedChips();
+    const container = document.getElementById('container-path-results');
+    if (!container) return;
+
+    const targetPal = getPalById(state.pathTargetId);
+    if (!targetPal) return;
+
+    const depthSelect = document.getElementById('select-max-depth') as HTMLSelectElement;
+    const maxDepth = depthSelect ? parseInt(depthSelect.value, 10) : 3;
+
+    const result = findShortestBreedingPath(state.ownedPalIds, state.pathTargetId, { maxDepth });
+
+    if (result.found && result.chain.length > 0) {
+      container.innerHTML = `
+        <div class="rounded-[20px] border-2 border-emerald-500/40 bg-canvas-elevated p-5 sm:p-6 shadow-whisper space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-hairline pb-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-mono text-xs font-bold">
+                  ROUTE FOUND: ${result.depth} ${result.depth === 1 ? 'STEP' : 'STEPS'}
+                </span>
+                <span class="text-xs text-mute font-mono">Computed in ${result.timeMs.toFixed(1)}ms</span>
+              </div>
+              <h4 class="text-base sm:text-lg font-bold text-ink mt-1">Shortest Breeding Chain to ${result.target.name}</h4>
+            </div>
+
+            <button
+              type="button"
+              id="btn-copy-route-plan"
+              class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] border border-hairline bg-canvas text-xs font-medium text-mute hover:text-ink cursor-pointer shrink-0"
+            >
+              <span>📋</span>
+              <span>Copy Route</span>
+            </button>
+          </div>
+
+          <!-- Step Progression Cards -->
+          <div class="space-y-3">
+            ${result.chain
+              .map(
+                (step, idx) => `
+              <div class="rounded-[14px] bg-canvas border border-hairline p-4 space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-mono font-bold text-link uppercase tracking-wider">Step ${step.step} of ${result.chain.length}</span>
+                  ${step.isSpecial ? '<span class="text-[10px] font-semibold px-2 py-0.5 rounded bg-amber-500/15 text-amber-600 dark:text-amber-400">⭐ Unique Recipe</span>' : ''}
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+                  <!-- Parent 1 -->
+                  <div class="flex items-center gap-2">
+                    <img src="${step.parent1.image}" alt="${step.parent1.name}" class="w-10 h-10 rounded-[8px] bg-canvas-elevated object-contain p-1" />
+                    <div>
+                      <div class="text-xs font-bold text-ink">${step.parent1.name}</div>
+                      <div class="text-[10px] font-mono ${state.ownedPalIds.includes(step.parent1.id) ? 'text-emerald-500' : 'text-blue-500'}">
+                        ${state.ownedPalIds.includes(step.parent1.id) ? '✔ In Farm' : 'Bred from step ' + (step.step - 1)}
+                      </div>
+                    </div>
+                  </div>
+
+                  <span class="text-mute font-bold text-base">+</span>
+
+                  <!-- Parent 2 -->
+                  <div class="flex items-center gap-2">
+                    <img src="${step.parent2.image}" alt="${step.parent2.name}" class="w-10 h-10 rounded-[8px] bg-canvas-elevated object-contain p-1" />
+                    <div>
+                      <div class="text-xs font-bold text-ink">${step.parent2.name}</div>
+                      <div class="text-[10px] font-mono ${state.ownedPalIds.includes(step.parent2.id) ? 'text-emerald-500' : 'text-blue-500'}">
+                        ${state.ownedPalIds.includes(step.parent2.id) ? '✔ In Farm' : 'Bred from step ' + (step.step - 1)}
+                      </div>
+                    </div>
+                  </div>
+
+                  <span class="text-link font-bold text-base">➔</span>
+
+                  <!-- Child Result -->
+                  <div class="flex items-center gap-2 bg-canvas-elevated px-3 py-1.5 rounded-[10px] border border-hairline">
+                    <img src="${step.child.image}" alt="${step.child.name}" class="w-10 h-10 rounded-[8px] object-contain" />
+                    <div>
+                      <div class="text-xs font-bold ${idx === result.chain.length - 1 ? 'text-emerald-600 dark:text-emerald-400 font-extrabold text-sm' : 'text-ink'}">${step.child.name}</div>
+                      <div class="text-[10px] font-mono text-mute">#${step.child.palDexNo}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `
+              )
+              .join('')}
+          </div>
+        </div>
+      `;
+    } else {
+      // Empty or Impossible state
+      container.innerHTML = `
+        <div class="rounded-[20px] border border-amber-500/30 bg-amber-500/5 p-6 text-center space-y-3">
+          <div class="w-12 h-12 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-400 flex items-center justify-center mx-auto text-xl font-bold">!</div>
+          <h4 class="text-base font-bold text-ink">No Breeding Route Found within ${maxDepth} Generations</h4>
+          <p class="text-xs sm:text-sm text-body max-w-lg mx-auto leading-relaxed">
+            ${result.message || 'Try adding more Pals to your farm, increasing the maximum generations to 4, or checking if your target requires a specific legendary parent.'}
+          </p>
+          <div class="pt-2 flex flex-wrap items-center justify-center gap-2">
+            <button type="button" id="btn-path-fallback-direct" class="px-3.5 py-2 rounded-[10px] bg-link text-white text-xs font-semibold cursor-pointer">
+              View All Direct Combinations for ${targetPal.name}
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('btn-path-fallback-direct')?.addEventListener('click', () => {
+        state.reverseTargetId = targetPal.id;
+        setMode('reverse');
+      });
+    }
+  }
+
+  document.getElementById('btn-compute-route')?.addEventListener('click', () => {
+    renderPathResults();
+  });
+
+  // IV / TALENTS PANEL
+  function renderIVCalculator() {
+    const valAHp = parseInt((document.getElementById('slider-iv-a-hp') as HTMLInputElement).value, 10);
+    const valAAtk = parseInt((document.getElementById('slider-iv-a-atk') as HTMLInputElement).value, 10);
+    const valADef = parseInt((document.getElementById('slider-iv-a-def') as HTMLInputElement).value, 10);
+
+    const valBHp = parseInt((document.getElementById('slider-iv-b-hp') as HTMLInputElement).value, 10);
+    const valBAtk = parseInt((document.getElementById('slider-iv-b-atk') as HTMLInputElement).value, 10);
+    const valBDef = parseInt((document.getElementById('slider-iv-b-def') as HTMLInputElement).value, 10);
+
+    (document.getElementById('val-iv-a-hp') as HTMLElement).textContent = String(valAHp);
+    (document.getElementById('val-iv-a-atk') as HTMLElement).textContent = String(valAAtk);
+    (document.getElementById('val-iv-a-def') as HTMLElement).textContent = String(valADef);
+
+    (document.getElementById('val-iv-b-hp') as HTMLElement).textContent = String(valBHp);
+    (document.getElementById('val-iv-b-atk') as HTMLElement).textContent = String(valBAtk);
+    (document.getElementById('val-iv-b-def') as HTMLElement).textContent = String(valBDef);
+
+    const result = calculateIVInheritance(
+      { hp: valAHp, attack: valAAtk, defense: valADef },
+      { hp: valBHp, attack: valBAtk, defense: valBDef }
+    );
+
+    (document.getElementById('odds-iv-hp') as HTMLElement).textContent = `${result.hp.targetOdds}%`;
+    (document.getElementById('odds-iv-atk') as HTMLElement).textContent = `${result.attack.targetOdds}%`;
+    (document.getElementById('odds-iv-def') as HTMLElement).textContent = `${result.defense.targetOdds}%`;
+    (document.getElementById('odds-iv-triple') as HTMLElement).textContent = `${result.perfectTripleOdds}%`;
+    (document.getElementById('odds-iv-summary') as HTMLElement).textContent = result.summary;
+  }
+
+  ['slider-iv-a-hp', 'slider-iv-a-atk', 'slider-iv-a-def', 'slider-iv-b-hp', 'slider-iv-b-atk', 'slider-iv-b-def'].forEach((id) => {
+    document.getElementById(id)?.addEventListener('input', renderIVCalculator);
+  });
+
+  document.querySelectorAll('.btn-preset-iv').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const parent = btn.getAttribute('data-parent');
+      const val = btn.getAttribute('data-val') || '100';
+      if (parent === 'a') {
+        (document.getElementById('slider-iv-a-hp') as HTMLInputElement).value = val;
+        (document.getElementById('slider-iv-a-atk') as HTMLInputElement).value = val;
+        (document.getElementById('slider-iv-a-def') as HTMLInputElement).value = val;
+      } else {
+        (document.getElementById('slider-iv-b-hp') as HTMLInputElement).value = val;
+        (document.getElementById('slider-iv-b-atk') as HTMLInputElement).value = val;
+        (document.getElementById('slider-iv-b-def') as HTMLInputElement).value = val;
+      }
+      renderIVCalculator();
+    });
+  });
+
+  // PALDECK DATABASE PANEL
+  function renderDatabaseGrid() {
+    const container = document.getElementById('container-database-grid');
+    if (!container) return;
+
+    let pals = getAllPals();
+    if (state.dbElement !== 'all') {
+      pals = pals.filter((p) => p.elements.includes(state.dbElement));
+    }
+    if (state.dbSearch) {
+      const q = state.dbSearch.toLowerCase().trim();
+      pals = pals.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.palDexNo.includes(q) ||
+          p.elements.some((e) => e.includes(q))
+      );
+    }
+
+    container.innerHTML = pals
+      .map(
+        (p) => `
+        <div class="rounded-[14px] bg-canvas border border-hairline p-3 hover:border-link transition-colors space-y-2 text-center group">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-[10px] bg-canvas-elevated p-1.5 flex items-center justify-center">
+            <img src="${p.image}" alt="${p.name}" class="w-full h-full object-contain group-hover:scale-105 transition-transform" loading="lazy" />
+          </div>
+          <div>
+            <div class="flex items-center justify-center gap-1">
+              <span class="text-xs font-bold text-ink truncate">${p.name}</span>
+            </div>
+            <div class="text-[10px] font-mono text-mute">#${p.palDexNo} • Score ${p.breedingPower}</div>
+            <div class="flex flex-wrap justify-center gap-1 mt-1">
+              ${p.elements.map((el) => `<span class="px-1.5 py-0.2 rounded text-[9px] font-medium capitalize ${getElementBadge(el)}">${el}</span>`).join('')}
+            </div>
+          </div>
+          <div class="pt-1 flex items-center justify-center gap-1">
+            <button
+              type="button"
+              class="btn-db-select-calc px-2 py-1 rounded bg-link text-white text-[10px] font-semibold hover:bg-link-deep cursor-pointer"
+              data-id="${p.id}"
+            >
+              Breed
+            </button>
+            <button
+              type="button"
+              class="btn-db-select-reverse px-2 py-1 rounded bg-hairline-soft text-ink text-[10px] font-medium hover:bg-hairline cursor-pointer"
+              data-id="${p.id}"
+            >
+              Parents
+            </button>
+          </div>
+        </div>
+      `
+      )
+      .join('');
+
+    container.querySelectorAll('.btn-db-select-calc').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        if (id) {
+          state.parentAId = id;
+          saveState();
+          setMode('pair');
+          renderPairCalculator();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    });
+
+    container.querySelectorAll('.btn-db-select-reverse').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        if (id) {
+          state.reverseTargetId = id;
+          setMode('reverse');
+          renderReverseResults();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      });
+    });
+  }
+
+  document.querySelectorAll('.btn-element-filter').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.btn-element-filter').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      const elem = btn.getAttribute('data-elem');
+      if (elem) {
+        state.dbElement = elem;
+        renderDatabaseGrid();
+      }
+    });
+  });
+
+  document.getElementById('input-database-search')?.addEventListener('input', (e) => {
+    state.dbSearch = (e.target as HTMLInputElement).value;
+    renderDatabaseGrid();
+  });
+
+  // MODAL / COMMAND PALETTE IMPLEMENTATION
+  const modal = document.getElementById('pal-selection-modal');
+  const modalSearchInput = document.getElementById('modal-search-input') as HTMLInputElement;
+  const modalPalList = document.getElementById('modal-pal-list');
+  let modalSelectedElem = 'all';
+
+  function openPalModal(slot: 'a' | 'b' | 'reverse' | 'path' | 'owned') {
+    state.activeModalSlot = slot;
+    if (modal) modal.classList.remove('hidden');
+    if (modalSearchInput) {
+      modalSearchInput.value = '';
+      setTimeout(() => modalSearchInput.focus(), 50);
+    }
+    renderModalList();
+  }
+
+  function closePalModal() {
+    if (modal) modal.classList.add('hidden');
+    state.activeModalSlot = null;
+  }
+
+  function renderModalList() {
+    if (!modalPalList) return;
+    const q = modalSearchInput?.value?.toLowerCase().trim() || '';
+
+    let list = getAllPals();
+    if (modalSelectedElem !== 'all') {
+      list = list.filter((p) => p.elements.includes(modalSelectedElem));
+    }
+    if (q) {
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.palDexNo.includes(q) ||
+          p.elements.some((e) => e.includes(q))
+      );
+    }
+
+    modalPalList.innerHTML = list
+      .map(
+        (p) => `
+        <button
+          type="button"
+          class="btn-modal-pick-pal w-full text-left rounded-[12px] border border-hairline hover:border-link bg-canvas p-2.5 flex items-center justify-between gap-2.5 transition-colors cursor-pointer group"
+          data-id="${p.id}"
+        >
+          <div class="flex items-center gap-2.5 min-w-0">
+            <img src="${p.image}" alt="${p.name}" class="w-10 h-10 rounded-[8px] bg-canvas-elevated object-contain p-1 shrink-0" loading="lazy" />
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs sm:text-sm font-bold text-ink truncate group-hover:text-link">${p.name}</span>
+                <span class="text-[10px] font-mono text-mute">#${p.palDexNo}</span>
+              </div>
+              <div class="flex items-center gap-1 mt-0.5">
+                ${p.elements.map((el) => `<span class="px-1.5 py-0.2 rounded text-[9px] font-medium capitalize ${getElementBadge(el)}">${el}</span>`).join('')}
+                <span class="text-[10px] font-mono text-mute ml-1">BP: ${p.breedingPower}</span>
+              </div>
+            </div>
+          </div>
+          <span class="text-xs font-mono text-link opacity-0 group-hover:opacity-100 transition-opacity">Select ➔</span>
+        </button>
+      `
+      )
+      .join('');
+
+    modalPalList.querySelectorAll('.btn-modal-pick-pal').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        if (!id) return;
+
+        if (state.activeModalSlot === 'a') {
+          state.parentAId = id;
+          renderPairCalculator();
+        } else if (state.activeModalSlot === 'b') {
+          state.parentBId = id;
+          renderPairCalculator();
+        } else if (state.activeModalSlot === 'reverse') {
+          state.reverseTargetId = id;
+          renderReverseResults();
+        } else if (state.activeModalSlot === 'path') {
+          state.pathTargetId = id;
+          renderPathResults();
+        } else if (state.activeModalSlot === 'owned') {
+          if (!state.ownedPalIds.includes(id)) {
+            state.ownedPalIds.push(id);
+            renderOwnedChips();
+          }
+        }
+
+        saveState();
+        closePalModal();
+      });
+    });
+  }
+
+  modalSearchInput?.addEventListener('input', renderModalList);
+
+  document.querySelectorAll('.btn-modal-elem-filter').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.btn-modal-elem-filter').forEach((b) => b.classList.remove('active'));
+      btn.classList.add('active');
+      modalSelectedElem = btn.getAttribute('data-elem') || 'all';
+      renderModalList();
+    });
+  });
+
+  document.getElementById('btn-close-modal')?.addEventListener('click', closePalModal);
+  modal?.addEventListener('click', (e) => {
+    if (e.target === modal) closePalModal();
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+      closePalModal();
+    }
+  });
+
+  // Slot trigger buttons
+  document.getElementById('btn-parent-a')?.addEventListener('click', () => openPalModal('a'));
+  document.getElementById('btn-parent-b')?.addEventListener('click', () => openPalModal('b'));
+  document.getElementById('btn-reverse-target')?.addEventListener('click', () => openPalModal('reverse'));
+  document.getElementById('btn-path-target')?.addEventListener('click', () => openPalModal('path'));
+  document.getElementById('btn-open-add-owned-modal')?.addEventListener('click', () => openPalModal('owned'));
+
+  // Clear slot buttons
+  document.querySelectorAll('.btn-clear-slot').forEach((btn) => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const slot = btn.getAttribute('data-slot');
+      if (slot === 'a') openPalModal('a');
+      if (slot === 'b') openPalModal('b');
+    });
+  });
+
+  // Share URL button
+  document.getElementById('btn-copy-share-url')?.addEventListener('click', () => {
+    const origin = window.location.origin;
+    const url = `${origin}/palworld-breeding-calculator/?p1=${state.parentAId}&p2=${state.parentBId}&target=${state.pathTargetId}&mode=${state.mode}`;
+    navigator.clipboard.writeText(url).then(() => {
+      const label = document.getElementById('copy-url-label');
+      if (label) {
+        label.textContent = 'Link Copied!';
+        setTimeout(() => (label.textContent = 'Share Plan'), 2000);
+      }
+    });
+  });
+
+  // Reset Calculator
+  document.getElementById('btn-reset-app')?.addEventListener('click', () => {
+    state.parentAId = '011'; // Penking
+    state.parentBId = '072'; // Bushi
+    state.reverseTargetId = '100';
+    state.pathTargetId = '100';
+    state.ownedPalIds = ['001', '002', '003', '005', '011', '014', '038'];
+    saveState();
+    renderPairCalculator();
+    renderReverseResults();
+    renderPathResults();
+    renderIVCalculator();
+  });
+
+  // Initial Boot
+  setMode(state.mode);
+  renderPairCalculator();
+  renderIVCalculator();
+</script>

@@ -77,10 +77,14 @@ const bingVerificationCode = bingVerification || (import.meta.env.PUBLIC_BING_SI
 const pageDescription = metaDescription || description || 'Free, accurate online calculators for finance, health, math, and everyday calculations.';
 const socialImage = image.startsWith('http') ? image : `${siteOrigin}${image.startsWith('/') ? image : `/${image}`}`;
 
-// Ensure any passed-in canonicalUrl using localhost is normalized to production siteOrigin
-const finalCanonical = canonicalUrl.includes('localhost')
+// Ensure any passed-in canonicalUrl using localhost is normalized to production siteOrigin,
+// and enforce consistent trailing slash for all internal site pages (trailingSlash: 'always')
+const baseCanonical = canonicalUrl.includes('localhost')
   ? `${siteOrigin}${normalizedPathname}`
   : canonicalUrl;
+const finalCanonical = baseCanonical.startsWith(siteOrigin) && !baseCanonical.endsWith('/') && !/\.[a-zA-Z0-9]+$/.test(baseCanonical)
+  ? `${baseCanonical}/`
+  : baseCanonical;
 
 const currentLocale = (locale || lang || Astro.currentLocale || DEFAULT_LOCALE) as SupportedLocale;
 const currentDir = languages[currentLocale as SupportedLanguage]?.dir || 'ltr';
@@ -410,12 +414,14 @@ const googleFontsUrl = currentLocale === 'ar'
             CHF: { symbol: 'CHF', name: 'Swiss Franc', isIndian: false, decimals: 2, locale: 'de-CH' },
             NZD: { symbol: 'NZ$', name: 'New Zealand Dollar', isIndian: false, decimals: 2, locale: 'en-NZ' },
             ZAR: { symbol: 'R', name: 'South African Rand', isIndian: false, decimals: 2, locale: 'en-ZA' },
+            BRL: { symbol: 'R$', name: 'Real Brasileiro', isIndian: false, decimals: 2, locale: 'pt-BR' },
           };
 
           window.__facExchangeSnapshot = exchangeSnapshot;
 
           function getPathDefaultCurrency() {
             const p = (window.location.pathname || '').toLowerCase();
+            if (p.includes('/calculadora-salario/pt')) return 'BRL';
             if (p.startsWith('/hi/') || p === '/hi') return 'INR';
             if (p.startsWith('/fr/') || p.startsWith('/de/') || p.startsWith('/es/') || p.startsWith('/it/') || p.startsWith('/nl/') || p.startsWith('/pt/')) return 'EUR';
             if (p.startsWith('/ar/')) return 'SAR';

@@ -19,6 +19,7 @@ export interface Props {
   formula?: string;
   isFrench?: boolean;
   isSpanish?: boolean;
+  isPortuguese?: boolean;
 }
 
 const {
@@ -30,12 +31,14 @@ const {
   formula,
   isFrench: propIsFrench,
   isSpanish: propIsSpanish,
+  isPortuguese: propIsPortuguese,
 } = Astro.props;
 
 const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
 const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro.url.pathname.startsWith('/calculadora-edad/es'));
+const isPortuguese = propIsPortuguese ?? (Astro.url.pathname.includes('/pt/') || Astro.url.pathname.startsWith('/calculadora-salario/pt'));
 
-let resolvedTitle = userTitle || (isSpanish ? 'Ejemplo de Cálculo Paso a Paso' : isFrench ? 'Exemple de Calcul Pas-à-Pas' : 'Step-by-Step Worked Example');
+let resolvedTitle = userTitle || (isPortuguese ? 'Exemplo Prático de Cálculo Passo a Passo' : isSpanish ? 'Ejemplo de Cálculo Paso a Paso' : isFrench ? 'Exemple de Calcul Pas-à-Pas' : 'Step-by-Step Worked Example');
 let resolvedScenario = userScenario || '';
 let resolvedSteps: WorkedStep[] = userSteps || [];
 let resolvedConclusion = userConclusion || '';
@@ -93,12 +96,12 @@ if (calculatorId && (!resolvedScenario || resolvedSteps.length === 0)) {
     <div class="flex items-center gap-2">
       <span class="inline-block w-2 h-2 rounded-full bg-cyan"></span>
       <span class="mono-eyebrow text-cyan">
-        {isSpanish ? "Demostración Pedagógica y Verificación" : isFrench ? "Démonstration Pédagogique & Vérification" : "Educational Calculation & Verification"}
+        {isPortuguese ? "Demonstração Pedagógica e Verificação" : isSpanish ? "Demostración Pedagógica y Verificación" : isFrench ? "Démonstration Pédagogique & Vérification" : "Educational Calculation & Verification"}
       </span>
     </div>
     {resolvedFormula && (
       <span class="hidden sm:inline-block rounded-[4px] border border-hairline-soft bg-canvas px-2.5 py-1 text-xs font-mono text-mute">
-        {isSpanish ? "Fórmula:" : isFrench ? "Formule :" : "Formula:"} {resolvedFormula}
+        {isPortuguese ? "Fórmula:" : isSpanish ? "Fórmula:" : isFrench ? "Formule :" : "Formula:"} {resolvedFormula}
       </span>
     )}
   </div>
@@ -110,7 +113,7 @@ if (calculatorId && (!resolvedScenario || resolvedSteps.length === 0)) {
   {resolvedScenario && (
     <div class="rounded-[8px] border border-hairline-soft bg-canvas p-4 text-xs sm:text-sm text-body leading-relaxed">
       <strong class="font-semibold text-ink">
-        {isSpanish ? "Escenario Práctico:" : isFrench ? "Scénario Concret :" : "Practical Scenario:"}
+        {isPortuguese ? "Cenário Prático:" : isSpanish ? "Escenario Práctico:" : isFrench ? "Scénario Concret :" : "Practical Scenario:"}
       </strong> 
       <span itemprop="description">{resolvedScenario}</span>
     </div>
@@ -154,7 +157,7 @@ if (calculatorId && (!resolvedScenario || resolvedSteps.length === 0)) {
       </svg>
       <div>
         <strong class="font-semibold text-cyan">
-          {isSpanish ? "Resultado Final Verificado:" : isFrench ? "Résultat Final Vérifié :" : "Final Verified Result:"}
+          {isPortuguese ? "Resultado Final Verificado:" : isSpanish ? "Resultado Final Verificado:" : isFrench ? "Résultat Final Vérifié :" : "Final Verified Result:"}
         </strong> {resolvedConclusion}
       </div>
     </div>

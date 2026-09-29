@@ -88,6 +88,8 @@ const isSpanish = pathname.includes('/es/') || (Astro.currentLocale === 'es') ||
     const docLang = document.documentElement.lang || '';
     const isFrPage = path.startsWith('/fr') || docLang.startsWith('fr');
     const isEsPage = path.includes('/es/') || docLang.startsWith('es') || path.startsWith('/calculadora-edad/es');
+    const isPtPage = path.includes('/pt') || docLang.startsWith('pt');
+    if (isPtPage) return;
 
     const switchBtn = document.getElementById('fac-toast-switch-btn');
     const dismissBtn = document.getElementById('fac-toast-dismiss-btn');

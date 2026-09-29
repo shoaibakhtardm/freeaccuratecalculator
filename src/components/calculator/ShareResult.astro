@@ -4,18 +4,20 @@ interface Props {
   calculatorTitle: string;
   isFrench?: boolean;
   isSpanish?: boolean;
+  isPortuguese?: boolean;
 }
 
-const { calculatorTitle, isFrench: propIsFrench, isSpanish: propIsSpanish } = Astro.props;
+const { calculatorTitle, isFrench: propIsFrench, isSpanish: propIsSpanish, isPortuguese: propIsPortuguese } = Astro.props;
 const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
 const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro.url.pathname.startsWith('/calculadora-edad/es'));
+const isPortuguese = propIsPortuguese ?? (Astro.url.pathname.includes('/pt') || (Astro.props as any).lang?.startsWith('pt'));
 ---
 
 <div class="rounded-xl border border-hairline bg-canvas p-4 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-whisper">
   <div class="flex items-center gap-2">
     <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
     <span class="text-xs font-mono text-mute">
-      {isSpanish ? "¿Te resultó útil y preciso? Comparte tu cálculo:" : isFrench ? "Outil utile et précis ? Partagez votre calcul :" : "Found this accurate? Share your calculation:"}
+      {isPortuguese ? "Achou útil e preciso? Compartilhe o seu cálculo:" : isSpanish ? "¿Te resultó útil y preciso? Comparte tu cálculo:" : isFrench ? "Outil utile et précis ? Partagez votre calcul :" : "Found this accurate? Share your calculation:"}
     </span>
   </div>
   
@@ -24,25 +26,26 @@ const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro
     <button
       id="copy-link-btn"
       class="min-h-[44px] px-3.5 py-1.5 rounded-lg border border-hairline bg-canvas-elevated hover:bg-link/10 text-ink text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
-      title={isSpanish ? "Copiar enlace del cálculo" : isFrench ? "Copier le lien du calcul" : "Copy calculation link"}
+      title={isPortuguese ? "Copiar link do cálculo" : isSpanish ? "Copiar enlace del cálculo" : isFrench ? "Copier le lien du calcul" : "Copy calculation link"}
       data-is-french={isFrench ? "true" : "false"}
       data-is-spanish={isSpanish ? "true" : "false"}
+      data-is-portuguese={isPortuguese ? "true" : "false"}
     >
       <svg class="w-3.5 h-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
       </svg>
-      <span id="copy-btn-text">{isSpanish ? "Copiar Enlace" : isFrench ? "Copier le Lien" : "Copy Link"}</span>
+      <span id="copy-btn-text">{isPortuguese ? "Copiar Link" : isSpanish ? "Copiar Enlace" : isFrench ? "Copier le Lien" : "Copy Link"}</span>
     </button>
 
     <!-- X / Twitter -->
     <a
       id="share-x-btn"
-      href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(isSpanish ? `Mira esta calculadora precisa (${calculatorTitle}):` : isFrench ? `Découvrez ce calculateur précis (${calculatorTitle}) :` : `Check out this accurate ${calculatorTitle}:`)}&url=${encodeURIComponent(Astro.url.href)}`}
+      href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(isPortuguese ? `Confira esta calculadora precisa (${calculatorTitle}):` : isSpanish ? `Mira esta calculadora precisa (${calculatorTitle}):` : isFrench ? `Découvrez ce calculateur précis (${calculatorTitle}) :` : `Check out this accurate ${calculatorTitle}:`)}&url=${encodeURIComponent(Astro.url.href)}`}
       target="_blank"
       rel="noopener noreferrer"
       class="min-h-[44px] min-w-[44px] rounded-lg border border-hairline bg-canvas-elevated hover:bg-link/10 text-ink flex items-center justify-center text-xs font-bold transition-colors"
-      aria-label={isSpanish ? "Compartir en X" : "Share on X"}
-      title={isSpanish ? "Compartir en X" : isFrench ? "Partager sur X" : "Share on X"}
+      aria-label={isPortuguese ? "Compartilhar no X" : isSpanish ? "Compartir en X" : "Share on X"}
+      title={isPortuguese ? "Compartilhar no X" : isSpanish ? "Compartir en X" : isFrench ? "Partager sur X" : "Share on X"}
     >
       𝕏
     </a>
@@ -54,8 +57,8 @@ const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro
       target="_blank"
       rel="noopener noreferrer"
       class="min-h-[44px] min-w-[44px] rounded-lg border border-hairline bg-canvas-elevated hover:bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xs transition-colors"
-      aria-label={isSpanish ? "Compartir en WhatsApp" : "Share on WhatsApp"}
-      title={isSpanish ? "Compartir en WhatsApp" : isFrench ? "Partager sur WhatsApp" : "Share on WhatsApp"}
+      aria-label={isPortuguese ? "Compartilhar no WhatsApp" : isSpanish ? "Compartir en WhatsApp" : "Share on WhatsApp"}
+      title={isPortuguese ? "Compartilhar no WhatsApp" : isSpanish ? "Compartir en WhatsApp" : isFrench ? "Partager sur WhatsApp" : "Share on WhatsApp"}
     >
       💬
     </a>
@@ -67,8 +70,8 @@ const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro
       target="_blank"
       rel="noopener noreferrer"
       class="min-h-[44px] min-w-[44px] rounded-lg border border-hairline bg-canvas-elevated hover:bg-blue-600/10 text-blue-500 flex items-center justify-center text-xs font-bold transition-colors"
-      aria-label={isSpanish ? "Compartir en LinkedIn" : "Share on LinkedIn"}
-      title={isSpanish ? "Compartir en LinkedIn" : isFrench ? "Partager sur LinkedIn" : "Share on LinkedIn"}
+      aria-label={isPortuguese ? "Compartilhar no LinkedIn" : isSpanish ? "Compartir en LinkedIn" : "Share on LinkedIn"}
+      title={isPortuguese ? "Compartilhar no LinkedIn" : isSpanish ? "Compartir en LinkedIn" : isFrench ? "Partager sur LinkedIn" : "Share on LinkedIn"}
     >
       in
     </a>
@@ -79,12 +82,13 @@ const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro
   document.getElementById('copy-link-btn')?.addEventListener('click', function () {
     navigator.clipboard.writeText(window.location.href);
     const label = document.getElementById('copy-btn-text');
+    const isPt = this.getAttribute('data-is-portuguese') === 'true' || window.location.pathname.includes('/pt');
     const isEs = this.getAttribute('data-is-spanish') === 'true' || window.location.pathname.includes('/es/');
     const isFr = this.getAttribute('data-is-french') === 'true' || window.location.pathname.startsWith('/fr/');
     if (label) {
-      label.textContent = isEs ? '¡Copiado!' : (isFr ? 'Copié !' : 'Copied!');
+      label.textContent = isPt ? 'Copiado!' : (isEs ? '¡Copiado!' : (isFr ? 'Copié !' : 'Copied!'));
       setTimeout(() => {
-        label.textContent = isEs ? 'Copiar Enlace' : (isFr ? 'Copier le Lien' : 'Copy Link');
+        label.textContent = isPt ? 'Copiar Link' : (isEs ? 'Copiar Enlace' : (isFr ? 'Copier le Lien' : 'Copy Link'));
       }, 2000);
     }
   });
