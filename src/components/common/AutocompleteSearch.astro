@@ -86,8 +86,10 @@ const searchI18nJson = JSON.stringify(hpStrings.search);
       placeholder=""
       class="fac-search-input relative z-20 w-full rounded-2xl sm:rounded-full bg-transparent py-3 sm:py-3.5 pl-11.5 sm:pl-12.5 pr-24 text-xs sm:text-sm md:text-base font-bold text-slate-900 dark:text-white placeholder:text-transparent placeholder:opacity-0 shadow-sm outline-none border-none ring-0 transition-all tracking-tight sm:tracking-normal"
       aria-label={effectivePlaceholder || hpStrings.search.ariaLabel}
+      role="combobox"
       aria-autocomplete="list"
-      aria-controls={`${id}-dropdown`}
+      aria-haspopup="listbox"
+      aria-controls={`${id}-results`}
       aria-expanded="false"
     />
 
@@ -113,7 +115,7 @@ const searchI18nJson = JSON.stringify(hpStrings.search);
   <div
     id={`${id}-dropdown`}
     class="fac-suggestions-panel absolute left-0 right-0 top-full mt-2.5 z-50 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl shadow-2xl shadow-slate-900/15 dark:shadow-black/50 overflow-hidden text-left rtl:text-right transition-all duration-200 origin-top opacity-0 scale-95 pointer-events-none invisible"
-    role="listbox"
+    aria-label={hpStrings.search.suggestedCount}
   >
     <!-- Dynamic Results Header -->
     <div class="fac-results-header px-4 py-2.5 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
@@ -122,9 +124,15 @@ const searchI18nJson = JSON.stringify(hpStrings.search);
     </div>
 
     <!-- Scrollable Results Container -->
-    <div class="fac-results-list max-h-[300px] sm:max-h-[360px] overflow-y-auto p-1.5 space-y-1">
+    <div
+      id={`${id}-results`}
+      class="fac-results-list max-h-[300px] sm:max-h-[360px] overflow-y-auto p-1.5 space-y-1"
+      role="listbox"
+      aria-label={hpStrings.search.suggestedCount}
+    >
       <!-- Injected dynamically by client JS -->
     </div>
+
 
     <!-- Empty State -->
     <div class="fac-no-results hidden p-6 text-center space-y-1.5">
@@ -177,11 +185,20 @@ const searchI18nJson = JSON.stringify(hpStrings.search);
         i18n = JSON.parse(container.dataset.i18n || '{}');
       } catch (_) {}
 
-      let dataset = [];
-      try {
-        dataset = JSON.parse(dataEl.textContent || '[]');
-      } catch (_) {
-        dataset = [];
+      let dataset = null;
+      function getDataset() {
+        if (!dataset) {
+          try {
+            dataset = JSON.parse(dataEl.textContent || '[]');
+          } catch (_) {
+            dataset = [];
+          }
+        }
+        return dataset;
+      }
+
+      if ('requestIdleCallback' in window) {
+        window.requestIdleCallback(getDataset, { timeout: 3500 });
       }
 
       let activeIndex = -1;
@@ -225,9 +242,11 @@ const searchI18nJson = JSON.stringify(hpStrings.search);
         items.forEach((item, idx) => {
           if (idx === activeIndex) {
             item.classList.add('bg-indigo-50', 'dark:bg-indigo-950/70', 'ring-1', 'ring-indigo-500/30');
+            item.setAttribute('aria-selected', 'true');
             item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
           } else {
             item.classList.remove('bg-indigo-50', 'dark:bg-indigo-950/70', 'ring-1', 'ring-indigo-500/30');
+            item.setAttribute('aria-selected', 'false');
           }
         });
       }
@@ -247,7 +266,9 @@ const searchI18nJson = JSON.stringify(hpStrings.search);
 
         // Score & rank matches
         const scored = [];
-        for (const item of dataset) {
+        const items = getDataset();
+        for (const item of items) {
+
           const nameLower = item.name.toLowerCase();
           const catLower = (item.categoryName || item.category).toLowerCase();
           const keywords = item.keywords || [];

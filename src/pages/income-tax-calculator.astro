@@ -131,8 +131,8 @@ const formulaVariables = [
             id="tax-country-select"
             class="rounded-lg border border-hairline bg-canvas px-3 py-1.5 text-xs font-mono font-semibold text-ink focus:border-link focus:outline-none cursor-pointer"
           >
-            <option value="IN" selected>🇮🇳 India (FY 2026–27 / AY 2027–28)</option>
-            <option value="US">🇺🇸 United States (Tax Year 2026 IRS)</option>
+            <option value="US" selected>🇺🇸 United States (Tax Year 2026 IRS)</option>
+            <option value="IN">🇮🇳 India (FY 2026–27 / AY 2027–28)</option>
           </select>
         </div>
       </div>
@@ -140,10 +140,10 @@ const formulaVariables = [
       <!-- Quick Preset Chips -->
       <div id="tax-presets-container" class="flex items-center gap-1.5 overflow-x-auto text-[11px] font-medium text-mute pb-1 sm:pb-0">
         <span class="select-none shrink-0">Presets:</span>
-        <button type="button" aria-label="Preset 7.5 Lakhs income" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="750000">₹7.5L</button>
-        <button type="button" aria-label="Preset 10 Lakhs income" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="1000000">₹10L</button>
-        <button type="button" aria-label="Preset 15 Lakhs income" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="1500000">₹15L</button>
-        <button type="button" aria-label="Preset 25 Lakhs income" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="2500000">₹25L</button>
+        <button type="button" aria-label="Preset 50k income" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="50000">$50k</button>
+        <button type="button" aria-label="Preset 85k income" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="85000">$85k</button>
+        <button type="button" aria-label="Preset 125k income" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="125000">$125k</button>
+        <button type="button" aria-label="Preset 200k income" class="preset-chip shrink-0 rounded border border-hairline bg-canvas px-3 py-2 sm:py-1 min-h-[44px] sm:min-h-[26px] hover:text-ink cursor-pointer" data-amount="200000">$200k</button>
       </div>
     </div>
 
@@ -153,16 +153,16 @@ const formulaVariables = [
       <div class="space-y-2">
         <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
           <label for="tax-gross-income">Gross Annual Income</label>
-          <span id="gross-display" class="font-mono text-link text-sm">₹ 10,00,000</span>
+          <span id="gross-display" class="font-mono text-link text-sm">$ 85,000</span>
         </div>
         <div class="relative flex items-center">
-          <span id="currency-symbol-addon" class="absolute left-3.5 text-sm font-mono text-mute select-none">₹</span>
+          <span id="currency-symbol-addon" class="absolute left-3.5 text-sm font-mono text-mute select-none">$</span>
           <input
             id="tax-gross-income"
             type="number"
             min="0"
-            step="10000"
-            value="1000000"
+            step="5000"
+            value="85000"
             class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas py-2.5 pl-8 pr-3 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
           />
         </div>
@@ -171,29 +171,29 @@ const formulaVariables = [
       <!-- 2. Status / Regime Dynamic Selector -->
       <div class="space-y-2">
         <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
-          <label id="tax-option-label" for="tax-option-select">Tax Regime / Filing Status</label>
+          <label id="tax-option-label" for="tax-option-select">Filing Status</label>
         </div>
         <select
           id="tax-option-select"
           class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2.5 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none"
         >
-          <option value="new" selected>New Tax Regime (Section 115BAC Default)</option>
-          <option value="old">Old Tax Regime (With Deductions)</option>
+          <option value="single" selected>Single Filer</option>
+          <option value="married_joint">Married Filing Jointly</option>
         </select>
       </div>
 
       <!-- Dynamic Country Field: India 80C or US 401(k) -->
       <div id="field-deduction-1" class="space-y-2">
         <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
-          <label id="label-deduction-1" for="input-deduction-1">Section 80C Deductions (Max ₹1.5L)</label>
+          <label id="label-deduction-1" for="input-deduction-1">Traditional 401(k) Contribution (Max $24,500)</label>
         </div>
         <input
           id="input-deduction-1"
           type="number"
           min="0"
-          max="150000"
-          step="5000"
-          value="150000"
+          max="24500"
+          step="500"
+          value="24500"
           class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas py-2.5 px-3 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none"
         />
       </div>
@@ -201,14 +201,14 @@ const formulaVariables = [
       <!-- Dynamic Country Field: India 80D / HRA or US Itemized -->
       <div id="field-deduction-2" class="space-y-2">
         <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
-          <label id="label-deduction-2" for="input-deduction-2">Section 80D Health Insurance (₹)</label>
+          <label id="label-deduction-2" for="input-deduction-2">Itemized Deductions (Optional $)</label>
         </div>
         <input
           id="input-deduction-2"
           type="number"
           min="0"
-          step="5000"
-          value="25000"
+          step="1000"
+          value="0"
           class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas py-2.5 px-3 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none"
         />
       </div>
@@ -219,28 +219,28 @@ const formulaVariables = [
       <ResultDisplay
         id="tax-net-result"
         label="Net Tax Payable"
-        prefix="₹ "
-        initialValue={44200}
+        prefix="$ "
+        initialValue={8864}
         decimals={0}
-        secondary="Effective Tax Rate: 4.42%"
+        secondary="Effective Tax Rate: 10.43%"
         accent="violet"
       />
       <ResultDisplay
         id="tax-takehome-result"
         label="Monthly Take-Home"
-        prefix="₹ "
-        initialValue={79650}
+        prefix="$ "
+        initialValue={6345}
         decimals={0}
-        secondary="Annual Take-Home: ₹ 9,55,800"
+        secondary="Annual Take-Home: $ 76,136"
         accent="cyan"
       />
       <ResultDisplay
         id="tax-taxable-result"
         label="Taxable Income"
-        prefix="₹ "
-        initialValue={925000}
+        prefix="$ "
+        initialValue={44400}
         decimals={0}
-        secondary="Standard Deduction: ₹ 75,000"
+        secondary="Standard Deduction: $ 16,100"
         accent="link"
       />
     </div>
@@ -287,33 +287,33 @@ const formulaVariables = [
           <tbody id="tax-breakdown-body" class="divide-y divide-hairline text-ink">
             <tr>
               <td class="py-2 px-3">Gross Total Income</td>
-              <td id="row-gross" class="py-2 px-3 text-right font-semibold">₹ 10,00,000</td>
+              <td id="row-gross" class="py-2 px-3 text-right font-semibold">$ 85,000</td>
               <td class="py-2 px-3 text-right text-mute">100.00%</td>
             </tr>
             <tr>
-              <td id="row-ded-label" class="py-2 px-3">Standard Deduction (Salaried)</td>
-              <td id="row-ded" class="py-2 px-3 text-right text-cyan font-semibold">- ₹ 75,000</td>
-              <td class="py-2 px-3 text-right text-mute">-7.50%</td>
+              <td id="row-ded-label" class="py-2 px-3">Deductions (Standard $16,100 + 401k)</td>
+              <td id="row-ded" class="py-2 px-3 text-right text-cyan font-semibold">- $ 40,600</td>
+              <td class="py-2 px-3 text-right text-mute">-47.76%</td>
             </tr>
             <tr>
               <td class="py-2 px-3">Net Taxable Income</td>
-              <td id="row-taxable" class="py-2 px-3 text-right font-semibold">₹ 9,25,000</td>
-              <td class="py-2 px-3 text-right text-mute">92.50%</td>
+              <td id="row-taxable" class="py-2 px-3 text-right font-semibold">$ 44,400</td>
+              <td class="py-2 px-3 text-right text-mute">52.24%</td>
             </tr>
             <tr>
-              <td id="row-tax-label" class="py-2 px-3">Tax Before Cess</td>
-              <td id="row-tax-base" class="py-2 px-3 text-right">₹ 42,500</td>
-              <td class="py-2 px-3 text-right text-mute">4.25%</td>
+              <td id="row-tax-label" class="py-2 px-3">Federal Income Tax</td>
+              <td id="row-tax-base" class="py-2 px-3 text-right">$ 2,361</td>
+              <td class="py-2 px-3 text-right text-mute">2.78%</td>
             </tr>
             <tr>
-              <td id="row-cess-label" class="py-2 px-3">Health & Education Cess (4%)</td>
-              <td id="row-cess" class="py-2 px-3 text-right text-violet">₹ 1,700</td>
-              <td class="py-2 px-3 text-right text-mute">0.17%</td>
+              <td id="row-cess-label" class="py-2 px-3">FICA Taxes (Social Security 6.2% + Medicare 1.45%)</td>
+              <td id="row-cess" class="py-2 px-3 text-right text-violet">$ 6,503</td>
+              <td class="py-2 px-3 text-right text-mute">7.65%</td>
             </tr>
             <tr class="bg-canvas-elevated font-semibold">
               <td class="py-2.5 px-3 text-link">Total Net Tax Liability</td>
-              <td id="row-net-tax" class="py-2.5 px-3 text-right text-link">₹ 44,200</td>
-              <td id="row-eff-rate" class="py-2.5 px-3 text-right text-link">4.42%</td>
+              <td id="row-net-tax" class="py-2.5 px-3 text-right text-link">$ 8,864</td>
+              <td id="row-eff-rate" class="py-2.5 px-3 text-right text-link">10.43%</td>
             </tr>
           </tbody>
         </table>
@@ -321,7 +321,7 @@ const formulaVariables = [
     </div>
 
     <!-- Comparative Recommendation Card (India New vs Old) -->
-    <div id="india-recommendation-card" class="rounded-[8px] border border-cyan/30 bg-cyan/5 p-4 text-xs space-y-1.5">
+    <div id="india-recommendation-card" style="display: none;" class="rounded-[8px] border border-cyan/30 bg-cyan/5 p-4 text-xs space-y-1.5">
       <div class="flex items-center justify-between font-semibold text-cyan">
         <span class="font-mono uppercase">Regime Recommendation: New Tax Regime</span>
         <span id="savings-badge" class="rounded bg-cyan/20 px-2 py-0.5 text-[11px]">Saves ₹ 62,400 annually</span>
@@ -346,29 +346,29 @@ const formulaVariables = [
   />
 
   <WorkedExample
-    title="Worked Example: ₹10,00,000 Salaried Income (India New Regime FY 2026–27)"
-    scenario="A salaried resident employee in India earning ₹10,00,000 gross annual salary under the default New Tax Regime."
+    title="Worked Example: $85,000 Salaried Income (US Tax Year 2026 Single Filer)"
+    scenario="A salaried employee in the United States earning $85,000 gross annual salary with a $24,500 traditional 401(k) contribution taking the 2026 standard deduction ($16,100)."
     steps={[
       {
         number: 1,
-        title: 'Apply Standard Deduction',
-        description: 'Gross Salary (₹10,00,000) − Standard Deduction (₹75,000) = Taxable Income of ₹9,25,000.',
-        mathExpression: 'Taxable Income = ₹9,25,000',
+        title: 'Calculate Taxable Income',
+        description: 'Gross Salary ($85,000) − 401(k) ($24,500) − Standard Deduction ($16,100) = Taxable Income of $44,400.',
+        mathExpression: 'Taxable Income = $44,400',
       },
       {
         number: 2,
-        title: 'Compute Progressive Marginal Slabs',
-        description: '₹0–3L: ₹0 | ₹3L–7L (5% on 4L): ₹20,000 | ₹7L–9.25L (10% on 2.25L): ₹22,500. Total base tax = ₹42,500.',
-        mathExpression: 'Tax Before Cess = ₹42,500',
+        title: 'Compute Federal Progressive Income Tax',
+        description: 'Progressive IRS brackets on $44,400 taxable income (10% on first $11,925 + 12% on remainder).',
+        mathExpression: 'Federal Income Tax = $2,361',
       },
       {
         number: 3,
-        title: 'Apply 4% Health & Education Cess',
-        description: '4% Cess on ₹42,500 = ₹1,700. Net tax payable = ₹42,500 + ₹1,700 = ₹44,200.',
-        mathExpression: 'Net Tax = ₹44,200 (Effective Rate: 4.42%)',
+        title: 'Apply Mandatory FICA Payroll Taxes',
+        description: 'Social Security (6.2% on $85k = $5,270) + Medicare (1.45% on $85k = $1,233) = $6,503 total FICA.',
+        mathExpression: 'Total FICA = $6,503',
       },
     ]}
-    conclusion="The taxpayer pays ₹44,200 total income tax, yielding monthly take-home pay of ₹79,650."
+    conclusion="The taxpayer pays $8,864 total tax ($2,361 Federal + $6,503 FICA), resulting in an effective tax rate of 10.43% and monthly take-home pay of $6,345."
   />
 
   <!-- Download & Export Section Card (SIP Standard) -->
@@ -437,8 +437,11 @@ const formulaVariables = [
   import { calculateUSIncomeTax } from '../engines/tax-us';
   import { promptCurrencyConversion, convertCurrency } from '../utils/currency';
 
-  let currentCountryCode = 'IN';
-  let currentCurrencyCode = 'INR';
+  const initialCurrency = typeof (window as any).facGetActiveCurrency === 'function'
+    ? (window as any).facGetActiveCurrency()
+    : (localStorage.getItem('fac_currency') || 'USD');
+  let currentCountryCode = initialCurrency === 'INR' ? 'IN' : 'US';
+  let currentCurrencyCode = initialCurrency === 'INR' ? 'INR' : 'USD';
   const taxJurisdictions = {
     IN: { currency: 'INR', currencySymbol: '₹' },
     US: { currency: 'USD', currencySymbol: '$' },
@@ -792,6 +795,15 @@ const formulaVariables = [
       if (amt && grossInput) { grossInput.value = amt; recalculate(); }
     });
   });
+
+  // Initial calculation / sync
+  if (currentCountryCode === 'IN') {
+    if (countrySelect) countrySelect.value = 'IN';
+    handleCountrySwitch('IN');
+  } else {
+    if (countrySelect) countrySelect.value = 'US';
+    recalculate();
+  }
 </script>
 
 <style is:global>
@@ -813,12 +825,11 @@ const formulaVariables = [
     #tax-print-report, #tax-print-report * { visibility: visible !important; }
     #tax-print-report {
       display: block !important;
-      position: absolute !important;
-      left: 0 !important; top: 0 !important;
+      position: static !important;
       width: 100% !important;
       background: #ffffff !important;
       color: #0f172a !important;
-      padding: 20px 24px !important;
+      padding: 0 !important;
       box-sizing: border-box !important;
     }
     @page { size: A4 portrait; margin: 10mm 12mm; }

@@ -29,6 +29,13 @@ export const VERIFIED_LOCALIZED_ROUTES: Record<string, LocalizedRouteConfig> = {
       hi: '/hi/finance/emi-calculator/',
     },
   },
+  'age-calculator': {
+    canonicalPath: '/age-calculator/',
+    locales: {
+      en: '/age-calculator/',
+      es: '/calculadora-edad/es/',
+    },
+  },
 };
 
 /**

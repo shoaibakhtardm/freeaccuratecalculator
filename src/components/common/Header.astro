@@ -40,22 +40,30 @@ const pathname = Astro.url.pathname;
   </div>
 </header>
 
-<!-- Scroll shadow script -->
+<!-- Scroll shadow script (RAF-batched, zero forced reflow) -->
 <script is:inline>
   (function () {
     const header = document.getElementById('main-header');
+    if (!header) return;
 
-    // Subtle shadow on scroll
-    function onScroll() {
-      if (!header) return;
+    let ticking = false;
+    function updateShadow() {
       if (window.scrollY > 8) {
         header.classList.add('shadow-md', 'dark:shadow-gray-950/60');
       } else {
         header.classList.remove('shadow-md', 'dark:shadow-gray-950/60');
       }
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateShadow);
+        ticking = true;
+      }
     }
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
   })();
 </script>
+

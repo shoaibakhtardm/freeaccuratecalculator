@@ -1,10 +1,12 @@
 ---
 interface Props {
   isFrench?: boolean;
+  isSpanish?: boolean;
 }
 
-const { isFrench: propIsFrench } = Astro.props;
+const { isFrench: propIsFrench, isSpanish: propIsSpanish } = Astro.props;
 const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
+const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro.url.pathname.startsWith('/calculadora-edad/es'));
 ---
 
 <div
@@ -13,13 +15,14 @@ const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
   role="dialog"
   aria-modal="true"
   data-is-french={isFrench ? "true" : "false"}
+  data-is-spanish={isSpanish ? "true" : "false"}
 >
   <div class="relative w-full max-w-md rounded-2xl border border-hairline bg-canvas-elevated p-6 sm:p-8 shadow-2xl space-y-5">
     <!-- Close Button -->
     <button
       id="modal-close-btn"
       class="absolute top-4 right-4 text-mute hover:text-ink min-h-[44px] min-w-[44px] flex items-center justify-center rounded-full transition-colors cursor-pointer"
-      aria-label={isFrench ? "Fermer la fenêtre" : "Close modal"}
+      aria-label={isSpanish ? "Cerrar ventana" : isFrench ? "Fermer la fenêtre" : "Close modal"}
     >
       ✕
     </button>
@@ -29,13 +32,15 @@ const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
-        <span>{isFrench ? "Téléchargement Gratuit" : "Free Download"}</span>
+        <span>{isSpanish ? "Descarga Gratuita" : isFrench ? "Téléchargement Gratuit" : "Free Download"}</span>
       </span>
       <h3 class="text-xl font-bold text-ink tracking-tight">
-        {isFrench ? "Enregistrez votre Échéancier d'Amortissement" : "Save Your Amortization & Tax Schedule"}
+        {isSpanish ? "Guarda tu Tabla de Amortización e Impuestos" : isFrench ? "Enregistrez votre Échéancier d'Amortissement" : "Save Your Amortization & Tax Schedule"}
       </h3>
       <p class="text-xs text-mute leading-relaxed">
-        {isFrench ? (
+        {isSpanish ? (
+          <>Recibe nuestra plantilla maestra <strong>Tabla de Amortización y Finanzas 2026</strong> (Excel / Google Sheets) con cálculo automatizado de cuotas.</>
+        ) : isFrench ? (
           <>Recevez notre modèle complet <strong>Tableau d'Amortissement & Fiscalité 2026</strong> (Excel / Google Sheets) avec simulation automatisée des échéances.</>
         ) : (
           <>Get our comprehensive <strong>2026 Wealth & Loan Amortization Master Spreadsheet</strong> (Excel/Google Sheets) with auto-calculating prepayment schedules.</>
@@ -46,13 +51,13 @@ const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
     <form id="email-capture-form" class="space-y-3">
       <div>
         <label for="subscriber-email" class="sr-only">
-          {isFrench ? "Adresse Email" : "Email Address"}
+          {isSpanish ? "Correo Electrónico" : isFrench ? "Adresse Email" : "Email Address"}
         </label>
         <input
           type="email"
           id="subscriber-email"
           required
-          placeholder={isFrench ? "Entrez votre adresse email..." : "Enter your best email..."}
+          placeholder={isSpanish ? "Introduce tu correo electrónico..." : isFrench ? "Entrez votre adresse email..." : "Enter your best email..."}
           class="w-full min-h-[44px] px-3.5 py-2 text-sm rounded-lg border border-hairline bg-canvas text-ink placeholder:text-mute focus:outline-none focus:ring-2 focus:ring-link font-sans"
         />
       </div>
@@ -62,20 +67,20 @@ const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
         id="modal-submit-btn"
         class="w-full min-h-[44px] px-4 py-2.5 rounded-lg bg-link hover:opacity-90 text-white font-medium text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
       >
-        <span>{isFrench ? "Recevoir le Modèle Gratuit" : "Send Me the Free Spreadsheet"}</span>
+        <span>{isSpanish ? "Recibir Plantilla Gratuita" : isFrench ? "Recevoir le Modèle Gratuit" : "Send Me the Free Spreadsheet"}</span>
       </button>
 
       <p class="text-[11px] text-mute text-center">
-        {isFrench ? "100% Gratuit • Aucun spam • Désinscription en 1 clic." : "100% Free • No Spam • Unsubscribe anytime with 1-click."}
+        {isSpanish ? "100% Gratuito • Sin spam • Cancela tu suscripción en 1 clic." : isFrench ? "100% Gratuit • Aucun spam • Désinscription en 1 clic." : "100% Free • No Spam • Unsubscribe anytime with 1-click."}
       </p>
     </form>
 
     <div id="modal-success-msg" class="hidden text-center py-4 space-y-2">
       <div class="text-emerald-400 text-2xl font-bold">
-        {isFrench ? "✓ Envoyé !" : "✓ Sent!"}
+        {isSpanish ? "✓ ¡Enviado!" : isFrench ? "✓ Envoyé !" : "✓ Sent!"}
       </div>
       <p class="text-xs text-mute">
-        {isFrench ? "Consultez votre boîte de réception pour accéder à votre document." : "Check your inbox for your download link."}
+        {isSpanish ? "Revisa tu bandeja de entrada para acceder a tu enlace de descarga." : isFrench ? "Consultez votre boîte de réception pour accéder à votre document." : "Check your inbox for your download link."}
       </p>
     </div>
   </div>

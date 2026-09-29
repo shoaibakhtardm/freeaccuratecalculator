@@ -9,7 +9,7 @@ export const faqDatabase: Record<string, FAQItem[]> = {
     {
       question: 'What is a SIP (Systematic Investment Plan) and how does it work?',
       answer:
-        'A Systematic Investment Plan (SIP) is an investment vehicle offered by mutual funds that allows you to invest a fixed sum of money at regular intervals (usually monthly) into a chosen mutual fund scheme. Instead of timing the market, SIP leverages Rupee Cost Averaging (purchasing more units when prices are low and fewer when prices are high) and the power of compounding to build long-term wealth disciplined over time.',
+        'A Systematic Investment Plan (SIP) is an investment vehicle offered by mutual funds and brokerage platforms that allows you to invest a fixed sum of money at regular intervals (usually monthly). Instead of timing the market, periodic investing leverages Dollar-Cost Averaging (DCA) (purchasing more fund units or shares when prices are low and fewer when prices are high) and the power of compound interest to build long-term wealth.',
     },
     {
       question: 'How is SIP return calculated mathematically?',
@@ -24,22 +24,22 @@ export const faqDatabase: Record<string, FAQItem[]> = {
     {
       question: 'How does inflation affect my SIP maturity corpus?',
       answer:
-        'Inflation reduces the purchasing power of your money over time. For example, a nominal corpus of ₹1 Crore accumulated in 15 years at a 6% annual inflation rate will have a real purchasing power of approximately ₹41.7 Lakh in today’s money. Our SIP calculator features an inflation-adjusted toggle to display your true future wealth in today’s purchasing power.',
+        'Inflation reduces the purchasing power of your money over time. For example, a nominal portfolio of $1,000,000 accumulated in 15 years at a 6% annual inflation rate will have a real purchasing power of approximately $417,265 in today’s money. Our SIP calculator features an inflation-adjusted toggle to display your true future wealth in today’s purchasing power.',
     },
     {
       question: 'What is the cost of delaying a SIP by 1 to 5 years?',
       answer:
-        'Delaying your SIP start date carries a severe compound opportunity cost known as the "Cost of Delay". For instance, starting a ₹10,000 monthly SIP at 12% return for 20 years yields approximately ₹99.9 Lakh. Delaying the start by just 3 years reduces your final wealth to ₹64.9 Lakh — a staggering loss of ₹35 Lakh in compound returns for skipping just 36 installments.',
+        'Delaying your SIP start date carries a severe compound opportunity cost known as the "Cost of Delay". For instance, starting a $1,000 monthly investment at 12% return for 20 years yields approximately $999,148. Delaying the start by just 3 years reduces your final wealth to $649,264 — a staggering loss of approximately $350,000 in compound returns for skipping just 36 installments.',
     },
     {
       question: 'What is the difference between Annuity Due and Ordinary Annuity?',
       answer:
-        'Annuity Due assumes contributions are deposited on the 1st day (beginning) of each month, earning compounding interest for that initial month. This is the official standard followed by Indian mutual fund AMCs. Ordinary Annuity assumes contributions occur on the last day (end) of each month, which is common in international financial markets.',
+        'Annuity Due assumes contributions are deposited on the 1st day (beginning) of each month, earning compounding interest for that initial month. Ordinary Annuity assumes contributions occur on the last day (end) of each month. Our calculator supports both modes so you can match your specific fund or brokerage timing.',
     },
     {
       question: 'What are the income tax rules on SIP mutual fund returns?',
       answer:
-        'In India (FY 2025–26 / AY 2026–27), returns on Equity Mutual Funds are subject to Capital Gains Tax: Long-Term Capital Gains (LTCG, units held > 12 months) are taxed at 12.5% on cumulative gains exceeding ₹1.25 Lakh per financial year. Short-Term Capital Gains (STCG, held ≤ 12 months) are taxed at 20%. Each monthly SIP installment is treated as an independent investment with its own 12-month holding period for LTCG eligibility.',
+        'In the United States, investments in taxable accounts are subject to Capital Gains Tax: Long-Term Capital Gains (assets held > 1 year) are taxed at preferential federal rates (0%, 15%, or 20%), while Short-Term Capital Gains (held ≤ 1 year) are taxed as ordinary income. In tax-advantaged accounts like a 401(k) or IRA, investments grow tax-deferred or tax-free. In India (FY 2025–26 / AY 2026–27), Equity Mutual Funds held > 12 months are subject to 12.5% LTCG on gains exceeding ₹1.25 Lakh per financial year, while short-term gains are taxed at 20%. Across all jurisdictions, each periodic installment has its own independent holding period for tax eligibility.',
     },
     {
       question: 'Does a SIP guarantee fixed or assured returns?',

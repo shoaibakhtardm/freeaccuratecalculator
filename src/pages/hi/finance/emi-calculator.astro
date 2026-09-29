@@ -411,7 +411,12 @@ const relatedCalculators = [
         }
       }
 
-      if (P <= 0 || totalMonths <= 0) return;
+      if (P <= 0 || totalMonths <= 0) {
+        if (amortTableBody) {
+          amortTableBody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-xs font-mono text-mute">मान्य ऋण मूलधन और अवधि दर्ज करें।</td></tr>';
+        }
+        return;
+      }
 
       const r = annualRate / 12 / 100;
       let emi = 0;

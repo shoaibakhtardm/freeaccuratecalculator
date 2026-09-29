@@ -52,6 +52,8 @@ User-agent: Bingbot
 User-agent: *
 Content-Signal: search=yes,ai-train=no,use=reference
 Allow: /
+Allow: /*.css$
+Allow: /*.js$
 Disallow: /dev-preview/
 Disallow: /api/
 Disallow: /admin/

@@ -51,7 +51,7 @@ const schema = {
         'Inflation-adjusted real wealth purchasing power',
         '3-Scenario Sensitivity Matrix (Conservative, Base, Aggressive)',
         'Cost of Delay Estimator (waiting 1, 3, 5 years)',
-        'Milestone Roadmap (Time to ₹10L, ₹25L, ₹50L, ₹1Cr, ₹5Cr)',
+        'Milestone Roadmap (Time to $50k, $100k, $250k, $500k, $1M)',
         'Year-by-year amortization schedule',
         'Printable PDF Statement & Excel (.csv) export',
         '100% Client-side privacy guarantee'
@@ -250,7 +250,7 @@ const schema = {
       <!-- Trust Indicator -->
       <div class="hidden sm:flex items-center gap-2 text-xs font-mono text-mute">
         <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span class="font-semibold text-ink">INR (₹)</span>
+        <span id="sip-header-currency-label" class="font-semibold text-ink">USD ($)</span>
         <span>•</span>
         <span>100% Private Client-Side</span>
       </div>
@@ -265,18 +265,18 @@ const schema = {
         <div class="space-y-2 p-4 rounded-xl border border-hairline bg-canvas/40">
           <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
             <label id="sip-primary-label" for="sip-primary-amount">Monthly Investment</label>
-            <span id="sip-amount-display" class="font-mono text-link text-base tabular-nums font-bold">₹ 10,000</span>
+            <span id="sip-amount-display" class="font-mono text-link text-base tabular-nums font-bold">$ 1,000</span>
           </div>
 
           <div class="relative flex items-center gap-2">
             <div class="relative flex-1">
-              <span id="sip-symbol-addon" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-mono text-mute select-none font-bold">₹</span>
+              <span id="sip-symbol-addon" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-mono text-mute select-none font-bold">$</span>
               <input
                 id="sip-primary-amount"
                 type="number"
-                min="100"
-                step="500"
-                value="10000"
+                min="50"
+                step="50"
+                value="1000"
                 class="w-full min-h-[46px] rounded-xl border border-hairline bg-canvas-elevated py-2.5 pl-8 pr-3 text-base font-mono text-ink focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20 tabular-nums font-semibold transition-all shadow-2xs"
               />
             </div>
@@ -302,10 +302,10 @@ const schema = {
             <input
               id="sip-amount-slider"
               type="range"
-              min="500"
-              max="100000"
-              step="500"
-              value="10000"
+              min="50"
+              max="10000"
+              step="50"
+              value="1000"
               aria-label="Investment amount slider"
               class="custom-range-slider w-full cursor-pointer h-2.5 rounded-lg appearance-none bg-hairline"
             />
@@ -373,7 +373,7 @@ const schema = {
               8% Debt / FD
             </button>
             <button type="button" class="rate-benchmark-chip text-[11px] font-mono px-2.5 py-1.5 min-h-[36px] flex items-center rounded-lg border border-cyan/40 bg-cyan/10 text-cyan font-bold cursor-pointer transition-all shrink-0" data-rate="12">
-              12% Nifty Index
+              12% Broad Market Index
             </button>
             <button type="button" class="rate-benchmark-chip text-[11px] font-mono px-2.5 py-1.5 min-h-[36px] flex items-center rounded-lg border border-hairline bg-canvas-elevated hover:border-cyan/50 hover:text-cyan text-mute cursor-pointer transition-all shrink-0" data-rate="15">
               15% Active Equity
@@ -441,7 +441,7 @@ const schema = {
             </div>
             <div class="pt-2">
               <span id="timing-badge" class="inline-block rounded-full bg-link/10 text-link border border-link/20 px-2.5 py-0.5 text-[10px] font-mono font-semibold">
-                Annuity Due (India Standard)
+                Annuity Due (Beginning of Month)
               </span>
             </div>
           </div>
@@ -506,23 +506,23 @@ const schema = {
                 Expected Maturity Corpus
               </span>
               <div class="flex items-baseline gap-2 mt-1">
-                <span id="hero-result-symbol" class="text-2xl sm:text-3xl font-bold font-mono text-ink">₹</span>
+                <span id="hero-result-symbol" class="text-2xl sm:text-3xl font-bold font-mono text-ink">$</span>
                 <span id="hero-result-value" class="text-3xl sm:text-4xl font-extrabold font-mono text-ink tabular-nums tracking-tight">
-                  23,23,391
+                  204,845
                 </span>
               </div>
               <p id="hero-result-sub" class="text-xs text-mute mt-1 font-mono">
-                Total accumulated wealth at 12% P.A.
+                Total accumulated wealth at 10% P.A.
               </p>
             </div>
 
             <!-- Wealth Multiplier Chip -->
             <div class="shrink-0 text-right">
               <span id="wealth-multiplier-badge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-bold bg-cyan/20 text-cyan border border-cyan/40 shadow-xs">
-                1.94x Return
+                1.71x Return
               </span>
               <div id="hero-secondary-badge" class="text-[11px] font-mono font-semibold text-mute mt-1">
-                +93.6% Gain
+                +70.7% Gain
               </div>
             </div>
           </div>
@@ -532,16 +532,16 @@ const schema = {
             <div class="flex items-center justify-between text-xs font-mono">
               <span class="text-link font-semibold flex items-center gap-1.5">
                 <span class="w-2.5 h-2.5 rounded-full bg-link inline-block"></span>
-                Invested: <span id="bar-invested-label" class="tabular-nums font-bold">₹ 12,00,000 (51.6%)</span>
+                Invested: <span id="bar-invested-label" class="tabular-nums font-bold">$ 120,000 (58.6%)</span>
               </span>
               <span class="text-cyan font-semibold flex items-center gap-1.5">
                 <span class="w-2.5 h-2.5 rounded-full bg-cyan inline-block"></span>
-                Gain: <span id="bar-gain-label" class="tabular-nums font-bold">₹ 11,23,391 (48.4%)</span>
+                Gain: <span id="bar-gain-label" class="tabular-nums font-bold">$ 84,845 (41.4%)</span>
               </span>
             </div>
             <div class="h-3 w-full overflow-hidden rounded-full bg-hairline flex">
-              <div id="spectrum-invested" class="h-full bg-link transition-all duration-300 rounded-l-full" style="width: 51.6%;"></div>
-              <div id="spectrum-gain" class="h-full bg-cyan transition-all duration-300 rounded-r-full" style="width: 48.4%;"></div>
+              <div id="spectrum-invested" class="h-full bg-link transition-all duration-300 rounded-l-full" style="width: 58.6%;"></div>
+              <div id="spectrum-gain" class="h-full bg-cyan transition-all duration-300 rounded-r-full" style="width: 41.4%;"></div>
             </div>
           </div>
         </div>
@@ -556,7 +556,7 @@ const schema = {
             </div>
             <div class="mt-2">
               <div class="text-xl sm:text-2xl font-bold font-mono text-ink tabular-nums">
-                <span id="sec-invested-symbol">₹</span> <span id="sec-invested-value">12,00,000</span>
+                <span id="sec-invested-symbol">$</span> <span id="sec-invested-value">120,000</span>
               </div>
               <span id="sec-invested-sub" class="text-[11px] font-mono text-mute mt-0.5 block">120 Monthly Deposits</span>
             </div>
@@ -570,7 +570,7 @@ const schema = {
             </div>
             <div class="mt-2">
               <div class="text-xl sm:text-2xl font-bold font-mono text-cyan tabular-nums">
-                <span id="sec-gain-symbol">₹</span> <span id="sec-gain-value">11,23,391</span>
+                <span id="sec-gain-symbol">$</span> <span id="sec-gain-value">84,845</span>
               </div>
               <span id="sec-gain-sub" class="text-[11px] font-mono text-mute mt-0.5 block">Pure Compound Growth</span>
             </div>
@@ -773,9 +773,9 @@ const schema = {
           </svg>
         </div>
         <div>
-          <span id="matrix-milestone-title" class="text-[10px] font-mono font-bold uppercase tracking-wider text-mute block">₹1 Crore Countdown</span>
+          <span id="matrix-milestone-title" class="text-[10px] font-mono font-bold uppercase tracking-wider text-mute block">$1 Million Countdown</span>
           <span id="matrix-milestone-time" class="text-xs font-mono font-bold text-ink block mt-0.5">
-            18 Years, 4 Months
+            20 Years, 0 Months
           </span>
           <p class="text-[10px] text-mute mt-0.5 leading-tight">Time required to reach the landmark corpus.</p>
         </div>
@@ -791,7 +791,7 @@ const schema = {
         <div>
           <span class="text-[10px] font-mono font-bold uppercase tracking-wider text-mute block">Real Value (Today's Money)</span>
           <span id="matrix-inflation-val" class="text-xs font-mono font-bold text-ink block mt-0.5">
-            ₹ 12,97,358
+            $ 129,736
           </span>
           <p class="text-[10px] text-mute mt-0.5 leading-tight">Future corpus adjusted for inflation.</p>
         </div>
@@ -837,8 +837,8 @@ const schema = {
             <span class="text-[10px] px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-mono">Debt / Hybrid</span>
           </div>
           <div>
-            <div id="scenario-cons-val" class="text-lg font-bold font-mono text-ink tabular-nums">₹ 18,41,657</div>
-            <div id="scenario-cons-gain" class="text-[11px] font-mono text-mute mt-0.5">Gain: ₹ 6,41,657 (1.53x)</div>
+            <div id="scenario-cons-val" class="text-lg font-bold font-mono text-ink tabular-nums">$ 184,166</div>
+            <div id="scenario-cons-gain" class="text-[11px] font-mono text-mute mt-0.5">Gain: $ 64,166 (1.53x)</div>
           </div>
         </div>
 
@@ -849,8 +849,8 @@ const schema = {
             <span class="text-[10px] px-2 py-0.5 rounded bg-link/10 text-link font-mono font-bold">Selected Goal</span>
           </div>
           <div>
-            <div id="scenario-base-val" class="text-lg font-black font-mono text-ink tabular-nums">₹ 23,23,391</div>
-            <div id="scenario-base-gain" class="text-[11px] font-mono text-link mt-0.5 font-semibold">Gain: ₹ 11,23,391 (1.94x)</div>
+            <div id="scenario-base-val" class="text-lg font-black font-mono text-ink tabular-nums">$ 232,339</div>
+            <div id="scenario-base-gain" class="text-[11px] font-mono text-link mt-0.5 font-semibold">Gain: $ 112,339 (1.94x)</div>
           </div>
         </div>
 
@@ -861,8 +861,8 @@ const schema = {
             <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-mono">High-Growth Equity</span>
           </div>
           <div>
-            <div id="scenario-aggr-val" class="text-lg font-bold font-mono text-ink tabular-nums">₹ 27,86,573</div>
-            <div id="scenario-aggr-gain" class="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 mt-0.5">Gain: ₹ 15,86,573 (2.32x)</div>
+            <div id="scenario-aggr-val" class="text-lg font-bold font-mono text-ink tabular-nums">$ 278,657</div>
+            <div id="scenario-aggr-gain" class="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 mt-0.5">Gain: $ 158,657 (2.32x)</div>
           </div>
         </div>
       </div>
@@ -887,22 +887,22 @@ const schema = {
         <!-- Delay 1 Year -->
         <div class="p-3 rounded-xl border border-hairline bg-canvas/60">
           <div class="text-[11px] font-mono text-mute uppercase font-semibold">Wait 1 Year (12 Mo)</div>
-          <div id="delay-1y-loss" class="text-base font-bold font-mono text-red-600 dark:text-red-400 mt-1">-₹ 3,42,100</div>
-          <div id="delay-1y-corpus" class="text-[10px] font-mono text-mute mt-0.5">Corpus drops to ₹ 19.81L</div>
+          <div id="delay-1y-loss" class="text-base font-bold font-mono text-red-600 dark:text-red-400 mt-1">-$ 34,210</div>
+          <div id="delay-1y-corpus" class="text-[10px] font-mono text-mute mt-0.5">Corpus drops to $ 198.1k</div>
         </div>
 
         <!-- Delay 3 Years -->
         <div class="p-3 rounded-xl border border-hairline bg-canvas/60">
           <div class="text-[11px] font-mono text-mute uppercase font-semibold">Wait 3 Years (36 Mo)</div>
-          <div id="delay-3y-loss" class="text-base font-bold font-mono text-red-600 dark:text-red-400 mt-1">-₹ 9,14,500</div>
-          <div id="delay-3y-corpus" class="text-[10px] font-mono text-mute mt-0.5">Corpus drops to ₹ 14.09L</div>
+          <div id="delay-3y-loss" class="text-base font-bold font-mono text-red-600 dark:text-red-400 mt-1">-$ 91,450</div>
+          <div id="delay-3y-corpus" class="text-[10px] font-mono text-mute mt-0.5">Corpus drops to $ 140.9k</div>
         </div>
 
         <!-- Delay 5 Years -->
         <div class="p-3 rounded-xl border border-hairline bg-canvas/60">
           <div class="text-[11px] font-mono text-mute uppercase font-semibold">Wait 5 Years (60 Mo)</div>
-          <div id="delay-5y-loss" class="text-base font-bold font-mono text-red-600 dark:text-red-400 mt-1">-₹ 14,35,000</div>
-          <div id="delay-5y-corpus" class="text-[10px] font-mono text-mute mt-0.5">Corpus drops to ₹ 8.88L</div>
+          <div id="delay-5y-loss" class="text-base font-bold font-mono text-red-600 dark:text-red-400 mt-1">-$ 143,500</div>
+          <div id="delay-5y-corpus" class="text-[10px] font-mono text-mute mt-0.5">Corpus drops to $ 88.8k</div>
         </div>
       </div>
     </div>
@@ -923,24 +923,24 @@ const schema = {
 
       <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5 text-center font-mono">
         <div class="p-2.5 rounded-xl border border-hairline bg-canvas-elevated">
-          <span class="text-[10px] text-mute uppercase block font-semibold">₹10 Lakh</span>
-          <span id="milestone-10l" class="text-xs font-bold text-ink mt-0.5 block">5.4 Years</span>
+          <span id="milestone-lbl-1" class="text-[10px] text-mute uppercase block font-semibold">$50k</span>
+          <span id="milestone-10l" class="text-xs font-bold text-ink mt-0.5 block">3.6 Years</span>
         </div>
         <div class="p-2.5 rounded-xl border border-hairline bg-canvas-elevated">
-          <span class="text-[10px] text-mute uppercase block font-semibold">₹25 Lakh</span>
-          <span id="milestone-25l" class="text-xs font-bold text-ink mt-0.5 block">10.6 Years</span>
+          <span id="milestone-lbl-2" class="text-[10px] text-mute uppercase block font-semibold">$100k</span>
+          <span id="milestone-25l" class="text-xs font-bold text-ink mt-0.5 block">6.2 Years</span>
         </div>
         <div class="p-2.5 rounded-xl border border-hairline bg-canvas-elevated">
-          <span class="text-[10px] text-mute uppercase block font-semibold">₹50 Lakh</span>
-          <span id="milestone-50l" class="text-xs font-bold text-ink mt-0.5 block">14.8 Years</span>
+          <span id="milestone-lbl-3" class="text-[10px] text-mute uppercase block font-semibold">$250k</span>
+          <span id="milestone-50l" class="text-xs font-bold text-ink mt-0.5 block">11.6 Years</span>
         </div>
         <div class="p-2.5 rounded-xl border border-hairline bg-canvas-elevated">
-          <span class="text-[10px] text-link uppercase block font-bold">₹1 Crore</span>
-          <span id="milestone-1cr" class="text-xs font-bold text-link mt-0.5 block">19.2 Years</span>
+          <span id="milestone-lbl-4" class="text-[10px] text-link uppercase block font-bold">$500k</span>
+          <span id="milestone-1cr" class="text-xs font-bold text-link mt-0.5 block">16.8 Years</span>
         </div>
         <div class="p-2.5 rounded-xl border border-hairline bg-canvas-elevated col-span-2 sm:col-span-1">
-          <span class="text-[10px] text-cyan uppercase block font-bold">₹5 Crore</span>
-          <span id="milestone-5cr" class="text-xs font-bold text-cyan mt-0.5 block">29.8 Years</span>
+          <span id="milestone-lbl-5" class="text-[10px] text-cyan uppercase block font-bold">$1M</span>
+          <span id="milestone-5cr" class="text-xs font-bold text-cyan mt-0.5 block">22.8 Years</span>
         </div>
       </div>
     </div>
@@ -954,7 +954,7 @@ const schema = {
           type="button"
           id="action-reset-btn"
           class="inline-flex items-center gap-1.5 px-3.5 py-2 min-h-[44px] sm:min-h-[36px] rounded-xl border border-hairline bg-canvas hover:bg-hairline-soft text-mute hover:text-ink text-xs font-semibold font-mono transition-all cursor-pointer shadow-xs active:scale-95"
-          title="Reset to default ₹10,000 / 12% / 10Y"
+          title="Reset to default $1,000 / 10% / 10Y"
         >
           <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -1019,29 +1019,29 @@ const schema = {
     <!-- Worked Example -->
     <div id="sip-worked-example-wrapper">
       <WorkedExample
-        title="Worked Example: ₹10,000 Monthly SIP for 10 Years at 12%"
-        scenario="An investor commits ₹10,000 on the 1st day of each month (Annuity Due) for 10 continuous years into a diversified equity fund averaging 12% annual return."
+        title="Worked Example: $1,000 Monthly SIP for 10 Years at 10%"
+        scenario="An investor commits $1,000 on the 1st day of each month (Annuity Due) for 10 continuous years into a diversified equity fund averaging 10% annual return."
         steps={[
           {
             number: 1,
             title: 'Calculate Installment Parameters',
-            description: 'Monthly interest rate i = 12% ÷ 12 = 1% = 0.01. Total number of installments n = 10 × 12 = 120.',
-            mathExpression: 'i = 0.01, n = 120',
+            description: 'Monthly interest rate i = 10% ÷ 12 = 0.833% = 0.008333. Total number of installments n = 10 × 12 = 120.',
+            mathExpression: 'i = 0.008333, n = 120',
           },
           {
             number: 2,
             title: 'Compute Total Principal Invested',
-            description: '120 payments × ₹10,000 = ₹12,00,000 total capital contributed.',
-            mathExpression: 'Total Invested = ₹12,00,000',
+            description: '120 payments × $1,000 = $120,000 total capital contributed.',
+            mathExpression: 'Total Invested = $120,000',
           },
           {
             number: 3,
             title: 'Apply Annuity Due Compounding Formula',
-            description: 'FV = 10,000 × [((1.01)¹²⁰ - 1) ÷ 0.01] × 1.01 = ₹23,23,391.',
-            mathExpression: 'Maturity Corpus = ₹23,23,391',
+            description: 'FV = 1,000 × [((1.008333)¹²⁰ - 1) ÷ 0.008333] × 1.008333 = $204,845.',
+            mathExpression: 'Maturity Corpus = $204,845',
           },
         ]}
-        conclusion="Total accumulated wealth is ₹23,23,391, generating ₹11,23,391 in compounded wealth gain (+93.6% gain on invested capital)."
+        conclusion="Total accumulated wealth is $204,845, generating $84,845 in compounded wealth gain (+70.7% gain on invested capital)."
       />
     </div>
 
@@ -1066,39 +1066,46 @@ const schema = {
           </thead>
           <tbody class="divide-y divide-hairline text-ink">
             <tr class="hover:bg-canvas-subtle/50 transition-colors">
-              <td class="py-3 px-3.5 font-bold">₹1,000 / mo</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 82,486</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 2,32,339</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 5,04,576</td>
-              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">₹ 9,99,148</td>
+              <td class="py-3 px-3.5 font-bold">$100 / mo</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 8,249</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 23,234</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 50,458</td>
+              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">$ 99,915</td>
             </tr>
             <tr class="hover:bg-canvas-subtle/50 transition-colors">
-              <td class="py-3 px-3.5 font-bold">₹5,000 / mo</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 4,12,432</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 11,61,695</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 25,22,880</td>
-              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">₹ 49,95,740</td>
+              <td class="py-3 px-3.5 font-bold">$250 / mo</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 20,622</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 58,085</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 126,144</td>
+              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">$ 249,787</td>
             </tr>
             <tr class="hover:bg-canvas-subtle/50 transition-colors">
-              <td class="py-3 px-3.5 font-bold">₹10,000 / mo</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 8,24,864</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 23,23,391</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 50,45,760</td>
-              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">₹ 99,91,479</td>
+              <td class="py-3 px-3.5 font-bold">$500 / mo</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 41,243</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 116,170</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 252,288</td>
+              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">$ 499,574</td>
             </tr>
             <tr class="hover:bg-canvas-subtle/50 transition-colors">
-              <td class="py-3 px-3.5 font-bold">₹25,000 / mo</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 20,62,159</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 58,08,477</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 1.26 Crore</td>
-              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">₹ 2.50 Crore</td>
+              <td class="py-3 px-3.5 font-bold">$1,000 / mo</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 82,486</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 232,339</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 504,576</td>
+              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">$ 999,148</td>
             </tr>
             <tr class="hover:bg-canvas-subtle/50 transition-colors">
-              <td class="py-3 px-3.5 font-bold">₹50,000 / mo</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 41,24,319</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 1.16 Crore</td>
-              <td class="py-3 px-3.5 text-right tabular-nums">₹ 2.52 Crore</td>
-              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">₹ 5.00 Crore</td>
+              <td class="py-3 px-3.5 font-bold">$2,500 / mo</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 206,216</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 580,848</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 1,261,440</td>
+              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">$ 2,497,870</td>
+            </tr>
+            <tr class="hover:bg-canvas-subtle/50 transition-colors">
+              <td class="py-3 px-3.5 font-bold">$5,000 / mo</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 412,432</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 1,161,695</td>
+              <td class="py-3 px-3.5 text-right tabular-nums">$ 2,522,880</td>
+              <td class="py-3 px-3.5 text-right tabular-nums font-bold text-link">$ 4,995,740</td>
             </tr>
           </tbody>
         </table>
@@ -1109,32 +1116,33 @@ const schema = {
     <div class="rounded-[20px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper">
       <div class="space-y-1">
         <span class="mono-eyebrow text-link">Taxation Rules</span>
-        <h2 class="heading-md text-ink font-display">Mutual Fund SIP Taxation & Capital Gains (FY 2025–26 / AY 2026–27)</h2>
-        <p class="text-xs sm:text-sm text-mute">Understanding how your SIP returns are taxed upon redemption:</p>
+        <h2 class="heading-md text-ink font-display">Mutual Fund SIP Capital Gains & Tax Considerations</h2>
+        <p class="text-xs sm:text-sm text-mute">Understanding how periodic mutual fund and ETF returns are treated upon redemption across jurisdictions:</p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
         <div class="p-4 rounded-xl border border-hairline bg-canvas space-y-2">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-ink text-sm">Equity Mutual Funds (>65% Equity)</span>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 font-bold">LTCG 12.5%</span>
+            <span class="font-bold text-ink text-sm">US & International Standards</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-600 font-bold">LTCG vs STCG</span>
           </div>
           <ul class="space-y-1.5 text-mute text-[11px] list-disc pl-4">
-            <li><strong class="text-ink">Long-Term (LTCG):</strong> Units held for more than 12 months. Gains up to <strong>₹1.25 Lakh per financial year are 100% tax-free</strong>. Gains above ₹1.25 Lakh are taxed at 12.5%.</li>
-            <li><strong class="text-ink">Short-Term (STCG):</strong> Units redeemed within 12 months are taxed at a flat rate of <strong>20%</strong>.</li>
-            <li><strong class="text-ink">SIP Rule:</strong> Each monthly installment is treated as an individual purchase with its own 12-month holding clock.</li>
+            <li><strong class="text-ink">Long-Term Capital Gains:</strong> Assets held for more than 12 months qualify for preferential tax rates (0%, 15%, or 20% in the US depending on taxable income).</li>
+            <li><strong class="text-ink">Short-Term Capital Gains:</strong> Assets sold within 12 months are taxed at ordinary income tax bracket rates.</li>
+            <li><strong class="text-ink">Periodic Installment Rule:</strong> Each periodic contribution operates under its own independent 12-month holding clock from the deposit date.</li>
+            <li><strong class="text-ink">Tax-Advantaged Accounts:</strong> Investments inside a 401(k), Traditional IRA, or Roth IRA compound tax-deferred or 100% tax-free.</li>
           </ul>
         </div>
 
         <div class="p-4 rounded-xl border border-hairline bg-canvas space-y-2">
           <div class="flex items-center justify-between">
-            <span class="font-bold text-ink text-sm">Debt & International Funds</span>
-            <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 font-bold">Slab Rate</span>
+            <span class="font-bold text-ink text-sm">Indian Mutual Funds (Reference)</span>
+            <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 font-bold">FY 2025–26</span>
           </div>
           <ul class="space-y-1.5 text-mute text-[11px] list-disc pl-4">
-            <li><strong class="text-ink">Taxation:</strong> For investments made after April 1, 2023, capital gains are added to taxable income and taxed at applicable <strong>individual income tax slab rates</strong>.</li>
-            <li><strong class="text-ink">Hybrid Funds (35%–65% Equity):</strong> Held &gt; 24 months qualify for LTCG at 12.5%; held &le; 24 months taxed at slab rates.</li>
-            <li><strong class="text-ink">TDS:</strong> No TDS is deducted for Indian resident individual investors on domestic mutual fund capital gains.</li>
+            <li><strong class="text-ink">Equity Funds (&gt;65% Equity):</strong> LTCG above ₹1.25 Lakh per financial year is taxed at 12.5%. STCG (held ≤ 12 months) is taxed at 20%.</li>
+            <li><strong class="text-ink">Debt Funds:</strong> Capital gains are taxed at applicable individual income tax slab rates for units acquired post-April 2023.</li>
+            <li><strong class="text-ink">Holding Calculation:</strong> First-In First-Out (FIFO) method applies to determine the holding duration of each monthly installment.</li>
           </ul>
         </div>
       </div>
@@ -1153,8 +1161,8 @@ const schema = {
             slug: "/sip-calculator/",
             description: "Invest a fixed amount periodically to average out market volatility and build wealth disciplined over time.",
             pros: [
-              "Averages purchase cost across market dips (Rupee/Dollar Cost Averaging)",
-              "Low barrier to entry (start with as little as $10 or ₹500/month)",
+              "Averages purchase cost across market dips (Dollar-Cost Averaging / DCA)",
+              "Low barrier to entry (start with as little as $10/month)",
               "Removes emotional stress and market-timing guesswork"
             ],
             cons: [
@@ -1196,10 +1204,12 @@ const schema = {
   type CalculatorMode = 'regular' | 'goal';
   let currentMode: CalculatorMode = 'regular';
 
-  // Active Currency State: Locked to Indian Rupee (INR ₹)
-  const currentCurrencyCode = 'INR';
-  const currentCurrencySymbol = '₹';
-  const isIndianFormat = true;
+  // Active Currency State: Defaults to USD ($)
+  let currentCurrencyCode = typeof (window as any).facGetActiveCurrency === 'function'
+    ? (window as any).facGetActiveCurrency()
+    : (localStorage.getItem('fac_currency') || 'USD');
+  let currentCurrencySymbol = currentCurrencyCode === 'INR' ? '₹' : '$';
+  let isIndianFormat = currentCurrencyCode === 'INR';
 
   // DOM Elements
   const modeRegularBtn = document.getElementById('sip-mode-regular');
@@ -1331,39 +1341,58 @@ const schema = {
     }
   }
 
-  // Presets locked to INR
+  // Presets dynamic based on currency
   function getPresets(mode: CalculatorMode) {
     if (mode === 'goal') {
+      if (isIndianFormat) {
+        return [
+          { label: '₹25 Lakh', value: 2500000 },
+          { label: '₹50 Lakh', value: 5000000 },
+          { label: '₹1 Crore', value: 10000000 },
+          { label: '₹2.5 Crore', value: 25000000 },
+          { label: '₹5 Crore', value: 50000000 },
+        ];
+      }
       return [
-        { label: '₹25 Lakh', value: 2500000 },
-        { label: '₹50 Lakh', value: 5000000 },
-        { label: '₹1 Crore', value: 10000000 },
-        { label: '₹2.5 Crore', value: 25000000 },
-        { label: '₹5 Crore', value: 50000000 },
+        { label: '$100k', value: 100000 },
+        { label: '$250k', value: 250000 },
+        { label: '$500k', value: 500000 },
+        { label: '$1M', value: 1000000 },
+        { label: '$2.5M', value: 2500000 },
+      ];
+    }
+    if (isIndianFormat) {
+      return [
+        { label: '₹2.5k', value: 2500 },
+        { label: '₹5k', value: 5000 },
+        { label: '₹10k', value: 10000 },
+        { label: '₹25k', value: 25000 },
+        { label: '₹50k', value: 50000 },
+        { label: '₹1 Lakh', value: 100000 },
       ];
     }
     return [
-      { label: '₹2.5k', value: 2500 },
-      { label: '₹5k', value: 5000 },
-      { label: '₹10k', value: 10000 },
-      { label: '₹25k', value: 25000 },
-      { label: '₹50k', value: 50000 },
-      { label: '₹1 Lakh', value: 100000 },
+      { label: '$250', value: 250 },
+      { label: '$500', value: 500 },
+      { label: '$1k', value: 1000 },
+      { label: '$2.5k', value: 2500 },
+      { label: '$5k', value: 5000 },
+      { label: '$10k', value: 10000 },
     ];
   }
 
   function updateSliderBounds() {
     if (!primarySlider) return;
     if (currentMode === 'goal') {
-      primarySlider.min = '500000';
-      primarySlider.max = '100000000';
-      primarySlider.step = '100000';
-      if (primaryInput) primaryInput.step = '100000';
+      primarySlider.min = isIndianFormat ? '500000' : '10000';
+      primarySlider.max = isIndianFormat ? '100000000' : '5000000';
+      primarySlider.step = isIndianFormat ? '100000' : '10000';
+      if (primaryInput) primaryInput.step = primarySlider.step;
     } else {
-      primarySlider.min = '500';
-      primarySlider.max = '100000';
-      primarySlider.step = '500';
-      if (primaryInput) primaryInput.step = '500';
+      primarySlider.min = isIndianFormat ? '500' : '50';
+      primarySlider.max = isIndianFormat ? '100000' : '10000';
+      primarySlider.step = isIndianFormat ? '500' : '50';
+      if (primaryInput) primaryInput.step = primarySlider.step;
     }
   }
 
@@ -1612,7 +1641,10 @@ const schema = {
 
     // 2. Landmark / Millionaire Countdown
     if (matrixMilestoneTime) {
-      const landmarkTarget = 10000000; // ₹1 Crore
+      const landmarkTarget = isIndianFormat ? 10000000 : 1000000; // ₹1 Crore or $1 Million
+      if (matrixMilestoneTitle) {
+        matrixMilestoneTitle.textContent = isIndianFormat ? '₹1 Crore Countdown' : '$1 Million Countdown';
+      }
       if (monthlyDeposit > 0 && i > 0) {
         const targetAnnuity = timing === 'beginning' ? landmarkTarget / (1 + i) : landmarkTarget;
         const ratio = (targetAnnuity * i) / monthlyDeposit + 1;
@@ -1700,11 +1732,28 @@ const schema = {
         return `${y} Years`;
       };
 
-      milestone10l.textContent = calcMilestoneTime(1000000);
-      milestone25l.textContent = calcMilestoneTime(2500000);
-      milestone50l.textContent = calcMilestoneTime(5000000);
-      milestone1cr.textContent = calcMilestoneTime(10000000);
-      milestone5cr.textContent = calcMilestoneTime(50000000);
+      const m1 = isIndianFormat ? 1000000 : 50000;
+      const m2 = isIndianFormat ? 2500000 : 100000;
+      const m3 = isIndianFormat ? 5000000 : 250000;
+      const m4 = isIndianFormat ? 10000000 : 500000;
+      const m5 = isIndianFormat ? 50000000 : 1000000;
+
+      milestone10l.textContent = calcMilestoneTime(m1);
+      milestone25l.textContent = calcMilestoneTime(m2);
+      milestone50l.textContent = calcMilestoneTime(m3);
+      milestone1cr.textContent = calcMilestoneTime(m4);
+      milestone5cr.textContent = calcMilestoneTime(m5);
+
+      const lbl1 = document.getElementById('milestone-lbl-1');
+      const lbl2 = document.getElementById('milestone-lbl-2');
+      const lbl3 = document.getElementById('milestone-lbl-3');
+      const lbl4 = document.getElementById('milestone-lbl-4');
+      const lbl5 = document.getElementById('milestone-lbl-5');
+      if (lbl1) lbl1.textContent = isIndianFormat ? '₹10 Lakh' : '$50k';
+      if (lbl2) lbl2.textContent = isIndianFormat ? '₹25 Lakh' : '$100k';
+      if (lbl3) lbl3.textContent = isIndianFormat ? '₹50 Lakh' : '$250k';
+      if (lbl4) lbl4.textContent = isIndianFormat ? '₹1 Crore' : '$500k';
+      if (lbl5) lbl5.textContent = isIndianFormat ? '₹5 Crore' : '$1M';
     }
 
     // Render Table & Print Metadata
@@ -1791,7 +1840,7 @@ const schema = {
   function syncUrlState() {
     try {
       const url = new URL(window.location.href);
-      url.searchParams.set('p', primaryInput?.value || '10000');
+      url.searchParams.set('p', primaryInput?.value || (isIndianFormat ? '10000' : '1000'));
       url.searchParams.set('r', rateInput?.value || '12');
       url.searchParams.set('y', yearsInput?.value || '10');
       url.searchParams.set('t', timingSelect?.value || 'beginning');
@@ -1971,8 +2020,8 @@ const schema = {
 
   // Reset Action
   document.getElementById('action-reset-btn')?.addEventListener('click', () => {
-    if (primaryInput) primaryInput.value = '10000';
-    if (primarySlider) primarySlider.value = '10000';
+    if (primaryInput) primaryInput.value = isIndianFormat ? '10000' : '1000';
+    if (primarySlider) primarySlider.value = isIndianFormat ? '10000' : '1000';
     if (rateInput) rateInput.value = '12';
     if (rateSlider) rateSlider.value = '12';
     if (yearsInput) yearsInput.value = '10';

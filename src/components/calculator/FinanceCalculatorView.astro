@@ -42,13 +42,15 @@ const isCurrencyCalculator =
   calc.slug.includes('child-support') ||
   calc.slug.includes('settlement') ||
   calc.slug.includes('pricing') ||
+  calc.slug.includes('tip') ||
+  calc.slug.includes('discount') ||
   calc.resultPrefix === '$' ||
   calc.mathInputs.some((i) => i.unit === '$' || (typeof i.label === 'string' && i.label.includes('$')));
 
 const isLoan = calc.slug.includes('loan') || calc.slug.includes('mortgage') || calc.slug.includes('emi') || calc.slug.includes('amortization') || calc.slug.includes('payment');
 const isInvestment = calc.slug.includes('sip') || calc.slug.includes('interest') || calc.slug.includes('investment') || calc.slug.includes('401k') || calc.slug.includes('roth') || calc.slug.includes('annuity') || calc.slug.includes('lumpsum') || calc.slug.includes('inflation');
 const showFinancialVisualizer = isCurrencyCalculator && (isLoan || isInvestment);
-const isPercentageResult = calc.resultUnit === '%' || (calc.defaultResult && calc.defaultResult.suffix === '%') || calc.slug.includes('roi');
+const isPercentageResult = calc.resultUnit === '%' || (calc.defaultResult && calc.defaultResult.suffix === '%') || calc.slug.includes('roi') || calc.slug.includes('probability');
 ---
 
 <div class="finance-calc-unified-container space-y-6">
@@ -70,11 +72,11 @@ const isPercentageResult = calc.resultUnit === '%' || (calc.defaultResult && cal
         <div>
           <div class="text-2xl font-black uppercase tracking-tight">Free Accurate Calculator</div>
           <div class="text-sm font-bold text-blue-700 mt-0.5">{calc.name} Statement & Verification Report</div>
-          <div class="text-xs text-slate-500 mt-1">freeaccuratecalculator.com • Verified Financial Computation Statement</div>
+          <div class="text-xs text-slate-500 mt-1">freeaccuratecalculator.com • Verified {isCurrencyCalculator ? 'Financial' : 'Computation'} Statement</div>
         </div>
         <div class="text-right text-xs text-slate-600 space-y-0.5">
           <div><span class="text-slate-400 uppercase">Generated:</span> <strong id="print-report-date"></strong></div>
-          <div><span class="text-slate-400 uppercase">Currency:</span> <strong id="print-currency-code"></strong></div>
+          <div><span class="text-slate-400 uppercase">{isCurrencyCalculator && !isPercentageResult ? 'Currency:' : 'Unit:'}</span> <strong id="print-currency-code"></strong></div>
           <div><span class="text-slate-400 uppercase">Tool:</span> <strong>{calc.name}</strong></div>
         </div>
       </div>
@@ -82,33 +84,33 @@ const isPercentageResult = calc.resultUnit === '%' || (calc.defaultResult && cal
       <!-- Inputs Summary -->
       <div class="bg-slate-50 border border-slate-200 rounded-lg p-3.5 mb-5">
         <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Calculation Parameters</div>
-        <div id="print-parameters-grid" class="grid grid-cols-3 gap-4 text-xs font-mono"></div>
+        <div id="print-parameters-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs font-mono"></div>
       </div>
 
       <!-- Metrics -->
-      <div class="grid grid-cols-3 gap-3 mb-6">
+      <div id="print-metrics-container" class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
         <div class="border border-slate-300 rounded-lg p-3.5 bg-white">
           <span id="print-metric-label-1" class="text-[10px] font-bold uppercase text-slate-500 block">Primary Value</span>
-          <div id="print-metric-value-1" class="text-lg font-black text-link mt-1"></div>
+          <div id="print-metric-value-1" class="text-lg font-black text-link mt-1 font-mono"></div>
           <span id="print-metric-sub-1" class="text-[10px] text-slate-500">Calculated Output</span>
         </div>
-        <div class="border border-slate-300 rounded-lg p-3.5 bg-white">
+        <div id="print-metric-card-2" class="border border-slate-300 rounded-lg p-3.5 bg-white">
           <span id="print-metric-label-2" class="text-[10px] font-bold uppercase text-slate-500 block">Principal / Base</span>
-          <div id="print-metric-value-2" class="text-lg font-black text-violet mt-1"></div>
+          <div id="print-metric-value-2" class="text-lg font-black text-violet mt-1 font-mono"></div>
           <span id="print-metric-sub-2" class="text-[10px] text-slate-500">Base Investment / Loan</span>
         </div>
-        <div class="border-2 border-slate-900 rounded-lg p-3.5 bg-slate-50">
+        <div id="print-metric-card-3" class="border-2 border-slate-900 rounded-lg p-3.5 bg-slate-50">
           <span id="print-metric-label-3" class="text-[10px] font-bold uppercase text-slate-900 block">Interest / Gain</span>
-          <div id="print-metric-value-3" class="text-lg font-black text-slate-900 mt-1"></div>
+          <div id="print-metric-value-3" class="text-lg font-black text-slate-900 mt-1 font-mono"></div>
           <span id="print-metric-sub-3" class="text-[10px] font-semibold text-link">Financial Impact</span>
         </div>
       </div>
 
       <!-- Schedule Table -->
-      <div class="space-y-2">
-        <div class="text-xs font-bold uppercase tracking-wider text-slate-900">Multi-Period Breakdown Schedule</div>
+      <div id="print-schedule-section" class="space-y-2">
+        <div id="print-schedule-title" class="text-xs font-bold uppercase tracking-wider text-slate-900">Multi-Period Breakdown Schedule</div>
         <table class="w-full text-left text-xs border-collapse">
-          <thead>
+          <thead id="print-schedule-head">
             <tr class="border-b-2 border-slate-300 bg-slate-100 text-slate-700">
               <th class="py-2 px-2.5">Period</th>
               <th class="py-2 px-2.5 text-right">Payment / Contribution</th>
@@ -611,18 +613,24 @@ const isPercentageResult = calc.resultUnit === '%' || (calc.defaultResult && cal
       }, 2500);
     }
 
-    function formatVal(val, decimals = 0) {
+    function formatVal(val, decimals) {
       if (isNaN(val) || !isFinite(val)) return '0';
+      const num = Number(val);
+      const hasFraction = Math.abs(num % 1) > 0.001;
+      const dec = decimals !== undefined ? (decimals === 0 && hasFraction ? 2 : decimals) : (hasFraction ? 2 : (isCurrency ? 0 : 2));
       if (isIndianFormat) {
-        const parts = Math.round(val).toString().split('.');
-        let lastThree = parts[0].substring(parts[0].length - 3);
-        const otherNumbers = parts[0].substring(0, parts[0].length - 3);
+        const fixed = num.toFixed(dec);
+        const parts = fixed.split('.');
+        let intPart = parts[0];
+        const decPart = dec > 0 && parts[1] !== undefined ? '.' + parts[1] : '';
+        let lastThree = intPart.substring(intPart.length - 3);
+        const otherNumbers = intPart.substring(0, intPart.length - 3);
         if (otherNumbers !== '') lastThree = ',' + lastThree;
-        return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+        return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree + decPart;
       }
-      return val.toLocaleString('en-US', {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
+      return num.toLocaleString('en-US', {
+        minimumFractionDigits: dec,
+        maximumFractionDigits: dec,
       });
     }
 
@@ -1690,15 +1698,20 @@ const isPercentageResult = calc.resultUnit === '%' || (calc.defaultResult && cal
       }
       if (scheduleCard) scheduleCard.style.display = 'block';
       if (!scheduleBody) return;
+
+      const isPercent = resultUnit === '%' || slug.includes('roi') || slug.includes('probability');
+      const rowDec = isCurrency && !isPercent ? (calcDecimals !== undefined ? calcDecimals : 2) : (calcDecimals ?? 2);
+      const sym = isCurrency && !isPercent ? currentCurrencySymbol + ' ' : '';
+
       let html = '';
       rows.slice(0, 50).forEach((r) => {
         html += `
           <tr class="hover:bg-canvas-subtle/50 transition-colors">
             <td class="py-2.5 px-3.5 font-semibold text-link whitespace-nowrap">${r.period}</td>
-            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono whitespace-nowrap">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.payment, 0)}</td>
-            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono text-mute whitespace-nowrap">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.principal, 0)}</td>
-            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono text-violet font-semibold whitespace-nowrap">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.interest, 0)}</td>
-            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono font-bold text-cyan whitespace-nowrap">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.balance, 0)}</td>
+            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono whitespace-nowrap">${sym}${typeof r.payment === 'number' ? formatVal(r.payment, rowDec) : r.payment}</td>
+            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono text-mute whitespace-nowrap">${sym}${typeof r.principal === 'number' ? formatVal(r.principal, rowDec) : r.principal}</td>
+            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono text-violet font-semibold whitespace-nowrap">${sym}${typeof r.interest === 'number' ? formatVal(r.interest, rowDec) : r.interest}</td>
+            <td class="py-2.5 px-3.5 text-right tabular-nums font-mono font-bold text-cyan whitespace-nowrap">${sym}${typeof r.balance === 'number' ? formatVal(r.balance, rowDec) : r.balance}</td>
           </tr>
         `;
       });
@@ -1712,36 +1725,140 @@ const isPercentageResult = calc.resultUnit === '%' || (calc.defaultResult && cal
       const m1 = document.getElementById('print-metric-value-1');
       const m2 = document.getElementById('print-metric-value-2');
       const m3 = document.getElementById('print-metric-value-3');
+      const m1Lbl = document.getElementById('print-metric-label-1');
+      const m2Lbl = document.getElementById('print-metric-label-2');
+      const m3Lbl = document.getElementById('print-metric-label-3');
+      const card2 = document.getElementById('print-metric-card-2');
+      const card3 = document.getElementById('print-metric-card-3');
+      const printSchedSection = document.getElementById('print-schedule-section');
+      const printSchedHead = document.getElementById('print-schedule-head');
 
-      if (pDate) pDate.textContent = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-      if (pCurr) pCurr.textContent = isCurrency ? `${currentCurrencyCode} (${currentCurrencySymbol})` : (resultUnit || 'Standard');
-      const decimals = isCurrency ? 0 : calcDecimals;
-      if (m1) m1.textContent = isCurrency ? `${currentCurrencySymbol} ${formatVal(r1, 0)}` : `${formatVal(r1, decimals)} ${resultUnit}`.trim();
-      if (m2) m2.textContent = isCurrency ? `${currentCurrencySymbol} ${formatVal(r2, 0)}` : formatVal(r2, decimals);
-      if (m3) m3.textContent = isCurrency ? `${currentCurrencySymbol} ${formatVal(r3, 0)}` : formatVal(r3, decimals);
+      if (pDate) pDate.textContent = new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+      const isPercent = resultUnit === '%' || slug.includes('roi') || slug.includes('probability');
+      if (pCurr) {
+        pCurr.textContent = isCurrency && !isPercent
+          ? `${currentCurrencyCode} (${currentCurrencySymbol})`
+          : (resultUnit || 'Standard Units');
+      }
 
+      // Preserve appropriate precision (2 for currency cents unless whole dollars specified)
+      const primaryDecimals = calcDecimals !== undefined ? calcDecimals : (isCurrency && !isPercent ? 2 : 2);
+
+      // 1. Metric 1 (Hero Result)
+      if (m1) {
+        if (isPercent) {
+          m1.textContent = `${formatVal(r1, primaryDecimals)}%`;
+        } else if (isCurrency) {
+          m1.textContent = `${currentCurrencySymbol} ${formatVal(r1, primaryDecimals)}`;
+        } else {
+          m1.textContent = `${formatVal(r1, primaryDecimals)}${resultUnit ? ' ' + resultUnit : ''}`.trim();
+        }
+      }
+      const heroLbl = document.getElementById('hero-result-label');
+      if (m1Lbl && heroLbl) m1Lbl.textContent = heroLbl.textContent || 'Primary Output';
+
+      // 2. Metrics 2 & 3
+      const s1Lbl = document.getElementById('sec-card-1-label');
+      const s2Lbl = document.getElementById('sec-card-2-label');
+      if (m2Lbl && s1Lbl) m2Lbl.textContent = s1Lbl.textContent || 'Base Component';
+      if (m3Lbl && s2Lbl) m3Lbl.textContent = s2Lbl.textContent || 'Secondary Metric';
+
+      const secDecimals = isCurrency && !isPercent ? 2 : (calcDecimals ?? 2);
+      if (m2) {
+        m2.textContent = isCurrency && !isPercent
+          ? `${currentCurrencySymbol} ${formatVal(r2, secDecimals)}`
+          : (typeof r2 === 'number' ? formatVal(r2, secDecimals) : String(r2));
+      }
+      if (m3) {
+        m3.textContent = isCurrency && !isPercent
+          ? `${currentCurrencySymbol} ${formatVal(r3, secDecimals)}`
+          : (typeof r3 === 'number' ? formatVal(r3, secDecimals) : String(r3));
+      }
+
+      // Hide card 2/3 in print if they are 0 and not part of financial visualizer
+      const hasSecondary = (r2 !== 0 || r3 !== 0) || showFinancialVisualizer;
+      if (card2) card2.style.display = hasSecondary ? 'block' : 'none';
+      if (card3) card3.style.display = hasSecondary ? 'block' : 'none';
+
+      // 3. Update Input Parameters Grid
       if (pGrid) {
         let phtml = '';
         for (const [k, v] of Object.entries(inputs)) {
-          phtml += `<div><span class="text-slate-500 uppercase block text-[10px]">${k}:</span><strong>${typeof v === 'number' ? formatVal(v, isCurrency ? 0 : calcDecimals) : v}</strong></div>`;
+          const formattedV = typeof v === 'number' ? formatVal(v, isCurrency && !isPercent ? (v % 1 === 0 ? 0 : 2) : (calcDecimals ?? 2)) : v;
+          phtml += `<div class="p-2 rounded bg-white border border-slate-200"><span class="text-slate-500 uppercase block text-[10px]">${k.replace(/_/g, ' ')}:</span><strong class="text-slate-900 font-mono">${formattedV}</strong></div>`;
         }
         pGrid.innerHTML = phtml;
       }
 
-      if (printScheduleBody) {
-        let pRows = '';
-        rows.slice(0, 30).forEach((r) => {
-          pRows += `
-            <tr>
-              <td class="py-1 px-2 font-bold">${r.period}</td>
-              <td class="py-1 px-2 text-right">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.payment, 0)}</td>
-              <td class="py-1 px-2 text-right">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.principal, 0)}</td>
-              <td class="py-1 px-2 text-right">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.interest, 0)}</td>
-              <td class="py-1 px-2 text-right font-bold">${isCurrency ? currentCurrencySymbol + ' ' : ''}${formatVal(r.balance, 0)}</td>
-            </tr>
-          `;
-        });
-        printScheduleBody.innerHTML = pRows;
+      // 4. Schedule Table (Hide cleanly if no table exists)
+      if (printScheduleBody && printSchedSection) {
+        if (!rows || rows.length === 0) {
+          printSchedSection.style.display = 'none';
+          printScheduleBody.innerHTML = '';
+        } else {
+          printSchedSection.style.display = 'block';
+
+          // Dynamic Headers
+          if (printSchedHead) {
+            if (slug.includes('discount')) {
+              printSchedHead.innerHTML = `
+                <tr class="border-b-2 border-slate-300 bg-slate-100 text-slate-700">
+                  <th class="py-2 px-2.5">Discount Tier</th>
+                  <th class="py-2 px-2.5 text-right">Sale Price</th>
+                  <th class="py-2 px-2.5 text-right">Pre-Tax Subtotal</th>
+                  <th class="py-2 px-2.5 text-right">Savings</th>
+                  <th class="py-2 px-2.5 text-right">Final Total</th>
+                </tr>
+              `;
+            } else if (slug.includes('ovulation')) {
+              printSchedHead.innerHTML = `
+                <tr class="border-b-2 border-slate-300 bg-slate-100 text-slate-700">
+                  <th class="py-2 px-2.5">Cycle Phase</th>
+                  <th class="py-2 px-2.5 text-right">Duration (Days)</th>
+                  <th class="py-2 px-2.5 text-right">Start Day</th>
+                  <th class="py-2 px-2.5 text-right">End Day</th>
+                  <th class="py-2 px-2.5 text-right">Cycle Length</th>
+                </tr>
+              `;
+            } else if (slug.includes('pregnancy')) {
+              printSchedHead.innerHTML = `
+                <tr class="border-b-2 border-slate-300 bg-slate-100 text-slate-700">
+                  <th class="py-2 px-2.5">Trimester / Stage</th>
+                  <th class="py-2 px-2.5 text-right">Duration (Weeks)</th>
+                  <th class="py-2 px-2.5 text-right">Start Week</th>
+                  <th class="py-2 px-2.5 text-right">End Week</th>
+                  <th class="py-2 px-2.5 text-right">Full Term</th>
+                </tr>
+              `;
+            } else {
+              printSchedHead.innerHTML = `
+                <tr class="border-b-2 border-slate-300 bg-slate-100 text-slate-700">
+                  <th class="py-2 px-2.5">Period</th>
+                  <th class="py-2 px-2.5 text-right">Payment / Installment</th>
+                  <th class="py-2 px-2.5 text-right">Principal / Invested</th>
+                  <th class="py-2 px-2.5 text-right">Interest / Growth</th>
+                  <th class="py-2 px-2.5 text-right">Ending Balance</th>
+                </tr>
+              `;
+            }
+          }
+
+          let pRows = '';
+          const rowDecimals = isCurrency && !isPercent ? 2 : (calcDecimals ?? 2);
+          const sym = isCurrency && !isPercent ? currentCurrencySymbol + ' ' : '';
+          rows.slice(0, 50).forEach((r) => {
+            pRows += `
+              <tr>
+                <td class="py-1 px-2 font-bold">${r.period}</td>
+                <td class="py-1 px-2 text-right">${sym}${typeof r.payment === 'number' ? formatVal(r.payment, rowDecimals) : r.payment}</td>
+                <td class="py-1 px-2 text-right">${sym}${typeof r.principal === 'number' ? formatVal(r.principal, rowDecimals) : r.principal}</td>
+                <td class="py-1 px-2 text-right">${sym}${typeof r.interest === 'number' ? formatVal(r.interest, rowDecimals) : r.interest}</td>
+                <td class="py-1 px-2 text-right font-bold">${sym}${typeof r.balance === 'number' ? formatVal(r.balance, rowDecimals) : r.balance}</td>
+              </tr>
+            `;
+          });
+          printScheduleBody.innerHTML = pRows;
+        }
       }
     }
 
@@ -1801,17 +1918,17 @@ const isPercentageResult = calc.resultUnit === '%' || (calc.defaultResult && cal
       showToast('Excel (.csv) downloaded!');
     }
 
-    function downloadPDF(e?: Event) {
+    function downloadPDF(e) {
       if (e) {
         e.preventDefault();
         e.stopPropagation();
-        if (typeof (e as any).stopImmediatePropagation === 'function') {
-          (e as any).stopImmediatePropagation();
+        if (typeof e.stopImmediatePropagation === 'function') {
+          e.stopImmediatePropagation();
         }
       }
       recalculate();
-      if (typeof (window as any).generateAndDownloadPDF === 'function') {
-        (window as any).generateAndDownloadPDF();
+      if (typeof window.generateAndDownloadPDF === 'function') {
+        window.generateAndDownloadPDF();
       } else {
         window.print();
       }
@@ -1932,22 +2049,41 @@ const isPercentageResult = calc.resultUnit === '%' || (calc.defaultResult && cal
     .print\:hidden {
       display: none !important;
     }
-    body * { visibility: hidden !important; }
-    #finance-print-report, #finance-print-report * { visibility: visible !important; }
+    main,
+    .max-w-7xl,
+    .lg\:col-span-8,
+    .grid,
+    .calculator-main-box {
+      display: block !important;
+      position: static !important;
+      overflow: visible !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+      background: #ffffff !important;
+      box-shadow: none !important;
+      height: auto !important;
+      min-height: auto !important;
+      float: none !important;
+    }
     #finance-print-report {
       display: block !important;
-      position: absolute !important;
-      left: 0 !important; top: 0 !important;
+      position: static !important;
+      visibility: visible !important;
       width: 100% !important;
       background: #ffffff !important;
       color: #0f172a !important;
-      padding: 20px 24px !important;
-      box-sizing: border-box !important;
+      padding: 0 !important;
+      margin: 0 !important;
     }
-    #finance-print-report table { width: 100% !important; border-collapse: collapse !important; }
-    #finance-print-report th, #finance-print-report td { border: 1px solid #cbd5e1 !important; padding: 5px 8px !important; }
-    #finance-print-report th { background-color: #f1f5f9 !important; font-weight: 700 !important; }
-    #finance-print-report tr { page-break-inside: avoid !important; }
-    @page { size: A4 portrait; margin: 10mm 12mm; }
+    #finance-print-report * { visibility: visible !important; }
+    #finance-print-report table { width: 100% !important; border-collapse: collapse !important; margin-top: 10px !important; }
+    #finance-print-report thead { display: table-header-group !important; }
+    #finance-print-report th, #finance-print-report td { border: 1px solid #cbd5e1 !important; padding: 6px 8px !important; font-size: 11px !important; }
+    #finance-print-report th { background-color: #f1f5f9 !important; font-weight: 700 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    #finance-print-report tr { page-break-inside: avoid !important; break-inside: avoid !important; }
+    @page { size: A4 portrait; margin: 12mm 12mm; }
   }
 </style>

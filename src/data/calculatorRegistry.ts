@@ -3394,7 +3394,7 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
       },
     ],
     inputs: [
-      { id: 'annual_deposit', label: 'Annual Deposit Amount ($)', type: 'number', defaultValue: 150000, step: 5000 },
+      { id: 'annual_deposit', label: 'Annual Deposit Amount (₹)', type: 'number', defaultValue: 150000, step: 5000 },
       { id: 'interest_rate', label: 'Annual Interest Rate (%)', type: 'number', defaultValue: 7.1, step: 0.1 },
       { id: 'tenure_years', label: 'Investment Tenure (Years)', type: 'number', defaultValue: 15, step: 1 },
     ],
@@ -3402,8 +3402,8 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
       label: 'Total PPF Maturity Amount',
       initialValue: 4068209,
       decimals: 0,
-      prefix: '$',
-      secondaryText: 'Total Deposited: $2,250,000 • Total Interest Earned: $1,818,209',
+      prefix: '₹ ',
+      secondaryText: 'Total Deposited: ₹ 22,50,000 • Total Interest Earned: ₹ 18,18,209',
       accent: 'cyan',
     },
     computeScript: `
@@ -3473,7 +3473,7 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
       },
     ],
     inputs: [
-      { id: 'monthly_salary', label: 'Monthly Basic Salary ($)', type: 'number', defaultValue: 50000, step: 2000 },
+      { id: 'monthly_salary', label: 'Monthly Basic Salary (₹)', type: 'number', defaultValue: 50000, step: 2000 },
       { id: 'current_age', label: 'Current Age', type: 'number', defaultValue: 25, step: 1 },
       { id: 'retirement_age', label: 'Retirement Age', type: 'number', defaultValue: 58, step: 1 },
       { id: 'annual_salary_growth', label: 'Annual Salary Increment (%)', type: 'number', defaultValue: 5.0, step: 0.5 },
@@ -3482,8 +3482,8 @@ const BASE_CALCULATORS: CalculatorEntry[] = [
       label: 'Estimated EPF Retirement Corpus',
       initialValue: 24719850,
       decimals: 0,
-      prefix: '$',
-      secondaryText: 'Total Contribution: $8,450,000 • Total Interest: $16,269,850',
+      prefix: '₹ ',
+      secondaryText: 'Total Contribution: ₹ 84,50,000 • Total Interest: ₹ 1,62,69,850',
       accent: 'link',
     },
     computeScript: `

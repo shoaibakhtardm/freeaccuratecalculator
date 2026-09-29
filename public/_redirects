@@ -168,3 +168,17 @@
 # Legacy duplicate sitemap index filenames -> single canonical index
 /sitemap_index.xml      /sitemap.xml     301
 /sitemap-index.xml      /sitemap.xml     301
+
+# Spanish Age Calculator & Guide normalizations
+/calculadora-edad                   /calculadora-edad/es/        301
+/calculadora-edad/                  /calculadora-edad/es/        301
+/calculadora-edad/guías/es          /calculadora-edad/guides/es/ 301
+/calculadora-edad/guías/es/         /calculadora-edad/guides/es/ 301
+/calculadora-edad/gu%C3%ADas/es     /calculadora-edad/guides/es/ 301
+/calculadora-edad/gu%C3%ADas/es/    /calculadora-edad/guides/es/ 301
+/calculadora-edad/gu%c3%adas/es     /calculadora-edad/guides/es/ 301
+/calculadora-edad/gu%c3%adas/es/    /calculadora-edad/guides/es/ 301
+/calculadora-edad/guias/es          /calculadora-edad/guides/es/ 301
+/calculadora-edad/guias/es/         /calculadora-edad/guides/es/ 301
+
+

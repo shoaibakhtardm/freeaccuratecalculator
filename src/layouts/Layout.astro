@@ -163,11 +163,41 @@ const ogLocaleMap: Record<string, string> = {
   hi: 'hi_IN',
 };
 const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
+
+const googleFontsUrl = currentLocale === 'ar'
+  ? 'https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap'
+  : 'https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap';
 ---
 
 <!doctype html>
 <html lang={lang || locale || Astro.currentLocale || currentLocale} dir={languages[(lang || locale || Astro.currentLocale || currentLocale) as SupportedLanguage]?.dir || currentDir || 'ltr'} class="scroll-smooth">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- Preconnect & DNS-Prefetch to external domains for sub-second DNS resolution -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+    <link rel="preconnect" href="https://www.googletagmanager.com" />
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+
+    <link rel="preload" as="style" href={googleFontsUrl} />
+    <link rel="stylesheet" href={googleFontsUrl} media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href={googleFontsUrl} />
+    </noscript>
+
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0070f3" />
+    <meta name="generator" content={Astro.generator} />
+
     <!-- Defer Google Tag Manager until Idle / First Interaction (Zero TBT & LCP impact) -->
     <script is:inline>
       window.dataLayer = window.dataLayer || [];
@@ -222,26 +252,6 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
       };
     </script>
 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    <meta name="color-scheme" content="light dark" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#0070f3" />
-    <meta name="generator" content={Astro.generator} />
-
-    <!-- Preconnect & DNS-Prefetch to external domains for sub-second DNS resolution -->
-    <link rel="preconnect" href="https://www.googletagmanager.com" />
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'" />
-    <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
-    </noscript>
 
     <!-- Inline Critical Above-The-Fold CSS (Fast FCP, 0.00 CLS) -->
     <style is:inline>
@@ -344,15 +354,6 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
       <link rel="alternate" hreflang={alternate.lang} href={alternate.href} />
     ))}
 
-    <script is:inline>
-      const currentLocale = document.documentElement.lang || 'en';
-      import(`/src/i18n/locales/${currentLocale}.json`).then((translations) => {
-        window.__translations = {
-          [currentLocale]: translations.default || translations
-        };
-      }).catch(() => {});
-    </script>
-
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={finalCanonical} />
@@ -413,25 +414,14 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
 
           window.__facExchangeSnapshot = exchangeSnapshot;
 
-          function detect() {
-            const langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
-            for (const l of langs) {
-              const loc = (l || '').toLowerCase().trim();
-              if (loc.endsWith('-in') || loc.includes('-in-') || loc === 'hi' || loc.startsWith('hi-')) return 'INR';
-              if (loc.endsWith('-gb') || loc.endsWith('-uk')) return 'GBP';
-              if (loc.endsWith('-ca')) return 'CAD';
-              if (loc.endsWith('-au')) return 'AUD';
-              if (loc.endsWith('-jp') || loc === 'ja' || loc.startsWith('ja-')) return 'JPY';
-              if (loc.endsWith('-cn') || loc === 'zh-cn') return 'CNY';
-              if (loc.endsWith('-sg')) return 'SGD';
-              if (loc.endsWith('-ae') || loc === 'ar-ae') return 'AED';
-              if (loc.endsWith('-sa') || loc === 'ar-sa') return 'SAR';
-              if (loc.endsWith('-ch')) return 'CHF';
-              if (loc.endsWith('-nz')) return 'NZD';
-              if (loc.endsWith('-za')) return 'ZAR';
-              if (loc.endsWith('-us')) return 'USD';
-              if (loc.endsWith('-de') || loc.endsWith('-fr') || loc.endsWith('-es') || loc.endsWith('-it') || loc.endsWith('-nl')) return 'EUR';
-            }
+          function getPathDefaultCurrency() {
+            const p = (window.location.pathname || '').toLowerCase();
+            if (p.startsWith('/hi/') || p === '/hi') return 'INR';
+            if (p.startsWith('/fr/') || p.startsWith('/de/') || p.startsWith('/es/') || p.startsWith('/it/') || p.startsWith('/nl/') || p.startsWith('/pt/')) return 'EUR';
+            if (p.startsWith('/ar/')) return 'SAR';
+            if (p.startsWith('/ja/')) return 'JPY';
+            if (p.startsWith('/zh/')) return 'CNY';
+            if (p.startsWith('/ru/')) return 'RUB';
             return 'USD';
           }
 
@@ -443,15 +433,16 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
           if (urlCurr && currencyMap[urlCurr]) {
             currentCode = urlCurr;
             localStorage.setItem('fac_currency', currentCode);
+            localStorage.setItem('fac_currency_manual', 'true');
           } else {
-            // 2. Check localStorage
+            // 2. Check localStorage if manually selected
+            const isManual = localStorage.getItem('fac_currency_manual') === 'true';
             const stored = (localStorage.getItem('fac_currency') || '').toUpperCase();
-            if (stored && currencyMap[stored]) {
+            if (isManual && stored && currencyMap[stored]) {
               currentCode = stored;
             } else {
-              // 3. Browser locale detection
-              currentCode = detect();
-              localStorage.setItem('fac_currency', currentCode);
+              // 3. Path default (USD for root / English)
+              currentCode = getPathDefaultCurrency();
             }
           }
 
@@ -487,6 +478,7 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
             const prev = window.__facCurrency || 'USD';
             window.__facCurrency = upper;
             localStorage.setItem('fac_currency', upper);
+            localStorage.setItem('fac_currency_manual', 'true');
 
             // Sync all currency select elements on page
             document.querySelectorAll('.fac-currency-select').forEach((sel) => {
@@ -513,9 +505,13 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
 
           // Native Locale Management (Independent from Currency)
           let savedLocale = (localStorage.getItem('fac_locale') || '').toLowerCase();
-          const pathMatch = window.location.pathname.match(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)(\/|$)/i);
+          const docLang = (document.documentElement.lang || '').toLowerCase();
+          const pathMatch = window.location.pathname.match(/(?:^\/|\/)(fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)(?:\/|$)/i);
           if (pathMatch) {
             savedLocale = pathMatch[1].toLowerCase();
+            localStorage.setItem('fac_locale', savedLocale);
+          } else if (docLang) {
+            savedLocale = docLang;
             localStorage.setItem('fac_locale', savedLocale);
           }
           if (!savedLocale) savedLocale = 'en';
@@ -649,6 +645,22 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
           "Rechercher 🔄 Convertisseur d'Unités..."
         ];
 
+        const SPANISH_PROMPTS = [
+          "Buscar calculadora (ej: edad, SIP, porcentaje, interés, hipoteca)...",
+          "Buscar 🎂 Calculadora de Edad...",
+          "Buscar 📈 Calculadora SIP...",
+          "Buscar 📐 Calculadora de Porcentajes...",
+          "Buscar ⏳ Interés Compuesto...",
+          "Buscar 🏠 Calculadora de Hipoteca...",
+          "Buscar 🩺 Calculadora de IMC...",
+          "Buscar 🍎 Calorías y TDEE...",
+          "Buscar 🚗 Préstamo de Auto...",
+          "Buscar ⏱️ Calculadora de Tiempo...",
+          "Buscar 🔄 Convertidor de Unidades...",
+          "Buscar 💰 Calculadora de Rendimiento...",
+          "Buscar 📅 Diferencia entre Fechas..."
+        ];
+
         function initSearchTypewriter(wrapper) {
           if (wrapper.closest('.fac-autocomplete-container') || 
               wrapper.__facTypewriterInit || 
@@ -656,8 +668,11 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
               wrapper.dataset.customTypewriter === 'true') return;
           wrapper.__facTypewriterInit = true;
 
-          const isFr = (document.documentElement.lang || '').startsWith('fr') || window.location.pathname.startsWith('/fr/');
-          const activePrompts = isFr ? FRENCH_PROMPTS : UNIVERSAL_PROMPTS;
+          const docLang = document.documentElement.lang || '';
+          const path = window.location.pathname;
+          const isEs = docLang.startsWith('es') || path.includes('/es/') || path.startsWith('/calculadora-edad/es');
+          const isFr = docLang.startsWith('fr') || path.startsWith('/fr/');
+          const activePrompts = isEs ? SPANISH_PROMPTS : (isFr ? FRENCH_PROMPTS : UNIVERSAL_PROMPTS);
 
           const textEl = wrapper.querySelector('.fac-typewriter-text');
           const container = wrapper.querySelector('.fac-typewriter-container');
@@ -736,8 +751,11 @@ const ogLocale = ogLocaleOverride || ogLocaleMap[currentLocale] || 'en_US';
         }
 
         function initAllTypewriters() {
-          document.querySelectorAll('.fac-search-wrapper').forEach(initSearchTypewriter);
+          const wrappers = document.querySelectorAll('.fac-search-wrapper:not(.fac-autocomplete-container .fac-search-wrapper)');
+          if (!wrappers.length) return;
+          wrappers.forEach(initSearchTypewriter);
         }
+
 
         if (document.readyState === 'loading') {
           document.addEventListener('DOMContentLoaded', initAllTypewriters);

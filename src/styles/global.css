@@ -52,9 +52,9 @@
   --color-canvas: #fafafa;
   --color-canvas-elevated: #ffffff;
   --color-ink: #171717;
-  --color-body: #4d4d4d;
-  --color-mute: #8f8f8f;
-  --color-faint: #a1a1a1;
+  --color-body: #374151;
+  --color-mute: #6b7280;
+  --color-faint: #6b7280;
   --color-hairline: #ebebeb;
   --color-hairline-soft: #f2f2f2;
   --color-primary: #171717;
@@ -72,9 +72,10 @@
   --color-canvas: #0a0a0a;
   --color-canvas-elevated: #141414;
   --color-ink: #ededed;
-  --color-body: #a1a1a1;
+  --color-body: #d1d5db;
   --color-mute: #8e8e8e;
-  --color-faint: #454545;
+  --color-faint: #9ca3af;
+
   --color-hairline: #262626;
   --color-hairline-soft: #171717;
   --color-primary: #ededed;
@@ -424,6 +425,160 @@ body {
   .fac-theme-toggle-btn, .fac-clear-btn, .fac-kbd-shortcut,
   #master-social-proof, .history-drawer-container, #mobile-sticky-hud {
     display: none !important;
+  }
+
+  /* Unclip layout containers for multi-page print document flow */
+  main,
+  .max-w-7xl,
+  .lg\:col-span-8,
+  .grid,
+  .calculator-main-box {
+    display: block !important;
+    position: static !important;
+    overflow: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+    height: auto !important;
+    min-height: auto !important;
+    float: none !important;
+  }
+
+  /* Universal High-Fidelity Print Report Containers */
+  #sip-print-report,
+  #emi-print-report,
+  #tax-print-report,
+  #finance-print-report,
+  #master-print-report,
+  #pct-print-report,
+  #bmi-print-report,
+  #age-print-report,
+  #ai-print-report,
+  #love-print-report,
+  .fac-print-report {
+    display: block !important;
+    position: static !important;
+    visibility: visible !important;
+    width: 100% !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #sip-print-report *,
+  #emi-print-report *,
+  #tax-print-report *,
+  #finance-print-report *,
+  #master-print-report *,
+  #pct-print-report *,
+  #bmi-print-report *,
+  #age-print-report *,
+  #ai-print-report *,
+  #love-print-report *,
+  .fac-print-report * {
+    visibility: visible !important;
+  }
+
+  /* Universal Print Tables with multi-page header repeats and row break protection */
+  #sip-print-report table,
+  #emi-print-report table,
+  #tax-print-report table,
+  #finance-print-report table,
+  #master-print-report table,
+  #pct-print-report table,
+  #bmi-print-report table,
+  #age-print-report table,
+  #ai-print-report table,
+  #love-print-report table,
+  .fac-print-report table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    margin-top: 10px !important;
+    page-break-inside: auto !important;
+  }
+
+  #sip-print-report thead,
+  #emi-print-report thead,
+  #tax-print-report thead,
+  #finance-print-report thead,
+  #master-print-report thead,
+  #pct-print-report thead,
+  #bmi-print-report thead,
+  #age-print-report thead,
+  #ai-print-report thead,
+  #love-print-report thead,
+  .fac-print-report thead {
+    display: table-header-group !important;
+  }
+
+  #sip-print-report tr,
+  #emi-print-report tr,
+  #tax-print-report tr,
+  #finance-print-report tr,
+  #master-print-report tr,
+  #pct-print-report tr,
+  #bmi-print-report tr,
+  #age-print-report tr,
+  #ai-print-report tr,
+  #love-print-report tr,
+  .fac-print-report tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  #sip-print-report th,
+  #sip-print-report td,
+  #emi-print-report th,
+  #emi-print-report td,
+  #tax-print-report th,
+  #tax-print-report td,
+  #finance-print-report th,
+  #finance-print-report td,
+  #master-print-report th,
+  #master-print-report td,
+  #pct-print-report th,
+  #pct-print-report td,
+  #bmi-print-report th,
+  #bmi-print-report td,
+  #age-print-report th,
+  #age-print-report td,
+  #ai-print-report th,
+  #ai-print-report td,
+  #love-print-report th,
+  #love-print-report td,
+  .fac-print-report th,
+  .fac-print-report td {
+    border: 1px solid #cbd5e1 !important;
+    padding: 6px 8px !important;
+    color: #0f172a !important;
+    font-size: 11px !important;
+  }
+
+  #sip-print-report th,
+  #emi-print-report th,
+  #tax-print-report th,
+  #finance-print-report th,
+  #master-print-report th,
+  #pct-print-report th,
+  #bmi-print-report th,
+  #age-print-report th,
+  #ai-print-report th,
+  #love-print-report th,
+  .fac-print-report th {
+    background-color: #f1f5f9 !important;
+    font-weight: 700 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 12mm 12mm;
   }
 }
 

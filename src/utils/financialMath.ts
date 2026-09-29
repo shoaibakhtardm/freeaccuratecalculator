@@ -260,7 +260,7 @@ export function generateEMIProof(
   annualRate: number,
   tenureMonths: number,
   emi: number,
-  currencySymbol: string = '₹'
+  currencySymbol: string = '$'
 ): ProofStep[] {
   const r = annualRate / 12 / 100;
   const factor = r > 0 ? Math.pow(1 + r, tenureMonths) : 1;

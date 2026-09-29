@@ -8,6 +8,18 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://freeaccuratecalculator.com/calculadora-edad/es/</loc>
+    <lastmod>2026-09-24T11:35:12.761Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freeaccuratecalculator.com/calculadora-edad/guides/es/</loc>
+    <lastmod>2026-09-24T12:14:31.983Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://freeaccuratecalculator.com/de/</loc>
     <lastmod>2026-09-10T00:52:46.000Z</lastmod>
     <changefreq>daily</changefreq>

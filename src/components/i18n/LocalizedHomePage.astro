@@ -36,10 +36,9 @@ const webPageSchema = {
 const allSchemas = [webPageSchema];
 
 const isFrenchLocale = currentLocale === 'fr';
+const isSpanishLocale = currentLocale === 'es';
 
-// Featured links point to verified live routes only (guides hub was retired with the guides content deletion).
-// The four obsolete English guide-card records (EMI / SIP / BMI / Compound Interest) were permanently
-// removed in the forensic URL cleanup. The calculators themselves remain live routes.
+// Featured contextual guide links pointing to verified canonical live routes
 const FEATURED_GUIDES = isFrenchLocale
   ? [
       {
@@ -58,8 +57,52 @@ const FEATURED_GUIDES = isFrenchLocale
         readTime: '4 min',
         icon: '📐',
       },
+      {
+        title: 'Calculateur d\'Échéance de Prêt (EMI) et Amortissement',
+        desc: 'Calculez vos mensualités de crédit, le coût total des intérêts et découvrez le tableau d\'amortissement détaillé.',
+        href: '/emi-calculator/',
+        tag: 'Finances',
+        readTime: '5 min',
+        icon: '🏦',
+      },
     ]
-  : [];
+  : isSpanishLocale
+  ? [
+      {
+        title: 'Calculadora de Edad: Cómo Calcular tu Edad Exacta',
+        desc: 'Aprende cómo calcular tu edad exacta en años, meses y días, cómo influyen los años bisiestos y las diferencias entre edad cronológica y corregida.',
+        href: '/calculadora-edad/guides/es/',
+        tag: 'Guía de Edad',
+        readTime: '8 min',
+        icon: '🎂',
+      },
+      {
+        title: 'Calculadora de Cuota de Préstamo (EMI) y Amortización',
+        desc: 'Simula el cálculo de cuotas mensuales de préstamos, el coste de intereses y el cronograma completo de amortización con saldo decreciente.',
+        href: '/emi-calculator/',
+        tag: 'Finanzas & Préstamos',
+        readTime: '5 min',
+        icon: '🏦',
+      },
+    ]
+  : [
+      {
+        title: 'Loan EMI Calculator & Reducing Balance Amortization',
+        desc: 'Calculate exact monthly loan payments, lifetime interest cost reduction, and dynamic payment schedules with reducing balance math.',
+        href: '/emi-calculator/',
+        tag: 'Finance & Loans',
+        readTime: '5 min',
+        icon: '🏦',
+      },
+      {
+        title: 'Guía de Cálculo de Edad Exacta (Spanish Guide)',
+        desc: 'Aprende cómo calcular tu edad exacta en años, meses y días con precisión matemática, años bisiestos y reglas de acarreo de calendario.',
+        href: '/calculadora-edad/guides/es/',
+        tag: 'Spanish Guide',
+        readTime: '8 min',
+        icon: '🎂',
+      },
+    ];
 
 const RAW_POPULAR_CALCULATORS = [
   // 1. Percentage Calculator
@@ -188,15 +231,15 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
       <div class="grid grid-cols-3 gap-2 sm:gap-3 max-w-2xl mx-auto pt-2 text-center">
         <div class="rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/60 p-2 sm:p-2.5 backdrop-blur-md">
           <span class="block text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit">{hpStrings.hero.metric1Value}</span>
-          <span class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">{hpStrings.hero.metric1Label}</span>
+          <span class="text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-300">{hpStrings.hero.metric1Label}</span>
         </div>
         <div class="rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/60 p-2 sm:p-2.5 backdrop-blur-md">
           <span class="block text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit">{hpStrings.hero.metric2Value}</span>
-          <span class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">{hpStrings.hero.metric2Label}</span>
+          <span class="text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-300">{hpStrings.hero.metric2Label}</span>
         </div>
         <div class="rounded-xl border border-slate-200/70 dark:border-slate-800/70 bg-white/60 dark:bg-slate-900/60 p-2 sm:p-2.5 backdrop-blur-md">
           <span class="block text-xs sm:text-sm font-bold text-slate-900 dark:text-white font-outfit">{hpStrings.hero.metric3Value}</span>
-          <span class="text-[10px] sm:text-[11px] text-slate-500 dark:text-slate-400">{hpStrings.hero.metric3Label}</span>
+          <span class="text-[10px] sm:text-[11px] text-slate-600 dark:text-slate-300">{hpStrings.hero.metric3Label}</span>
         </div>
       </div>
 
@@ -216,7 +259,7 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
           <span>{hpStrings.popularSection.heading}</span>
         </h2>
       </div>
-      <span class="text-[11px] font-mono text-slate-500 dark:text-slate-400 font-semibold bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-full border border-slate-200/80 dark:border-slate-700/80">
+      <span class="text-[11px] font-mono text-slate-600 dark:text-slate-300 font-semibold bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-full border border-slate-200/80 dark:border-slate-700/80">
         {POPULAR_CALCULATORS.length} {hpStrings.popularSection.toolsCount.replace(/^\d+\s*/, '') || 'Tools'}
       </span>
     </div>
@@ -256,7 +299,6 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
     </div>
 
     <div
-      aria-label={hpStrings.aboutSection.h2}
       class="w-full rounded-2xl sm:rounded-3xl border border-slate-200/90 dark:border-slate-800/90 bg-white/80 dark:bg-slate-900/80 p-4 sm:p-6 md:p-8 shadow-sm dark:shadow-xl backdrop-blur-xl box-border flex flex-col space-y-5"
     >
       <!-- Header row inside the box -->
@@ -265,10 +307,11 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
           <span class="flex h-2 w-2 rounded-full bg-cyan animate-pulse"></span>
           <span class="font-outfit text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">{hpStrings.aboutSection.headerLeft}</span>
         </div>
-        <span class="text-[11px] font-mono text-slate-500 dark:text-slate-400 font-semibold bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-full border border-slate-200/80 dark:border-slate-700/80">
+        <span class="text-[11px] font-mono text-slate-600 dark:text-slate-300 font-semibold bg-slate-100 dark:bg-slate-800/80 px-2 py-0.5 rounded-full border border-slate-200/80 dark:border-slate-700/80">
           {hpStrings.aboutSection.headerRight}
         </span>
       </div>
+
 
       <!-- 6 Equal Boxes in a Unified 3-Column Grid (3 grids x 2 rows) -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 w-full">
@@ -426,18 +469,18 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
   )}
 
   <!-- Featured Educational Guides Section -->
-  {hpStrings.guidesSection && FEATURED_GUIDES.length > 0 && (
+  {FEATURED_GUIDES.length > 0 && (
     <section class="mt-12 mb-4 w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl mx-auto px-1">
       <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-6 pb-2 border-b border-slate-200/80 dark:border-slate-800/80">
         <div>
           <span class="font-outfit text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-            {hpStrings.guidesSection.eyebrow}
+            {hpStrings.guidesSection?.eyebrow || (isSpanishLocale ? 'Artículos y Recursos' : 'Mathematical Transparency')}
           </span>
           <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white font-outfit mt-1">
-            {hpStrings.guidesSection.heading}
+            {hpStrings.guidesSection?.heading || (isSpanishLocale ? 'Guías Educativas y Demostraciones' : 'Featured Educational Guides & Computational Models')}
           </h2>
           <p class="text-xs text-slate-600 dark:text-slate-300 mt-1 max-w-xl">
-            {hpStrings.guidesSection.desc}
+            {hpStrings.guidesSection?.desc || (isSpanishLocale ? 'Profundiza en las fórmulas matemáticas, algoritmos de cálculo y casos prácticos.' : 'Deep-dive into verified calculation algorithms, mathematical proofs, and step-by-step practical guides.')}
           </p>
         </div>
       </div>
@@ -454,7 +497,7 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
                   <span>{guide.icon}</span>
                   <span>{guide.tag}</span>
                 </span>
-                <span class="text-slate-400 dark:text-slate-500 font-mono">
+                <span class="text-slate-600 dark:text-slate-300 font-mono">
                   {guide.readTime}
                 </span>
               </div>
@@ -466,7 +509,7 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
               </p>
             </div>
             <span class="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 group-hover:translate-x-0.5 transition-transform pt-1">
-              <span>{isFrenchLocale ? 'Lire le guide' : 'Read Guide'}</span>
+              <span>{isFrenchLocale ? 'Lire le guide' : isSpanishLocale ? 'Leer guía completa' : 'Explore Guide'}</span>
               <span>→</span>
             </span>
           </a>
@@ -495,7 +538,8 @@ const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
           <details class="group py-4 first:pt-0 last:pb-0" open={index === 0}>
             <summary class="flex min-h-[44px] items-center justify-between cursor-pointer list-none text-xs sm:text-sm md:text-base font-bold text-slate-900 dark:text-white hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors focus:outline-none">
               <span class="pr-3 text-balance">{faq.question}</span>
-              <span class="ml-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 text-slate-400 group-open:rotate-180 transition-transform duration-200">
+              <span class="ml-2 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 group-open:rotate-180 transition-transform duration-200">
+
                 <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                 </svg>

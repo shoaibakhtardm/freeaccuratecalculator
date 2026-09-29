@@ -6,18 +6,20 @@ interface Props {
   variables?: Array<{ symbol: string; meaning: string }>;
   title?: string;
   isFrench?: boolean;
+  isSpanish?: boolean;
 }
 
-const { formula, explanation, variables = [], title, isFrench: propIsFrench } = Astro.props;
+const { formula, explanation, variables = [], title, isFrench: propIsFrench, isSpanish: propIsSpanish } = Astro.props;
 const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
-const resolvedTitle = title || (isFrench ? 'Formule & Méthode de Calcul' : 'Formula & Mathematical Foundation');
+const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro.url.pathname.startsWith('/calculadora-edad/es'));
+const resolvedTitle = title || (isSpanish ? 'Fórmula y Fundamento Matemático' : isFrench ? 'Formule & Méthode de Calcul' : 'Formula & Mathematical Foundation');
 ---
 
 <section class="mt-8 rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-4">
   <div class="flex items-center gap-2">
-    <span class="mono-eyebrow text-link">{isFrench ? "Définition Mathématique" : "Mathematical Definition"}</span>
+    <span class="mono-eyebrow text-link">{isSpanish ? "Definición Matemática" : isFrench ? "Définition Mathématique" : "Mathematical Definition"}</span>
     <span class="h-1.5 w-1.5 rounded-full bg-hairline"></span>
-    <span class="text-xs text-mute font-mono">{isFrench ? "Formule Standard" : "Standard Formula"}</span>
+    <span class="text-xs text-mute font-mono">{isSpanish ? "Fórmula Estándar" : isFrench ? "Formule Standard" : "Standard Formula"}</span>
   </div>
 
   <h2 class="heading-md text-ink">{resolvedTitle}</h2>

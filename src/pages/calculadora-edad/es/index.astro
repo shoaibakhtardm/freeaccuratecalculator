@@ -1,0 +1,1208 @@
+---
+// src/pages/calculadora-edad/es/index.astro
+import CalculatorLayout from '../../../layouts/CalculatorLayout.astro';
+import FormulaSection from '../../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../../components/calculator/WorkedExample.astro';
+import FAQSection from '../../../components/calculator/FAQSection.astro';
+
+const faqs = [
+  {
+    question: '¿Cómo calcula esta herramienta la edad cronológica exacta?',
+    answer:
+      'La calculadora resta tu fecha y hora exacta de nacimiento del momento presente o de una fecha objetivo determinada. Toma en cuenta la duración real de cada mes del calendario gregoriano (28, 29, 30 o 31 días) y los años bisiestos para proporcionar un desglose 100% exacto en años, meses, días, horas, minutos y segundos en tiempo real.',
+  },
+  {
+    question: '¿Por qué la calculadora restringe las fechas de nacimiento futuras?',
+    answer:
+      'La edad cronológica mide el tiempo transcurrido desde el momento del nacimiento hasta el presente. Una fecha de nacimiento situada en el futuro constituye una imposibilidad matemática para la edad vivida, por lo que la calculadora aplica una validación estricta en el navegador que impide ingresar fechas posteriores al día actual.',
+  },
+  {
+    question: '¿Cómo funciona el contador de segundos en tiempo real?',
+    answer:
+      'El motor de cómputo en el cliente ejecuta un ciclo de alta precisión a intervalos de un segundo directamente en tu navegador. Con cada segundo transcurrido, se actualizan al instante el total de segundos vividos, las horas transcurridas y la cuenta regresiva para tu próximo cumpleaños, sin necesidad de recargar la página.',
+  },
+  {
+    question: '¿Cómo se calcula la cuenta regresiva para el próximo cumpleaños?',
+    answer:
+      'El algoritmo comprueba si la fecha de tu cumpleaños ya ocurrió en el año calendario en curso. Si ya pasó, establece como objetivo tu aniversario del próximo año; en caso contrario, toma la fecha venidera de este año, calculando con exactitud los meses, días, horas, minutos y segundos restantes.',
+  },
+  {
+    question: '¿Son privados mi fecha de nacimiento y mis datos personales?',
+    answer:
+      'Sí, 100% privados y confidenciales. Todos los cálculos se ejecutan exclusivamente en tu dispositivo mediante JavaScript en el navegador. Ninguna fecha, hora ni dato personal se envía, almacena ni registra en servidores externos.',
+  },
+];
+
+const relatedCalculators = [
+  { title: 'Calculadora de Fechas', href: '/date-calculator/', badge: 'Cotidiana' },
+  { title: 'Calculadora de Tiempo', href: '/time-calculator/', badge: 'Tiempo' },
+  { title: 'Calculadora de Horas', href: '/hours-calculator/', badge: 'Horas' },
+  { title: 'Calculadora de Porcentajes', href: '/percentage-calculator/', badge: 'Matemáticas' },
+];
+
+const workedExampleSteps = [
+  {
+    number: 1,
+    title: 'Calcular los Años Naturales Completos',
+    description: 'Resta el año de nacimiento del año objetivo o actual, ajustando hacia atrás en 1 año si el aniversario aún no se ha cumplido en el año de referencia.',
+    mathExpression: 'Años = 2026 - 2000 = 26 años completos',
+  },
+  {
+    number: 2,
+    title: 'Calcular los Meses y Días Naturales Restantes',
+    description: 'Cuenta los meses naturales completos transcurridos desde el último día mensual cumplido, tomando en consideración los días reales (28 a 31) de los meses intermedios.',
+    mathExpression: 'Meses = 2, Días = 14',
+  },
+  {
+    number: 3,
+    title: 'Calcular Unidades Granulares (Días, Horas, Minutos y Segundos)',
+    description: 'Convierte el total de milisegundos transcurridos en días solares completos, horas acumuladas, minutos y segundos exactos mediante el diferencial temporal.',
+    mathExpression: 'Total de Segundos = Milisegundos Totales ÷ 1.000',
+  },
+];
+
+const now = new Date();
+const todayDateString = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+const currentYear = now.getFullYear();
+---
+
+<CalculatorLayout
+  title="Calculadora de Edad: Calcula tu Edad Exacta Gratis"
+  metaDescription="Calcula tu edad exacta en años, meses, días y segundos en tiempo real. Cuenta regresiva para tu cumpleaños y cálculo 100% gratis y preciso."
+  h1="Calculadora de edad"
+  subtitle="Calcula tu edad exacta desglosada en años, meses, días, horas, minutos y segundos en tiempo real con validación estricta de fechas."
+  category={{ label: 'Herramientas Cotidianas', href: '/everyday/' }}
+  calculatorName="Calculadora de Edad"
+  relatedCalculators={relatedCalculators}
+  faqs={faqs}
+  lang="es"
+>
+  <!-- Caja Principal de la Calculadora (Diseño Estándar) -->
+  <div id="age-calculator-card" class="calculator-main-box relative rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6 overflow-hidden transition-all pb-24 sm:pb-8">
+    <!-- Resplandor Ambiental Sutil en Gradiente -->
+    <div class="pointer-events-none absolute -top-32 -right-32 w-80 h-80 rounded-full bg-link/10 blur-3xl print:hidden"></div>
+    <div class="pointer-events-none absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-cyan/10 blur-3xl print:hidden"></div>
+
+    <!-- Informe Dedicado de Alta Fidelidad para Imprimir/PDF (Visible SOLO al imprimir) -->
+    <div id="age-print-report" class="hidden print:block font-mono text-slate-900 fac-print-report">
+      <!-- Membrete Oficial del Encabezado -->
+      <div class="border-b-2 border-slate-900 pb-4 mb-5 flex justify-between items-start">
+        <div>
+          <div class="text-2xl font-black uppercase tracking-tight">Free Accurate Calculator</div>
+          <div class="text-sm font-bold text-blue-700 mt-0.5">Informe de Edad Cronológica e Hitos Temporales</div>
+          <div class="text-xs text-slate-500 mt-1">freeaccuratecalculator.com • Certificado de Cronología Gregoriana Verificada</div>
+        </div>
+        <div class="text-right text-xs text-slate-600 space-y-0.5">
+          <div><span class="text-slate-400 uppercase">Generado:</span> <strong id="age-print-date" class="text-slate-900"></strong></div>
+          <div><span class="text-slate-400 uppercase">Método de Cálculo:</span> <strong class="text-slate-900">Diferencial Solar y de Calendario Exacto</strong></div>
+        </div>
+      </div>
+
+      <!-- Parámetros Cronométricos -->
+      <div class="bg-slate-50 border border-slate-200 rounded-lg p-3.5 mb-5">
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Parámetros Cronológicos</div>
+        <div class="grid grid-cols-4 gap-4 text-xs">
+          <div><span class="text-slate-500 block text-[10px] uppercase">Fecha de Nacimiento</span><span id="age-print-birth" class="text-sm font-bold text-slate-900"></span></div>
+          <div><span class="text-slate-500 block text-[10px] uppercase">Edad a Fecha de</span><span id="age-print-target" class="text-sm font-bold text-slate-900"></span></div>
+          <div><span class="text-slate-500 block text-[10px] uppercase">Día de Nacimiento</span><span id="age-print-day" class="text-sm font-bold text-slate-900"></span></div>
+          <div><span class="text-slate-500 block text-[10px] uppercase">Signos Zodiacales</span><span id="age-print-zodiac" class="text-sm font-bold text-slate-900"></span></div>
+        </div>
+      </div>
+
+      <!-- Resultado Principal de Edad -->
+      <div class="border-2 border-slate-900 rounded-lg p-4 bg-slate-50 mb-6">
+        <span class="text-[10px] font-bold uppercase text-slate-900 block">Edad Cronológica Exacta</span>
+        <div id="age-print-hero" class="text-2xl font-black text-slate-900 mt-1"></div>
+        <div id="age-print-ticker" class="text-xs text-slate-600 mt-1"></div>
+      </div>
+
+      <!-- Tabla de Desglose Detallado de Tiempo de Vida -->
+      <div class="space-y-2 mb-6">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-900">Desglose Detallado de Vida e Hitos Fisiológicos</div>
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="border-b-2 border-slate-300 bg-slate-100 text-slate-700">
+              <th class="py-2 px-2.5">Unidad de Tiempo / Métrica</th>
+              <th class="py-2 px-2.5 text-right">Cantidad Transcurrida</th>
+              <th class="py-2 px-2.5">Descripción</th>
+            </tr>
+          </thead>
+          <tbody id="age-print-table-body" class="divide-y divide-slate-200">
+            <!-- Rellenado dinámicamente -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pie de página del informe -->
+      <div class="mt-8 pt-3 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-500">
+        <div>Generado por <strong>Free Accurate Calculator</strong> • https://freeaccuratecalculator.com</div>
+        <div>Cálculo verificado 100% en el cliente • Totalmente Privado</div>
+      </div>
+    </div>
+
+    <!-- Contenedor de Interfaz en Pantalla (Oculto al imprimir) -->
+    <div class="print:hidden space-y-6">
+      <!-- Controles Superiores: Modo y Alternador en Vivo -->
+      <div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="mono-eyebrow text-mute">Modo de Entrada:</span>
+          <div class="inline-flex rounded-[6px] border border-hairline bg-canvas p-0.5" role="tablist" aria-label="Modo de entrada de fecha">
+            <button
+              id="tab-datepicker-btn"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              class="rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors"
+            >
+              📅 Selector de Calendario
+            </button>
+            <button
+              id="tab-dropdown-btn"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              class="rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink cursor-pointer hover:bg-hairline-soft transition-colors"
+            >
+              🔢 Día / Mes / Año
+            </button>
+          </div>
+        </div>
+
+        <!-- Selector de Contador en Tiempo Real -->
+        <div class="flex items-center gap-2">
+          <span class="mono-eyebrow text-mute">Reloj en Vivo:</span>
+          <button
+            id="toggle-ticker-btn"
+            type="button"
+            aria-pressed="true"
+            aria-label="Alternar actualización en vivo de segundos"
+            class="inline-flex items-center gap-1.5 rounded-full border border-hairline bg-canvas px-3 py-1.5 min-h-[44px] sm:min-h-[30px] text-xs font-mono font-medium text-ink hover:border-link transition-colors cursor-pointer"
+          >
+            <span id="ticker-status-dot" class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span id="ticker-status-text">En vivo (Activo)</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Banner de Error (Oculto por defecto, visible para fechas futuras) -->
+      <div
+        id="future-date-error"
+        role="alert"
+        class="hidden rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-xs sm:text-sm font-mono text-red-600 dark:text-red-400 space-y-1"
+      >
+        <div class="flex items-center gap-2 font-bold">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <span>Límite de Fecha Futura Excedido</span>
+        </div>
+        <p>La fecha de nacimiento no puede ser futura. Por favor selecciona la fecha de hoy o una fecha anterior.</p>
+      </div>
+
+      <!-- Área de Campos del Formulario -->
+      <div class="space-y-5">
+        <!-- 1. Sección de Fecha de Nacimiento -->
+        <div id="mode-datepicker" class="space-y-2">
+          <label for="birth-date-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+            Fecha de Nacimiento <span class="text-red-500">*</span>
+          </label>
+          <div class="relative">
+            <input
+              id="birth-date-input"
+              type="date"
+              value="2000-01-01"
+              max={todayDateString}
+              aria-label="Fecha de nacimiento en formato calendario"
+              class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3.5 py-2.5 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+            />
+          </div>
+          <p class="text-[11px] text-mute font-mono">Selecciona tu fecha exacta de nacimiento. Las fechas futuras están estrictamente restringidas.</p>
+        </div>
+
+        <!-- Modo de Entrada Alternativo con Desplegables -->
+        <div id="mode-dropdown" class="hidden space-y-2">
+          <span class="block text-xs font-semibold text-ink uppercase font-mono">
+            Fecha de Nacimiento (Día / Mes / Año) <span class="text-red-500">*</span>
+          </span>
+          <div class="grid grid-cols-3 gap-3">
+            <div>
+              <label for="birth-day-select" class="sr-only">Día de Nacimiento</label>
+              <select
+                id="birth-day-select"
+                aria-label="Día de nacimiento"
+                class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+              >
+                {Array.from({ length: 31 }, (_, i) => i + 1).map((d) => (
+                  <option value={d} selected={d === 1}>{d}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label for="birth-month-select" class="sr-only">Mes de Nacimiento</label>
+              <select
+                id="birth-month-select"
+                aria-label="Mes de nacimiento"
+                class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+              >
+                {[
+                  { val: 1, name: 'Ene (01)' },
+                  { val: 2, name: 'Feb (02)' },
+                  { val: 3, name: 'Mar (03)' },
+                  { val: 4, name: 'Abr (04)' },
+                  { val: 5, name: 'May (05)' },
+                  { val: 6, name: 'Jun (06)' },
+                  { val: 7, name: 'Jul (07)' },
+                  { val: 8, name: 'Ago (08)' },
+                  { val: 9, name: 'Sep (09)' },
+                  { val: 10, name: 'Oct (10)' },
+                  { val: 11, name: 'Nov (11)' },
+                  { val: 12, name: 'Dic (12)' },
+                ].map((m) => (
+                  <option value={m.val} selected={m.val === 1}>{m.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label for="birth-year-input" class="sr-only">Año de Nacimiento</label>
+              <input
+                id="birth-year-input"
+                type="number"
+                min="1900"
+                max={currentYear}
+                value="2000"
+                placeholder="Año (ej. 2000)"
+                aria-label="Año de nacimiento"
+                class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Despliegue Opcional de Hora de Nacimiento -->
+        <div class="rounded-xl border border-hairline bg-canvas/60 p-4 space-y-3">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-sm font-medium text-ink">⏰ Hora Exacta de Nacimiento</span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono bg-link/10 text-link">Precisión al segundo en vivo</span>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input id="enable-time-toggle" type="checkbox" aria-label="Habilitar hora exacta de nacimiento" class="sr-only peer" />
+              <div class="w-9 h-5 bg-hairline peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-link"></div>
+            </label>
+          </div>
+
+          <div id="birth-time-container" class="hidden grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-hairline">
+            <div>
+              <label for="birth-time-input" class="block text-[11px] font-semibold text-mute uppercase font-mono mb-1">
+                Hora de Nacimiento (HH:MM)
+              </label>
+              <input
+                id="birth-time-input"
+                type="time"
+                value="12:00"
+                aria-label="Hora exacta de nacimiento"
+                class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none"
+              />
+            </div>
+            <div class="flex items-center text-xs text-mute leading-relaxed pt-2 sm:pt-4">
+              <span>Activar la hora permite calcular en tiempo real hasta el segundo exacto desde tu nacimiento.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edad a la Fecha (Comparación Opcional) -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label for="target-date-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+              Calcular Edad a Fecha de (Fecha Objetivo)
+            </label>
+            <button
+              id="reset-target-today-btn"
+              type="button"
+              class="text-[11px] font-mono text-link hover:underline cursor-pointer"
+            >
+              Restablecer a Hoy
+            </button>
+          </div>
+          <input
+            id="target-date-input"
+            type="date"
+            value={todayDateString}
+            aria-label="Fecha objetivo para calcular la edad"
+            class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas px-3.5 py-2.5 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link"
+          />
+          <p class="text-[11px] text-mute font-mono">Por defecto toma el día de hoy para seguimiento cronológico en tiempo real. Puedes modificarla para calcular tu edad en cualquier fecha específica.</p>
+        </div>
+      </div>
+
+      <!-- Tarjeta de Resultado Principal en Tiempo Real (Hero) -->
+      <div
+        id="age-hero-card"
+        aria-live="polite"
+        class="rounded-2xl border border-link/30 bg-gradient-to-br from-link/5 via-canvas to-link/10 p-6 sm:p-8 relative overflow-hidden transition-all shadow-whisper space-y-5"
+      >
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-hairline pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-link animate-ping"></span>
+            <span class="mono-eyebrow text-xs uppercase tracking-wider text-link font-bold">Edad Cronológica Exacta</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button
+              id="copy-age-btn"
+              type="button"
+              class="inline-flex items-center gap-1 text-xs font-mono text-link hover:underline cursor-pointer px-2 py-1 rounded border border-hairline bg-canvas"
+              title="Copiar resumen de edad al portapapeles"
+              aria-label="Copiar resultado de edad"
+            >
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span id="copy-age-text">Copiar Resultado</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Contador Principal: Años, Meses, Días -->
+        <div class="space-y-2">
+          <div class="text-3xl sm:text-5xl font-extrabold font-mono text-ink tracking-tight flex flex-wrap items-baseline gap-x-3 gap-y-1">
+            <span id="hero-years">0</span> <span class="text-lg sm:text-2xl font-bold text-mute">Años</span>
+            <span id="hero-months">0</span> <span class="text-lg sm:text-2xl font-bold text-mute">Meses</span>
+            <span id="hero-days">0</span> <span class="text-lg sm:text-2xl font-bold text-mute">Días</span>
+          </div>
+
+          <!-- Contador Secundario en Tiempo Real: Horas, Minutos, Segundos -->
+          <div class="flex items-center gap-2 text-sm sm:text-lg font-mono font-semibold text-link pt-1">
+            <span>⏳</span>
+            <span id="hero-hours">00</span><span>h</span> :
+            <span id="hero-minutes">00</span><span>m</span> :
+            <span id="hero-seconds" class="inline-block min-w-[28px] text-ink font-bold">00</span><span>s</span>
+            <span class="text-xs font-mono text-mute font-normal">(segundos en vivo)</span>
+          </div>
+        </div>
+
+        <!-- Banner del Día de la Semana de Nacimiento -->
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+          <div class="flex items-center gap-2">
+            <span class="text-base">🎂</span>
+            <span class="text-mute">Naciste un:</span>
+            <strong id="born-day-name" class="text-ink font-bold text-sm">--</strong>
+          </div>
+          <div class="flex items-center gap-3 text-mute text-[11px]">
+            <span>Signo del Zodíaco: <strong id="zodiac-sign" class="text-ink">--</strong></span>
+            <span>Horóscopo Chino: <strong id="chinese-zodiac" class="text-ink">--</strong></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cuadrícula de Desglose de Unidades (Días, Horas, Minutos, Segundos) -->
+      <div class="space-y-3">
+        <h3 class="text-xs font-semibold text-ink uppercase font-mono tracking-wider">
+          Desglose Detallado del Tiempo de Vida (Unidades Totales)
+        </h3>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <!-- Total de Días -->
+          <div class="rounded-xl border border-hairline bg-canvas p-4 text-center space-y-1">
+            <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Total de Días Vividos</span>
+            <div id="metric-total-days" class="text-xl sm:text-2xl font-extrabold font-mono text-ink tracking-tight">0</div>
+            <span class="text-[10px] font-mono text-mute block">Períodos de 24 horas</span>
+          </div>
+
+          <!-- Total de Horas -->
+          <div class="rounded-xl border border-hairline bg-canvas p-4 text-center space-y-1">
+            <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Total de Horas</span>
+            <div id="metric-total-hours" class="text-xl sm:text-2xl font-extrabold font-mono text-ink tracking-tight">0</div>
+            <span class="text-[10px] font-mono text-mute block">Horas transcurridas</span>
+          </div>
+
+          <!-- Total de Minutos -->
+          <div class="rounded-xl border border-hairline bg-canvas p-4 text-center space-y-1">
+            <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Total de Minutos</span>
+            <div id="metric-total-minutes" class="text-xl sm:text-2xl font-extrabold font-mono text-ink tracking-tight">0</div>
+            <span class="text-[10px] font-mono text-mute block">Minutos vividos</span>
+          </div>
+
+          <!-- Total de Segundos (En Vivo) -->
+          <div class="rounded-xl border border-link/40 bg-link/5 p-4 text-center space-y-1">
+            <span class="text-[10px] font-mono text-link uppercase tracking-wider font-bold block">Total de Segundos (En vivo)</span>
+            <div id="metric-total-seconds" class="text-xl sm:text-2xl font-extrabold font-mono text-link tracking-tight">0</div>
+            <span class="text-[10px] font-mono text-mute block">Avanzando en tiempo real</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta de Cuenta Regresiva para el Próximo Cumpleaños -->
+      <div class="rounded-xl border border-hairline bg-canvas p-5 sm:p-6 space-y-4">
+        <div class="flex items-center justify-between border-b border-hairline pb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">🎉</span>
+            <h3 class="text-sm font-semibold uppercase font-mono text-ink">Cuenta Regresiva para el Próximo Cumpleaños</h3>
+          </div>
+          <span id="next-birthday-date" class="text-xs font-mono text-mute">--</span>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center font-mono">
+          <div class="rounded-lg bg-hairline-soft/40 p-3">
+            <div id="nb-months" class="text-2xl font-extrabold text-ink">0</div>
+            <div class="text-[10px] text-mute uppercase">Meses</div>
+          </div>
+          <div class="rounded-lg bg-hairline-soft/40 p-3">
+            <div id="nb-days" class="text-2xl font-extrabold text-ink">0</div>
+            <div class="text-[10px] text-mute uppercase">Días</div>
+          </div>
+          <div class="rounded-lg bg-hairline-soft/40 p-3">
+            <div id="nb-hours" class="text-2xl font-extrabold text-ink">0</div>
+            <div class="text-[10px] text-mute uppercase">Horas</div>
+          </div>
+          <div class="rounded-lg bg-hairline-soft/40 p-3">
+            <div id="nb-seconds" class="text-2xl font-extrabold text-link">0</div>
+            <div class="text-[10px] text-mute uppercase">Segundos</div>
+          </div>
+        </div>
+
+        <p id="nb-summary" class="text-xs font-mono text-mute text-center leading-relaxed"></p>
+      </div>
+
+      <!-- Hitos Curiosos y Estadísticas Fisiológicas -->
+      <div class="rounded-xl border border-hairline bg-canvas-elevated p-5 space-y-3">
+        <h3 class="text-xs font-semibold text-ink uppercase font-mono tracking-wider">
+          Hitos Fisiológicos de Vida
+        </h3>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
+          <div class="rounded-lg border border-hairline bg-canvas p-3 space-y-1">
+            <span class="text-mute text-[11px] block">❤️ Latidos Cardíacos Estimados</span>
+            <div id="stat-heartbeats" class="text-base font-bold text-ink">--</div>
+            <span class="text-[10px] text-faint">A un ritmo medio en reposo de 72 lpm</span>
+          </div>
+          <div class="rounded-lg border border-hairline bg-canvas p-3 space-y-1">
+            <span class="text-mute text-[11px] block">💨 Respiraciones Estimadas</span>
+            <div id="stat-breaths" class="text-base font-bold text-ink">--</div>
+            <span class="text-[10px] text-faint">A un promedio de 16 respiraciones / min</span>
+          </div>
+          <div class="rounded-lg border border-hairline bg-canvas p-3 space-y-1">
+            <span class="text-mute text-[11px] block">🌓 Medio Cumpleaños</span>
+            <div id="stat-half-birthday" class="text-base font-bold text-ink">--</div>
+            <span class="text-[10px] text-faint">Hito exacto opuesto a 6 meses</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra de Acciones: Copiar, Compartir, Descargar PDF -->
+      <div class="pt-3 border-t border-hairline flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-mono print:hidden">
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <button
+            type="button"
+            id="age-copy-btn"
+            aria-label="Copiar resultado"
+            class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-hairline bg-canvas hover:bg-hairline text-ink transition-colors cursor-pointer min-h-[40px]"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <span>Copiar Resultado</span>
+          </button>
+          <button
+            type="button"
+            id="age-share-btn"
+            aria-label="Compartir este cálculo"
+            class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg border border-hairline bg-canvas hover:bg-hairline text-ink transition-colors cursor-pointer min-h-[40px]"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+            </svg>
+            <span>Compartir</span>
+          </button>
+        </div>
+
+        <button
+          type="button"
+          id="age-download-pdf-btn"
+          class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-link hover:bg-link-hover active:scale-95 text-white font-semibold shadow-xs transition-all cursor-pointer min-h-[40px]"
+          title="Descargar Informe de Edad Verificado en PDF"
+          aria-label="Descargar informe en formato PDF"
+        >
+          <svg class="h-3.5 w-3.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span>Descargar PDF</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fórmula Educativa y Metodología Científica -->
+  <FormulaSection
+    formula="Edad Cronológica = Marca Temporal Objetivo - Marca Temporal de Nacimiento"
+    explanation="El cálculo estándar según el calendario gregoriano toma en cuenta la cantidad variable de días de cada mes (28, 29, 30 o 31) y los años bisiestos (29 de febrero). El total de días, horas, minutos y segundos representa el tiempo solar absoluto transcurrido desde el momento del nacimiento."
+    variables={[
+      { symbol: 'Fecha Objetivo', meaning: 'El momento presente o fecha de comparación histórica' },
+      { symbol: 'Fecha de Nacimiento', meaning: 'La fecha y hora exacta en que comenzó la vida' },
+      { symbol: 'Año Bisiesto', meaning: 'Cada año divisible por 4, excepto años de fin de siglo no divisibles por 400' },
+      { symbol: 'Diferencial de Segundos', meaning: 'Total de milisegundos transcurridos dividido por 1.000' },
+    ]}
+    isSpanish={true}
+  />
+
+  <!-- Ejemplo Práctico -->
+  <WorkedExample
+    calculatorId="age-calculator"
+    title="Ejemplo Práctico: Cálculo de Edad Cronológica"
+    scenario="Cálculo de la edad exacta de una persona nacida el 1 de enero de 2000 a las 12:00 PM con fecha de referencia al 15 de marzo de 2026."
+    steps={workedExampleSteps}
+    conclusion="Al 15 de marzo de 2026, la edad cronológica exacta es de 26 años, 2 meses y 14 días, abarcando más de 9.570 días y 826 millones de segundos."
+    isSpanish={true}
+  />
+
+  <!-- Centro de Recursos y Guías Complementarias -->
+  <div class="rounded-[16px] border border-hairline bg-canvas-elevated p-6 sm:p-8 space-y-4 shadow-whisper">
+    <div class="flex items-center gap-2 text-xs font-mono font-semibold uppercase tracking-wider text-link">
+      <span>Recursos Educativos</span>
+      <span class="text-hairline">•</span>
+      <span>Centro de Guías</span>
+    </div>
+    <div class="space-y-2">
+      <h3 class="text-lg sm:text-xl font-bold text-ink">¿Quieres comprender a fondo cómo se calcula la edad?</h3>
+      <p class="text-sm text-body leading-relaxed">
+        Descubre cómo funcionan los algoritmos de diferencia de fechas, cómo influyen los años bisiestos y las diferencias entre edad cronológica, edad corregida en prematuros y edad biológica en nuestra <a href="/calculadora-edad/guides/es/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">guía completa sobre el cálculo de la edad</a>.
+      </p>
+    </div>
+  </div>
+
+  <!-- Sección de Preguntas Frecuentes con Generación Schema.org -->
+  <FAQSection faqs={faqs} title="Preguntas Frecuentes y Respuestas Técnicas" isSpanish={true} />
+</CalculatorLayout>
+
+<!-- Motor en Tiempo Real de Alta Precisión en el Cliente -->
+<script is:inline>
+  (function () {
+    // Elementos del DOM
+    const datePickerInput = document.getElementById('birth-date-input');
+    const birthDaySelect = document.getElementById('birth-day-select');
+    const birthMonthSelect = document.getElementById('birth-month-select');
+    const birthYearInput = document.getElementById('birth-year-input');
+    const enableTimeToggle = document.getElementById('enable-time-toggle');
+    const birthTimeContainer = document.getElementById('birth-time-container');
+    const birthTimeInput = document.getElementById('birth-time-input');
+    const targetDateInput = document.getElementById('target-date-input');
+    const resetTargetTodayBtn = document.getElementById('reset-target-today-btn');
+    const tabDatepickerBtn = document.getElementById('tab-datepicker-btn');
+    const tabDropdownBtn = document.getElementById('tab-dropdown-btn');
+    const modeDatepicker = document.getElementById('mode-datepicker');
+    const modeDropdown = document.getElementById('mode-dropdown');
+    const toggleTickerBtn = document.getElementById('toggle-ticker-btn');
+    const tickerStatusDot = document.getElementById('ticker-status-dot');
+    const tickerStatusText = document.getElementById('ticker-status-text');
+    const futureError = document.getElementById('future-date-error');
+
+    // Elementos de visualización de resultados
+    const heroYears = document.getElementById('hero-years');
+    const heroMonths = document.getElementById('hero-months');
+    const heroDays = document.getElementById('hero-days');
+    const heroHours = document.getElementById('hero-hours');
+    const heroMinutes = document.getElementById('hero-minutes');
+    const heroSeconds = document.getElementById('hero-seconds');
+    const bornDayName = document.getElementById('born-day-name');
+    const zodiacSign = document.getElementById('zodiac-sign');
+    const chineseZodiac = document.getElementById('chinese-zodiac');
+
+    // Elementos de métricas granulares
+    const metricTotalDays = document.getElementById('metric-total-days');
+    const metricTotalHours = document.getElementById('metric-total-hours');
+    const metricTotalMinutes = document.getElementById('metric-total-minutes');
+    const metricTotalSeconds = document.getElementById('metric-total-seconds');
+
+    // Elementos del próximo cumpleaños
+    const nextBirthdayDate = document.getElementById('next-birthday-date');
+    const nbMonths = document.getElementById('nb-months');
+    const nbDays = document.getElementById('nb-days');
+    const nbHours = document.getElementById('nb-hours');
+    const nbSeconds = document.getElementById('nb-seconds');
+    const nbSummary = document.getElementById('nb-summary');
+
+    // Elementos de estadísticas fisiológicas
+    const statHeartbeats = document.getElementById('stat-heartbeats');
+    const statBreaths = document.getElementById('stat-breaths');
+    const statHalfBirthday = document.getElementById('stat-half-birthday');
+
+    // Botón de copiar
+    const copyAgeBtn = document.getElementById('copy-age-btn');
+    const copyAgeText = document.getElementById('copy-age-text');
+
+    let isTickerActive = true;
+    let tickerInterval = null;
+    let isDropdownMode = false;
+
+    // Función auxiliar: formatear AAAA-MM-DD
+    function toDateInputValue(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    // Inicializar límite máximo de fecha a hoy (Restricción de fecha futura)
+    function enforceFutureDateLimits() {
+      const now = new Date();
+      const todayString = toDateInputValue(now);
+
+      if (datePickerInput) {
+        datePickerInput.max = todayString;
+      }
+      if (birthYearInput) {
+        birthYearInput.max = String(now.getFullYear());
+      }
+      if (targetDateInput && !targetDateInput.value) {
+        targetDateInput.value = todayString;
+      }
+    }
+
+    enforceFutureDateLimits();
+
+    // Sincronización entre selector de calendario y desplegables
+    function syncDatepickerToDropdown() {
+      if (!datePickerInput || !datePickerInput.value) return;
+      const parts = datePickerInput.value.split('-');
+      if (parts.length === 3) {
+        if (birthYearInput) birthYearInput.value = parts[0];
+        if (birthMonthSelect) birthMonthSelect.value = parseInt(parts[1], 10);
+        if (birthDaySelect) birthDaySelect.value = parseInt(parts[2], 10);
+      }
+    }
+
+    function syncDropdownToDatepicker() {
+      if (!birthYearInput || !birthMonthSelect || !birthDaySelect) return;
+      const y = parseInt(birthYearInput.value, 10);
+      const m = parseInt(birthMonthSelect.value, 10);
+      const d = parseInt(birthDaySelect.value, 10);
+      if (!isNaN(y) && !isNaN(m) && !isNaN(d)) {
+        const mm = String(m).padStart(2, '0');
+        const dd = String(d).padStart(2, '0');
+        if (datePickerInput) {
+          datePickerInput.value = `${y}-${mm}-${dd}`;
+        }
+      }
+    }
+
+    // Obtener objeto Date de nacimiento configurado
+    function getBirthDate() {
+      let y, m, d;
+      if (isDropdownMode) {
+        y = parseInt(birthYearInput?.value || '2000', 10);
+        m = parseInt(birthMonthSelect?.value || '1', 10) - 1;
+        d = parseInt(birthDaySelect?.value || '1', 10);
+      } else {
+        const val = datePickerInput?.value || '2000-01-01';
+        const parts = val.split('-');
+        y = parseInt(parts[0], 10);
+        m = parseInt(parts[1], 10) - 1;
+        d = parseInt(parts[2], 10);
+      }
+
+      let hour = 0;
+      let minute = 0;
+      if (enableTimeToggle?.checked && birthTimeInput?.value) {
+        const tParts = birthTimeInput.value.split(':');
+        if (tParts.length >= 2) {
+          hour = parseInt(tParts[0], 10) || 0;
+          minute = parseInt(tParts[1], 10) || 0;
+        }
+      }
+
+      return new Date(y, m, d, hour, minute, 0, 0);
+    }
+
+    // Obtener fecha objetivo de comparación
+    function getTargetDate() {
+      const now = new Date();
+      if (!targetDateInput || !targetDateInput.value) {
+        return now;
+      }
+      const todayStr = toDateInputValue(now);
+      if (targetDateInput.value === todayStr) {
+        return now;
+      }
+      const parts = targetDateInput.value.split('-');
+      const y = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10) - 1;
+      const d = parseInt(parts[2], 10);
+      return new Date(y, m, d, now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
+    }
+
+    // Nombres de los días de la semana en español
+    const DAYS_ES = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const MONTHS_ES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    const MONTHS_SHORT_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+
+    // Signos zodiacales occidentales en español
+    function getZodiac(month, day) {
+      const dates = [20, 19, 21, 20, 21, 21, 23, 23, 23, 23, 22, 22];
+      const signs = [
+        'Capricornio', 'Acuario', 'Piscis', 'Aries', 'Tauro', 'Géminis',
+        'Cáncer', 'Leo', 'Virgo', 'Libra', 'Escorpio', 'Sagitario', 'Capricornio'
+      ];
+      return day < dates[month - 1] ? signs[month - 1] : signs[month];
+    }
+
+    // Signos del zodíaco chino en español
+    function getChineseZodiac(year) {
+      const animals = ['Rata', 'Buey', 'Tigre', 'Conejo', 'Dragón', 'Serpiente', 'Caballo', 'Cabra', 'Mono', 'Gallo', 'Perro', 'Cerdo'];
+      const baseYear = 1900;
+      const index = (year - baseYear) % 12;
+      return animals[(index + 12) % 12];
+    }
+
+    // Algoritmo principal de edad cronológica
+    function updateCalculations() {
+      const birth = getBirthDate();
+      const target = getTargetDate();
+
+      // Comprobar validez de fecha futura (limitación de fecha futura)
+      if (birth.getTime() > target.getTime()) {
+        if (futureError) futureError.classList.remove('hidden');
+        if (datePickerInput) datePickerInput.classList.add('border-red-500');
+        if (birthYearInput) birthYearInput.classList.add('border-red-500');
+
+        // Restablecer pantallas a cero
+        if (heroYears) heroYears.textContent = '0';
+        if (heroMonths) heroMonths.textContent = '0';
+        if (heroDays) heroDays.textContent = '0';
+        if (heroHours) heroHours.textContent = '00';
+        if (heroMinutes) heroMinutes.textContent = '00';
+        if (heroSeconds) heroSeconds.textContent = '00';
+
+        if (metricTotalDays) metricTotalDays.textContent = '0';
+        if (metricTotalHours) metricTotalHours.textContent = '0';
+        if (metricTotalMinutes) metricTotalMinutes.textContent = '0';
+        if (metricTotalSeconds) metricTotalSeconds.textContent = '0';
+
+        if (bornDayName) bornDayName.textContent = 'Fecha Futura Seleccionada';
+        if (zodiacSign) zodiacSign.textContent = '--';
+        if (chineseZodiac) chineseZodiac.textContent = '--';
+        if (nbSummary) nbSummary.textContent = 'Por favor selecciona una fecha de nacimiento de hoy o anterior.';
+        return;
+      }
+
+      // Fecha válida
+      if (futureError) futureError.classList.add('hidden');
+      if (datePickerInput) datePickerInput.classList.remove('border-red-500');
+      if (birthYearInput) birthYearInput.classList.remove('border-red-500');
+
+      // 1. Desglose en años, meses y días del calendario
+      let years = target.getFullYear() - birth.getFullYear();
+      let months = target.getMonth() - birth.getMonth();
+      let days = target.getDate() - birth.getDate();
+      let hours = target.getHours() - birth.getHours();
+      let minutes = target.getMinutes() - birth.getMinutes();
+      let seconds = target.getSeconds() - birth.getSeconds();
+
+      if (seconds < 0) {
+        minutes--;
+        seconds += 60;
+      }
+      if (minutes < 0) {
+        hours--;
+        minutes += 60;
+      }
+      if (hours < 0) {
+        days--;
+        hours += 24;
+      }
+      if (days < 0) {
+        months--;
+        const prevMonthDays = new Date(target.getFullYear(), target.getMonth(), 0).getDate();
+        days += prevMonthDays;
+      }
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      // Actualizar pantalla principal (Hero)
+      if (heroYears) heroYears.textContent = String(Math.max(0, years));
+      if (heroMonths) heroMonths.textContent = String(Math.max(0, months));
+      if (heroDays) heroDays.textContent = String(Math.max(0, days));
+      if (heroHours) heroHours.textContent = String(Math.max(0, hours)).padStart(2, '0');
+      if (heroMinutes) heroMinutes.textContent = String(Math.max(0, minutes)).padStart(2, '0');
+      if (heroSeconds) heroSeconds.textContent = String(Math.max(0, seconds)).padStart(2, '0');
+
+      // 2. Métricas de tiempo total transcurrido
+      const totalMs = target.getTime() - birth.getTime();
+      const totalSeconds = Math.floor(totalMs / 1000);
+      const totalMinutes = Math.floor(totalSeconds / 60);
+      const totalHours = Math.floor(totalMinutes / 60);
+      const totalDays = Math.floor(totalHours / 24);
+
+      if (metricTotalDays) metricTotalDays.textContent = totalDays.toLocaleString('es-ES');
+      if (metricTotalHours) metricTotalHours.textContent = totalHours.toLocaleString('es-ES');
+      if (metricTotalMinutes) metricTotalMinutes.textContent = totalMinutes.toLocaleString('es-ES');
+      if (metricTotalSeconds) metricTotalSeconds.textContent = totalSeconds.toLocaleString('es-ES');
+
+      // 3. Día de nacimiento y signo zodiacal
+      const dayIndex = birth.getDay();
+      if (bornDayName) bornDayName.textContent = DAYS_ES[dayIndex];
+      if (zodiacSign) zodiacSign.textContent = getZodiac(birth.getMonth() + 1, birth.getDate());
+      if (chineseZodiac) chineseZodiac.textContent = getChineseZodiac(birth.getFullYear());
+
+      // 4. Cuenta regresiva para el próximo cumpleaños
+      let nextBdayYear = target.getFullYear();
+      let nextBday = new Date(nextBdayYear, birth.getMonth(), birth.getDate(), birth.getHours(), birth.getMinutes(), 0);
+
+      // Si el cumpleaños de este año ya pasó, avanzar al siguiente año
+      if (nextBday.getTime() <= target.getTime()) {
+        nextBdayYear++;
+        nextBday = new Date(nextBdayYear, birth.getMonth(), birth.getDate(), birth.getHours(), birth.getMinutes(), 0);
+      }
+
+      const diffMs = nextBday.getTime() - target.getTime();
+      let nbSecsTotal = Math.floor(diffMs / 1000);
+      const nbDaysCount = Math.floor(nbSecsTotal / (24 * 3600));
+
+      const nbMonthsEst = Math.floor(nbDaysCount / 30.4375);
+      const nbDaysRem = Math.floor(nbDaysCount % 30.4375);
+
+      if (nextBirthdayDate) {
+        const dayStr = nextBday.getDate();
+        const monthStr = MONTHS_SHORT_ES[nextBday.getMonth()];
+        const yearStr = nextBday.getFullYear();
+        nextBirthdayDate.textContent = `${dayStr} ${monthStr} ${yearStr} (${DAYS_ES[nextBday.getDay()]})`;
+      }
+      if (nbMonths) nbMonths.textContent = String(nbMonthsEst);
+      if (nbDays) nbDays.textContent = String(nbDaysRem);
+      if (nbHours) nbHours.textContent = String(nbHoursCount).padStart(2, '0');
+      if (nbSeconds) nbSeconds.textContent = String(nbSecsFinal).padStart(2, '0');
+
+      const turningAge = nextBdayYear - birth.getFullYear();
+      if (nbSummary) {
+        const fullDateStr = `${nextBday.getDate()} de ${MONTHS_ES[nextBday.getMonth()]} de ${nextBday.getFullYear()}`;
+        nbSummary.textContent = `Cumplirás ${turningAge} años el ${DAYS_ES[nextBday.getDay()]}, ${fullDateStr}. ¡Quedan exactamente ${nbDaysCount.toLocaleString('es-ES')} días!`;
+      }
+
+      // 5. Estadísticas fisiológicas
+      if (statHeartbeats) {
+        const beats = Math.round(totalMinutes * 72);
+        statHeartbeats.textContent = beats.toLocaleString('es-ES') + ' latidos';
+      }
+      if (statBreaths) {
+        const breaths = Math.round(totalMinutes * 16);
+        statBreaths.textContent = breaths.toLocaleString('es-ES') + ' respiraciones';
+      }
+      if (statHalfBirthday) {
+        const halfBday = new Date(birth.getFullYear(), birth.getMonth() + 6, birth.getDate());
+        statHalfBirthday.textContent = `${halfBday.getDate()} de ${MONTHS_SHORT_ES[halfBday.getMonth()]}`;
+      }
+    }
+
+    // Generar URL de estado compartible solo al compartir explícitamente
+    function buildShareUrl() {
+      try {
+        const dob = datePickerInput?.value || '';
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(dob)) return null;
+        const params = new URLSearchParams();
+        params.set('dob', dob);
+        if (enableTimeToggle?.checked && birthTimeInput?.value) {
+          params.set('time', birthTimeInput.value);
+        }
+        return `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+      } catch (_) {
+        return null;
+      }
+    }
+
+    // Iniciar contador en tiempo real
+    function startTicker() {
+      if (tickerInterval) clearInterval(tickerInterval);
+      tickerInterval = setInterval(updateCalculations, 1000);
+      isTickerActive = true;
+      if (tickerStatusDot) {
+        tickerStatusDot.className = 'w-2 h-2 rounded-full bg-green-500 animate-pulse';
+      }
+      if (tickerStatusText) {
+        tickerStatusText.textContent = 'En vivo (Activo)';
+      }
+    }
+
+    function stopTicker() {
+      if (tickerInterval) clearInterval(tickerInterval);
+      tickerInterval = null;
+      isTickerActive = false;
+      if (tickerStatusDot) {
+        tickerStatusDot.className = 'w-2 h-2 rounded-full bg-mute';
+      }
+      if (tickerStatusText) {
+        tickerStatusText.textContent = 'En pausa';
+      }
+    }
+
+    // Alternar clic en contador en vivo
+    if (toggleTickerBtn) {
+      toggleTickerBtn.addEventListener('click', () => {
+        if (isTickerActive) {
+          stopTicker();
+        } else {
+          startTicker();
+          updateCalculations();
+        }
+      });
+    }
+
+    // Escuchadores de eventos de entrada
+    if (datePickerInput) {
+      datePickerInput.addEventListener('input', () => {
+        syncDatepickerToDropdown();
+        updateCalculations();
+      });
+      datePickerInput.addEventListener('change', () => {
+        syncDatepickerToDropdown();
+        updateCalculations();
+      });
+    }
+
+    [birthDaySelect, birthMonthSelect, birthYearInput].forEach((el) => {
+      if (el) {
+        el.addEventListener('input', () => {
+          syncDropdownToDatepicker();
+          updateCalculations();
+        });
+        el.addEventListener('change', () => {
+          syncDropdownToDatepicker();
+          updateCalculations();
+        });
+      }
+    });
+
+    if (enableTimeToggle) {
+      enableTimeToggle.addEventListener('change', () => {
+        if (birthTimeContainer) {
+          if (enableTimeToggle.checked) {
+            birthTimeContainer.classList.remove('hidden');
+            birthTimeContainer.classList.add('grid');
+          } else {
+            birthTimeContainer.classList.add('hidden');
+            birthTimeContainer.classList.remove('grid');
+          }
+        }
+        updateCalculations();
+      });
+    }
+
+    if (birthTimeInput) {
+      birthTimeInput.addEventListener('input', updateCalculations);
+    }
+
+    if (targetDateInput) {
+      targetDateInput.addEventListener('input', updateCalculations);
+    }
+
+    if (resetTargetTodayBtn) {
+      resetTargetTodayBtn.addEventListener('click', () => {
+        if (targetDateInput) {
+          targetDateInput.value = toDateInputValue(new Date());
+        }
+        updateCalculations();
+      });
+    }
+
+    // Pestañas selectoras de modo de entrada
+    if (tabDatepickerBtn && tabDropdownBtn) {
+      tabDatepickerBtn.addEventListener('click', () => {
+        isDropdownMode = false;
+        tabDatepickerBtn.className = 'rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors';
+        tabDatepickerBtn.setAttribute('aria-selected', 'true');
+        tabDropdownBtn.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink cursor-pointer hover:bg-hairline-soft transition-colors';
+        tabDropdownBtn.setAttribute('aria-selected', 'false');
+        if (modeDatepicker) modeDatepicker.classList.remove('hidden');
+        if (modeDropdown) modeDropdown.classList.add('hidden');
+        syncDropdownToDatepicker();
+        updateCalculations();
+      });
+
+      tabDropdownBtn.addEventListener('click', () => {
+        isDropdownMode = true;
+        tabDropdownBtn.className = 'rounded-[4px] bg-primary px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-on-primary cursor-pointer transition-colors';
+        tabDropdownBtn.setAttribute('aria-selected', 'true');
+        tabDatepickerBtn.className = 'rounded-[4px] px-3.5 py-2 sm:py-1.5 min-h-[44px] sm:min-h-[28px] text-xs font-medium text-ink cursor-pointer hover:bg-hairline-soft transition-colors';
+        tabDatepickerBtn.setAttribute('aria-selected', 'false');
+        if (modeDropdown) modeDropdown.classList.remove('hidden');
+        if (modeDatepicker) modeDatepicker.classList.add('hidden');
+        syncDatepickerToDropdown();
+        updateCalculations();
+      });
+    }
+
+    // Copiar resultado al portapapeles
+    if (copyAgeBtn) {
+      copyAgeBtn.addEventListener('click', () => {
+        const y = heroYears?.textContent || '0';
+        const m = heroMonths?.textContent || '0';
+        const d = heroDays?.textContent || '0';
+        const h = heroHours?.textContent || '00';
+        const min = heroMinutes?.textContent || '00';
+        const s = heroSeconds?.textContent || '00';
+        const daysTotal = metricTotalDays?.textContent || '0';
+        const secsTotal = metricTotalSeconds?.textContent || '0';
+        const bornDay = bornDayName?.textContent || '';
+
+        const summary = `Edad cronológica: ${y} años, ${m} meses y ${d} días (${h}h:${min}m:${s}s)\nTotal de días: ${daysTotal} días | Total de segundos: ${secsTotal} segs\nNaciste un: ${bornDay}\nCalculado con FreeAccurateCalculator.com`;
+
+        navigator.clipboard.writeText(summary).then(() => {
+          if (copyAgeText) {
+            copyAgeText.textContent = '¡Copiado!';
+            setTimeout(() => {
+              copyAgeText.textContent = 'Copiar Resultado';
+            }, 2000);
+          }
+        });
+      });
+    }
+
+    // Restaurar parámetros de URL al cargar
+    function restoreParams() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const dobParam = urlParams.get('dob');
+      const timeParam = urlParams.get('time');
+
+      if (dobParam && /^\d{4}-\d{2}-\d{2}$/.test(dobParam)) {
+        if (datePickerInput) datePickerInput.value = dobParam;
+        syncDatepickerToDropdown();
+      }
+      if (timeParam && enableTimeToggle && birthTimeInput) {
+        enableTimeToggle.checked = true;
+        birthTimeInput.value = timeParam;
+        if (birthTimeContainer) {
+          birthTimeContainer.classList.remove('hidden');
+          birthTimeContainer.classList.add('grid');
+        }
+      }
+
+      if (urlParams.has('dob') || urlParams.has('time')) {
+        try {
+          window.history.replaceState({}, '', window.location.pathname);
+        } catch (_) {}
+      }
+    }
+
+    // Escuchadores de la barra de acciones
+    const ageCopyBtn = document.getElementById('age-copy-btn');
+    const ageShareBtn = document.getElementById('age-share-btn');
+    const agePdfBtn = document.getElementById('age-download-pdf-btn');
+
+    if (ageCopyBtn) {
+      ageCopyBtn.addEventListener('click', () => {
+        copyAgeBtn?.click();
+      });
+    }
+
+    if (ageShareBtn) {
+      ageShareBtn.addEventListener('click', () => {
+        const shareUrl = buildShareUrl() || window.location.href;
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          if (typeof window.showToast === 'function') window.showToast('¡Enlace copiado al portapapeles!');
+        });
+      });
+    }
+
+    function updatePrintReport() {
+      const dDate = document.getElementById('age-print-date');
+      const dBirth = document.getElementById('age-print-birth');
+      const dTarget = document.getElementById('age-print-target');
+      const dDay = document.getElementById('age-print-day');
+      const dZodiac = document.getElementById('age-print-zodiac');
+      const dHero = document.getElementById('age-print-hero');
+      const dTicker = document.getElementById('age-print-ticker');
+      const dBody = document.getElementById('age-print-table-body');
+
+      const now = new Date();
+      if (dDate) dDate.textContent = `${now.getDate()} de ${MONTHS_ES[now.getMonth()]} de ${now.getFullYear()}`;
+      if (dBirth) dBirth.textContent = datePickerInput?.value || '--';
+      if (dTarget) dTarget.textContent = targetDateInput?.value || 'Fecha Actual';
+      if (dDay) dDay.textContent = document.getElementById('born-day-name')?.textContent || '--';
+
+      const zSign = document.getElementById('zodiac-sign')?.textContent || '';
+      const cSign = document.getElementById('chinese-zodiac')?.textContent || '';
+      if (dZodiac) dZodiac.textContent = `${zSign} • ${cSign}`;
+
+      const y = document.getElementById('hero-years')?.textContent || '0';
+      const m = document.getElementById('hero-months')?.textContent || '0';
+      const d = document.getElementById('hero-days')?.textContent || '0';
+      if (dHero) dHero.textContent = `${y} años, ${m} meses y ${d} días`;
+
+      const h = document.getElementById('hero-hours')?.textContent || '0';
+      const min = document.getElementById('hero-minutes')?.textContent || '0';
+      const s = document.getElementById('hero-seconds')?.textContent || '0';
+      if (dTicker) dTicker.textContent = `Tiempo exacto transcurrido: ${h} horas, ${min} minutos y ${s} segundos`;
+
+      const daysVal = document.getElementById('metric-total-days')?.textContent || '0';
+      const hoursVal = document.getElementById('metric-total-hours')?.textContent || '0';
+      const minVal = document.getElementById('metric-total-minutes')?.textContent || '0';
+      const secVal = document.getElementById('metric-total-seconds')?.textContent || '0';
+      const beatsVal = document.getElementById('stat-heartbeats')?.textContent || '--';
+      const breathsVal = document.getElementById('stat-breaths')?.textContent || '--';
+      const halfBday = document.getElementById('stat-half-birthday')?.textContent || '--';
+
+      if (dBody) {
+        dBody.innerHTML = `
+          <tr>
+            <td class="py-1.5 px-2.5 font-bold text-blue-700">Total de Días Vividos</td>
+            <td class="py-1.5 px-2.5 text-right font-mono">${daysVal}</td>
+            <td class="py-1.5 px-2.5 text-slate-600 text-[11px]">Períodos completos de 24 horas transcurridos</td>
+          </tr>
+          <tr>
+            <td class="py-1.5 px-2.5 font-bold text-blue-700">Total de Horas</td>
+            <td class="py-1.5 px-2.5 text-right font-mono">${hoursVal}</td>
+            <td class="py-1.5 px-2.5 text-slate-600 text-[11px]">Horas acumuladas de vida</td>
+          </tr>
+          <tr>
+            <td class="py-1.5 px-2.5 font-bold text-blue-700">Total de Minutos</td>
+            <td class="py-1.5 px-2.5 text-right font-mono">${minVal}</td>
+            <td class="py-1.5 px-2.5 text-slate-600 text-[11px]">Minutos desde el nacimiento</td>
+          </tr>
+          <tr>
+            <td class="py-1.5 px-2.5 font-bold text-blue-700">Total de Segundos</td>
+            <td class="py-1.5 px-2.5 text-right font-mono">${secVal}</td>
+            <td class="py-1.5 px-2.5 text-slate-600 text-[11px]">Segundos solares exactos</td>
+          </tr>
+          <tr>
+            <td class="py-1.5 px-2.5 font-bold text-blue-700">Latidos Cardíacos Estimados</td>
+            <td class="py-1.5 px-2.5 text-right font-mono">${beatsVal}</td>
+            <td class="py-1.5 px-2.5 text-slate-600 text-[11px]">A un promedio en reposo de 72 lpm</td>
+          </tr>
+          <tr>
+            <td class="py-1.5 px-2.5 font-bold text-blue-700">Respiraciones Estimadas</td>
+            <td class="py-1.5 px-2.5 text-right font-mono">${breathsVal}</td>
+            <td class="py-1.5 px-2.5 text-slate-600 text-[11px]">A un promedio de 16 respiraciones / min</td>
+          </tr>
+          <tr>
+            <td class="py-1.5 px-2.5 font-bold text-blue-700">Hito de Medio Cumpleaños</td>
+            <td class="py-1.5 px-2.5 text-right font-mono">${halfBday}</td>
+            <td class="py-1.5 px-2.5 text-slate-600 text-[11px]">Punto exacto del calendario opuesto a 6 meses</td>
+          </tr>
+        `;
+      }
+    }
+
+    window.addEventListener('fac:before-pdf-print', () => { updateCalculations(); updatePrintReport(); });
+    window.addEventListener('beforeprint', () => { updateCalculations(); updatePrintReport(); });
+
+    if (agePdfBtn) {
+      agePdfBtn.addEventListener('click', (e) => {
+        if (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (typeof e.stopImmediatePropagation === 'function') {
+            e.stopImmediatePropagation();
+          }
+        }
+        updateCalculations();
+        updatePrintReport();
+        if (typeof window['generateAndDownloadPDF'] === 'function') {
+          window['generateAndDownloadPDF']();
+        } else {
+          window.print();
+        }
+      });
+    }
+
+    restoreParams();
+    updateCalculations();
+    startTicker();
+  })();
+</script>

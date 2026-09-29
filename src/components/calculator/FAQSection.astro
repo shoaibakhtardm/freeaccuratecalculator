@@ -9,11 +9,13 @@ interface Props {
   faqs?: FAQItem[];
   title?: string;
   isFrench?: boolean;
+  isSpanish?: boolean;
 }
 
-const { faqs = [], title, isFrench: propIsFrench } = Astro.props;
+const { faqs = [], title, isFrench: propIsFrench, isSpanish: propIsSpanish } = Astro.props;
 const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
-const resolvedTitle = title || (isFrench ? 'Questions Fréquentes' : 'Frequently Asked Questions');
+const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro.url.pathname.startsWith('/calculadora-edad/es'));
+const resolvedTitle = title || (isSpanish ? 'Preguntas Frecuentes' : isFrench ? 'Questions Fréquentes' : 'Frequently Asked Questions');
 
 const hasFaqs = Array.isArray(faqs) && faqs.length > 0;
 
@@ -36,7 +38,7 @@ const faqSchema = hasFaqs
 {hasFaqs && (
   <section class="mt-8 rounded-[12px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6">
     <div>
-      <span class="mono-eyebrow text-link">{isFrench ? "Foire Aux Questions" : "Knowledge Base"}</span>
+      <span class="mono-eyebrow text-link">{isSpanish ? "Base de Conocimiento" : isFrench ? "Foire Aux Questions" : "Knowledge Base"}</span>
       <h2 class="heading-md text-ink mt-1">{resolvedTitle}</h2>
     </div>
 

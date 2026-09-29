@@ -130,6 +130,7 @@ if (faqSchema) {
 
 const combinedSchemas = [softwareAppSchema, ...extraSchemas];
 const isFrench = lang?.startsWith('fr') || Astro.url.pathname.startsWith('/fr/');
+const isSpanish = lang?.startsWith('es') || Astro.url.pathname.includes('/es/') || Astro.url.pathname.startsWith('/calculadora-edad/es');
 ---
 
 <Layout
@@ -153,6 +154,7 @@ const isFrench = lang?.startsWith('fr') || Astro.url.pathname.startsWith('/fr/')
       <!-- Breadcrumbs -->
       <Breadcrumbs
         isFrench={isFrench}
+        isSpanish={isSpanish}
         items={[
           { label: category.label, href: category.href },
           { label: calculatorName },
@@ -171,7 +173,7 @@ const isFrench = lang?.startsWith('fr') || Astro.url.pathname.startsWith('/fr/')
             <span class="mono-eyebrow text-link">{category.label}</span>
             <span class="h-1 w-1 rounded-full bg-faint"></span>
             <span class:list={['text-[11px] font-mono text-mute', compactMobileHeader && 'hidden sm:inline']}>
-              {isFrench ? "Moteur 100% Côté Client & Privé" : "Instant Client-Side Engine"}
+              {isSpanish ? "Motor 100% en el Cliente y Privado" : isFrench ? "Moteur 100% Côté Client & Privé" : "Instant Client-Side Engine"}
             </span>
           </div>
           <h1 class:list={['text-ink', compactMobileHeader ? 'text-xl sm:text-2xl md:display-hero font-semibold tracking-tight' : 'display-hero']}>{h1}</h1>
@@ -179,8 +181,8 @@ const isFrench = lang?.startsWith('fr') || Astro.url.pathname.startsWith('/fr/')
         </div>
 
         <div class:list={['items-center gap-2 shrink-0', compactMobileHeader ? 'hidden sm:flex' : 'flex']}>
-          <EmbedButton isFrench={isFrench} />
-          <ShareButton isFrench={isFrench} />
+          <EmbedButton isFrench={isFrench} isSpanish={isSpanish} />
+          <ShareButton isFrench={isFrench} isSpanish={isSpanish} />
         </div>
       </div>
 
@@ -192,7 +194,7 @@ const isFrench = lang?.startsWith('fr') || Astro.url.pathname.startsWith('/fr/')
           <slot />
 
           <!-- Calculator Result Sharing Component -->
-          <ShareResult calculatorTitle={calculatorName} isFrench={isFrench} />
+          <ShareResult calculatorTitle={calculatorName} isFrench={isFrench} isSpanish={isSpanish} />
 
           <!-- Native in-content ad slot between calculator and educational content -->
           <AdSlot slotType="in-content" slotId="CALC-INCONTENT-01" />
@@ -202,9 +204,9 @@ const isFrench = lang?.startsWith('fr') || Astro.url.pathname.startsWith('/fr/')
 
           <!-- Embed Mode Attribution Watermark (Visible only when in fac-embed-view) -->
           <div class="hidden fac-embed-watermark text-center text-xs text-mute py-3 border-t border-hairline font-mono">
-            {isFrench ? "⚡ Outil interactif fourni par" : "⚡ Interactive tool provided by"}{' '}
+            {isSpanish ? "⚡ Herramienta interactiva proporcionada por" : isFrench ? "⚡ Outil interactif fourni par" : "⚡ Interactive tool provided by"}{' '}
             <a href={canonicalUrl} target="_blank" rel="noopener" class="text-link font-semibold hover:underline">Free Accurate Calculator</a>
-            {' '}• {isFrench ? "100% Gratuit & Confidentiel" : "100% Free & Private"}
+            {' '}• {isSpanish ? "100% Gratuito y Privado" : isFrench ? "100% Gratuit & Confidentiel" : "100% Free & Private"}
           </div>
         </div>
 
@@ -216,7 +218,7 @@ const isFrench = lang?.startsWith('fr') || Astro.url.pathname.startsWith('/fr/')
 
             {relatedCalculators.length > 0 && (
               <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-5 shadow-whisper space-y-3">
-                <h3 class="mono-eyebrow text-ink">{isFrench ? "Calculatrices Similaires" : "Related Calculators"}</h3>
+                <h3 class="mono-eyebrow text-ink">{isSpanish ? "Calculadoras Relacionadas" : isFrench ? "Calculatrices Similaires" : "Related Calculators"}</h3>
                 <ul class="space-y-2">
                   {relatedCalculators.map((rel) => (
                     <li>
@@ -243,10 +245,12 @@ const isFrench = lang?.startsWith('fr') || Astro.url.pathname.startsWith('/fr/')
                 <svg class="h-3.5 w-3.5 text-link" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
-                <span>{isFrench ? "Vérifié Mathématiquement" : "Mathematically Verified"}</span>
+                <span>{isSpanish ? "Verificado Matemáticamente" : isFrench ? "Vérifié Mathématiquement" : "Mathematically Verified"}</span>
               </div>
               <p class="text-[11px] leading-relaxed">
-                {isFrench
+                {isSpanish
+                  ? "Fórmulas verificadas con modelos de referencia estándar. Los resultados se calculan al instante en tu navegador con total privacidad y sin latencia."
+                  : isFrench
                   ? "Formules rigoureusement conformes aux normes et modèles de référence. Calculs instantanés dans votre navigateur sans latence et en toute confidentialité."
                   : "Formulas checked against standard reference models. Results compute instantly in your browser with zero latency."}
               </p>
@@ -258,5 +262,5 @@ const isFrench = lang?.startsWith('fr') || Astro.url.pathname.startsWith('/fr/')
   )}
 
   <!-- Smart Email Capture Modal (Triggers non-intrusively after 2 calculations) -->
-  {!disableEmailModal && <SmartEmailModal isFrench={isFrench} />}
+  {!disableEmailModal && <SmartEmailModal isFrench={isFrench} isSpanish={isSpanish} />}
 </Layout>

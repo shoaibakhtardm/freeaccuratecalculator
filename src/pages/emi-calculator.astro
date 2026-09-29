@@ -57,8 +57,8 @@ const formulaVariables = [
 ---
 
 <CalculatorLayout
-  title="EMI Calculator — Equated Monthly Installment with Prepayment & Lakh/Crore Support"
-  metaDescription="Calculate your exact loan EMI, extra payment savings, and multi-tab amortization schedule. Features real-time what-if reactivity, step-by-step mathematical proof, and Indian Lakh/Crore formatting."
+  title="Free EMI Calculator: Fast & Accurate Loan Payoff"
+  metaDescription="Calculate loan EMI, interest savings & amortization instantly. Free, accurate payment schedule with reducing balance math. Try now!"
   h1="EMI Calculator"
   subtitle="Calculate equated monthly installments for home loans, personal loans, and car financing with instant reducing balance math and prepayment analysis."
   category={{ label: 'Finance', href: '/finance/' }}
@@ -188,8 +188,8 @@ const formulaVariables = [
             id="format-standard-btn"
             type="button"
             aria-label="Use Standard Million notation"
-            aria-pressed="false"
-            class="rounded px-2.5 py-1 min-h-[32px] sm:min-h-[26px] text-xs font-medium text-mute hover:text-ink cursor-pointer transition-colors"
+            aria-pressed="true"
+            class="rounded bg-link/15 text-link font-bold px-2.5 py-1 min-h-[32px] sm:min-h-[26px] text-xs cursor-pointer transition-colors"
           >
             Million
           </button>
@@ -197,8 +197,8 @@ const formulaVariables = [
             id="format-indian-btn"
             type="button"
             aria-label="Use Indian Lakh and Crore notation"
-            aria-pressed="true"
-            class="rounded bg-link/15 text-link font-bold px-2.5 py-1 min-h-[32px] sm:min-h-[26px] text-xs cursor-pointer transition-colors"
+            aria-pressed="false"
+            class="rounded px-2.5 py-1 min-h-[32px] sm:min-h-[26px] text-xs font-medium text-mute hover:text-ink cursor-pointer transition-colors"
           >
             Lakh/Crore
           </button>
@@ -206,7 +206,7 @@ const formulaVariables = [
 
         <div class="flex items-center gap-2 text-xs font-mono text-mute">
           <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span id="emi-header-currency-label" class="font-semibold text-ink">INR (₹)</span>
+          <span id="emi-header-currency-label" class="font-semibold text-ink">USD ($)</span>
           <span>•</span>
           <span>100% Private</span>
         </div>
@@ -222,18 +222,18 @@ const formulaVariables = [
         <div class="space-y-2 p-4 rounded-xl border border-hairline bg-canvas/40">
           <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
             <label for="emi-principal">Loan Amount (Principal)</label>
-            <span id="principal-display" class="font-mono text-link text-base tabular-nums font-bold">₹ 25,00,000</span>
+            <span id="principal-display" class="font-mono text-link text-base tabular-nums font-bold">$ 250,000</span>
           </div>
 
           <div class="relative flex items-center gap-2">
             <div class="relative flex-1">
-              <span id="principal-symbol" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-mono text-mute select-none font-bold">₹</span>
+              <span id="principal-symbol" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-mono text-mute select-none font-bold">$</span>
               <input
                 id="emi-principal"
                 type="text"
                 inputmode="text"
-                value="2500000"
-                placeholder="e.g. 2500000, 25L, 1.5Cr"
+                value="250000"
+                placeholder="e.g. 250000, 250k, 1M"
                 class="w-full min-h-[46px] rounded-xl border border-hairline bg-canvas-elevated py-2.5 pl-8 pr-3 text-base font-mono text-ink focus:border-link focus:outline-none focus:ring-2 focus:ring-link/20 tabular-nums font-semibold transition-all shadow-2xs"
               />
             </div>
@@ -244,13 +244,13 @@ const formulaVariables = [
                 type="button"
                 id="btn-principal-minus"
                 class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl border border-hairline bg-canvas-elevated text-mute hover:text-ink hover:border-link/50 active:scale-95 transition-all text-sm font-mono font-bold cursor-pointer"
-                title="Decrease 1 Lakh"
+                title="Decrease $10,000"
               >−</button>
               <button
                 type="button"
                 id="btn-principal-plus"
                 class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl border border-hairline bg-canvas-elevated text-mute hover:text-ink hover:border-link/50 active:scale-95 transition-all text-sm font-mono font-bold cursor-pointer"
-                title="Increase 1 Lakh"
+                title="Increase $10,000"
               >+</button>
             </div>
           </div>
@@ -260,10 +260,10 @@ const formulaVariables = [
             <input
               id="emi-principal-slider"
               type="range"
-              min="100000"
-              max="10000000"
-              step="50000"
-              value="2500000"
+              min="10000"
+              max="2000000"
+              step="5000"
+              value="250000"
               aria-label="Loan principal amount slider"
               class="custom-range-slider w-full cursor-pointer h-2.5 rounded-lg appearance-none bg-hairline"
             />
@@ -271,11 +271,11 @@ const formulaVariables = [
 
           <!-- Preset Chips -->
           <div class="flex items-center gap-1.5 overflow-x-auto pt-1 pb-0.5 text-xs font-medium no-scrollbar">
-            <button type="button" class="preset-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-link/40 hover:text-link text-mute cursor-pointer transition-colors" data-amount="500000">5L</button>
-            <button type="button" class="preset-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-link/40 hover:text-link text-mute cursor-pointer transition-colors" data-amount="1500000">15L</button>
-            <button type="button" class="preset-chip text-[10px] font-mono px-2 py-1 rounded border border-link/40 bg-link/10 text-link font-bold cursor-pointer transition-colors" data-amount="2500000">25L</button>
-            <button type="button" class="preset-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-link/40 hover:text-link text-mute cursor-pointer transition-colors" data-amount="5000000">50L</button>
-            <button type="button" class="preset-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-link/40 hover:text-link text-mute cursor-pointer transition-colors" data-amount="10000000">1Cr</button>
+            <button type="button" class="preset-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-link/40 hover:text-link text-mute cursor-pointer transition-colors" data-amount="50000">50k</button>
+            <button type="button" class="preset-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-link/40 hover:text-link text-mute cursor-pointer transition-colors" data-amount="100000">100k</button>
+            <button type="button" class="preset-chip text-[10px] font-mono px-2 py-1 rounded border border-link/40 bg-link/10 text-link font-bold cursor-pointer transition-colors" data-amount="250000">250k</button>
+            <button type="button" class="preset-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-link/40 hover:text-link text-mute cursor-pointer transition-colors" data-amount="500000">500k</button>
+            <button type="button" class="preset-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-link/40 hover:text-link text-mute cursor-pointer transition-colors" data-amount="1000000">1M</button>
           </div>
         </div>
 
@@ -283,7 +283,7 @@ const formulaVariables = [
         <div class="space-y-2 p-4 rounded-xl border border-hairline bg-canvas/40">
           <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
             <label for="emi-rate">Interest Rate (% P.A.)</label>
-            <span id="rate-display" class="font-mono text-cyan text-base tabular-nums font-bold">8.50%</span>
+            <span id="rate-display" class="font-mono text-cyan text-base tabular-nums font-bold">6.50%</span>
           </div>
 
           <div class="relative flex items-center gap-2">
@@ -294,7 +294,7 @@ const formulaVariables = [
                 min="0.1"
                 max="30"
                 step="0.05"
-                value="8.5"
+                value="6.5"
                 class="w-full min-h-[46px] rounded-xl border border-hairline bg-canvas-elevated py-2.5 pl-3 pr-8 text-base font-mono text-ink focus:border-cyan focus:outline-none focus:ring-2 focus:ring-cyan/20 tabular-nums font-semibold transition-all shadow-2xs"
               />
               <span class="absolute right-3.5 top-1/2 -translate-y-1/2 text-sm font-mono text-mute select-none font-bold">%</span>
@@ -321,10 +321,10 @@ const formulaVariables = [
             <input
               id="emi-rate-slider"
               type="range"
-              min="4"
+              min="2"
               max="20"
               step="0.1"
-              value="8.5"
+              value="6.5"
               aria-label="Interest rate slider"
               class="custom-range-slider w-full cursor-pointer h-2.5 rounded-lg appearance-none bg-hairline"
             />
@@ -332,10 +332,10 @@ const formulaVariables = [
 
           <!-- Quick Rate Chips -->
           <div class="flex items-center gap-1.5 pt-1 overflow-x-auto no-scrollbar">
-            <button type="button" class="rate-chip text-[11px] font-mono px-2.5 py-1 rounded-lg border border-hairline bg-canvas-elevated hover:border-cyan/50 hover:text-cyan text-mute cursor-pointer transition-all shrink-0" data-rate="7">7% Home</button>
-            <button type="button" class="rate-chip text-[11px] font-mono px-2.5 py-1 rounded-lg border border-cyan/40 bg-cyan/10 text-cyan font-bold cursor-pointer transition-all shrink-0" data-rate="8.5">8.5% Avg</button>
-            <button type="button" class="rate-chip text-[11px] font-mono px-2.5 py-1 rounded-lg border border-hairline bg-canvas-elevated hover:border-cyan/50 hover:text-cyan text-mute cursor-pointer transition-all shrink-0" data-rate="10.5">10.5% Auto</button>
-            <button type="button" class="rate-chip text-[11px] font-mono px-2.5 py-1 rounded-lg border border-hairline bg-canvas-elevated hover:border-cyan/50 hover:text-cyan text-mute cursor-pointer transition-all shrink-0" data-rate="12">12% Personal</button>
+            <button type="button" class="rate-chip text-[11px] font-mono px-2.5 py-1 rounded-lg border border-hairline bg-canvas-elevated hover:border-cyan/50 hover:text-cyan text-mute cursor-pointer transition-all shrink-0" data-rate="5.5">5.5% Prime</button>
+            <button type="button" class="rate-chip text-[11px] font-mono px-2.5 py-1 rounded-lg border border-cyan/40 bg-cyan/10 text-cyan font-bold cursor-pointer transition-all shrink-0" data-rate="6.5">6.5% Benchmark</button>
+            <button type="button" class="rate-chip text-[11px] font-mono px-2.5 py-1 rounded-lg border border-hairline bg-canvas-elevated hover:border-cyan/50 hover:text-cyan text-mute cursor-pointer transition-all shrink-0" data-rate="7.5">7.5% Standard</button>
+            <button type="button" class="rate-chip text-[11px] font-mono px-2.5 py-1 rounded-lg border border-hairline bg-canvas-elevated hover:border-cyan/50 hover:text-cyan text-mute cursor-pointer transition-all shrink-0" data-rate="9.5">9.5% Personal</button>
           </div>
         </div>
 
@@ -344,7 +344,7 @@ const formulaVariables = [
           <div class="flex items-center justify-between text-xs font-semibold text-ink uppercase font-mono">
             <label for="emi-tenure">Loan Tenure</label>
             <div class="flex items-center gap-2">
-              <span id="tenure-display" class="font-mono text-violet text-sm tabular-nums font-bold">20 Years (240 Mo)</span>
+              <span id="tenure-display" class="font-mono text-violet text-sm tabular-nums font-bold">30 Years (360 Mo)</span>
               <div class="inline-flex rounded-lg border border-hairline bg-canvas p-0.5 text-xs">
                 <button id="tenure-yr-btn" type="button" aria-label="Tenure in years" aria-pressed="true" class="rounded px-2.5 py-1 min-h-[44px] sm:min-h-[26px] font-medium bg-primary text-on-primary">Yr</button>
                 <button id="tenure-mo-btn" type="button" aria-label="Tenure in months" aria-pressed="false" class="rounded px-2.5 py-1 min-h-[44px] sm:min-h-[26px] font-medium text-ink">Mo</button>
@@ -358,7 +358,7 @@ const formulaVariables = [
               type="number"
               min="1"
               max="360"
-              value="20"
+              value="30"
               class="w-full min-h-[46px] rounded-xl border border-hairline bg-canvas-elevated py-2.5 px-3 text-base font-mono text-ink focus:border-violet focus:outline-none focus:ring-2 focus:ring-violet/20 tabular-nums font-semibold transition-all shadow-2xs"
             />
           </div>
@@ -370,7 +370,7 @@ const formulaVariables = [
               min="1"
               max="30"
               step="1"
-              value="20"
+              value="30"
               aria-label="Loan tenure slider"
               class="custom-range-slider w-full cursor-pointer h-2.5 rounded-lg appearance-none bg-hairline"
             />
@@ -381,8 +381,8 @@ const formulaVariables = [
             <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-violet/40 hover:text-violet text-mute cursor-pointer transition-colors" data-years="5">5Y</button>
             <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-violet/40 hover:text-violet text-mute cursor-pointer transition-colors" data-years="10">10Y</button>
             <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-violet/40 hover:text-violet text-mute cursor-pointer transition-colors" data-years="15">15Y</button>
-            <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1 rounded border border-violet/40 bg-violet/10 text-violet font-bold cursor-pointer transition-colors" data-years="20">20Y</button>
-            <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-violet/40 hover:text-violet text-mute cursor-pointer transition-colors" data-years="30">30Y</button>
+            <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1 rounded border border-hairline bg-canvas-elevated hover:border-violet/40 hover:text-violet text-mute cursor-pointer transition-colors" data-years="20">20Y</button>
+            <button type="button" class="tenure-chip text-[10px] font-mono px-2 py-1 rounded border border-violet/40 bg-violet/10 text-violet font-bold cursor-pointer transition-colors" data-years="30">30Y</button>
           </div>
         </div>
 
@@ -393,17 +393,17 @@ const formulaVariables = [
               <span>Extra Monthly Prepayment</span>
               <span class="rounded bg-cyan/15 px-1.5 py-0.5 text-[10px] font-medium text-cyan uppercase font-bold">Accelerator</span>
             </label>
-            <span id="extra-display" class="font-mono text-cyan text-base tabular-nums font-bold">₹ 0</span>
+            <span id="extra-display" class="font-mono text-cyan text-base tabular-nums font-bold">$ 0</span>
           </div>
 
           <div class="relative flex items-center">
-            <span id="extra-symbol" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-mono text-mute select-none font-bold">₹</span>
+            <span id="extra-symbol" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-mono text-mute select-none font-bold">$</span>
             <input
               id="emi-extra"
               type="text"
               inputmode="text"
               value="0"
-              placeholder="e.g. 5000, 5k, 10k"
+              placeholder="e.g. 500, 1000"
               class="w-full min-h-[46px] rounded-xl border border-hairline bg-canvas-elevated py-2.5 pl-8 pr-3 text-base font-mono text-ink focus:border-cyan focus:outline-none focus:ring-2 focus:ring-cyan/20 tabular-nums font-semibold transition-all shadow-2xs"
             />
           </div>
@@ -414,7 +414,7 @@ const formulaVariables = [
               type="range"
               min="0"
               max="50000"
-              step="500"
+              step="100"
               value="0"
               aria-label="Extra monthly prepayment slider"
               class="custom-range-slider w-full cursor-pointer h-2.5 rounded-lg appearance-none bg-hairline"
@@ -433,23 +433,23 @@ const formulaVariables = [
                 Monthly EMI Obligation
               </span>
               <div class="flex items-baseline gap-2 mt-1">
-                <span id="hero-result-symbol" class="text-2xl sm:text-3xl font-bold font-mono text-ink">₹</span>
+                <span id="hero-result-symbol" class="text-2xl sm:text-3xl font-bold font-mono text-ink">$</span>
                 <span id="emi-monthly-result" class="text-3xl sm:text-4xl font-extrabold font-mono text-ink tabular-nums tracking-tight">
-                  21,696
+                  1,580
                 </span>
               </div>
               <p id="hero-result-sub" class="text-xs text-mute mt-1 font-mono">
-                Baseline installment at 8.50% P.A.
+                Baseline installment at 6.50% P.A.
               </p>
             </div>
 
             <!-- Cost Ratio Chip -->
             <div class="shrink-0 text-right">
               <span id="emi-multiplier-badge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-mono font-bold bg-cyan/20 text-cyan border border-cyan/40 shadow-xs">
-                2.08x Total
+                2.28x Total
               </span>
               <div id="emi-secondary-badge" class="text-[11px] font-mono font-semibold text-mute mt-1">
-                52.0% Interest
+                56.1% Interest
               </div>
             </div>
           </div>
@@ -459,16 +459,16 @@ const formulaVariables = [
             <div class="flex items-center justify-between text-xs font-mono">
               <span class="text-link font-semibold flex items-center gap-1.5">
                 <span class="w-2.5 h-2.5 rounded-full bg-link inline-block"></span>
-                Principal: <span id="bar-principal-label" class="tabular-nums font-bold">₹ 25,00,000 (48.0%)</span>
+                Principal: <span id="bar-principal-label" class="tabular-nums font-bold">$ 250,000 (43.9%)</span>
               </span>
               <span class="text-violet font-semibold flex items-center gap-1.5">
                 <span class="w-2.5 h-2.5 rounded-full bg-violet inline-block"></span>
-                Interest: <span id="bar-interest-label" class="tabular-nums font-bold">₹ 27,06,935 (52.0%)</span>
+                Interest: <span id="bar-interest-label" class="tabular-nums font-bold">$ 318,861 (56.1%)</span>
               </span>
             </div>
             <div class="h-3 w-full overflow-hidden rounded-full bg-hairline flex">
-              <div id="bar-principal" class="h-full bg-link transition-all duration-300 rounded-l-full" style="width: 48%;"></div>
-              <div id="bar-interest" class="h-full bg-violet transition-all duration-300 rounded-r-full" style="width: 52%;"></div>
+              <div id="bar-principal" class="h-full bg-link transition-all duration-300 rounded-l-full" style="width: 44%;"></div>
+              <div id="bar-interest" class="h-full bg-violet transition-all duration-300 rounded-r-full" style="width: 56%;"></div>
             </div>
           </div>
         </div>
@@ -483,7 +483,7 @@ const formulaVariables = [
             </div>
             <div class="mt-2">
               <div class="text-xl sm:text-2xl font-bold font-mono text-ink tabular-nums">
-                <span id="sec-principal-symbol">₹</span> <span id="sec-principal-value">25,00,000</span>
+                <span id="sec-principal-symbol">$</span> <span id="sec-principal-value">250,000</span>
               </div>
               <span id="sec-principal-sub" class="text-[11px] font-mono text-mute mt-0.5 block">100% Loan Borrowed</span>
             </div>
@@ -497,7 +497,7 @@ const formulaVariables = [
             </div>
             <div class="mt-2">
               <div class="text-xl sm:text-2xl font-bold font-mono text-violet tabular-nums">
-                <span id="sec-interest-symbol">₹</span> <span id="emi-interest-result">27,06,935</span>
+                <span id="sec-interest-symbol">$</span> <span id="emi-interest-result">318,861</span>
               </div>
               <span id="sec-interest-sub" class="text-[11px] font-mono text-mute mt-0.5 block">Lifetime Borrowing Cost</span>
             </div>
@@ -541,7 +541,7 @@ const formulaVariables = [
             </svg>
             <div class="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
               <span id="donut-center-pct" class="text-base font-mono font-black text-ink tabular-nums">
-                52.0%
+                56.1%
               </span>
               <span class="text-[9px] font-mono uppercase tracking-widest text-mute font-bold">
                 Interest
@@ -556,18 +556,18 @@ const formulaVariables = [
                 <span class="w-2.5 h-2.5 rounded bg-link inline-block"></span>
                 Principal Component:
               </span>
-              <span id="legend-principal-pct" class="font-bold text-ink">48.0%</span>
+              <span id="legend-principal-pct" class="font-bold text-ink">43.9%</span>
             </div>
             <div class="flex items-center justify-between sm:justify-start gap-4">
               <span class="flex items-center gap-1.5 text-mute">
                 <span class="w-2.5 h-2.5 rounded bg-violet inline-block"></span>
                 Interest Component:
               </span>
-              <span id="legend-interest-pct" class="font-bold text-violet">52.0%</span>
+              <span id="legend-interest-pct" class="font-bold text-violet">56.1%</span>
             </div>
             <div class="pt-2 border-t border-hairline flex items-center justify-between sm:justify-start gap-4 text-[11px]">
               <span class="text-mute">Total Repayment:</span>
-              <span id="legend-total-val" class="font-bold text-ink">₹ 52,06,935</span>
+              <span id="legend-total-val" class="font-bold text-ink">$ 568,861</span>
             </div>
           </div>
         </div>
@@ -587,7 +587,7 @@ const formulaVariables = [
         <div>
           <span class="text-[10px] font-mono uppercase tracking-wider text-mute block">Principal Crossover</span>
           <span id="matrix-crossover-time" class="text-xs font-mono font-bold text-ink block mt-0.5">
-            Year 10.5
+            Year 16.5
           </span>
           <p class="text-[10px] text-mute mt-0.5 leading-tight">When monthly principal exceeds monthly interest.</p>
         </div>
@@ -603,7 +603,7 @@ const formulaVariables = [
         <div>
           <span class="text-[10px] font-mono uppercase tracking-wider text-mute block">Interest Savings</span>
           <span id="savings-interest-text" class="text-xs font-mono font-bold text-link block mt-0.5">
-            ₹ 0
+            $ 0
           </span>
           <p id="savings-time-text" class="text-[10px] text-mute mt-0.5 leading-tight">0 Months faster payoff</p>
         </div>
@@ -619,7 +619,7 @@ const formulaVariables = [
         <div>
           <span class="text-[10px] font-mono uppercase tracking-wider text-mute block">Total Payment (P + I)</span>
           <span id="emi-total-result" class="text-xs font-mono font-bold text-ink block mt-0.5">
-            ₹ 52,06,935
+            $ 568,861
           </span>
           <p class="text-[10px] text-mute mt-0.5 leading-tight">Principal + lifetime reducing interest.</p>
         </div>
@@ -635,7 +635,7 @@ const formulaVariables = [
         <div>
           <span class="text-[10px] font-mono uppercase tracking-wider text-mute block">Effective Payoff Year</span>
           <span id="savings-new-tenure-text" class="text-xs font-mono font-bold text-ink block mt-0.5">
-            20 Years
+            30 Years
           </span>
           <p class="text-[10px] text-mute mt-0.5 leading-tight">Scheduled loan freedom date.</p>
         </div>
@@ -650,7 +650,7 @@ const formulaVariables = [
           <span class="text-xs sm:text-sm font-bold text-ink">What if you prepay 1 extra EMI every year?</span>
         </div>
         <p id="emi-insight-text" class="text-xs text-mute font-mono">
-          Prepaying just ₹21,700 once a year would save you <strong class="text-emerald-600 dark:text-emerald-400">₹4.8 Lakhs</strong> in total interest and close your loan 3.5 years early!
+          Prepaying just $1,580 once a year would save you <strong class="text-emerald-600 dark:text-emerald-400">$48,000+</strong> in total interest and close your loan over 4 years early!
         </p>
       </div>
       <button
@@ -691,6 +691,18 @@ const formulaVariables = [
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
           </svg>
           <span id="emi-share-text">Share</span>
+        </button>
+
+        <button
+          type="button"
+          id="btn-view-schedule"
+          class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-link/30 bg-link/10 hover:bg-link/20 text-link text-xs font-semibold font-mono transition-all cursor-pointer shadow-xs active:scale-95"
+          title="Jump to Amortization Schedule table"
+        >
+          <svg class="h-3.5 w-3.5 text-link" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          <span>View Schedule</span>
         </button>
       </div>
     </div>
@@ -746,8 +758,8 @@ const formulaVariables = [
         Monthly EMI
       </div>
       <div class="flex items-baseline gap-1.5 font-mono">
-        <span id="mobile-hud-val" class="text-base font-bold text-white tabular-nums">₹ 21,696</span>
-        <span id="mobile-hud-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-cyan/20 text-cyan font-semibold">2.08x Cost</span>
+        <span id="mobile-hud-val" class="text-base font-bold text-white tabular-nums">$ 1,580</span>
+        <span id="mobile-hud-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-cyan/20 text-cyan font-semibold">2.28x Cost</span>
       </div>
     </div>
 
@@ -847,29 +859,29 @@ const formulaVariables = [
     <!-- Worked Example -->
     <div id="emi-worked-example-wrapper">
       <WorkedExample
-        title="Worked Example: 25 Lakh Home Loan at 8.5% for 20 Years"
-        scenario="A borrower takes an Indian home loan of ₹25,00,000 for 20 years (240 months) at an annual interest rate of 8.5%."
+        title="Worked Example: $250,000 Loan at 6.5% for 30 Years"
+        scenario="A borrower takes a fixed-rate loan of $250,000 for 30 years (360 months) at an annual interest rate of 6.5%."
         steps={[
           {
             number: 1,
             title: 'Convert Annual Rate to Monthly Periodic Rate',
-            description: 'Divide the 8.5% annual rate by 12 months and convert from percentage to decimal.',
-            mathExpression: 'r = 8.5 ÷ 12 ÷ 100 = 0.0070833',
+            description: 'Divide the 6.5% annual rate by 12 months and convert from percentage to decimal.',
+            mathExpression: 'r = 6.5 ÷ 12 ÷ 100 = 0.0054167',
           },
           {
             number: 2,
             title: 'Evaluate Compounding Factor (1 + r)ⁿ',
-            description: 'Raise the monthly rate factor to the 240th power.',
-            mathExpression: '(1 + 0.0070833)²⁴⁰ = 5.4412',
+            description: 'Raise the monthly rate factor to the 360th power.',
+            mathExpression: '(1 + 0.0054167)³⁶⁰ = 6.9918',
           },
           {
             number: 3,
             title: 'Calculate Periodic EMI Amount',
             description: 'Substitute values into the reducing balance formula.',
-            mathExpression: 'E = 25,00,000 × 0.0070833 × 5.4412 ÷ (5.4412 - 1) = ₹ 21,696',
+            mathExpression: 'E = 250,000 × 0.0054167 × 6.9918 ÷ (6.9918 - 1) = $ 1,580',
           },
         ]}
-        conclusion="Monthly EMI is exactly ₹21,696. Across 240 months, cumulative payments total ₹52,06,935, comprising ₹25,00,000 principal and ₹27,06,935 lifetime interest."
+        conclusion="Monthly EMI is exactly $1,580. Across 360 months, cumulative payments total $568,861, comprising $250,000 principal and $318,861 lifetime interest."
       />
     </div>
 
@@ -916,8 +928,9 @@ const formulaVariables = [
     // 1. Silent Currency Integration
     const activeCode = typeof window.facGetActiveCurrency === 'function'
       ? window.facGetActiveCurrency()
-      : (localStorage.getItem('fac_currency') || 'INR');
+      : (localStorage.getItem('fac_currency') || 'USD');
 
+    let currentCurrencyCode = activeCode;
     let currentCurrencySymbol = activeCode === 'INR' ? '₹' : '$';
     let isIndianFormat = activeCode === 'INR';
 
@@ -997,200 +1010,241 @@ const formulaVariables = [
     let currentScheduleData = [];
 
     function calculate() {
-      const P = Math.max(0, parseSmartInput(principalInput?.value || '2500000'));
-      const annualRate = Math.max(0, parseFloat(rateInput?.value || '8.5'));
-      const tenureVal = Math.max(1, parseFloat(tenureInput?.value || '20'));
-      const extraVal = Math.max(0, parseSmartInput(extraInput?.value || '0'));
+      try {
+        const P = Math.max(0, parseSmartInput(principalInput?.value || '250000'));
+        const annualRate = Math.max(0, parseFloat(rateInput?.value || '6.5'));
+        const tenureVal = Math.max(1, parseFloat(tenureInput?.value || '30'));
+        const extraVal = Math.max(0, parseSmartInput(extraInput?.value || '0'));
 
-      const n = Math.round(tenureIsYears ? tenureVal * 12 : tenureVal);
-      const r = (annualRate / 12) / 100;
+        const n = Math.round(tenureIsYears ? tenureVal * 12 : tenureVal);
+        const r = (annualRate / 12) / 100;
 
-      // Closed-Form Formula
-      let emi = 0;
-      if (r === 0) {
-        emi = n > 0 ? P / n : 0;
-      } else {
-        const factor = Math.pow(1 + r, n);
-        emi = n > 0 ? (P * r * factor) / (factor - 1) : 0;
-      }
-
-      // Amortization simulation with optional prepayment
-      let balance = P;
-      let totalInterest = 0;
-      let totalExtraPaid = 0;
-      let totalPaid = 0;
-      let monthsCount = 0;
-
-      const monthlyRows = [];
-      const yearlyRows = [];
-      let curYearInterest = 0;
-      let curYearPrincipal = 0;
-      let curYearExtra = 0;
-
-      let crossoverMonth = null;
-
-      while (balance > 0.01 && monthsCount < 600) {
-        monthsCount++;
-        const interestMonth = balance * r;
-        let principalMonth = emi - interestMonth;
-        let actualExtra = extraVal;
-
-        if (balance < principalMonth + actualExtra) {
-          principalMonth = Math.min(balance, principalMonth);
-          actualExtra = Math.max(0, balance - principalMonth);
-          balance = 0;
+        // Closed-Form Formula
+        let emi = 0;
+        if (r === 0) {
+          emi = n > 0 ? P / n : 0;
         } else {
-          balance -= (principalMonth + actualExtra);
+          const factor = Math.pow(1 + r, n);
+          emi = n > 0 ? (P * r * factor) / (factor - 1) : 0;
         }
 
-        totalInterest += interestMonth;
-        totalExtraPaid += actualExtra;
-        totalPaid += (principalMonth + interestMonth + actualExtra);
+        // Amortization simulation with optional prepayment
+        let balance = P;
+        let totalInterest = 0;
+        let totalExtraPaid = 0;
+        let totalPaid = 0;
+        let monthsCount = 0;
 
-        if (!crossoverMonth && principalMonth >= interestMonth) {
-          crossoverMonth = monthsCount;
-        }
+        const monthlyRows = [];
+        const yearlyRows = [];
+        let curYearInterest = 0;
+        let curYearPrincipal = 0;
+        let curYearExtra = 0;
 
-        monthlyRows.push({
-          period: `Mo ${monthsCount}`,
-          principal: Math.round(principalMonth),
-          interest: Math.round(interestMonth),
-          extra: Math.round(actualExtra),
-          payment: Math.round(principalMonth + interestMonth + actualExtra),
-          balance: Math.round(balance),
-        });
+        let crossoverMonth = null;
 
-        curYearPrincipal += principalMonth;
-        curYearInterest += interestMonth;
-        curYearExtra += actualExtra;
+        while (balance > 0.01 && monthsCount < 600) {
+          monthsCount++;
+          const interestMonth = balance * r;
+          let principalMonth = emi - interestMonth;
+          let actualExtra = extraVal;
 
-        if (monthsCount % 12 === 0 || balance <= 0.01) {
-          yearlyRows.push({
-            period: `Year ${Math.ceil(monthsCount / 12)}`,
-            principal: Math.round(curYearPrincipal),
-            interest: Math.round(curYearInterest),
-            extra: Math.round(curYearExtra),
-            payment: Math.round(curYearPrincipal + curYearInterest + curYearExtra),
+          if (balance < principalMonth + actualExtra) {
+            principalMonth = Math.min(balance, principalMonth);
+            actualExtra = Math.max(0, balance - principalMonth);
+            balance = 0;
+          } else {
+            balance -= (principalMonth + actualExtra);
+          }
+
+          totalInterest += interestMonth;
+          totalExtraPaid += actualExtra;
+          totalPaid += (principalMonth + interestMonth + actualExtra);
+
+          if (!crossoverMonth && principalMonth >= interestMonth) {
+            crossoverMonth = monthsCount;
+          }
+
+          monthlyRows.push({
+            period: `Mo ${monthsCount}`,
+            principal: Math.round(principalMonth),
+            interest: Math.round(interestMonth),
+            extra: Math.round(actualExtra),
+            payment: Math.round(principalMonth + interestMonth + actualExtra),
             balance: Math.round(balance),
           });
-          curYearPrincipal = 0;
-          curYearInterest = 0;
-          curYearExtra = 0;
+
+          curYearPrincipal += principalMonth;
+          curYearInterest += interestMonth;
+          curYearExtra += actualExtra;
+
+          if (monthsCount % 12 === 0 || balance <= 0.01) {
+            yearlyRows.push({
+              period: `Year ${Math.ceil(monthsCount / 12)}`,
+              principal: Math.round(curYearPrincipal),
+              interest: Math.round(curYearInterest),
+              extra: Math.round(curYearExtra),
+              payment: Math.round(curYearPrincipal + curYearInterest + curYearExtra),
+              balance: Math.round(balance),
+            });
+            curYearPrincipal = 0;
+            curYearInterest = 0;
+            curYearExtra = 0;
+          }
+        }
+
+        const baselineTotalPay = emi * n;
+        const baselineTotalInt = Math.max(0, baselineTotalPay - P);
+        const interestSaved = Math.max(0, baselineTotalInt - totalInterest);
+        const monthsSaved = Math.max(0, n - monthsCount);
+
+        currentScheduleData = yearlyRows;
+
+        // Update DOM Text & Results
+        if (emiMonthlyResult) emiMonthlyResult.textContent = formatNumber(Math.round(emi));
+        if (emiInterestResult) emiInterestResult.textContent = formatNumber(Math.round(totalInterest));
+        if (emiTotalResult) emiTotalResult.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(totalPaid))}`;
+
+        const dispP = document.getElementById('principal-display');
+        const dispR = document.getElementById('rate-display');
+        const dispT = document.getElementById('tenure-display');
+        const dispEx = document.getElementById('extra-display');
+
+        if (dispP) dispP.textContent = `${currentCurrencySymbol} ${formatNumber(P)}`;
+        if (dispR) dispR.textContent = `${annualRate.toFixed(2)}%`;
+        if (dispT) dispT.textContent = `${tenureVal} ${tenureIsYears ? 'Years' : 'Months'} (${n} Mo)`;
+        if (dispEx) dispEx.textContent = `${currentCurrencySymbol} ${formatNumber(extraVal)}`;
+
+        const secP = document.getElementById('sec-principal-value');
+        if (secP) secP.textContent = formatNumber(P);
+
+        // Multiplier & Ratios
+        const costRatio = P > 0 ? ((totalPaid / P)).toFixed(2) : '1.00';
+        const badgeMult = document.getElementById('emi-multiplier-badge');
+        if (badgeMult) badgeMult.textContent = `${costRatio}x Cost`;
+
+        const interestPct = totalPaid > 0 ? (totalInterest / totalPaid) * 100 : 0;
+        const principalPct = Math.max(0, 100 - interestPct);
+
+        const secBadge = document.getElementById('emi-secondary-badge');
+        if (secBadge) secBadge.textContent = `${interestPct.toFixed(1)}% Interest`;
+
+        // Spectrum Bar
+        const barP = document.getElementById('bar-principal');
+        const barI = document.getElementById('bar-interest');
+        const labelP = document.getElementById('bar-principal-label');
+        const labelI = document.getElementById('bar-interest-label');
+
+        if (barP) barP.style.width = `${principalPct.toFixed(1)}%`;
+        if (barI) barI.style.width = `${interestPct.toFixed(1)}%`;
+        if (labelP) labelP.textContent = `${currentCurrencySymbol} ${formatNumber(P)} (${principalPct.toFixed(1)}%)`;
+        if (labelI) labelI.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(totalInterest))} (${interestPct.toFixed(1)}%)`;
+
+        // SVG Donut Rings
+        const circ = 339.29;
+        const pOffset = circ * (1 - (principalPct / 100));
+        const iOffset = circ * (1 - (interestPct / 100));
+
+        const ringP = document.getElementById('donut-principal-ring');
+        const ringI = document.getElementById('donut-interest-ring');
+        const centerPct = document.getElementById('donut-center-pct');
+
+        if (ringP) ringP.style.strokeDashoffset = String(pOffset);
+        if (ringI) ringI.style.strokeDashoffset = String(iOffset);
+        if (centerPct) centerPct.textContent = `${interestPct.toFixed(1)}%`;
+
+        const legP = document.getElementById('legend-principal-pct');
+        const legI = document.getElementById('legend-interest-pct');
+        const legTot = document.getElementById('legend-total-val');
+        if (legP) legP.textContent = `${principalPct.toFixed(1)}%`;
+        if (legI) legI.textContent = `${interestPct.toFixed(1)}%`;
+        if (legTot) legTot.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(totalPaid))}`;
+
+        // Matrix Cards
+        const crossTime = document.getElementById('matrix-crossover-time');
+        if (crossTime) crossTime.textContent = crossoverMonth ? `Year ${(crossoverMonth / 12).toFixed(1)}` : 'Year 1';
+
+        const saveIntText = document.getElementById('savings-interest-text');
+        const saveTimeText = document.getElementById('savings-time-text');
+        if (saveIntText) saveIntText.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(interestSaved))}`;
+        if (saveTimeText) saveTimeText.textContent = `${monthsSaved} Months faster payoff`;
+
+        const newTenureText = document.getElementById('savings-new-tenure-text');
+        if (newTenureText) newTenureText.textContent = `${(monthsCount / 12).toFixed(1)} Years (${monthsCount} Mo)`;
+
+        // Mobile HUD
+        const mobileVal = document.getElementById('mobile-hud-val');
+        const mobileBadge = document.getElementById('mobile-hud-badge');
+        if (mobileVal) mobileVal.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(emi))}`;
+        if (mobileBadge) mobileBadge.textContent = `${costRatio}x Cost`;
+
+        // Print Report Sync
+        const printDate = document.getElementById('emi-print-date');
+        const printCurr = document.getElementById('emi-print-currency');
+        const printP = document.getElementById('emi-print-principal');
+        const printR = document.getElementById('emi-print-rate');
+        const printT = document.getElementById('emi-print-tenure');
+        const printEmi = document.getElementById('emi-print-emi');
+        const printInt = document.getElementById('emi-print-interest');
+        const printTot = document.getElementById('emi-print-total');
+
+        if (printDate) printDate.textContent = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+        if (printCurr) printCurr.textContent = `${activeCode} (${currentCurrencySymbol})`;
+        if (printP) printP.textContent = `${currentCurrencySymbol} ${formatNumber(P)}`;
+        if (printR) printR.textContent = `${annualRate.toFixed(2)}% P.A.`;
+        if (printT) printT.textContent = `${tenureVal} ${tenureIsYears ? 'Years' : 'Months'}`;
+        if (printEmi) printEmi.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(emi))}`;
+        if (printInt) printInt.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(totalInterest))}`;
+        if (printTot) printTot.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(totalPaid))}`;
+
+        // Toggle Extra Paid Header Column
+        const thExtra = document.getElementById('th-extra');
+        if (thExtra) {
+          if (extraVal > 0) {
+            thExtra.classList.remove('hidden');
+          } else {
+            thExtra.classList.add('hidden');
+          }
+        }
+
+        // Render Table
+        renderTable(scheduleTabMode === 'yearly' ? yearlyRows : monthlyRows, extraVal > 0);
+        renderPrintTable(yearlyRows);
+      } catch (err) {
+        console.error('[EMI Calculator] Critical error generating amortization schedule:', err);
+        const tbody = document.getElementById('amortization-table-body');
+        if (tbody) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="5" class="py-8 px-4 text-center text-xs font-mono text-red-500 bg-red-500/5 rounded-lg">
+                ⚠️ An error occurred while computing the amortization schedule. Please check input parameters.
+              </td>
+            </tr>
+          `;
         }
       }
-
-      const baselineTotalPay = emi * n;
-      const baselineTotalInt = Math.max(0, baselineTotalPay - P);
-      const interestSaved = Math.max(0, baselineTotalInt - totalInterest);
-      const monthsSaved = Math.max(0, n - monthsCount);
-
-      currentScheduleData = yearlyRows;
-
-      // Update DOM Text & Results
-      if (emiMonthlyResult) emiMonthlyResult.textContent = formatNumber(Math.round(emi));
-      if (emiInterestResult) emiInterestResult.textContent = formatNumber(Math.round(totalInterest));
-      if (emiTotalResult) emiTotalResult.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(totalPaid))}`;
-
-      const dispP = document.getElementById('principal-display');
-      const dispR = document.getElementById('rate-display');
-      const dispT = document.getElementById('tenure-display');
-      const dispEx = document.getElementById('extra-display');
-
-      if (dispP) dispP.textContent = `${currentCurrencySymbol} ${formatNumber(P)}`;
-      if (dispR) dispR.textContent = `${annualRate.toFixed(2)}%`;
-      if (dispT) dispT.textContent = `${tenureVal} ${tenureIsYears ? 'Years' : 'Months'} (${n} Mo)`;
-      if (dispEx) dispEx.textContent = `${currentCurrencySymbol} ${formatNumber(extraVal)}`;
-
-      const secP = document.getElementById('sec-principal-value');
-      if (secP) secP.textContent = formatNumber(P);
-
-      // Multiplier & Ratios
-      const costRatio = P > 0 ? ((totalPaid / P)).toFixed(2) : '1.00';
-      const badgeMult = document.getElementById('emi-multiplier-badge');
-      if (badgeMult) badgeMult.textContent = `${costRatio}x Cost`;
-
-      const interestPct = totalPaid > 0 ? (totalInterest / totalPaid) * 100 : 0;
-      const principalPct = Math.max(0, 100 - interestPct);
-
-      const secBadge = document.getElementById('emi-secondary-badge');
-      if (secBadge) secBadge.textContent = `${interestPct.toFixed(1)}% Interest`;
-
-      // Spectrum Bar
-      const barP = document.getElementById('bar-principal');
-      const barI = document.getElementById('bar-interest');
-      const labelP = document.getElementById('bar-principal-label');
-      const labelI = document.getElementById('bar-interest-label');
-
-      if (barP) barP.style.width = `${principalPct.toFixed(1)}%`;
-      if (barI) barI.style.width = `${interestPct.toFixed(1)}%`;
-      if (labelP) labelP.textContent = `${currentCurrencySymbol} ${formatNumber(P)} (${principalPct.toFixed(1)}%)`;
-      if (labelI) labelI.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(totalInterest))} (${interestPct.toFixed(1)}%)`;
-
-      // SVG Donut Rings
-      const circ = 339.29;
-      const pOffset = circ * (1 - (principalPct / 100));
-      const iOffset = circ * (1 - (interestPct / 100));
-
-      const ringP = document.getElementById('donut-principal-ring');
-      const ringI = document.getElementById('donut-interest-ring');
-      const centerPct = document.getElementById('donut-center-pct');
-
-      if (ringP) ringP.style.strokeDashoffset = String(pOffset);
-      if (ringI) ringI.style.strokeDashoffset = String(iOffset);
-      if (centerPct) centerPct.textContent = `${interestPct.toFixed(1)}%`;
-
-      const legP = document.getElementById('legend-principal-pct');
-      const legI = document.getElementById('legend-interest-pct');
-      const legTot = document.getElementById('legend-total-val');
-      if (legP) legP.textContent = `${principalPct.toFixed(1)}%`;
-      if (legI) legI.textContent = `${interestPct.toFixed(1)}%`;
-      if (legTot) legTot.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(totalPaid))}`;
-
-      // Matrix Cards
-      const crossTime = document.getElementById('matrix-crossover-time');
-      if (crossTime) crossTime.textContent = crossoverMonth ? `Year ${(crossoverMonth / 12).toFixed(1)}` : 'Year 1';
-
-      const saveIntText = document.getElementById('savings-interest-text');
-      const saveTimeText = document.getElementById('savings-time-text');
-      if (saveIntText) saveIntText.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(interestSaved))}`;
-      if (saveTimeText) saveTimeText.textContent = `${monthsSaved} Months faster payoff`;
-
-      const newTenureText = document.getElementById('savings-new-tenure-text');
-      if (newTenureText) newTenureText.textContent = `${(monthsCount / 12).toFixed(1)} Years (${monthsCount} Mo)`;
-
-      // Mobile HUD
-      const mobileVal = document.getElementById('mobile-hud-val');
-      const mobileBadge = document.getElementById('mobile-hud-badge');
-      if (mobileVal) mobileVal.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(emi))}`;
-      if (mobileBadge) mobileBadge.textContent = `${costRatio}x Cost`;
-
-      // Print Report Sync
-      const printDate = document.getElementById('emi-print-date');
-      const printCurr = document.getElementById('emi-print-currency');
-      const printP = document.getElementById('emi-print-principal');
-      const printR = document.getElementById('emi-print-rate');
-      const printT = document.getElementById('emi-print-tenure');
-      const printEmi = document.getElementById('emi-print-emi');
-      const printInt = document.getElementById('emi-print-interest');
-      const printTot = document.getElementById('emi-print-total');
-
-      if (printDate) printDate.textContent = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-      if (printCurr) printCurr.textContent = `${activeCode} (${currentCurrencySymbol})`;
-      if (printP) printP.textContent = `${currentCurrencySymbol} ${formatNumber(P)}`;
-      if (printR) printR.textContent = `${annualRate.toFixed(2)}% P.A.`;
-      if (printT) printT.textContent = `${tenureVal} ${tenureIsYears ? 'Years' : 'Months'}`;
-      if (printEmi) printEmi.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(emi))}`;
-      if (printInt) printInt.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(totalInterest))}`;
-      if (printTot) printTot.textContent = `${currentCurrencySymbol} ${formatNumber(Math.round(totalPaid))}`;
-
-      // Render Table
-      renderTable(scheduleTabMode === 'yearly' ? yearlyRows : monthlyRows);
-      renderPrintTable(yearlyRows);
     }
 
-    function renderTable(rows) {
+    function renderTable(rows, hasExtra = false) {
       const tbody = document.getElementById('amortization-table-body');
-      if (!tbody) return;
+      if (!tbody) {
+        console.error('[EMI Calculator] Target tbody #amortization-table-body not found in DOM');
+        return;
+      }
+      if (!rows || rows.length === 0) {
+        console.warn('[EMI Calculator] Schedule data array is empty (scheduleData.length === 0). Rendering empty state fallback.');
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="${hasExtra ? 6 : 5}" class="py-8 px-4 text-center text-xs font-mono text-mute bg-canvas-subtle/30">
+              <div class="flex flex-col items-center justify-center space-y-1">
+                <span class="text-sm font-semibold text-ink">No amortization schedule data available</span>
+                <span class="text-mute">Enter a valid positive loan principal, interest rate, and tenure above to generate the payment schedule.</span>
+              </div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
       let html = '';
       rows.slice(0, 360).forEach((r) => {
         html += `
@@ -1198,6 +1252,7 @@ const formulaVariables = [
             <td class="py-2.5 px-3.5 font-semibold text-link whitespace-nowrap">${r.period}</td>
             <td class="py-2.5 px-3.5 text-right tabular-nums font-mono whitespace-nowrap">${currentCurrencySymbol} ${formatNumber(r.principal)}</td>
             <td class="py-2.5 px-3.5 text-right tabular-nums font-mono text-violet font-semibold whitespace-nowrap">${currentCurrencySymbol} ${formatNumber(r.interest)}</td>
+            ${hasExtra ? `<td class="py-2.5 px-3.5 text-right tabular-nums font-mono text-cyan font-semibold whitespace-nowrap">${currentCurrencySymbol} ${formatNumber(r.extra)}</td>` : ''}
             <td class="py-2.5 px-3.5 text-right tabular-nums font-mono text-ink font-bold whitespace-nowrap">${currentCurrencySymbol} ${formatNumber(r.payment)}</td>
             <td class="py-2.5 px-3.5 text-right tabular-nums font-mono text-mute whitespace-nowrap">${currentCurrencySymbol} ${formatNumber(r.balance)}</td>
           </tr>
@@ -1249,14 +1304,14 @@ const formulaVariables = [
     // Quick Steppers
     document.getElementById('btn-principal-minus')?.addEventListener('click', () => {
       const cur = parseSmartInput(principalInput.value || '0');
-      const next = Math.max(100000, cur - 100000);
+      const next = Math.max(10000, cur - 10000);
       principalInput.value = String(next);
       principalSlider.value = String(next);
       calculate();
     });
     document.getElementById('btn-principal-plus')?.addEventListener('click', () => {
       const cur = parseSmartInput(principalInput.value || '0');
-      const next = cur + 100000;
+      const next = cur + 10000;
       if (next > parseFloat(principalSlider.max)) principalSlider.max = String(next * 1.2);
       principalInput.value = String(next);
       principalSlider.value = String(next);
@@ -1514,19 +1569,36 @@ const formulaVariables = [
       });
     }
 
+    // View Schedule Smooth Scrolling & Responsive Table Initialization
+    function scrollToSchedule() {
+      const scheduleCard = document.getElementById('schedule-section-card');
+      if (!scheduleCard) {
+        console.error('[EMI Calculator] Schedule card #schedule-section-card not found in DOM');
+        return;
+      }
+      if (!currentScheduleData || currentScheduleData.length === 0) {
+        calculate();
+      }
+      scheduleCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scheduleCard.classList.add('ring-2', 'ring-link/40');
+      setTimeout(() => {
+        scheduleCard.classList.remove('ring-2', 'ring-link/40');
+      }, 1500);
+    }
+
     // Event Listeners
     document.getElementById('emi-copy-summary-btn')?.addEventListener('click', copySummary);
     document.getElementById('emi-share-link-btn')?.addEventListener('click', shareLink);
     document.getElementById('emi-action-pdf-btn')?.addEventListener('click', downloadPDF);
     document.getElementById('emi-action-excel-btn')?.addEventListener('click', downloadExcel);
-    document.getElementById('mobile-hud-scroll-btn')?.addEventListener('click', () => {
-      document.getElementById('schedule-section-card')?.scrollIntoView({ behavior: 'smooth' });
-    });
+    document.getElementById('btn-view-schedule')?.addEventListener('click', scrollToSchedule);
+    document.getElementById('mobile-hud-scroll-btn')?.addEventListener('click', scrollToSchedule);
 
     // Currency Switcher & Event
     window.addEventListener('currencychange', (e) => {
       const newCurr = e.detail?.currency;
       if (newCurr) {
+        currentCurrencyCode = newCurr;
         currentCurrencySymbol = e.detail.symbol || '$';
         isIndianFormat = e.detail.isIndian ?? (newCurr === 'INR');
         const headerLabel = document.getElementById('emi-header-currency-label');
@@ -1591,12 +1663,11 @@ const formulaVariables = [
     #emi-print-report, #emi-print-report * { visibility: visible !important; }
     #emi-print-report {
       display: block !important;
-      position: absolute !important;
-      left: 0 !important; top: 0 !important;
+      position: static !important;
       width: 100% !important;
       background: #ffffff !important;
       color: #0f172a !important;
-      padding: 20px 24px !important;
+      padding: 0 !important;
       box-sizing: border-box !important;
     }
     #emi-print-report table { width: 100% !important; border-collapse: collapse !important; }

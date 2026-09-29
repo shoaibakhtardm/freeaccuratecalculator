@@ -105,7 +105,7 @@ const isCurrencyCalculator =
     <div class="pointer-events-none absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-cyan/10 blur-3xl print:hidden"></div>
     
     <!-- Dedicated High-Fidelity Print/PDF Report (Visible ONLY in print) -->
-    <div id="master-print-report" class="hidden print:block font-mono text-slate-900">
+    <div id="master-print-report" class="hidden print:block font-mono text-slate-900 fac-print-report">
       <div class="border-b-2 border-slate-900 pb-4 mb-5 flex justify-between items-start">
         <div>
           <div class="text-2xl font-black uppercase tracking-tight">Free Accurate Calculator</div>
@@ -144,7 +144,7 @@ const isCurrencyCalculator =
       </div>
 
       <!-- Print Amortization Schedule Table -->
-      <div class="border-t border-slate-300 pt-4">
+      <div id="master-print-schedule-section" class="border-t border-slate-300 pt-4">
         <div class="text-xs font-bold uppercase mb-2">
           {isFrench ? "Échéancier Détaillé de Progression Algorithmique" : "Detailed Computational Progression Schedule"}
         </div>
@@ -583,6 +583,9 @@ const isCurrencyCalculator =
 
     function formatVal(val, decimals = 0) {
       if (isNaN(val) || !isFinite(val)) return '0';
+      if (decimals === 0 && Math.abs(val % 1) > 0.001) {
+        decimals = 2;
+      }
       if (isFrenchMode) {
         return new Intl.NumberFormat('fr-FR', {
           minimumFractionDigits: decimals,
@@ -590,11 +593,12 @@ const isCurrencyCalculator =
         }).format(val);
       }
       if (isIndianFormat) {
-        const parts = Math.round(val).toString().split('.');
+        const parts = (decimals > 0 ? Number(val).toFixed(decimals) : Math.round(val).toString()).split('.');
         let lastThree = parts[0].substring(parts[0].length - 3);
         const otherNumbers = parts[0].substring(0, parts[0].length - 3);
         if (otherNumbers !== '') lastThree = ',' + lastThree;
-        return otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+        const formattedInt = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+        return parts.length > 1 ? `${formattedInt}.${parts[1]}` : formattedInt;
       }
       return val.toLocaleString('en-US', {
         minimumFractionDigits: decimals,
@@ -1089,6 +1093,16 @@ const isCurrencyCalculator =
       // Update Schedule Tables
       currentReportState = { val1: res1, val2: res2, val3: res3, schedule: rows };
 
+      const schedCont = document.getElementById('master-schedule-container');
+      if (schedCont) {
+        schedCont.style.display = rows.length > 0 ? 'block' : 'none';
+      }
+
+      const schedSec = document.getElementById('master-print-schedule-section');
+      if (schedSec) {
+        schedSec.style.display = rows.length > 0 ? 'block' : 'none';
+      }
+
       if (scheduleBody) {
         scheduleBody.innerHTML = rows.slice(0, 15).map((r) => `
           <tr class="border-b border-hairline hover:bg-canvas-subtle transition-colors">
@@ -1105,10 +1119,10 @@ const isCurrencyCalculator =
         printScheduleBody.innerHTML = rows.map((r) => `
           <tr class="border-b border-slate-200">
             <td class="p-2 border-r border-slate-300 font-bold">${r.period}</td>
-            <td class="p-2 border-r border-slate-300">${isFrenchMode ? `${formatVal(r.payment, 0)} €` : `${currentCurrencySymbol}${formatVal(r.payment, 0)}`}</td>
-            <td class="p-2 border-r border-slate-300">${isFrenchMode ? `${formatVal(r.principal, 0)} €` : `${currentCurrencySymbol}${formatVal(r.principal, 0)}`}</td>
-            <td class="p-2 border-r border-slate-300">${isFrenchMode ? `${formatVal(r.interest, 0)} €` : `${currentCurrencySymbol}${formatVal(r.interest, 0)}`}</td>
-            <td class="p-2 font-bold">${isFrenchMode ? `${formatVal(r.balance, 0)} €` : `${currentCurrencySymbol}${formatVal(r.balance, 0)}`}</td>
+            <td class="p-2 border-r border-slate-300">${isFrenchMode ? `${formatVal(r.payment, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(r.payment, 0)}`}</td>
+            <td class="p-2 border-r border-slate-300">${isFrenchMode ? `${formatVal(r.principal, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(r.principal, 0)}`}</td>
+            <td class="p-2 border-r border-slate-300">${isFrenchMode ? `${formatVal(r.interest, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(r.interest, 0)}`}</td>
+            <td class="p-2 font-bold">${isFrenchMode ? `${formatVal(r.balance, 0)}${isCurrCalc ? ' €' : ''}` : `${isCurrCalc ? currentCurrencySymbol : ''}${formatVal(r.balance, 0)}`}</td>
           </tr>
         `).join('');
       }
@@ -1181,13 +1195,13 @@ const isCurrencyCalculator =
         if (e) {
           e.preventDefault();
           e.stopPropagation();
-          if (typeof (e as any).stopImmediatePropagation === 'function') {
-            (e as any).stopImmediatePropagation();
+          if (typeof e.stopImmediatePropagation === 'function') {
+            e.stopImmediatePropagation();
           }
         }
         syncMasterPrintData();
-        if (typeof (window as any).generateAndDownloadPDF === 'function') {
-          (window as any).generateAndDownloadPDF();
+        if (typeof window.generateAndDownloadPDF === 'function') {
+          window.generateAndDownloadPDF();
         } else {
           window.print();
         }

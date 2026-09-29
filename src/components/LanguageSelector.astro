@@ -24,6 +24,7 @@ const languages = ALL_SUPPORTED_LOCALES.map((code) => ({
 
 const activeLang = languages.find((l) => l.code === currentLocale) || languages[0];
 const isFrench = currentLocale === 'fr' || Astro.url.pathname.startsWith('/fr/');
+const isSpanish = currentLocale === 'es' || Astro.url.pathname.includes('/es/') || Astro.url.pathname.startsWith('/calculadora-edad/es');
 ---
 
 <div class={`fac-lang-wrapper relative inline-flex items-center notranslate shrink-0 ${className}`}>
@@ -31,7 +32,7 @@ const isFrench = currentLocale === 'fr' || Astro.url.pathname.startsWith('/fr/')
   <button
     type="button"
     class="fac-lang-btn group relative flex items-center justify-between gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 rounded-2xl border border-slate-200/90 dark:border-slate-800/90 bg-white/85 dark:bg-slate-900/85 hover:bg-slate-50 dark:hover:bg-slate-800/90 hover:border-indigo-500/40 dark:hover:border-indigo-400/40 shadow-xs hover:shadow-md hover:shadow-indigo-500/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:focus-visible:ring-indigo-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-gray-950 min-h-[44px] sm:min-h-[38px] h-11 sm:h-9 cursor-pointer transition-all duration-300 select-none min-w-[120px] sm:min-w-[145px]"
-    aria-label={isFrench ? "Choisir la langue" : "Select Language"}
+    aria-label={isSpanish ? "Seleccionar idioma" : isFrench ? "Choisir la langue" : "Select Language"}
     aria-haspopup="listbox"
     aria-expanded="false"
   >
@@ -75,15 +76,14 @@ const isFrench = currentLocale === 'fr' || Astro.url.pathname.startsWith('/fr/')
   <!-- Animated Dropdown Menu Panel -->
   <div
     class="fac-lang-dropdown absolute right-0 top-full mt-2 w-64 max-h-[80vh] overflow-y-auto rounded-2xl border border-gray-200/90 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl shadow-xl shadow-gray-900/10 dark:shadow-black/50 p-1.5 z-50 transition-all duration-200 ease-out origin-top-right transform opacity-0 scale-95 -translate-y-1 pointer-events-none invisible"
-    role="listbox"
-    aria-label="Languages"
+    aria-label={isSpanish ? "Menú de selección de idioma" : isFrench ? "Choisir une langue" : "Select language menu"}
   >
     <!-- Search Language Header with Search Box & Counter -->
     <div class="p-1.5 border-b border-gray-100 dark:border-gray-800/80 mb-1 space-y-1.5">
       <div class="flex items-center px-1 text-[10px] font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
         <span class="flex items-center gap-1.5 text-slate-800 dark:text-slate-200">
           <span class="text-xs">🔍</span>
-          <span>Search Language</span>
+          <span>{isSpanish ? "Buscar idioma" : "Search Language"}</span>
         </span>
       </div>
 
@@ -93,14 +93,14 @@ const isFrench = currentLocale === 'fr' || Astro.url.pathname.startsWith('/fr/')
         <input
           type="search"
           class="fac-lang-search-input w-full pl-7 pr-7 py-1.5 text-xs rounded-xl bg-slate-50 dark:bg-slate-800/90 border border-slate-200/80 dark:border-slate-700/80 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 dark:focus:border-indigo-400 transition-all"
-          placeholder="Search language (e.g. Hindi, es)..."
+          placeholder={isSpanish ? "Buscar idioma (ej. Español, es)..." : "Search language (e.g. Hindi, es)..."}
           autocomplete="off"
           spellcheck="false"
         />
         <button
           type="button"
           class="fac-lang-search-clear hidden absolute right-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs p-0.5 rounded-full cursor-pointer"
-          aria-label="Clear language search"
+          aria-label={isSpanish ? "Borrar búsqueda de idioma" : "Clear language search"}
         >
           ✕
         </button>
@@ -108,7 +108,12 @@ const isFrench = currentLocale === 'fr' || Astro.url.pathname.startsWith('/fr/')
     </div>
 
     <!-- Options List Container with Realtime Search Filtering -->
-    <div class="fac-lang-options-list max-h-[240px] overflow-y-auto space-y-0.5 pr-0.5">
+    <div
+      class="fac-lang-options-list max-h-[240px] overflow-y-auto space-y-0.5 pr-0.5"
+      role="listbox"
+      aria-label={isSpanish ? "Lista de idiomas" : isFrench ? "Liste des langues" : "Languages"}
+    >
+
       {languages.map((lang) => {
         const isCurrent = lang.code === currentLocale;
         const searchKeywords = `${lang.name} ${lang.englishName} ${lang.code} ${lang.short}`.toLowerCase();
@@ -144,7 +149,7 @@ const isFrench = currentLocale === 'fr' || Astro.url.pathname.startsWith('/fr/')
       <!-- Empty state when query does not match any language -->
       <div class="fac-no-lang hidden py-3 px-2 text-center text-xs text-slate-500 dark:text-slate-400 space-y-1">
         <span class="text-base">🔍</span>
-        <p class="font-medium text-slate-700 dark:text-slate-300">No language found</p>
+        <p class="font-medium text-slate-700 dark:text-slate-300">{isSpanish ? "No se encontró ningún idioma" : "No language found"}</p>
       </div>
     </div>
   </div>
@@ -167,7 +172,7 @@ const isFrench = currentLocale === 'fr' || Astro.url.pathname.startsWith('/fr/')
     // Detect currently active locale
     function getActiveLocale() {
       const path = window.location.pathname.toLowerCase();
-      const match = path.match(/^\/(fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)(\/|$)/);
+      const match = path.match(/(?:^\/|\/)(fr|de|es|ar|nl|pt|it|ru|ja|hi|zh)(?:\/|$)/);
       if (match) return match[1];
       return localStorage.getItem('fac_locale') || 'en';
     }

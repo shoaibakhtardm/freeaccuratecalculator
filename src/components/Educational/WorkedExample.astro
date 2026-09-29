@@ -18,6 +18,7 @@ export interface Props {
   conclusion?: string;
   formula?: string;
   isFrench?: boolean;
+  isSpanish?: boolean;
 }
 
 const {
@@ -28,11 +29,13 @@ const {
   conclusion: userConclusion,
   formula,
   isFrench: propIsFrench,
+  isSpanish: propIsSpanish,
 } = Astro.props;
 
 const isFrench = propIsFrench ?? Astro.url.pathname.startsWith('/fr/');
+const isSpanish = propIsSpanish ?? (Astro.url.pathname.includes('/es/') || Astro.url.pathname.startsWith('/calculadora-edad/es'));
 
-let resolvedTitle = userTitle || (isFrench ? 'Exemple de Calcul Pas-à-Pas' : 'Step-by-Step Worked Example');
+let resolvedTitle = userTitle || (isSpanish ? 'Ejemplo de Cálculo Paso a Paso' : isFrench ? 'Exemple de Calcul Pas-à-Pas' : 'Step-by-Step Worked Example');
 let resolvedScenario = userScenario || '';
 let resolvedSteps: WorkedStep[] = userSteps || [];
 let resolvedConclusion = userConclusion || '';
@@ -90,12 +93,12 @@ if (calculatorId && (!resolvedScenario || resolvedSteps.length === 0)) {
     <div class="flex items-center gap-2">
       <span class="inline-block w-2 h-2 rounded-full bg-cyan"></span>
       <span class="mono-eyebrow text-cyan">
-        {isFrench ? "Démonstration Pédagogique & Vérification" : "Educational Calculation & Verification"}
+        {isSpanish ? "Demostración Pedagógica y Verificación" : isFrench ? "Démonstration Pédagogique & Vérification" : "Educational Calculation & Verification"}
       </span>
     </div>
     {resolvedFormula && (
       <span class="hidden sm:inline-block rounded-[4px] border border-hairline-soft bg-canvas px-2.5 py-1 text-xs font-mono text-mute">
-        {isFrench ? "Formule :" : "Formula:"} {resolvedFormula}
+        {isSpanish ? "Fórmula:" : isFrench ? "Formule :" : "Formula:"} {resolvedFormula}
       </span>
     )}
   </div>
@@ -107,7 +110,7 @@ if (calculatorId && (!resolvedScenario || resolvedSteps.length === 0)) {
   {resolvedScenario && (
     <div class="rounded-[8px] border border-hairline-soft bg-canvas p-4 text-xs sm:text-sm text-body leading-relaxed">
       <strong class="font-semibold text-ink">
-        {isFrench ? "Scénario Concret :" : "Practical Scenario:"}
+        {isSpanish ? "Escenario Práctico:" : isFrench ? "Scénario Concret :" : "Practical Scenario:"}
       </strong> 
       <span itemprop="description">{resolvedScenario}</span>
     </div>
@@ -151,7 +154,7 @@ if (calculatorId && (!resolvedScenario || resolvedSteps.length === 0)) {
       </svg>
       <div>
         <strong class="font-semibold text-cyan">
-          {isFrench ? "Résultat Final Vérifié :" : "Final Verified Result:"}
+          {isSpanish ? "Resultado Final Verificado:" : isFrench ? "Résultat Final Vérifié :" : "Final Verified Result:"}
         </strong> {resolvedConclusion}
       </div>
     </div>

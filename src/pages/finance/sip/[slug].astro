@@ -31,10 +31,10 @@ const maturityCorpus = Math.round(P * (((Math.pow(1 + i, n) - 1) / i) * (1 + i))
 const wealthGain = maturityCorpus - totalInvested;
 
 const formulaVariables = [
-  { symbol: 'P', meaning: `Monthly Deposit (₹${P.toLocaleString('en-IN')})` },
+  { symbol: 'P', meaning: `Monthly Deposit ($${P.toLocaleString('en-US')})` },
   { symbol: 'n', meaning: `Number of Monthly Installments (${n} months)` },
   { symbol: 'i', meaning: `Monthly Interest Rate (${(i * 100).toFixed(3)}%)` },
-  { symbol: 'FV', meaning: `Expected Maturity Corpus (₹${maturityCorpus.toLocaleString('en-IN')})` },
+  { symbol: 'FV', meaning: `Expected Maturity Corpus ($${maturityCorpus.toLocaleString('en-US')})` },
 ];
 
 const workedSteps = [
@@ -47,14 +47,14 @@ const workedSteps = [
   {
     number: 2,
     title: 'Determine Total Installments & Invested Principal',
-    description: `Multiply monthly deposit ₹${P.toLocaleString('en-IN')} by ${page.years} years (${n} months).`,
-    mathExpression: `Total Invested = ₹${P.toLocaleString('en-IN')} × ${n} = ₹${totalInvested.toLocaleString('en-IN')}`,
+    description: `Multiply monthly deposit $${P.toLocaleString('en-US')} by ${page.years} years (${n} months).`,
+    mathExpression: `Total Invested = $${P.toLocaleString('en-US')} × ${n} = $${totalInvested.toLocaleString('en-US')}`,
   },
   {
     number: 3,
     title: 'Apply Annuity Due Compounding Equation',
     description: `Compound every installment through the future value annuity formula.`,
-    mathExpression: `FV = ₹${P.toLocaleString('en-IN')} × [((1 + ${i.toFixed(4)})^${n} - 1) ÷ ${i.toFixed(4)}] × (1 + ${i.toFixed(4)}) = ₹${maturityCorpus.toLocaleString('en-IN')}`,
+    mathExpression: `FV = $${P.toLocaleString('en-US')} × [((1 + ${i.toFixed(4)})^${n} - 1) ÷ ${i.toFixed(4)}] × (1 + ${i.toFixed(4)}) = $${maturityCorpus.toLocaleString('en-US')}`,
   },
 ];
 ---
@@ -63,7 +63,7 @@ const workedSteps = [
   title={page.title}
   metaDescription={page.metaDescription}
   h1={page.h1}
-  subtitle={`Comprehensive wealth projection for ₹${P.toLocaleString('en-IN')} monthly mutual fund contributions over a continuous ${page.years}-year compounding horizon.`}
+  subtitle={`Comprehensive wealth projection for $${P.toLocaleString('en-US')} monthly contributions over a continuous ${page.years}-year compounding horizon.`}
   category={{ label: 'Finance', href: '/finance/' }}
   calculatorName={`SIP ${page.h1}`}
   faqs={page.faqs}
@@ -79,10 +79,10 @@ const workedSteps = [
         <svg class="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
         </svg>
-        <span>Compounding Summary (India / AMFI Benchmark Standard)</span>
+        <span>Compounding Summary (Annuity Due Standard)</span>
       </div>
       <p class="text-body leading-relaxed">
-        Investing <strong>₹{P.toLocaleString('en-IN')}</strong> per month for <strong>{page.years} years</strong> ({n} installments) at an expected <strong>{page.expectedReturnRate}% CAGR</strong> accumulates an estimated corpus of <strong>₹{maturityCorpus.toLocaleString('en-IN')}</strong>, generating <strong>₹{wealthGain.toLocaleString('en-IN')}</strong> in pure compounding returns.
+        Investing <strong>${P.toLocaleString('en-US')}</strong> per month for <strong>{page.years} years</strong> ({n} installments) at an expected <strong>{page.expectedReturnRate}% CAGR</strong> accumulates an estimated corpus of <strong>${maturityCorpus.toLocaleString('en-US')}</strong>, generating <strong>${wealthGain.toLocaleString('en-US')}</strong> in pure compounding returns.
       </p>
     </div>
 
@@ -91,7 +91,7 @@ const workedSteps = [
       <ResultDisplay
         id="cluster-corpus"
         label="Expected Maturity Corpus"
-        prefix="₹ "
+        prefix="$ "
         initialValue={maturityCorpus}
         decimals={0}
         secondary={`${page.years} Years @ ${page.expectedReturnRate}% CAGR`}
@@ -100,7 +100,7 @@ const workedSteps = [
       <ResultDisplay
         id="cluster-invested"
         label="Total Capital Invested"
-        prefix="₹ "
+        prefix="$ "
         initialValue={totalInvested}
         decimals={0}
         secondary={`${n} Monthly Installments`}
@@ -109,7 +109,7 @@ const workedSteps = [
       <ResultDisplay
         id="cluster-gain"
         label="Estimated Wealth Gain"
-        prefix="₹ "
+        prefix="$ "
         initialValue={wealthGain}
         decimals={0}
         secondary="Pure Compounding Growth"
@@ -130,16 +130,16 @@ const workedSteps = [
   </div>
 
   <WorkedExample
-    title={`Worked Example: ₹${P.toLocaleString('en-IN')} Monthly SIP for ${page.years} Years`}
-    scenario={`An investor deposits ₹${P.toLocaleString('en-IN')} on the 1st of each month for ${page.years} continuous years into a diversified equity fund averaging ${page.expectedReturnRate}% annual return.`}
+    title={`Worked Example: $${P.toLocaleString('en-US')} Monthly Investment for ${page.years} Years`}
+    scenario={`An investor deposits $${P.toLocaleString('en-US')} on the 1st of each month for ${page.years} continuous years into an index fund averaging ${page.expectedReturnRate}% annual return.`}
     steps={workedSteps}
-    conclusion={`Total accumulated maturity corpus reaches ₹${maturityCorpus.toLocaleString('en-IN')} against ₹${totalInvested.toLocaleString('en-IN')} invested principal, yielding +${((wealthGain / totalInvested) * 100).toFixed(1)}% in net gains.`}
+    conclusion={`Total accumulated maturity corpus reaches $${maturityCorpus.toLocaleString('en-US')} against $${totalInvested.toLocaleString('en-US')} invested principal, yielding +${((wealthGain / totalInvested) * 100).toFixed(1)}% in net gains.`}
   />
 
   <FormulaSection
     title="Exact Mathematical Derivation"
     expression="FV = P × [((1 + i)ⁿ - 1) ÷ i] × (1 + i)"
-    explanation={`Calculations follow the Annuity Due formulation standard in Indian mutual funds, where contributions deposited on the 1st of each month immediately compound over the full month's timeline.`}
+    explanation={`Calculations follow the Annuity Due formulation standard, where contributions deposited on the 1st of each month immediately compound over the full month's timeline.`}
     variables={formulaVariables}
   />
 </CalculatorLayout>

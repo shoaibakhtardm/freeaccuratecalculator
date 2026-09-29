@@ -68,6 +68,17 @@ export const MULTILANG_ROUTES_REGISTRY: Record<string, Partial<Record<SupportedL
     en: '/emi-calculator/',
     hi: '/hi/finance/emi-calculator/',
   },
+  // Age Calculator
+  // English: /age-calculator/ (dedicated static page)
+  // Spanish: /calculadora-edad/es/ (dedicated localized route)
+  '/age-calculator/': {
+    en: '/age-calculator/',
+    es: '/calculadora-edad/es/',
+  },
+  '/calculadora-edad/es/': {
+    en: '/age-calculator/',
+    es: '/calculadora-edad/es/',
+  },
 };
 
 /**
@@ -91,6 +102,13 @@ export function extractLocaleAndBasePath(pathname: string): { locale: SupportedL
     const locale = match[1] as SupportedLocale;
     const basePath = normalized.replace(localeRegex, '/');
     return { locale, basePath };
+  }
+
+  const suffixRegex = /\/(es|fr|de|ar|nl|pt|it|ru|ja|hi|zh|en)\/$/;
+  const suffixMatch = normalized.match(suffixRegex);
+  if (suffixMatch) {
+    const locale = suffixMatch[1] as SupportedLocale;
+    return { locale, basePath: normalized };
   }
 
   return { locale: 'en', basePath: normalized };
@@ -149,7 +167,7 @@ export function computeHreflangTags(
   }
 
   // 4. Verified Multi-Language Programmatic Registry
-  const matchedConfig = MULTILANG_ROUTES_REGISTRY[basePath];
+  const matchedConfig = MULTILANG_ROUTES_REGISTRY[basePath] || MULTILANG_ROUTES_REGISTRY[normalized];
   if (matchedConfig) {
     const links: HreflangLink[] = [];
 
@@ -171,7 +189,17 @@ export function computeHreflangTags(
     return { canonicalUrl, hreflangLinks: links };
   }
 
-  // 5. English-only / Non-localized calculators:
+  // 5. Non-English pages with no verified alternates in registry:
+  // Per Google Search Central guidelines, pages without alternate localized versions
+  // must NOT emit fake hreflang="en" or "x-default" tags.
+  if (locale !== 'en') {
+    return {
+      canonicalUrl,
+      hreflangLinks: [],
+    };
+  }
+
+  // 6. English-only / Non-localized calculators:
   // Emits self-referencing 'en' and 'x-default' ONLY.
   // This completely eliminates ghost 404 hreflangs for the 1,400+ English pages.
   const defaultEnglishUrl = `${origin}${basePath}`;

@@ -1,0 +1,699 @@
+---
+// src/pages/calculadora-edad/guides/es/index.astro
+import Layout from '../../../../layouts/Layout.astro';
+import Breadcrumbs from '../../../../components/common/Breadcrumbs.astro';
+
+const pageTitle = "Calculadora de Edad: Cómo Calcular tu Edad Exacta";
+const metaDescription = "Calcula tu edad exacta en años, meses y días gratis. Aprende cómo calcular tu edad exacta paso a paso con fórmulas precisas y reglas de calendario.";
+const canonicalUrl = "https://freeaccuratecalculator.com/calculadora-edad/guides/es/";
+
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "@id": `${canonicalUrl}#article`,
+  "headline": pageTitle,
+  "description": metaDescription,
+  "inLanguage": "es",
+  "url": canonicalUrl,
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonicalUrl
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Free Accurate Calculator",
+    "url": "https://freeaccuratecalculator.com/"
+  },
+  "about": [
+    {
+      "@type": "Thing",
+      "name": "Cálculo de la edad cronológica"
+    },
+    {
+      "@type": "Thing",
+      "name": "Calendario gregoriano y fechas de nacimiento"
+    }
+  ]
+};
+
+const faqPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": `${canonicalUrl}#faq`,
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿Cómo puedo calcular mi edad exacta hoy mismo?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Solo necesitas tu fecha de nacimiento (día, mes y año) y compararla con la fecha actual. Nuestra calculadora de edad automatiza este cómputo desglosando al segundo tus años cumplidos, meses naturales transcurridos y días vividos."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Por qué restar simplemente los años da un resultado incorrecto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Porque una persona no cumple años al comenzar el año civil el 1 de enero, sino en la fecha específica de su natalicio. Si tu cumpleaños aún no ha llegado en el año en curso, tienes un año menos de lo que indica la resta simple de los años."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cómo se calcula la edad si nací el 29 de febrero en un año bisiesto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Legalmente, en la mayoría de los países hispanohablantes (según sus respectivos Códigos Civiles), en los años comunes que no son bisiestos se considera que la persona cumple años a las 00:00 horas del 1 de marzo, o a las 24:00 horas del 28 de febrero, completando el ciclo anual de 365 días."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Puedo calcular mi edad para una fecha futura?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí. Fijando una fecha futura como momento de referencia objetivo (por ejemplo, el 1 de enero de 2030), el algoritmo resta tu fecha de nacimiento de esa fecha proyectada, indicándote cuántos años, meses y días tendrás con exactitud en ese instante venidero."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Qué diferencia hay entre edad cronológica y edad biológica?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "La edad cronológica cuenta el tiempo solar transcurrido desde el parto de forma universal e idéntica para todos. La edad biológica refleja el estado real de envejecimiento celular y de los órganos, el cual varía de acuerdo con la genética, la actividad física y el estilo de vida."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Para qué sirve el cálculo de edad cronológica Pearson?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Se utiliza en psicología clínica y psicopedagogía para determinar la edad exacta de un niño o adulto en el momento de realizar pruebas estandarizadas (como las escalas de inteligencia WISC o WAIS). Esto permite al profesional aplicar el baremo normativo exacto correspondiente a su grupo de edad."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Hasta qué edad se recomienda aplicar la edad corregida en prematuros?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Por consenso en pediatría, la edad corregida se utiliza habitualmente hasta los 24 meses de vida (2 años), momento en el cual la mayoría de los niños nacidos prematuramente han alcanzado los parámetros madurativos de sus pares nacidos a término."
+      }
+    }
+  ]
+};
+---
+
+<Layout
+  title={pageTitle}
+  metaDescription={metaDescription}
+  canonicalUrl={canonicalUrl}
+  jsonLd={[articleSchema, faqPageSchema]}
+  lang="es"
+  locale="es"
+>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10">
+    <!-- Ruta de navegación estructurada (Breadcrumbs) -->
+    <Breadcrumbs
+      isSpanish={true}
+      items={[
+        { label: 'Calculadora de Edad', href: '/calculadora-edad/' },
+        { label: 'Guías', href: '/calculadora-edad/guides/es/' },
+        { label: 'Cómo calcular tu edad exacta' }
+      ]}
+    />
+
+    <!-- Enlace de retorno a la Calculadora de Edad -->
+    <div style="margin-bottom: 20px;">
+      <a href="https://freeaccuratecalculator.com/calculadora-edad/es/" style="display: inline-flex; align-items: center; color: #007bff; text-decoration: none; font-weight: 600; font-size: 16px;">
+        <span style="margin-right: 6px;">←</span> Volver a la Calculadora de Edad
+      </a>
+    </div>
+
+    <!-- Encabezado Principal y Presentación -->
+    <header class="space-y-4 border-b border-hairline pb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-medium bg-link/10 text-link border border-link/20">
+        <span>Guía Técnica y Educativa</span>
+        <span class="text-hairline">•</span>
+        <span>Cálculo Cronológico</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black text-ink tracking-tight leading-tight">
+        Calculadora de Edad: Cómo Calcular tu Edad Exacta
+      </h1>
+      <p class="text-base sm:text-lg text-body leading-relaxed max-w-3xl">
+        Conocer cuántos años, meses y días han transcurrido desde el momento en que naciste parece una operación matemática simple, pero las variaciones del calendario gregoriano y la posición de tu próximo cumpleaños introducen discrepancias frecuentes. En esta guía desglosamos las fórmulas formales para calcular la edad, las diferencias conceptuales entre el tiempo cronológico y el biológico, y cuándo utilizar nuestra <a href="/calculadora-edad/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calculadora de edad</a> para obtener un desglose inmediato y exacto.
+      </p>
+    </header>
+
+    <!-- Resumen rápido en caja destacada -->
+    <div class="rounded-[16px] border border-link/20 bg-link/5 p-6 sm:p-8 space-y-3">
+      <div class="flex items-center gap-2 text-link font-semibold text-sm uppercase tracking-wide font-mono">
+        <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>Conceptos Clave de un Vistazo</span>
+      </div>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-body">
+        <li class="flex items-start gap-2">
+          <span class="text-link font-bold">•</span>
+          <span><strong>Resta directa:</strong> Restar el año de nacimiento del año actual falla si tu cumpleaños no ha ocurrido aún en este año.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-link font-bold">•</span>
+          <span><strong>Desglose completo:</strong> La edad exacta combina años cumplidos, meses naturales y días residuales con acarreo de calendario.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-link font-bold">•</span>
+          <span><strong>Años bisiestos:</strong> Los nacidos el 29 de febrero experimentan reglas civiles específicas en años comunes.</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-link font-bold">•</span>
+          <span><strong>Edad corregida:</strong> En bebés prematuros, se descuentan las semanas de gestación faltantes para evaluar su neurodesarrollo.</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Sección 1: Cómo calcular la edad con una fecha de nacimiento -->
+    <section class="space-y-4">
+      <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/10 text-primary text-sm font-mono font-bold">1</span>
+        ¿Cómo calcular la edad con una fecha de nacimiento?
+      </h2>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        El método intuitivo que la mayoría de las personas utiliza al responder a la pregunta «¿cuántos años tienes?» consiste en tomar el año presente y restarle el año de nacimiento. Sin embargo, esta operación aritmética básica suele arrojar un resultado incorrecto durante una parte sustancial del año.
+      </p>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        La edad legal y cronológica se define por los <strong>aniversarios efectivamente cumplidos</strong>, no por el cambio de dígito en el calendario general. Si tu fecha de nacimiento todavía no se ha celebrado dentro del año civil en curso, tu edad exacta es todavía un año menor que el resultado de una resta simple entre años.
+      </p>
+
+      <!-- Ejemplo práctico 1 -->
+      <div class="rounded-[14px] border border-hairline bg-canvas-elevated p-5 sm:p-6 space-y-3">
+        <div class="text-xs font-mono font-semibold uppercase tracking-wider text-cyan">Ejemplo Comparativo</div>
+        <p class="text-sm text-body">
+          Imagina a una persona nacida el <strong>28 de noviembre de 1995</strong> y deseamos calcular su edad el <strong>15 de mayo de 2026</strong>:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+          <div class="rounded-[10px] border border-red-500/20 bg-red-500/5 p-4 space-y-1">
+            <span class="text-xs font-bold text-red-600 dark:text-red-400 uppercase tracking-wide">Resta Simple de Años</span>
+            <div class="text-lg font-mono font-bold text-ink">2026 − 1995 = 31 años</div>
+            <p class="text-xs text-body">❌ <em>Incorrecto:</em> El 15 de mayo todavía faltan más de seis meses para que la persona alcance su aniversario número 31.</p>
+          </div>
+          <div class="rounded-[10px] border border-emerald-500/20 bg-emerald-500/5 p-4 space-y-1">
+            <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide">Cálculo Cronológico Exacto</span>
+            <div class="text-lg font-mono font-bold text-ink">30 años cumplidos</div>
+            <p class="text-xs text-body">✅ <em>Correcto:</em> La persona tiene 30 años cumplidos, además de 5 meses y 17 días de tiempo vivido adicional.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        Por esta razón, la regla algorítmica para determinar los años cumplidos a partir de una fecha de nacimiento establece:
+      </p>
+      <div class="rounded-[12px] border border-hairline bg-canvas p-4 font-mono text-sm text-ink space-y-1">
+        <div>Años = Año_Actual − Año_Nacimiento</div>
+        <div class="text-xs text-mute">// Si el mes actual es menor al mes de nacimiento, o si es el mismo mes pero el día actual es menor al día de nacimiento:</div>
+        <div class="text-primary font-semibold">Si (Mes_Actual &lt; Mes_Nacimiento) o (Mes_Actual == Mes_Nacimiento y Día_Actual &lt; Día_Nacimiento):</div>
+        <div class="pl-4 text-primary">Años = Años − 1</div>
+      </div>
+    </section>
+
+    <!-- Sección 2: Cómo calcular la edad exacta en años, meses y días -->
+    <section class="space-y-4">
+      <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/10 text-primary text-sm font-mono font-bold">2</span>
+        ¿Cómo calcular la edad exacta en años, meses y días?
+      </h2>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        En numerosos trámites administrativos, evaluaciones pedagógicas, expedientes clínicos y registros de desarrollo infantil, expresar la edad únicamente en años resulta insuficiente. Se requiere una granularidad precisa: <strong>años cumplidos, meses enteros y días residuales</strong>.
+      </p>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        Este cálculo no consiste simplemente en convertir decimales, sino en aplicar la <em>técnica de acarreo de calendario</em> (borrowing), respetando la cantidad real de días que posee cada mes del calendario gregoriano:
+      </p>
+      <ol class="list-decimal pl-5 space-y-2 text-sm sm:text-base text-body">
+        <li><strong>Diferencia de días:</strong> Resta el día de nacimiento del día objetivo. Si el día objetivo es menor, se «pide prestado» un mes completo al mes anterior del calendario y se suman sus días reales (28, 29, 30 o 31 días según corresponda).</li>
+        <li><strong>Diferencia de meses:</strong> Resta el mes de nacimiento del mes objetivo ajustado. Si el mes objetivo resulta negativo, se descuenta un año completo y se añaden 12 meses al balance.</li>
+        <li><strong>Diferencia de años:</strong> Resta el año de nacimiento del año objetivo con los ajustes de acarreo aplicados.</li>
+      </ol>
+
+      <!-- Diagrama visual explicativo de la línea de tiempo -->
+      <figure class="my-6 rounded-[16px] border border-hairline bg-canvas-elevated p-6 space-y-3">
+        <div class="text-xs font-mono font-semibold uppercase tracking-wider text-link">Desglose Gráfico del Intervalo Temporal</div>
+        <div class="w-full overflow-x-auto py-2">
+          <div class="min-w-[540px] flex items-center justify-between relative px-4">
+            <!-- Barra de conexión horizontal -->
+            <div class="absolute left-10 right-10 top-1/2 -translate-y-1/2 h-1.5 bg-gradient-to-r from-link via-cyan to-violet rounded-full opacity-60"></div>
+
+            <!-- Punto 1: Nacimiento -->
+            <div class="relative z-10 flex flex-col items-center bg-canvas-elevated px-2 py-1">
+              <span class="w-4 h-4 rounded-full bg-link ring-4 ring-link/20"></span>
+              <span class="text-xs font-bold text-ink mt-2">Fecha de Nacimiento</span>
+              <span class="text-[11px] font-mono text-mute">Punto Cero (0d, 0m, 0a)</span>
+            </div>
+
+            <!-- Punto 2: Último cumpleaños cumplido -->
+            <div class="relative z-10 flex flex-col items-center bg-canvas-elevated px-2 py-1">
+              <span class="w-3.5 h-3.5 rounded-full bg-cyan ring-4 ring-cyan/20"></span>
+              <span class="text-xs font-bold text-ink mt-2">Último Aniversario</span>
+              <span class="text-[11px] font-mono text-cyan font-medium">Años Completos</span>
+            </div>
+
+            <!-- Punto 3: Último mes cumplido -->
+            <div class="relative z-10 flex flex-col items-center bg-canvas-elevated px-2 py-1">
+              <span class="w-3.5 h-3.5 rounded-full bg-violet ring-4 ring-violet/20"></span>
+              <span class="text-xs font-bold text-ink mt-2">Último Mes Cumplido</span>
+              <span class="text-[11px] font-mono text-violet font-medium">+ Meses Naturales</span>
+            </div>
+
+            <!-- Punto 4: Fecha actual / objetivo -->
+            <div class="relative z-10 flex flex-col items-center bg-canvas-elevated px-2 py-1">
+              <span class="w-4 h-4 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20"></span>
+              <span class="text-xs font-bold text-ink mt-2">Fecha de Consulta</span>
+              <span class="text-[11px] font-mono text-emerald-600 dark:text-emerald-400 font-medium">+ Días Residuales</span>
+            </div>
+          </div>
+        </div>
+        <figcaption class="text-xs text-mute text-center pt-2">
+          Figura 1: Representación cronológica del tiempo transcurrido dividiendo el lapso en años naturales, meses enteros intermedios y días solares restantes.
+        </figcaption>
+      </figure>
+
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        Para no realizar manualmente estas conversiones de meses con diferente longitud o verificar si febrero tuvo 29 días por ser año bisiesto, puedes ingresar tus datos en nuestra herramienta para <a href="/calculadora-edad/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calcular tu edad exacta</a> con precisión matemática instantánea.
+      </p>
+    </section>
+
+    <!-- Sección 3: Cómo calcular la edad entre dos fechas -->
+    <section class="space-y-4">
+      <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/10 text-primary text-sm font-mono font-bold">3</span>
+        ¿Cómo calcular la edad entre dos fechas distintas?
+      </h2>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        Aunque comúnmente calculamos la edad respecto a la fecha actual, existe una amplia variedad de situaciones donde se requiere medir el tiempo transcurrido entre dos marcas temporales arbitrarias del pasado o hacia un momento futuro proyectado.
+      </p>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        Este cálculo de intervalo fecha a fecha resulta fundamental en escenarios como:
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 space-y-2">
+          <h3 class="text-sm font-bold text-ink flex items-center gap-2">
+            <span class="text-link">📋</span> Antigüedad Laboral y Contratos
+          </h3>
+          <p class="text-xs text-body leading-relaxed">
+            Medir con exactitud cuántos años, meses y días de servicio ha prestado un empleado entre su fecha de contratación y su fecha de liquidación o pase a retiro.
+          </p>
+        </div>
+        <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 space-y-2">
+          <h3 class="text-sm font-bold text-ink flex items-center gap-2">
+            <span class="text-cyan">🏛️</span> Elegibilidad Civil e Histórica
+          </h3>
+          <p class="text-xs text-body leading-relaxed">
+            Comprobar la edad exacta que una persona tenía en una fecha histórica específica, como el día de contraer matrimonio, adquirir una propiedad o firmar una escritura.
+          </p>
+        </div>
+        <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 space-y-2">
+          <h3 class="text-sm font-bold text-ink flex items-center gap-2">
+            <span class="text-violet">🏥</span> Historial Clínico Retrospectivo
+          </h3>
+          <p class="text-xs text-body leading-relaxed">
+            Verificar la edad que tenía un paciente en el momento en que se le diagnosticó una patología o se le practicó una intervención quirúrgica documentada.
+          </p>
+        </div>
+        <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 space-y-2">
+          <h3 class="text-sm font-bold text-ink flex items-center gap-2">
+            <span class="text-emerald-500">🎯</span> Proyecciones hacia Fechas Futuras
+          </h3>
+          <p class="text-xs text-body leading-relaxed">
+            Descubrir qué edad exacta tendrás en un hito futuro particular: el día de inauguración de unos juegos olímpicos, la fecha prevista de tu graduación o el cambio de década.
+          </p>
+        </div>
+      </div>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        El principio matemático es idéntico al de la fecha de nacimiento: se sustituye la fecha actual por la <em>fecha de referencia objetivo</em>, garantizando que el punto final sea cronológicamente posterior al punto inicial. Puedes utilizar nuestra solución para <a href="/calculadora-edad/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calcular la edad entre dos fechas</a> personalizadas seleccionando cualquier día del calendario.
+      </p>
+    </section>
+
+    <!-- Sección 4: ¿Qué es la edad cronológica? -->
+    <section class="space-y-4">
+      <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/10 text-primary text-sm font-mono font-bold">4</span>
+        ¿Qué es la edad cronológica y cómo se define?
+      </h2>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        La <strong>edad cronológica</strong> es la medida objetiva, astronómica e inmutable del tiempo transcurrido desde el instante del nacimiento de un ser vivo hasta un instante determinado. Se fundamenta estrictamente en la rotación de la Tierra alrededor del Sol y en las convenciones del calendario gregoriano.
+      </p>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        A diferencia de conceptos fisiológicos variables como el desgaste celular o la capacidad pulmonar, una <strong>calculadora edad cronológica</strong> computa una magnitud matemática fija: no varía en función del estilo de vida, la nutrición o el estado anímico. Cada individuo acumula exactamente un segundo cronológico por cada segundo transcurrido en el tiempo coordinado universal (UTC).
+      </p>
+
+      <!-- Recuadro especializado: Escalas Pearson -->
+      <div class="rounded-[14px] border border-hairline bg-canvas-elevated p-5 sm:p-6 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-mono font-semibold uppercase tracking-wider text-violet">Ámbito Psicométrico y Clínico</span>
+          <span class="text-[11px] font-mono bg-violet/10 text-violet px-2 py-0.5 rounded">Normas Pearson Clinical</span>
+        </div>
+        <h3 class="text-base font-bold text-ink">¿Por qué es crucial el cálculo de edad cronológica Pearson?</h3>
+        <p class="text-sm text-body leading-relaxed">
+          En evaluaciones psicométricas, neuropsicológicas y de coeficiente intelectual estandarizadas —como las escalas Wechsler (WAIS, WISC, WPPSI) o las pruebas de desarrollo infantil distribuidas internacionalmente por entidades editoriales como Pearson Clinical—, la exactitud en años, meses y días resulta determinante.
+        </p>
+        <p class="text-sm text-body leading-relaxed">
+          Las tablas baremadas de puntuaciones escalares cambian en intervalos estrechos (con frecuencia cada tres o cuatro meses de edad). Un error de apenas tres días en la asignación del mes puede provocar que el evaluador consulte una tabla de baremos incorrecta, distorsionando el percentil obtenido por un estudiante o paciente. Por ello, una calculadora de edad cronológica con desglose diario es la herramienta estándar empleada antes de corregir pruebas psicométricas.
+        </p>
+      </div>
+    </section>
+
+    <!-- Sección 5: ¿Qué es la edad corregida? -->
+    <section class="space-y-4">
+      <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/10 text-primary text-sm font-mono font-bold">5</span>
+        ¿Qué es la edad corregida y cuándo se utiliza?
+      </h2>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        La <strong>edad corregida</strong> es un ajuste cronológico que la medicina pediátrica aplica a los bebés nacidos de forma prematura (antes de alcanzar las 37 semanas de gestación). Su finalidad es evaluar el desarrollo psicomotor, el peso, la talla y las pautas madurativas en función de la fecha en que el bebé <em>debería haber nacido</em> de haber completado un embarazo a término (semana 40), y no exclusivamente según el día del alumbramiento.
+      </p>
+
+      <div class="rounded-[12px] border border-hairline bg-canvas p-4 font-mono text-sm text-ink space-y-2">
+        <div class="text-xs font-bold uppercase tracking-wider text-mute">Fórmula de la Edad Corregida:</div>
+        <div class="text-primary font-bold">Edad Corregida = Edad Cronológica − Semanas de Prematuridad</div>
+        <div class="text-xs text-body pt-1 font-sans">
+          Donde las semanas de prematuridad equivalen a: <em>40 semanas − Edad gestacional al nacer en semanas</em>.
+        </div>
+      </div>
+
+      <div class="rounded-[14px] border border-hairline bg-canvas-elevated p-5 space-y-2">
+        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-cyan">Ejemplo Pediátrico Ilustrativo</span>
+        <p class="text-sm text-body leading-relaxed">
+          Si un bebé nació a las 32 semanas de gestación (8 semanas antes de la semana 40) y hoy cumple <strong>24 semanas de edad cronológica</strong> (6 meses desde el parto):
+        </p>
+        <div class="text-sm font-mono text-ink bg-canvas p-3 rounded-[8px]">
+          Edad Corregida = 24 semanas − 8 semanas = 16 semanas (aproximadamente 4 meses)
+        </div>
+        <p class="text-xs text-mute leading-relaxed">
+          El pediatra evaluará si el bebé sostiene la cabeza o interactúa socialmente conforme a los hitos esperados para un lactante de 4 meses, y no de 6. Generalmente, este ajuste se mantiene hasta los 2 años de edad.
+        </p>
+      </div>
+
+      <div class="rounded-[12px] border border-amber-500/20 bg-amber-500/5 p-4 text-xs text-body space-y-1">
+        <div class="font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider">Aviso Informativo sobre Salud Infantil</div>
+        <p>
+          Las pautas de edad corregida constituyen una referencia conceptual educativa. Nuestra herramienta general de cálculo temporal no sustituye la monitorización clínica individualizada que debe efectuar el pediatra o especialista en neonatología del menor.
+        </p>
+      </div>
+    </section>
+
+    <!-- Sección 6: ¿Qué es la edad gestacional? -->
+    <section class="space-y-4">
+      <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/10 text-primary text-sm font-mono font-bold">6</span>
+        ¿Qué es la edad gestacional?
+      </h2>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        La <strong>edad gestacional</strong> describe la duración del embarazo y se calcula en semanas y días completos transcurridos desde el primer día de la última menstruación (FUM o regla) de la madre, o mediante biometría fetal por ecografía durante el primer trimestre.
+      </p>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        Es fundamental distinguir claramente entre estos tres conceptos temporales que suelen generar confusión en consultas y trámites de maternidad:
+      </p>
+
+      <div class="overflow-x-auto rounded-[12px] border border-hairline bg-canvas-elevated">
+        <table class="w-full text-left text-xs sm:text-sm border-collapse">
+          <thead>
+            <tr class="border-b border-hairline bg-canvas text-ink font-semibold">
+              <th class="p-3 sm:p-4">Tipo de Edad</th>
+              <th class="p-3 sm:p-4">Punto de Origen</th>
+              <th class="p-3 sm:p-4">Unidad Habitual</th>
+              <th class="p-3 sm:p-4">Propósito Principal</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline text-body">
+            <tr>
+              <td class="p-3 sm:p-4 font-bold text-ink">Edad Cronológica</td>
+              <td class="p-3 sm:p-4">Instante del nacimiento (parto)</td>
+              <td class="p-3 sm:p-4 font-mono">Años, meses, días</td>
+              <td class="p-3 sm:p-4">Identificación civil, legal y festividades</td>
+            </tr>
+            <tr>
+              <td class="p-3 sm:p-4 font-bold text-ink">Edad Gestacional</td>
+              <td class="p-3 sm:p-4">Primer día de última regla (FUM)</td>
+              <td class="p-3 sm:p-4 font-mono">Semanas y días (ej. 38+4)</td>
+              <td class="p-3 sm:p-4">Control del embarazo y madurez fetal</td>
+            </tr>
+            <tr>
+              <td class="p-3 sm:p-4 font-bold text-ink">Edad Corregida</td>
+              <td class="p-3 sm:p-4">Fecha prevista de parto a término</td>
+              <td class="p-3 sm:p-4 font-mono">Semanas o meses ajustados</td>
+              <td class="p-3 sm:p-4">Seguimiento evolutivo de bebés prematuros</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Sección 7: Edad biológica y edad metabólica -->
+    <section class="space-y-4">
+      <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/10 text-primary text-sm font-mono font-bold">7</span>
+        Edad biológica y edad metabólica: ¿son lo mismo que la edad cronológica?
+      </h2>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        No, no son lo mismo. Mientras que la edad cronológica avanza a la misma velocidad para todos los seres humanos en el planeta, el ritmo al que nuestro organismo envejece físicamente presenta notables variaciones individuales.
+      </p>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+        <div class="rounded-[14px] border border-hairline bg-canvas-elevated p-5 sm:p-6 space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="flex h-7 w-7 items-center justify-center rounded-full bg-violet/10 text-violet text-sm">🧬</span>
+            <h3 class="text-base font-bold text-ink">Edad Biológica</h3>
+          </div>
+          <p class="text-sm text-body leading-relaxed">
+            Mide el estado real de deterioro o conservación celular de los tejidos y órganos de un cuerpo. En la ciencia médica moderna se estima mediante biomarcadores moleculares, como la longitud de los telómeros o los patrones de metilación del ADN (conocidos como <em>relojes epigenéticos de Horvath</em>).
+          </p>
+          <p class="text-xs text-mute leading-relaxed">
+            Una persona de 45 años con excelentes hábitos de sueño, ejercicio y alimentación puede presentar una edad biológica equivalente a 38 años, o viceversa.
+          </p>
+        </div>
+
+        <div class="rounded-[14px] border border-hairline bg-canvas-elevated p-5 sm:p-6 space-y-3">
+          <div class="flex items-center gap-2">
+            <span class="flex h-7 w-7 items-center justify-center rounded-full bg-cyan/10 text-cyan text-sm">⚡</span>
+            <h3 class="text-base font-bold text-ink">Edad Metabólica</h3>
+          </div>
+          <p class="text-sm text-body leading-relaxed">
+            Se calcula comparando la tasa metabólica basal (TMB) de una persona —la energía que su cuerpo consume en reposo para mantener sus funciones vitales— con el promedio de TMB registrado en la población general para cada grupo etario.
+          </p>
+          <p class="text-xs text-mute leading-relaxed">
+            Una masa muscular elevada suele incrementar el metabolismo basal, otorgando una edad metabólica inferior a la edad que figura en el documento de identidad.
+          </p>
+        </div>
+      </div>
+
+      <div class="rounded-[12px] border border-hairline bg-canvas p-4 text-xs text-mute">
+        <strong class="text-ink">Transparencia sobre nuestras herramientas:</strong> Nuestra calculadora en línea procesa exclusivamente el diferencial de tiempo cronológico según el calendario solar. Ninguna calculadora de fechas en la web puede medir tu edad biológica o metabólica real sin exámenes de laboratorio de sangre, análisis epigenéticos o básculas de bioimpedancia clínica.
+      </div>
+    </section>
+
+    <!-- Sección 8: Cómo calcular la edad de un perro (y de un gato) -->
+    <section class="space-y-4">
+      <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/10 text-primary text-sm font-mono font-bold">8</span>
+        ¿Cómo calcular la edad de un perro (y de un gato)?
+      </h2>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        Durante décadas persistió la creencia popular de que para saber la edad de un perro bastaba con multiplicar sus años humanos por siete (la regla del 7 a 1). La medicina veterinaria y la genética contemporánea han demostrado de forma concluyente que esta fórmula es biológicamente inexacta.
+      </p>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        Los mamíferos domésticos experimentan un desarrollo inicial sumamente acelerado durante sus primeros dos años de vida, alcanzando la madurez sexual y esquelética con rapidez, para luego envejecer a un ritmo más paulatino que varía drásticamente según el peso corporal y la raza:
+      </p>
+
+      <div class="overflow-x-auto rounded-[12px] border border-hairline bg-canvas-elevated">
+        <table class="w-full text-left text-xs sm:text-sm border-collapse">
+          <thead>
+            <tr class="border-b border-hairline bg-canvas text-ink font-semibold">
+              <th class="p-3 sm:p-4">Años Reales del Animal</th>
+              <th class="p-3 sm:p-4">Perro Pequeño (&lt;10 kg)</th>
+              <th class="p-3 sm:p-4">Perro Mediano (10–25 kg)</th>
+              <th class="p-3 sm:p-4">Perro Gigante (&gt;40 kg)</th>
+              <th class="p-3 sm:p-4">Gato Doméstico</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-hairline text-body font-mono">
+            <tr>
+              <td class="p-3 sm:p-4 font-sans font-bold text-ink">1 año</td>
+              <td class="p-3 sm:p-4">15 años</td>
+              <td class="p-3 sm:p-4">15 años</td>
+              <td class="p-3 sm:p-4">12 años</td>
+              <td class="p-3 sm:p-4">15 años</td>
+            </tr>
+            <tr>
+              <td class="p-3 sm:p-4 font-sans font-bold text-ink">2 años</td>
+              <td class="p-3 sm:p-4">24 años</td>
+              <td class="p-3 sm:p-4">24 años</td>
+              <td class="p-3 sm:p-4">22 años</td>
+              <td class="p-3 sm:p-4">24 años</td>
+            </tr>
+            <tr>
+              <td class="p-3 sm:p-4 font-sans font-bold text-ink">5 años</td>
+              <td class="p-3 sm:p-4">36 años</td>
+              <td class="p-3 sm:p-4">40 años</td>
+              <td class="p-3 sm:p-4">45 años</td>
+              <td class="p-3 sm:p-4">36 años</td>
+            </tr>
+            <tr>
+              <td class="p-3 sm:p-4 font-sans font-bold text-ink">10 años</td>
+              <td class="p-3 sm:p-4">56 años</td>
+              <td class="p-3 sm:p-4">66 años</td>
+              <td class="p-3 sm:p-4">78 años</td>
+              <td class="p-3 sm:p-4">56 años</td>
+            </tr>
+            <tr>
+              <td class="p-3 sm:p-4 font-sans font-bold text-ink">15 años</td>
+              <td class="p-3 sm:p-4">76 años</td>
+              <td class="p-3 sm:p-4">87 años</td>
+              <td class="p-3 sm:p-4">110+ años</td>
+              <td class="p-3 sm:p-4">76 años</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-xs text-mute leading-relaxed">
+        Investigadores de la Universidad de California en San Diego desarrollaron en 2019 un modelo epigenético basado en la metilación del genoma canino expresado mediante la fórmula: <code>Edad Humana ≈ 16 × ln(Edad del Perro) + 31</code>. Este modelo demuestra que un cachorro de un año ya equivale aproximadamente a un joven humano de 31 años en marcadores celulares.
+      </p>
+    </section>
+
+    <!-- Sección 9: ¿Qué es la edad lunar? -->
+    <section class="space-y-4">
+      <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/10 text-primary text-sm font-mono font-bold">9</span>
+        ¿Qué es la edad lunar y los sistemas tradicionales de conteo?
+      </h2>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        En las culturas occidentales, una persona nace con «cero años» y cumple un año adicional exactamente cada 365 días solares (o 366 en bisiestos). No obstante, en diversas civilizaciones orientales han predominado durante siglos los sistemas de <strong>cálculo nominal o edad lunar</strong>.
+      </p>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        En el sistema tradicional de Asia Oriental (conocido popularmente como <em>edad coreana</em> o conteo de año nuevo):
+      </p>
+      <ul class="list-disc pl-5 space-y-2 text-sm sm:text-base text-body">
+        <li><strong>Un año al nacer:</strong> Al momento de nacer, el bebé ya tiene un año de edad, reconociendo el tiempo de desarrollo intrauterino en el vientre materno.</li>
+        <li><strong>Incremento colectivo:</strong> Todas las personas añaden un año a su edad el primer día del Año Nuevo (sea el 1 de enero en el calendario civil o el Año Nuevo Lunar), independientemente de la fecha exacta de su cumpleaños personal.</li>
+      </ul>
+      <div class="rounded-[12px] border border-hairline bg-canvas-elevated p-4 text-xs sm:text-sm text-body space-y-2">
+        <strong class="text-ink">Curiosidad histórica del sistema:</strong>
+        <p>
+          Un bebé nacido el 31 de diciembre en el sistema tradicional nacía con un año de edad y, tan solo al día siguiente (1 de enero), cumplía dos años, a pesar de haber vivido apenas 24 horas. Consciente de las confusiones jurídicas e internacionales que esto causaba, en junio de 2023 Corea del Sur abolió oficialmente el sistema tradicional para la administración pública y trámites civiles, adoptando el cálculo de edad cronológica internacional.
+        </p>
+      </div>
+    </section>
+
+    <!-- Sección 10: Cómo calcular el año de nacimiento a partir de la edad -->
+    <section class="space-y-4">
+      <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight flex items-center gap-3">
+        <span class="flex h-8 w-8 items-center justify-center rounded-[8px] bg-primary/10 text-primary text-sm font-mono font-bold">10</span>
+        ¿Cómo calcular el año de nacimiento a partir de la edad?
+      </h2>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        A menudo se plantea la operación inversa: conocemos la edad de una persona en años cumplidos y deseamos deducir su año de nacimiento. Al igual que en el cálculo directo, el resultado depende estrictamente de si la persona ya celebró su cumpleaños en el año corriente:
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="rounded-[12px] border border-hairline bg-canvas p-4 space-y-1">
+          <span class="text-xs font-bold text-emerald-600 dark:text-emerald-400 uppercase font-mono">Caso A: Ya cumplió años este año</span>
+          <div class="text-base font-mono font-bold text-ink">Año Nacimiento = Año Actual − Edad</div>
+          <p class="text-xs text-mute">Ejemplo: Tienes 30 años en 2026 y tu cumpleaños ya pasó en marzo: 2026 − 30 = <strong>1996</strong>.</p>
+        </div>
+        <div class="rounded-[12px] border border-hairline bg-canvas p-4 space-y-1">
+          <span class="text-xs font-bold text-link uppercase font-mono">Caso B: Aún no cumple años este año</span>
+          <div class="text-base font-mono font-bold text-ink">Año Nacimiento = Año Actual − Edad − 1</div>
+          <p class="text-xs text-mute">Ejemplo: Tienes 30 años en 2026 pero tu cumpleaños es en noviembre: 2026 − 30 − 1 = <strong>1995</strong>.</p>
+        </div>
+      </div>
+      <p class="text-body text-sm sm:text-base leading-relaxed">
+        Por consiguiente, conocer únicamente los años cumplidos de alguien sitúa su nacimiento en una ventana de <strong>dos posibles años civiles</strong> a menos que se conozca el mes y día exactos.
+      </p>
+    </section>
+
+    <!-- Sección 11: Preguntas Frecuentes -->
+    <section class="space-y-6 border-t border-hairline pt-8">
+      <div class="space-y-2">
+        <span class="text-xs font-mono font-semibold uppercase tracking-wider text-link">Respuestas Rápidas</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-ink tracking-tight">
+          Preguntas frecuentes sobre el cálculo de la edad
+        </h2>
+        <p class="text-sm text-body">
+          Resolvemos las dudas técnicas y prácticas más habituales al calcular la edad cronológica y fechas de nacimiento.
+        </p>
+      </div>
+
+      <div class="space-y-4">
+        <div class="rounded-[14px] border border-hairline bg-canvas-elevated p-5 space-y-2">
+          <h3 class="text-base font-bold text-ink">¿Cómo puedo calcular mi edad exacta hoy mismo?</h3>
+          <p class="text-sm text-body leading-relaxed">
+            Solo necesitas tu fecha de nacimiento (día, mes y año) y compararla con la fecha actual. Nuestra <a href="/calculadora-edad/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calculadora de edad</a> automatiza este cómputo desglosando al segundo tus años cumplidos, meses naturales transcurridos y días vividos.
+          </p>
+        </div>
+
+        <div class="rounded-[14px] border border-hairline bg-canvas-elevated p-5 space-y-2">
+          <h3 class="text-base font-bold text-ink">¿Por qué restar simplemente los años da un resultado incorrecto?</h3>
+          <p class="text-sm text-body leading-relaxed">
+            Porque una persona no cumple años al comenzar el año civil el 1 de enero, sino en la fecha específica de su natalicio. Si tu cumpleaños aún no ha llegado en el año en curso, tienes un año menos de lo que indica la resta simple de los años.
+          </p>
+        </div>
+
+        <div class="rounded-[14px] border border-hairline bg-canvas-elevated p-5 space-y-2">
+          <h3 class="text-base font-bold text-ink">¿Cómo se calcula la edad si nací el 29 de febrero en un año bisiesto?</h3>
+          <p class="text-sm text-body leading-relaxed">
+            Legalmente, en la mayoría de los países hispanohablantes (según sus respectivos Códigos Civiles), en los años comunes que no son bisiestos se considera que la persona cumple años a las 00:00 horas del 1 de marzo, o a las 24:00 horas del 28 de febrero, completando el ciclo anual de 365 días.
+          </p>
+        </div>
+
+        <div class="rounded-[14px] border border-hairline bg-canvas-elevated p-5 space-y-2">
+          <h3 class="text-base font-bold text-ink">¿Puedo calcular mi edad para una fecha futura?</h3>
+          <p class="text-sm text-body leading-relaxed">
+            Sí. Fijando una fecha futura como momento de referencia objetivo (por ejemplo, el 1 de enero de 2030), el algoritmo resta tu fecha de nacimiento de esa fecha proyectada, indicándote cuántos años, meses y días tendrás con exactitud en ese instante venidero.
+          </p>
+        </div>
+
+        <div class="rounded-[14px] border border-hairline bg-canvas-elevated p-5 space-y-2">
+          <h3 class="text-base font-bold text-ink">¿Qué diferencia hay entre edad cronológica y edad biológica?</h3>
+          <p class="text-sm text-body leading-relaxed">
+            La edad cronológica cuenta el tiempo solar transcurrido desde el parto de forma universal e idéntica para todos. La edad biológica refleja el estado real de envejecimiento celular y de los órganos, el cual varía de acuerdo con la genética, la actividad física y el estilo de vida.
+          </p>
+        </div>
+
+        <div class="rounded-[14px] border border-hairline bg-canvas-elevated p-5 space-y-2">
+          <h3 class="text-base font-bold text-ink">¿Para qué sirve el cálculo de edad cronológica Pearson?</h3>
+          <p class="text-sm text-body leading-relaxed">
+            Se utiliza en psicología clínica y psicopedagogía para determinar la edad exacta de un niño o adulto en el momento de realizar pruebas estandarizadas (como las escalas de inteligencia WISC o WAIS). Esto permite al profesional aplicar el baremo normativo exacto correspondiente a su grupo de edad.
+          </p>
+        </div>
+
+        <div class="rounded-[14px] border border-hairline bg-canvas-elevated p-5 space-y-2">
+          <h3 class="text-base font-bold text-ink">¿Hasta qué edad se recomienda aplicar la edad corregida en prematuros?</h3>
+          <p class="text-sm text-body leading-relaxed">
+            Por consenso en pediatría, la edad corregida se utiliza habitualmente hasta los 24 meses de vida (2 años), momento en el cual la mayoría de los niños nacidos prematuramente han alcanzado los parámetros madurativos de sus pares nacidos a término.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sección 12: Llamada a la Acción (CTA) Final Contextual y Amigable -->
+    <section class="rounded-[20px] border border-hairline bg-gradient-to-br from-canvas-elevated via-canvas-elevated to-link/5 p-6 sm:p-10 text-center space-y-5 shadow-whisper">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-link/10 text-link mx-auto">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </div>
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-ink tracking-tight">
+        Calcula tu edad de forma rápida y precisa
+      </h2>
+      <p class="text-sm sm:text-base text-body max-w-2xl mx-auto leading-relaxed">
+        Ahora que conoces cómo interactúan los meses naturales, los años bisiestos y las reglas de acarreo de calendario, obtén tu cálculo al instante. Introduce tu fecha de nacimiento en nuestra herramienta para <a href="/calculadora-edad/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calcular tu edad en años, meses y días</a>, junto con los días solares totales, segundos vividos y la cuenta regresiva en vivo para tu próximo cumpleaños.
+      </p>
+      <div class="pt-2">
+        <a
+          href="/calculadora-edad/"
+          class="inline-flex items-center justify-center gap-2 rounded-[12px] bg-primary px-8 py-3.5 text-sm sm:text-base font-semibold text-on-primary hover:opacity-90 transition-all shadow-whisper"
+        >
+          <span>Ir a la Calculadora de Edad</span>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+    </section>
+  </div>
+</Layout>

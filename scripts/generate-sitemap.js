@@ -247,7 +247,8 @@ function categorizeRoute(pathname) {
   if (segments.length === 0) return 'main';
 
   const first = segments[0];
-  if (I18N_LOCALES.has(first)) return 'i18n';
+  const last = segments[segments.length - 1];
+  if (I18N_LOCALES.has(first) || I18N_LOCALES.has(last)) return 'i18n';
   if (first === 'finance') return 'finance';
   if (first === 'math') return 'math';
   if (first === 'health') return 'health';
@@ -282,7 +283,10 @@ function getPriorityAndChangeFreq(route) {
   if (/^\/(?:(?:en|es|fr|de|ar|nl|pt|it|ru|ja|hi|zh)\/)?(finance|math|health|business)\/$/.test(route)) {
     return { priority: '0.8', changefreq: 'weekly' };
   }
-  if (route.includes('-calculator') || route.includes('/sip/')) {
+  if (route === '/calculadora-edad/guides/es/' || route.startsWith('/calculadora-edad/guides/')) {
+    return { priority: '0.8', changefreq: 'weekly' };
+  }
+  if (route.includes('-calculator') || route.includes('calculadora-') || route.includes('/sip/')) {
     return { priority: '0.7', changefreq: 'weekly' };
   }
   if (route === '/ruler/') {

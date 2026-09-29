@@ -7,105 +7,50 @@ export interface Props {
 
 const { className = '', href } = Astro.props;
 const currentLocale = Astro.currentLocale || 'en';
+const isSpanish = currentLocale === 'es' || Astro.url.pathname.includes('/es/') || Astro.url.pathname.startsWith('/calculadora-edad/es');
+const isFrench = currentLocale === 'fr' || Astro.url.pathname.startsWith('/fr/');
 const defaultHref = currentLocale === 'en' ? '/' : `/${currentLocale}/`;
 const targetHref = href || defaultHref;
+const logoAria = isSpanish
+  ? "Free Accurate Calculator - Volver a la página de inicio"
+  : isFrench
+  ? "Free Accurate Calculator - Retour à l'accueil"
+  : "Free Accurate Calculator - Return to homepage";
 ---
 
 <a
   href={targetHref}
-  aria-label="Free Accurate Calculator - Return to homepage"
+  aria-label={logoAria}
   class={`group relative inline-flex items-center gap-2 sm:gap-3.5 select-none shrink-0 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 dark:focus-visible:ring-indigo-400 rounded-2xl transition-all duration-300 hover:scale-[1.015] active:scale-[0.985] ${className}`}
 >
-  <!-- [ROYAL JEWEL EMBLEM]: Bespoke Gradient Squircle + Luxury Bevel + Ambient Glow -->
+  <!-- [BRAND LOGO ICON]: Sleek Minimalist Calculator Emblem -->
   <div class="relative shrink-0 flex items-center justify-center">
-    <!-- Ambient Royal Glow on Hover -->
+    <!-- Ambient Subtle Glow on Hover -->
     <div
-      class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 opacity-25 dark:opacity-40 blur-md group-hover:opacity-75 group-hover:blur-lg transition-all duration-500 pointer-events-none"
+      class="absolute -inset-1 rounded-2xl bg-slate-900/10 dark:bg-white/10 opacity-0 group-hover:opacity-100 blur-md transition-all duration-300 pointer-events-none"
       aria-hidden="true"
     ></div>
 
-    <!-- Outer Beveled Border Frame -->
-    <div
-      class="relative p-[1.2px] sm:p-[1.5px] rounded-2xl bg-gradient-to-b from-blue-400/80 via-indigo-500/60 to-purple-700/80 shadow-sm sm:shadow-md shadow-indigo-500/20 group-hover:shadow-xl group-hover:shadow-indigo-500/40 group-hover:scale-105 group-hover:rotate-[-1.5deg] transition-all duration-300 ease-out"
+    <svg
+      class="h-8.5 w-8.5 sm:h-10 sm:w-10 rounded-[13px] sm:rounded-[15px] shadow-sm ring-1 ring-black/5 dark:ring-white/20 transition-all duration-300 group-hover:scale-105"
+      viewBox="0 0 600 600"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
     >
-      <!-- Inner Jewel Body -->
-      <div
-        class="relative flex h-8.5 w-8.5 sm:h-10.5 sm:w-10.5 items-center justify-center rounded-[13px] sm:rounded-[14.5px] bg-gradient-to-br from-blue-600 via-indigo-800 to-slate-950 text-white overflow-hidden"
-      >
-        <!-- Glass Sheen Diagonal Glint -->
-        <div
-          class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/30 pointer-events-none"
-          aria-hidden="true"
-        ></div>
-
-        <!-- Royal Calculator Glyph -->
-        <svg
-          class="h-4.5 w-4.5 sm:h-5.5 sm:w-5.5 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] transition-transform duration-300 group-hover:scale-105"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <!-- Calculator Outer Body -->
-          <rect
-            x="3.5"
-            y="2.5"
-            width="17"
-            height="19"
-            rx="3.5"
-            stroke="currentColor"
-            stroke-width="1.8"
-            class="text-blue-100"
-          ></rect>
-
-          <!-- LCD Precision Screen -->
-          <rect
-            x="6.5"
-            y="5.5"
-            width="11"
-            height="4"
-            rx="1.5"
-            fill="currentColor"
-            fill-opacity="0.2"
-            stroke="currentColor"
-            stroke-width="1.4"
-            class="text-cyan-300"
-          ></rect>
-          <!-- LCD Indicator Beam -->
-          <line
-            x1="8.5"
-            y1="7.5"
-            x2="15.5"
-            y2="7.5"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            class="text-cyan-200"
-          ></line>
-
-          <!-- Keypad Matrix -->
-          <!-- Row 1 -->
-          <circle cx="8" cy="13" r="1.1" fill="currentColor" class="text-white"></circle>
-          <circle cx="12" cy="13" r="1.1" fill="currentColor" class="text-white"></circle>
-          <rect x="15" y="12" width="2.2" height="2.2" rx="0.6" fill="currentColor" class="text-amber-400"></rect>
-
-          <!-- Row 2 -->
-          <circle cx="8" cy="17" r="1.1" fill="currentColor" class="text-white"></circle>
-          <circle cx="12" cy="17" r="1.1" fill="currentColor" class="text-white"></circle>
-          <rect x="15" y="16" width="2.2" height="2.2" rx="0.6" fill="currentColor" class="text-cyan-400"></rect>
-        </svg>
-
-        <!-- Royal Diamond Sparkle in Corner -->
-        <svg
-          class="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 h-2 sm:h-2.5 w-2 sm:w-2.5 text-amber-300 animate-pulse pointer-events-none opacity-90 group-hover:opacity-100 group-hover:rotate-45 transition-transform duration-500"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          aria-hidden="true"
-        >
-          <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z"></path>
-        </svg>
-      </div>
-    </div>
+      <rect x="45" y="45" width="510" height="510" rx="97" fill="#000000"></rect>
+      <svg x="68" y="68" width="464" height="464" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.21" stroke-linecap="round" stroke-linejoin="round">
+        <rect width="16" height="20" x="4" y="2" rx="2"></rect>
+        <line x1="8" x2="16" y1="6" y2="6"></line>
+        <line x1="16" x2="16" y1="14" y2="18"></line>
+        <path d="M16 10h.01"></path>
+        <path d="M12 10h.01"></path>
+        <path d="M8 10h.01"></path>
+        <path d="M12 14h.01"></path>
+        <path d="M8 14h.01"></path>
+        <path d="M12 18h.01"></path>
+        <path d="M8 18h.01"></path>
+      </svg>
+    </svg>
   </div>
 
   <!-- [BRAND WORDMARK]: Unified Royal Two-Tier Typographic Lockup -->
@@ -143,18 +88,22 @@ const targetHref = href || defaultHref;
 
 <style>
   @keyframes royal-shine {
-    0% {
-      background-position: 0% 50%;
+    0%, 100% {
+      opacity: 1;
     }
     50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
+      opacity: 0.85;
     }
   }
   .animate-royal-shine {
-    animation: royal-shine 4s ease-in-out infinite;
+    animation: royal-shine 3.5s ease-in-out infinite;
+    will-change: opacity;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-royal-shine {
+      animation: none !important;
+    }
   }
 </style>
+
 

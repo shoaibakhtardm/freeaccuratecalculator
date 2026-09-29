@@ -2,13 +2,14 @@
 // src/components/common/LocaleDetectionToast.astro
 const pathname = Astro.url.pathname;
 const isFrench = pathname.startsWith('/fr') || (Astro.currentLocale === 'fr');
+const isSpanish = pathname.includes('/es/') || (Astro.currentLocale === 'es') || pathname.startsWith('/calculadora-edad/es');
 ---
 
 <div
   id="fac-locale-toast"
   class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:max-w-md z-50 bg-white/95 dark:bg-slate-900/95 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl shadow-slate-900/20 backdrop-blur-xl p-4 transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none invisible"
-  role="alert"
-  aria-live="polite"
+  role="region"
+  aria-label={isSpanish ? "Sugerencia de idioma" : isFrench ? "Suggestion de langue" : "Language suggestion"}
 >
   <div class="flex items-start gap-3">
     <!-- Globe Icon -->
@@ -16,17 +17,21 @@ const isFrench = pathname.startsWith('/fr') || (Astro.currentLocale === 'fr');
       <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"></circle>
         <line x1="2" y1="12" x2="22" y2="12"></line>
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path>
       </svg>
     </div>
 
     <!-- Content -->
     <div class="flex-1 min-w-0">
       <h3 id="fac-toast-title" class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-        {isFrench ? "Langue Détectée" : "Language Detected"}
+        {isSpanish ? "Idioma Detectado" : isFrench ? "Langue Détectée" : "Language Detected"}
       </h3>
       <p id="fac-toast-text" class="text-sm font-medium text-slate-800 dark:text-slate-200 mt-0.5">
-        {isFrench ? (
+        {isSpanish ? (
+          <>
+            Hemos detectado que navegas en <strong id="fac-toast-lang-name" class="text-indigo-600 dark:text-indigo-400"></strong>. ¿Deseas cambiar?
+          </>
+        ) : isFrench ? (
           <>
             Nous avons détecté que vous naviguez en <strong id="fac-toast-lang-name" class="text-indigo-600 dark:text-indigo-400"></strong>.
           </>
@@ -44,14 +49,14 @@ const isFrench = pathname.startsWith('/fr') || (Astro.currentLocale === 'fr');
           id="fac-toast-switch-btn"
           class="px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-xs hover:shadow-md transition-all cursor-pointer"
         >
-          {isFrench ? "Changer maintenant" : "Switch Now"}
+          {isSpanish ? "Cambiar ahora" : isFrench ? "Changer maintenant" : "Switch Now"}
         </button>
         <button
           type="button"
           id="fac-toast-dismiss-btn"
           class="px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium transition-colors cursor-pointer"
         >
-          {isFrench ? "Rester en Français" : "Stay on English"}
+          {isSpanish ? "Permanecer en Español" : isFrench ? "Rester en Français" : "Stay on English"}
         </button>
       </div>
     </div>
@@ -61,7 +66,7 @@ const isFrench = pathname.startsWith('/fr') || (Astro.currentLocale === 'fr');
       type="button"
       id="fac-toast-close-x"
       class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1 -mr-1 -mt-1 rounded-lg transition-colors cursor-pointer"
-      aria-label={isFrench ? "Fermer la suggestion de langue" : "Dismiss language suggestion"}
+      aria-label={isSpanish ? "Cerrar sugerencia de idioma" : isFrench ? "Fermer la suggestion de langue" : "Dismiss language suggestion"}
     >
       <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
@@ -82,6 +87,7 @@ const isFrench = pathname.startsWith('/fr') || (Astro.currentLocale === 'fr');
     const path = window.location.pathname;
     const docLang = document.documentElement.lang || '';
     const isFrPage = path.startsWith('/fr') || docLang.startsWith('fr');
+    const isEsPage = path.includes('/es/') || docLang.startsWith('es') || path.startsWith('/calculadora-edad/es');
 
     const switchBtn = document.getElementById('fac-toast-switch-btn');
     const dismissBtn = document.getElementById('fac-toast-dismiss-btn');
@@ -89,7 +95,14 @@ const isFrench = pathname.startsWith('/fr') || (Astro.currentLocale === 'fr');
     const titleEl = document.getElementById('fac-toast-title');
     const textEl = document.getElementById('fac-toast-text');
 
-    if (isFrPage) {
+    if (isEsPage) {
+      if (titleEl) titleEl.textContent = 'Idioma Detectado';
+      if (textEl) {
+        textEl.innerHTML = 'Hemos detectado que navegas en <strong id="fac-toast-lang-name" class="text-indigo-600 dark:text-indigo-400"></strong>. ¿Deseas cambiar?';
+      }
+      if (switchBtn) switchBtn.textContent = 'Cambiar ahora';
+      if (dismissBtn) dismissBtn.textContent = 'Permanecer en Español';
+    } else if (isFrPage) {
       if (titleEl) titleEl.textContent = 'Langue Détectée';
       if (textEl) {
         textEl.innerHTML = 'Nous avons détecté que vous naviguez en <strong id="fac-toast-lang-name" class="text-indigo-600 dark:text-indigo-400"></strong>.';

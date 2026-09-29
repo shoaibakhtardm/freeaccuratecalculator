@@ -4,9 +4,17 @@ import { getHomepageStrings } from '../../i18n/homepageDict';
 
 interface Props {
   locale?: string;
+  guidesHref?: string;
+  guidesTitle?: string;
+  guidesAria?: string;
 }
 
-const { locale: propLocale } = Astro.props;
+const {
+  locale: propLocale,
+  guidesHref: propGuidesHref,
+  guidesTitle: propGuidesTitle,
+  guidesAria: propGuidesAria,
+} = Astro.props;
 const currentYear = new Date().getFullYear();
 const currentLocale = (propLocale || Astro.currentLocale || 'en').toLowerCase();
 const hpStrings = getHomepageStrings(currentLocale);
@@ -40,22 +48,35 @@ const legalLinks = [
   { name: hpStrings.footer.privacy, href: '/privacy-policy/', icon: '🛡️' },
 ];
 
-// Guides hub was retired with the guides content deletion — link to the homepage tool directory instead.
-const guidesTitle = hpStrings.footer.guides;
-const guidesHref = '/';
-const guidesAria = `${hpStrings.footer.guides}`;
+// Contextual guide link resolution:
+// On the Spanish Age Calculator page (/calculadora-edad/es/), link specifically to the comprehensive Spanish Age Guide
+const isCalculadoraEdad = Astro.url.pathname.includes('/calculadora-edad');
+const isSpanish = currentLocale === 'es' || Astro.url.pathname.includes('/es');
+
+let defaultGuidesHref = '/';
+let defaultGuidesAria = `${hpStrings.footer.guides}`;
+
+if (isCalculadoraEdad && isSpanish) {
+  defaultGuidesHref = 'https://freeaccuratecalculator.com/calculadora-edad/guides/es/';
+  defaultGuidesAria = 'Guías completas sobre el cálculo de edad';
+}
+
+const guidesTitle = propGuidesTitle || hpStrings.footer.guides;
+const guidesHref = propGuidesHref || defaultGuidesHref;
+const guidesAria = propGuidesAria || defaultGuidesAria;
 ---
 
 <footer class="mt-6 sm:mt-8 border-t border-hairline bg-canvas transition-colors">
   <div class="mx-auto max-w-7xl px-3 py-8 sm:px-6 lg:px-8 flex flex-col items-center justify-center text-center space-y-6">
     <!-- 1. Navigation Links in 3 Perfectly Aligned Tiers -->
-    <nav aria-label={hpStrings.footer.rights} class="flex flex-col items-center justify-center gap-2.5 sm:gap-3 w-full max-w-md sm:max-w-lg mx-auto">
+    <nav aria-label="Footer Navigation" class="flex flex-col items-center justify-center gap-2.5 sm:gap-3 w-full max-w-md sm:max-w-lg mx-auto">
       <!-- Line 1: Big Featured Guides Box on Top -->
       <div class="w-full flex justify-center">
         <a
           href={guidesHref}
           title={guidesAria}
-          class="group relative flex items-center justify-center gap-3 w-full h-12 sm:h-14 rounded-2xl border border-hairline bg-canvas hover:bg-canvas-elevated hover:border-link/60 px-4 sm:px-6 text-sm sm:text-base font-semibold cursor-pointer transition-all duration-200 shadow-whisper hover:shadow-card hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link active:scale-[0.98]"
+          class="footer-link group relative flex items-center justify-center gap-3 w-full h-12 sm:h-14 rounded-2xl border border-hairline bg-canvas hover:bg-canvas-elevated hover:border-link/60 px-4 sm:px-6 text-sm sm:text-base font-semibold cursor-pointer transition-all duration-200 shadow-whisper hover:shadow-card hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-link active:scale-[0.98]"
+          style="color: inherit; text-decoration: none;"
         >
           <span class="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-full bg-canvas-elevated border border-hairline text-base sm:text-lg shadow-xs group-hover:scale-110 group-hover:bg-hairline-soft transition-transform">
             📚
@@ -64,7 +85,7 @@ const guidesAria = `${hpStrings.footer.guides}`;
             {guidesTitle}
           </span>
           <span class="w-2 h-2 rounded-full bg-cyan animate-pulse group-hover:bg-link transition-colors ml-1"></span>
-          <svg class="h-3.5 w-3.5 text-mute group-hover:text-link group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-all" viewBox="0 0 20 20" fill="currentColor">
+          <svg class="h-3.5 w-3.5 text-slate-500 group-hover:text-link group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5 transition-all" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" />
           </svg>
         </a>
@@ -113,8 +134,9 @@ const guidesAria = `${hpStrings.footer.guides}`;
         <span class="inline-block h-1.5 w-1.5 rounded-full bg-cyan animate-pulse shrink-0"></span>
         <span>&copy; {currentYear} Free Accurate Calculator</span>
         <span class="text-faint mx-0.5">&mdash;</span>
-        <span class="text-mute font-normal truncate">{statementText}</span>
+        <span class="text-slate-600 dark:text-slate-300 font-normal truncate">{statementText}</span>
       </p>
+
     </div>
   </div>
 </footer>

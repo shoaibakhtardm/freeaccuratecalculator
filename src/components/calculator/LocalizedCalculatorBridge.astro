@@ -20,6 +20,7 @@ const dictJson = JSON.stringify(DICTIONARIES[activeLocale] || DICTIONARIES.en);
       window.facCurrentLocale = activeLocale;
       window.facIsRtl = isRtl;
       window.facDictionary = dict;
+      window.__translations = { [activeLocale]: dict };
 
       window.facT = function (key, replacements) {
         let text = dict[key] || key;

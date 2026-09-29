@@ -11,7 +11,6 @@ const { className = '', id = 'theme-toggle' } = Astro.props;
 <button
   id={id}
   type="button"
-  role="button"
   data-theme-toggle
   aria-label="Switch theme mode"
   aria-pressed="false"
@@ -99,11 +98,21 @@ const { className = '', id = 'theme-toggle' } = Astro.props;
 
     function syncAllThemeButtons() {
       const isDark = document.documentElement.classList.contains('dark');
-      const targetMode = isDark ? 'light' : 'dark';
+      const docLang = (document.documentElement.lang || '').toLowerCase();
+      const isEs = docLang.startsWith('es') || window.location.pathname.includes('/es/') || window.location.pathname.startsWith('/calculadora-edad/es');
+      const isFr = docLang.startsWith('fr') || window.location.pathname.startsWith('/fr/');
+
+      let label = isDark ? 'Switch to light theme' : 'Switch to dark theme';
+      if (isEs) {
+        label = isDark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
+      } else if (isFr) {
+        label = isDark ? 'Passer au mode clair' : 'Passer au mode sombre';
+      }
+
       document.querySelectorAll('.fac-theme-toggle-btn, [data-theme-toggle]').forEach((btn) => {
         btn.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-        btn.setAttribute('aria-label', `Switch to ${targetMode} theme`);
-        btn.setAttribute('title', `Switch to ${targetMode} theme`);
+        btn.setAttribute('aria-label', label);
+        btn.setAttribute('title', label);
       });
     }
 
