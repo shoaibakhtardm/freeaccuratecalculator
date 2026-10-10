@@ -46,6 +46,61 @@ export default {
       });
     }
 
+    // 1c. Fast 301 redirects for genuine legacy country equivalents
+    if (pathname === '/countries/france' || pathname === '/countries/france/' || pathname.startsWith('/countries/france/fr/')) {
+      return new Response(null, {
+        status: 301,
+        statusText: 'Moved Permanently',
+        headers: {
+          Location: 'https://freeaccuratecalculator.com/fr/',
+          'Cache-Control': 'public, max-age=86400',
+        },
+      });
+    }
+    if (pathname === '/countries/france/sip-calculator' || pathname === '/countries/france/sip-calculator/') {
+      return new Response(null, {
+        status: 301,
+        statusText: 'Moved Permanently',
+        headers: {
+          Location: 'https://freeaccuratecalculator.com/sip-calculator/',
+          'Cache-Control': 'public, max-age=86400',
+        },
+      });
+    }
+    if (pathname === '/countries/india/finance' || pathname === '/countries/india/finance/') {
+      return new Response(null, {
+        status: 301,
+        statusText: 'Moved Permanently',
+        headers: {
+          Location: 'https://freeaccuratecalculator.com/finance/',
+          'Cache-Control': 'public, max-age=86400',
+        },
+      });
+    }
+
+    // 1d. HTTP 410 Gone for permanently retired legacy URLs (avoids soft-404 penalties from mass redirects)
+    const isRetiredUrl = (
+      pathname === '/countries' ||
+      pathname === '/countries/' ||
+      pathname.startsWith('/countries/united-states') ||
+      pathname.startsWith('/countries/singapore') ||
+      pathname.startsWith('/countries/france/en') ||
+      pathname.startsWith('/countries/france/fr/guides') ||
+      pathname.startsWith('/love/guides') ||
+      (pathname.startsWith('/countries/') && !pathname.startsWith('/countries/es') && !pathname.startsWith('/countries/in'))
+    );
+
+    if (isRetiredUrl) {
+      return new Response('410 Gone - This resource has been permanently retired.', {
+        status: 410,
+        statusText: 'Gone',
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+          'Cache-Control': 'public, max-age=86400',
+        },
+      });
+    }
+
     // 2. Normalize URLs without trailing slash to canonical trailing-slash URL with 301 Permanent Redirect
     // (excluding static files with extensions like .xml, .txt, .svg, .js, .css, etc.)
     const isFile = pathname.split('/').pop().includes('.');

@@ -180,5 +180,22 @@
 /calculadora-edad/gu%c3%adas/es/    /calculadora-edad/guides/es/ 301
 /calculadora-edad/guias/es          /calculadora-edad/guides/es/ 301
 /calculadora-edad/guias/es/         /calculadora-edad/guides/es/ 301
+# Health pregnancy URL consolidations
+/pregnancy-conception-calculator/   /pregnancy-due-date-calculator/   301
+/pregnancy-conception-calculator    /pregnancy-due-date-calculator/   301
+/due-date-calculator/               /pregnancy-due-date-calculator/   301
+/due-date-calculator                /pregnancy-due-date-calculator/   301
 
-
+# Retired country URLs with genuine equivalents (301 Moved Permanently)
+/countries/france/sip-calculator/   /sip-calculator/                  301
+/countries/france/sip-calculator    /sip-calculator/                  301
+/countries/india/finance/           /finance/                         301
+/countries/india/finance            /finance/                         301
+/countries/france/fr/*              /fr/                              301
+/countries/france/fr                /fr/                              301
+/countries/france/*                 /fr/                              301
+/countries/france                   /fr/                              301
+/countries/es/*                     /es/                              301
+/countries/es                       /es/                              301
+/countries/in/*                     /hi/                              301
+/countries/in                       /hi/                              301
