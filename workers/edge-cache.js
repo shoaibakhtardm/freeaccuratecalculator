@@ -47,7 +47,10 @@ export default {
     }
 
     // 1c. Fast 301 redirects for genuine legacy country equivalents
-    if (pathname === '/countries/france' || pathname === '/countries/france/' || pathname.startsWith('/countries/france/fr/')) {
+    if (
+      (pathname === '/countries/france' || pathname === '/countries/france/' || pathname.startsWith('/countries/france/fr/')) &&
+      !pathname.startsWith('/countries/france/fr/guides')
+    ) {
       return new Response(null, {
         status: 301,
         statusText: 'Moved Permanently',

@@ -61,6 +61,7 @@ test('Edge Worker: Permanently retired country & guide URLs return true HTTP 410
     'https://freeaccuratecalculator.com/countries/united-states/',
     'https://freeaccuratecalculator.com/countries/singapore/',
     'https://freeaccuratecalculator.com/countries/france/en/guides/',
+    'https://freeaccuratecalculator.com/countries/france/fr/guides/',
     'https://freeaccuratecalculator.com/love/guides/',
     'https://freeaccuratecalculator.com/countries/random-dead-path'
   ];

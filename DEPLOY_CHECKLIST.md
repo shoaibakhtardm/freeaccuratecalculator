@@ -75,6 +75,51 @@ Cloudflare Pages triggers the production deployment pipeline automatically.
 
 ---
 
+## 3b. Standalone Cloudflare Worker Deployment (`workers/edge-cache.js`)
+
+Because Cloudflare Pages handles static asset hosting, `workers/edge-cache.js` operates as a **Cloudflare Worker Route** sitting in front of `freeaccuratecalculator.com/*` to deliver edge caching, HTTP 410 Gone status codes, and instant redirect canonicalization.
+
+### Safe Pre-Live Worker Testing
+Before deploying the worker to the production route, test locally or on staging:
+
+1. **Local Worker Simulation (Zero Risk):**
+   ```bash
+   npx wrangler dev workers/edge-cache.js --port 8787
+   ```
+   In a separate terminal, test the local simulation:
+   ```bash
+   # Test 301 Redirect
+   curl -sI "http://localhost:8787/countries/france/"
+   # Test 410 Gone
+   curl -sI "http://localhost:8787/countries/united-states/"
+   # Test France FR Guides 410 Gone
+   curl -sI "http://localhost:8787/countries/france/fr/guides/"
+   ```
+
+2. **Node Unit Test Runner (Automated):**
+   ```bash
+   node --test tests/edge-worker-redirects-410.test.mjs
+   ```
+
+### Worker Deployment Options
+
+#### Option A: Via Cloudflare Dashboard (Recommended, Zero CLI Auth Setup)
+1. In the Cloudflare Dashboard, go to **Compute (Workers) & Pages** → **Workers**.
+2. Select your worker application (e.g., `freeaccuratecalculator-edge-cache`).
+3. Click **Edit code**.
+4. Copy the entire contents of `workers/edge-cache.js` from the repository and paste it into the editor.
+5. Click **Deploy**.
+6. Under the worker's **Settings** → **Triggers** → **Routes**, confirm the route is active:
+   * **Route:** `freeaccuratecalculator.com/*` (and `www.freeaccuratecalculator.com/*` if applicable)
+   * **Zone:** `freeaccuratecalculator.com`
+
+#### Option B: Via Wrangler CLI
+```bash
+npx wrangler deploy workers/edge-cache.js --name freeaccuratecalculator-edge-cache --compatibility-date 2025-02-01
+```
+
+---
+
 ## 4. CRITICAL: Cloudflare Edge Cache Purge Step
 
 Because Cloudflare previously cached 404 responses for `/guides/` and `/calculadora-sip/es/`, and served 200 OK on `www`, **the edge cache must be purged immediately post-deploy**:
