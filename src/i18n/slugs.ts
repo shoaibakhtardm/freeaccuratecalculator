@@ -36,6 +36,13 @@ export const VERIFIED_LOCALIZED_ROUTES: Record<string, LocalizedRouteConfig> = {
       es: '/calculadora-edad/es/',
     },
   },
+  'sip-calculator': {
+    canonicalPath: '/sip-calculator/',
+    locales: {
+      en: '/sip-calculator/',
+      es: '/calculadora-sip/es/',
+    },
+  },
 };
 
 /**

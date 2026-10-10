@@ -8,7 +8,7 @@ export default defineConfig({
     environment: 'node',
     include: [
       'src/**/*.{test,spec}.{ts,js}',
-      'tests/**/*.{test,spec}.{ts,js,mjs}',
+      'tests/**/*.{test,spec}.ts',
     ],
     exclude: ['**/node_modules/**', '**/dist/**', '**/.astro/**'],
     coverage: {

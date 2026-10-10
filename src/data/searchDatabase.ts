@@ -357,15 +357,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     ]
   },
   {
-    "name": "Due Date Calculator",
-    "slug": "due-date-calculator",
-    "category": "health",
-    "categoryName": "Health",
-    "icon": "🩺",
-    "href": "/health/due-date-calculator/",
-    "keywords": []
-  },
-  {
     "name": "Email ROI Calculator",
     "slug": "email-roi-calculator",
     "category": "marketing",
@@ -685,24 +676,6 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "categoryName": "Chemistry",
     "icon": "🧪",
     "href": "/ph-calculator/",
-    "keywords": []
-  },
-  {
-    "name": "Pregnancy Calculator",
-    "slug": "pregnancy-calculator",
-    "category": "health",
-    "categoryName": "Health",
-    "icon": "🩺",
-    "href": "/health/pregnancy-calculator/",
-    "keywords": []
-  },
-  {
-    "name": "Pregnancy Conception Calculator",
-    "slug": "pregnancy-conception-calculator",
-    "category": "health",
-    "categoryName": "Health",
-    "icon": "🩺",
-    "href": "/health/pregnancy-conception-calculator/",
     "keywords": []
   },
   {
@@ -1154,7 +1127,13 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "categoryName": "Everyday",
     "icon": "🍽️",
     "href": "/tip-calculator/",
-    "keywords": ["tip", "bill split", "gratuity", "restaurant", "dining"]
+    "keywords": [
+      "tip",
+      "bill split",
+      "gratuity",
+      "restaurant",
+      "dining"
+    ]
   },
   {
     "name": "Discount Calculator",
@@ -1163,7 +1142,14 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "categoryName": "Everyday",
     "icon": "🏷️",
     "href": "/discount-calculator/",
-    "keywords": ["discount", "percent off", "sale", "coupon", "savings", "markdown"]
+    "keywords": [
+      "discount",
+      "percent off",
+      "sale",
+      "coupon",
+      "savings",
+      "markdown"
+    ]
   },
   {
     "name": "Ovulation Calculator",
@@ -1172,7 +1158,13 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "categoryName": "Health",
     "icon": "🌸",
     "href": "/ovulation-calculator/",
-    "keywords": ["ovulation", "fertile window", "conception", "fertility", "period"]
+    "keywords": [
+      "ovulation",
+      "fertile window",
+      "conception",
+      "fertility",
+      "period"
+    ]
   },
   {
     "name": "Pregnancy Due Date Calculator",
@@ -1181,7 +1173,14 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "categoryName": "Health",
     "icon": "👶",
     "href": "/pregnancy-due-date-calculator/",
-    "keywords": ["pregnancy", "due date", "baby due date", "conception", "trimester", "gestational age"]
+    "keywords": [
+      "pregnancy",
+      "due date",
+      "baby due date",
+      "conception",
+      "trimester",
+      "gestational age"
+    ]
   },
   {
     "name": "Inflation Calculator",
@@ -1190,6 +1189,13 @@ export const SEARCHABLE_CALCULATORS: SearchCalculatorItem[] = [
     "categoryName": "Finance",
     "icon": "📉",
     "href": "/inflation-calculator/",
-    "keywords": ["inflation", "purchasing power", "cpi", "money value", "future value", "cost of living"]
+    "keywords": [
+      "inflation",
+      "purchasing power",
+      "cpi",
+      "money value",
+      "future value",
+      "cost of living"
+    ]
   }
 ];

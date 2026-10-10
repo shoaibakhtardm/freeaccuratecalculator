@@ -79,6 +79,15 @@ export const MULTILANG_ROUTES_REGISTRY: Record<string, Partial<Record<SupportedL
     en: '/age-calculator/',
     es: '/calculadora-edad/es/',
   },
+  // SIP Calculator (English & Spanish bidirectional parity)
+  '/sip-calculator/': {
+    en: '/sip-calculator/',
+    es: '/calculadora-sip/es/',
+  },
+  '/calculadora-sip/es/': {
+    en: '/sip-calculator/',
+    es: '/calculadora-sip/es/',
+  },
 };
 
 /**
