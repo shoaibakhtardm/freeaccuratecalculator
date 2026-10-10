@@ -183,22 +183,62 @@ curl -s "https://freeaccuratecalculator.com/pt/" | grep "<title>"
 
 ---
 
-## 6. Rollback Plan
+## 6. Comprehensive Rollback Plan
 
-If an unexpected production issue occurs post-deploy:
+If an unexpected production anomaly occurs post-deploy (e.g., 5xx errors, redirect loops, broken sitemaps, or unexpected regression on `/`):
 
-### Option 1: Instant Cloudflare Dashboard Rollback (<30 seconds)
-1. Open Cloudflare Dashboard → **Workers & Pages** → **`freeaccuratecalculator`**.
-2. Go to **Deployments**.
-3. Locate the previous stable production deployment (Commit `2ecfda9` or earlier).
-4. Click **`...`** on the right side and select **Rollback to this deployment**.
-5. Navigate to **Caching** → **Configuration** → click **Purge Everything**.
-*Result: Instant zero-downtime rollback to prior production state.*
+### Rollback Decision Triggers
+Trigger an immediate rollback if ANY of the following occur:
+1. `curl -sI https://freeaccuratecalculator.com/` returns non-200 or infinite redirect loop.
+2. `curl -sI https://freeaccuratecalculator.com/sitemap.xml` fails to serve valid XML index.
+3. India traffic landing on mobile homepage experiences layout or script failure.
+4. Live HTTP verification reveals unexpected 500/502 status on core calculators.
 
-### Option 2: Git Rollback
+---
+
+### Method A: Instant Cloudflare Dashboard Rollback (<30 seconds, Recommended)
+1. Open [Cloudflare Dashboard](https://dash.cloudflare.com/) → **Workers & Pages** → **`freeaccuratecalculator`**.
+2. Navigate to the **Deployments** tab.
+3. Locate the previous production deployment (`2ecfda9` - *SEO: Spanish age calculator and guides optimization*).
+4. Click the three dots (**`...`**) next to that deployment and select **Rollback to this deployment**.
+5. Once confirmed, go to **Caching** → **Configuration** → click **Purge Everything**.
+*Result: Instant zero-downtime rollback to the prior production build artifacts.*
+
+---
+
+### Method B: Cloudflare Worker Route Rollback (If Worker was updated)
+If `workers/edge-cache.js` was deployed as a standalone Worker:
+1. Open Cloudflare Dashboard → **Workers & Pages** → select Worker **`freeaccuratecalculator-edge-cache`** (or active worker name).
+2. Navigate to **Deployments** / **Version History**.
+3. Select the version active prior to release.
+4. Click **Rollback** to reactivate the prior script.
+5. Purge Cloudflare Edge Cache.
+
+---
+
+### Method C: Git Hard Rollback & Fast Re-deploy
+If dashboard rollback is unavailable:
 ```bash
+# 1. Checkout main branch
 git checkout main
-git reset --hard 2ecfda9 # previous production commit
+
+# 2. Reset hard to previous stable commit
+git reset --hard 2ecfda9
+
+# 3. Force push to main (triggers automatic re-build)
 git push origin main --force-with-lease
+
+# 4. Purge edge cache once pipeline finishes
+# Dashboard: Caching -> Configuration -> Purge Everything
 ```
-Purge Cloudflare cache once the rollback build completes.
+
+---
+
+### Post-Rollback Smoke Test
+After executing any rollback method, verify live stability:
+```bash
+curl -sI "https://freeaccuratecalculator.com/"
+curl -sI "https://freeaccuratecalculator.com/sitemap.xml"
+curl -sI "https://freeaccuratecalculator.com/sip-calculator/"
+```
+All must return `HTTP/1.1 200 OK`.
