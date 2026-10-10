@@ -37,6 +37,7 @@ const allSchemas = [webPageSchema];
 
 const isFrenchLocale = currentLocale === 'fr';
 const isSpanishLocale = currentLocale === 'es';
+const isPortugueseLocale = currentLocale === 'pt';
 
 // Featured contextual guide links pointing to verified canonical live routes
 const FEATURED_GUIDES = isFrenchLocale
@@ -85,6 +86,25 @@ const FEATURED_GUIDES = isFrenchLocale
         icon: '🏦',
       },
     ]
+  : isPortugueseLocale
+  ? [
+      {
+        title: 'Calculadora de Férias CLT 2026: Calcule seu Recibo',
+        desc: 'Simule o valor das férias com o terço constitucional de 1/3, abono pecuniário (venda de dias) isento de encargos e tabelas oficiais de 2026.',
+        href: '/calculadora-de-ferias/pt/',
+        tag: 'Direito do Trabalho',
+        readTime: '6 min',
+        icon: '🏖️',
+      },
+      {
+        title: 'Calculadora de Salário Líquido 2026: INSS e Novo IRRF',
+        desc: 'Descubra exatamente quanto receber na conta após os descontos de INSS progressivo e as novas regras de isenção do IRRF de 2026 no Brasil.',
+        href: '/calculadora-salario/pt/',
+        tag: 'Finanças & Trabalho',
+        readTime: '7 min',
+        icon: '💼',
+      },
+    ]
   : [
       {
         title: 'Loan EMI Calculator & Reducing Balance Amortization',
@@ -95,12 +115,12 @@ const FEATURED_GUIDES = isFrenchLocale
         icon: '🏦',
       },
       {
-        title: 'Guía de Cálculo de Edad Exacta (Spanish Guide)',
-        desc: 'Aprende cómo calcular tu edad exacta en años, meses y días con precisión matemática, años bisiestos y reglas de acarreo de calendario.',
-        href: '/calculadora-edad/guides/es/',
-        tag: 'Spanish Guide',
-        readTime: '8 min',
-        icon: '🎂',
+        title: 'Compound Interest Formulas & Investment Growth Math',
+        desc: 'Understand the mathematical mechanics of daily, monthly, and annual compounding with regular contribution formulas and proofs.',
+        href: '/compound-interest-calculator/',
+        tag: 'Wealth & Investing',
+        readTime: '6 min',
+        icon: '📈',
       },
     ];
 
@@ -175,6 +195,7 @@ const RAW_POPULAR_CALCULATORS = [
 
 const POPULAR_CALCULATORS = RAW_POPULAR_CALCULATORS.map((item) => ({
   ...item,
+  href: currentLocale === 'es' && item.key === 'age-calculator' ? '/calculadora-edad/es/' : item.href,
   name: hpStrings.popularSection.tools[item.key] || item.key,
 }));
 ---

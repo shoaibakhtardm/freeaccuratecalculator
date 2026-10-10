@@ -58,7 +58,7 @@ test('Spanish Age Guide — Topical Breadcrumbs & Structured Data', () => {
   // Breadcrumbs element
   assert.match(html, /<nav aria-label="Ruta de navegación"/, 'Must render localized Spanish breadcrumbs');
   assert.match(html, /href="\/es\/"[^>]*>[\s\S]*?Inicio/, 'Breadcrumbs must link to Spanish home');
-  assert.match(html, /href="\/calculadora-edad\/"[^>]*>[\s\S]*?Calculadora de Edad/, 'Breadcrumbs must link to Age Calculator');
+  assert.match(html, /href="\/calculadora-edad(?:\/es)?\/"[^>]*>[\s\S]*?Calculadora de Edad/, 'Breadcrumbs must link to Age Calculator');
 
   // JSON-LD Schema
   assert.match(html, /"@type":"Article"/, 'Must include Article schema');
@@ -92,8 +92,8 @@ test('Spanish Age Guide — Semantic Topical H2 Coverage & Internal Linking', ()
     );
   }
 
-  // Contextual links to /calculadora-edad/
-  const calcLinks = [...html.matchAll(/href="\/calculadora-edad\/"/g)];
+  // Contextual links to /calculadora-edad/ or /calculadora-edad/es/
+  const calcLinks = [...html.matchAll(/href="\/calculadora-edad(?:\/es)?\/"/g)];
   assert.ok(
     calcLinks.length >= 3 && calcLinks.length <= 8,
     `Must have 3 to 8 natural contextual links to the calculator (found ${calcLinks.length})`

@@ -11,6 +11,94 @@ export async function getStaticPaths() {
   return [];
 }
 
+const LOVE_ALIAS_CONFIG: Record<string, { name: string; title: string; description: string }> = {
+  'love-calculator': {
+    name: 'Love Calculator',
+    title: 'Love Calculator — Free True Love Percentage & Compatibility Meter',
+    description: 'Calculate your romantic compatibility score instantly with our free love calculator. Private, instant love percentage analysis and relationship insights.',
+  },
+  'love-calculator-by-name': {
+    name: 'Love Calculator by Name',
+    title: 'Love Calculator by Name — Instant Name Compatibility Test',
+    description: 'Calculate love compatibility by names. Enter two names to analyze harmonic phonetic resonance and instant true love percentage scores.',
+  },
+  'ai-love-calculator': {
+    name: 'AI Love Calculator',
+    title: 'AI Love Calculator — Neural Compatibility & Chemistry Test',
+    description: 'Use our artificial intelligence love calculator to evaluate partner compatibility, personality chemistry, and relationship harmony metrics.',
+  },
+  'ai-love-predictor': {
+    name: 'AI Love Predictor',
+    title: 'AI Love Predictor — Future Relationship & Longevity Forecast',
+    description: 'Predict long-term relationship trajectory and compatibility forecasts with our free algorithmic AI love predictor tool.',
+  },
+  'marriage-compatibility-calculator': {
+    name: 'Marriage Compatibility Calculator',
+    title: 'Marriage Compatibility Calculator — Free Partner Harmony Test',
+    description: 'Evaluate marital compatibility, long-term commitment factors, and relationship harmony with our free marriage compatibility calculator.',
+  },
+  'kundli-matching': {
+    name: 'Kundli Matching Calculator',
+    title: 'Kundli Matching Calculator — Gun Milan & Vedic Horoscope Check',
+    description: 'Free online Kundli matching and Gun Milan calculator for marriage compatibility, Ashtakoot points, and Vedic astrological harmony.',
+  },
+  'crush-love-test': {
+    name: 'Crush Love Test',
+    title: 'Crush Love Test — Quiz & Instant Crush Compatibility Meter',
+    description: 'Find out if your crush likes you back. Test your mutual chemistry and feelings with our fast, free online crush love test.',
+  },
+  'crush-love-test-calculator': {
+    name: 'Crush Love Test Calculator',
+    title: 'Crush Love Test Calculator — Percentage & Attraction Score',
+    description: 'Calculate exact crush compatibility percentage and attraction scores with our free mathematical crush love test calculator.',
+  },
+  'birth-date-compatibility': {
+    name: 'Birth Date Compatibility',
+    title: 'Birth Date Compatibility Calculator — Life Path & Age Harmony',
+    description: 'Calculate astrological and numerological life path compatibility using both partners dates of birth. Fast, private, and 100% free.',
+  },
+  'birth-date-love-compatibility': {
+    name: 'Birth Date Love Compatibility',
+    title: 'Birth Date Love Compatibility — Birthday Match & Chemistry Test',
+    description: 'Analyze birthday match chemistry and astrological synchronization between two birth dates with our detailed compatibility calculator.',
+  },
+  'zodiac-love-compatibility-calculator': {
+    name: 'Zodiac Love Compatibility Calculator',
+    title: 'Zodiac Love Compatibility Calculator — Sun Sign Chemistry Test',
+    description: 'Check romantic chemistry between all 12 astrological sun signs. Detailed elemental match breakdowns, strengths, and communication tips.',
+  },
+  'zodiac-compatibility': {
+    name: 'Zodiac Compatibility',
+    title: 'Zodiac Compatibility Chart — Astrological Element Harmony',
+    description: 'Explore complete horoscope compatibility across Fire, Earth, Air, and Water signs with our comprehensive zodiac compatibility guide.',
+  },
+  'love-compatibility-calculator': {
+    name: 'Love Compatibility Calculator',
+    title: 'Love Compatibility Calculator — Overall Relationship Meter',
+    description: 'Comprehensive love compatibility calculator combining name vibration, zodiac elements, and shared values for couples.',
+  },
+  'relationship-compatibility-test': {
+    name: 'Relationship Compatibility Test',
+    title: 'Relationship Compatibility Test — Couples Health & Harmony Quiz',
+    description: 'Evaluate communication styles, mutual goals, and shared values with our free, private relationship compatibility assessment.',
+  },
+  'relationship-counter': {
+    name: 'Relationship Day Counter',
+    title: 'Relationship Day Counter — Anniversary & Days Together Tracker',
+    description: 'Track exact days, months, and hours you and your partner have been together. Free relationship milestone and anniversary day counter.',
+  },
+  'true-love-calculator': {
+    name: 'True Love Calculator',
+    title: 'True Love Calculator — Authentic Romance & Soul Connection Meter',
+    description: 'Calculate genuine emotional resonance and authentic relationship potential with our free online true love calculator.',
+  },
+  'true-love-calculator-by-names': {
+    name: 'True Love Calculator by Names',
+    title: 'True Love Calculator by Names — Double Name Chemistry Analysis',
+    description: 'Deep algorithmic name compatibility analysis for true love percentage, vowels balance, and couple vibrational synergy.',
+  },
+};
+
 interface Props {
   calc: LoveCalculatorItem;
 }
@@ -20,6 +108,11 @@ const currentSlug = (Astro.params as Record<string, string | undefined>)?.slug |
 
 const siteOrigin = 'https://freeaccuratecalculator.com';
 const canonicalUrl = `${siteOrigin}/${currentSlug}/`;
+
+const aliasMeta = (LOVE_ALIAS_CONFIG as Record<string, { name: string; title: string; description: string }>)[currentSlug || ''];
+const displayName = aliasMeta?.name || calc.name;
+const pageTitle = aliasMeta?.title || `${calc.name} - Free & Accurate Compatibility Test (2026)`;
+const pageDescription = aliasMeta?.description || `Calculate your love compatibility score instantly with our free ${calc.name.toLowerCase()}. Private, instant name analysis and relationship insights.`;
 
 // Find 3 other related love calculators
 const relatedCalculators = LOVE_CALCULATORS.filter((c) => c.slug !== calc.slug).slice(0, 3);
@@ -98,14 +191,14 @@ const loveLanguages = [
 ---
 
 <Layout
-  title={`${calc.name} - Free & Accurate Compatibility Test (2026)`}
-  description={`Calculate your love compatibility score instantly with our free ${calc.name.toLowerCase()}. Private, instant name analysis and relationship insights.`}
+  title={pageTitle}
+  description={pageDescription}
   keywords={`${calc.keyword}, ${calc.name.toLowerCase()}, love calculator, name compatibility, love percentage, relationship test, free compatibility test 2026`}
   canonicalUrl={canonicalUrl}
-  ogTitle={`${calc.name} - Discover Your Compatibility`}
+  ogTitle={`${displayName} - Discover Your Compatibility`}
   ogDescription="Free instant love compatibility test. 100% private, no signup required."
   ogImage={`${siteOrigin}/og-images/${calc.slug}.jpg`}
-  twitterTitle={`${calc.name} - Free Compatibility Test`}
+  twitterTitle={`${displayName} - Free Compatibility Test`}
   twitterDescription="Calculate your love percentage instantly. 100% private & accurate."
   twitterImage={`${siteOrigin}/twitter-images/${calc.slug}.jpg`}
   jsonLd={combinedJsonLd}
@@ -145,7 +238,7 @@ const loveLanguages = [
       <div class="flex items-center gap-3">
         <span class="text-3xl sm:text-4xl drop-shadow-[0_0_10px_rgba(244,63,94,0.4)]">{calc.icon}</span>
         <h1 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white font-outfit">
-          {calc.name}
+          {displayName}
         </h1>
       </div>
 

@@ -67,14 +67,13 @@ const currentYear = now.getFullYear();
 ---
 
 <CalculatorLayout
-  title="Calculadora de Edad: Calcula tu Edad Exacta Gratis"
-  metaDescription="Calcula tu edad exacta en años, meses, días y segundos en tiempo real. Cuenta regresiva para tu cumpleaños y cálculo 100% gratis y preciso."
+  title="Calculadora de Edad Exacta: Años, Meses y Días"
+  metaDescription="Calcula tu edad exacta en años, meses, días y segundos en tiempo real. Conoce tu próximo cumpleaños, total de días vividos y tiempo transcurrido 100% gratis."
   h1="Calculadora de edad"
   subtitle="Calcula tu edad exacta desglosada en años, meses, días, horas, minutos y segundos en tiempo real con validación estricta de fechas."
   category={{ label: 'Herramientas Cotidianas', href: '/everyday/' }}
   calculatorName="Calculadora de Edad"
   relatedCalculators={relatedCalculators}
-  faqs={faqs}
   lang="es"
 >
   <!-- Caja Principal de la Calculadora (Diseño Estándar) -->
@@ -855,6 +854,11 @@ const currentYear = now.getFullYear();
       const diffMs = nextBday.getTime() - target.getTime();
       let nbSecsTotal = Math.floor(diffMs / 1000);
       const nbDaysCount = Math.floor(nbSecsTotal / (24 * 3600));
+      nbSecsTotal %= (24 * 3600);
+      const nbHoursCount = Math.floor(nbSecsTotal / 3600);
+      nbSecsTotal %= 3600;
+      const nbMinsCount = Math.floor(nbSecsTotal / 60);
+      const nbSecsFinal = nbSecsTotal % 60;
 
       const nbMonthsEst = Math.floor(nbDaysCount / 30.4375);
       const nbDaysRem = Math.floor(nbDaysCount % 30.4375);

@@ -114,7 +114,7 @@ const faqPageSchema = {
     <Breadcrumbs
       isSpanish={true}
       items={[
-        { label: 'Calculadora de Edad', href: '/calculadora-edad/' },
+        { label: 'Calculadora de Edad', href: '/calculadora-edad/es/' },
         { label: 'Guías', href: '/calculadora-edad/guides/es/' },
         { label: 'Cómo calcular tu edad exacta' }
       ]}
@@ -138,7 +138,7 @@ const faqPageSchema = {
         Calculadora de Edad: Cómo Calcular tu Edad Exacta
       </h1>
       <p class="text-base sm:text-lg text-body leading-relaxed max-w-3xl">
-        Conocer cuántos años, meses y días han transcurrido desde el momento en que naciste parece una operación matemática simple, pero las variaciones del calendario gregoriano y la posición de tu próximo cumpleaños introducen discrepancias frecuentes. En esta guía desglosamos las fórmulas formales para calcular la edad, las diferencias conceptuales entre el tiempo cronológico y el biológico, y cuándo utilizar nuestra <a href="/calculadora-edad/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calculadora de edad</a> para obtener un desglose inmediato y exacto.
+        Conocer cuántos años, meses y días han transcurrido desde el momento en que naciste parece una operación matemática simple, pero las variaciones del calendario gregoriano y la posición de tu próximo cumpleaños introducen discrepancias frecuentes. En esta guía desglosamos las fórmulas formales para calcular la edad, las diferencias conceptuales entre el tiempo cronológico y el biológico, y cuándo utilizar nuestra <a href="/calculadora-edad/es/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calculadora de edad</a> para obtener un desglose inmediato y exacto.
       </p>
     </header>
 
@@ -275,8 +275,40 @@ const faqPageSchema = {
       </figure>
 
       <p class="text-body text-sm sm:text-base leading-relaxed">
-        Para no realizar manualmente estas conversiones de meses con diferente longitud o verificar si febrero tuvo 29 días por ser año bisiesto, puedes ingresar tus datos en nuestra herramienta para <a href="/calculadora-edad/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calcular tu edad exacta</a> con precisión matemática instantánea.
+        Para no realizar manualmente estas conversiones de meses con diferente longitud o verificar si febrero tuvo 29 días por ser año bisiesto, puedes ingresar tus datos en nuestra herramienta para <a href="/calculadora-edad/es/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calcular tu edad exacta</a> con precisión matemática instantánea.
       </p>
+
+      <!-- Subsección especializada: Cálculo en Excel con la función SIFECHA -->
+      <div class="rounded-[14px] border border-hairline bg-canvas-elevated p-5 sm:p-6 space-y-3 mt-4">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-mono font-semibold uppercase tracking-wider text-emerald-600 dark:text-emerald-400">Método Informático en Hojas de Cálculo</span>
+          <span class="text-[11px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded">Excel / Google Sheets</span>
+        </div>
+        <h3 class="text-base font-bold text-ink">¿Cómo calcular la edad en Excel paso a paso con la función SIFECHA?</h3>
+        <p class="text-sm text-body leading-relaxed">
+          Si gestionas una base de datos en Microsoft Excel o Google Sheets, la fórmula nativa más precisa es <code>SIFECHA</code> (o <code>DATEDIF</code> en versiones en inglés). Su sintaxis calcula la diferencia entre la celda de nacimiento (por ejemplo, <code>A2</code>) y la fecha actual:
+        </p>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+          <div class="rounded-[10px] border border-hairline bg-canvas p-3 space-y-1">
+            <span class="text-xs font-mono font-bold text-ink block">Años Cumplidos</span>
+            <code class="text-xs font-mono text-emerald-600 dark:text-emerald-400 block">=SIFECHA(A2; HOY(); "y")</code>
+            <span class="text-[11px] text-mute block">Años naturales enteros</span>
+          </div>
+          <div class="rounded-[10px] border border-hairline bg-canvas p-3 space-y-1">
+            <span class="text-xs font-mono font-bold text-ink block">Meses Residuales</span>
+            <code class="text-xs font-mono text-cyan block">=SIFECHA(A2; HOY(); "ym")</code>
+            <span class="text-[11px] text-mute block">Meses tras el último año</span>
+          </div>
+          <div class="rounded-[10px] border border-hairline bg-canvas p-3 space-y-1">
+            <span class="text-xs font-mono font-bold text-ink block">Días Residuales</span>
+            <code class="text-xs font-mono text-violet block">=SIFECHA(A2; HOY(); "md")</code>
+            <span class="text-[11px] text-mute block">Días tras el último mes</span>
+          </div>
+        </div>
+        <p class="text-xs text-mute leading-relaxed pt-1">
+          Para unir los tres componentes en una sola celda formateada: <code>=SIFECHA(A2; HOY(); "y") &amp; " años, " &amp; SIFECHA(A2; HOY(); "ym") &amp; " meses y " &amp; SIFECHA(A2; HOY(); "md") &amp; " días"</code>.
+        </p>
+      </div>
     </section>
 
     <!-- Sección 3: Cómo calcular la edad entre dos fechas -->
@@ -326,7 +358,7 @@ const faqPageSchema = {
         </div>
       </div>
       <p class="text-body text-sm sm:text-base leading-relaxed">
-        El principio matemático es idéntico al de la fecha de nacimiento: se sustituye la fecha actual por la <em>fecha de referencia objetivo</em>, garantizando que el punto final sea cronológicamente posterior al punto inicial. Puedes utilizar nuestra solución para <a href="/calculadora-edad/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calcular la edad entre dos fechas</a> personalizadas seleccionando cualquier día del calendario.
+        El principio matemático es idéntico al de la fecha de nacimiento: se sustituye la fecha actual por la <em>fecha de referencia objetivo</em>, garantizando que el punto final sea cronológicamente posterior al punto inicial. Puedes utilizar nuestra solución para <a href="/calculadora-edad/es/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calcular la edad entre dos fechas</a> personalizadas seleccionando cualquier día del calendario.
       </p>
     </section>
 
@@ -622,7 +654,7 @@ const faqPageSchema = {
         <div class="rounded-[14px] border border-hairline bg-canvas-elevated p-5 space-y-2">
           <h3 class="text-base font-bold text-ink">¿Cómo puedo calcular mi edad exacta hoy mismo?</h3>
           <p class="text-sm text-body leading-relaxed">
-            Solo necesitas tu fecha de nacimiento (día, mes y año) y compararla con la fecha actual. Nuestra <a href="/calculadora-edad/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calculadora de edad</a> automatiza este cómputo desglosando al segundo tus años cumplidos, meses naturales transcurridos y días vividos.
+            Solo necesitas tu fecha de nacimiento (día, mes y año) y compararla con la fecha actual. Nuestra <a href="/calculadora-edad/es/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calculadora de edad</a> automatiza este cómputo desglosando al segundo tus años cumplidos, meses naturales transcurridos y días vividos.
           </p>
         </div>
 
@@ -681,11 +713,11 @@ const faqPageSchema = {
         Calcula tu edad de forma rápida y precisa
       </h2>
       <p class="text-sm sm:text-base text-body max-w-2xl mx-auto leading-relaxed">
-        Ahora que conoces cómo interactúan los meses naturales, los años bisiestos y las reglas de acarreo de calendario, obtén tu cálculo al instante. Introduce tu fecha de nacimiento en nuestra herramienta para <a href="/calculadora-edad/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calcular tu edad en años, meses y días</a>, junto con los días solares totales, segundos vividos y la cuenta regresiva en vivo para tu próximo cumpleaños.
+        Ahora que conoces cómo interactúan los meses naturales, los años bisiestos y las reglas de acarreo de calendario, obtén tu cálculo al instante. Introduce tu fecha de nacimiento en nuestra herramienta para <a href="/calculadora-edad/es/" class="font-semibold text-link underline decoration-link/40 hover:decoration-link transition-colors">calcular tu edad en años, meses y días</a>, junto con los días solares totales, segundos vividos y la cuenta regresiva en vivo para tu próximo cumpleaños.
       </p>
       <div class="pt-2">
         <a
-          href="/calculadora-edad/"
+          href="/calculadora-edad/es/"
           class="inline-flex items-center justify-center gap-2 rounded-[12px] bg-primary px-8 py-3.5 text-sm sm:text-base font-semibold text-on-primary hover:opacity-90 transition-all shadow-whisper"
         >
           <span>Ir a la Calculadora de Edad</span>

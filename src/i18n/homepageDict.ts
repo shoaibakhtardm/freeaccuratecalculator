@@ -120,17 +120,17 @@ export interface HomepageStrings {
 export const HOMEPAGE_TRANSLATIONS: Record<SupportedLocale, HomepageStrings> = {
   "en": {
     "seo": {
-      "title": "Free Accurate Calculator — 100+ Precision Online Calculators",
-      "description": "Instant, 100% free online calculators for Finance, Math, Health, Tax & Everyday calculations. Zero ads, verified precision math, and instant formula breakdowns.",
+      "title": "Free Online Calculators — 100+ Tools | Free Accurate Calculator",
+      "description": "Free online calculators for personal finance, math, health, fitness, and everyday tasks. Instant, private browser calculations with documented formulas and zero ads.",
       "websiteName": "Free Accurate Calculator",
       "websiteDesc": "Free online calculators for finance, health, math, business, and everyday utility."
     },
     "hero": {
-      "pillBadge": "100+ Free Online Calculators • Documented Formulas • Private Math",
+      "pillBadge": "Free Online Calculators • Documented Formulas • Private Math",
       "h1Line1": "Free Online Calculators",
       "h1Highlight": "Fast, Accurate & Easy to Use",
       "subtitle": "Access free online calculators for personal finance, math, health, business, statistics, and everyday tasks. Get fast, transparent results with documented formulas, step-by-step explanations, and private browser computations.",
-      "metric1Value": "⚡ 100+ Tools",
+      "metric1Value": "⚡ Precision Tools",
       "metric1Label": "Free Online Access",
       "metric2Value": "📐 Documented Math",
       "metric2Label": "Formulas & Assumptions",
@@ -1352,17 +1352,17 @@ export const HOMEPAGE_TRANSLATIONS: Record<SupportedLocale, HomepageStrings> = {
   },
   "pt": {
     "seo": {
-      "title": "Calculadoras online gratuitas – Finanças, saúde e matemática | Free Accurate Calculator",
-      "description": "Calculadoras online gratuitas para finanças, saúde, matemática e tarefas diárias. Obtenha resultados rápidos e transparentes com fórmulas documentadas.",
+      "title": "Calculadora Online Grátis – Ferramentas Rápidas e Precisas | Free Accurate Calculator",
+      "description": "Calculadoras online gratuitas para finanças, saúde, matemática e dia a dia. Cálculos rápidos e privados no seu navegador com fórmulas documentadas.",
       "websiteName": "Free Accurate Calculator (Português)",
       "websiteDesc": "Calculadoras online gratuitas para finanças pessoais, saúde, matemática e utilidades cotidianas."
     },
     "hero": {
-      "pillBadge": "100+ Calculadoras online gratuitas • Fórmulas documentadas",
+      "pillBadge": "Calculadoras Online Gratuitas • Fórmulas Documentadas",
       "h1Line1": "Calculadoras online gratuitas",
       "h1Highlight": "Rápidas, precisas e fáceis de usar",
       "subtitle": "Acesse calculadoras online gratuitas para finanças pessoais, saúde, matemática, negócios e rotinas do dia a dia. Obtenha resultados rápidos com fórmulas documentadas e processamento privado no seu navegador.",
-      "metric1Value": "⚡ 100+ Ferramentas",
+      "metric1Value": "⚡ Ferramentas Precisas",
       "metric1Label": "Acesso online gratuito",
       "metric2Value": "📐 Fórmulas Claras",
       "metric2Label": "Metodologia documentada",
