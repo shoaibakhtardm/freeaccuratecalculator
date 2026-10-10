@@ -25,17 +25,40 @@ export default {
       return fetch(request);
     }
 
-    // 2. Normalize URLs without trailing slash to canonical trailing-slash URL with 301 Permanent Redirect
-    // (excluding static files with extensions like .xml, .txt, .svg, .js, .css, etc.)
-    const isFile = pathname.split('/').pop().includes('.');
-    if (!isFile && !pathname.endsWith('/')) {
-      const canonicalTarget = new URL(`${pathname}/${url.search}`, url.origin);
+    // 1b. Enforce production HTTPS and non-www canonical host only for production domain
+    // (Guarantees localhost, 127.0.0.1, and *.pages.dev previews are not broken)
+    const isProdHost = url.hostname === 'freeaccuratecalculator.com' || url.hostname === 'www.freeaccuratecalculator.com';
+    const isWww = url.hostname.startsWith('www.');
+    const forwardedProto = request.headers.get('x-forwarded-proto');
+    const isHttp = forwardedProto ? forwardedProto === 'http' : url.protocol === 'http:';
+
+    if (isProdHost && (isWww || isHttp)) {
+      const canonicalTarget = new URL('https://freeaccuratecalculator.com');
+      canonicalTarget.pathname = url.pathname;
+      canonicalTarget.search = url.search;
       return new Response(null, {
         status: 301,
         statusText: 'Moved Permanently',
         headers: {
           Location: canonicalTarget.toString(),
-          'Cache-Control': 'public, max-age=31536000, immutable',
+          'Cache-Control': 'public, max-age=86400',
+        },
+      });
+    }
+
+    // 2. Normalize URLs without trailing slash to canonical trailing-slash URL with 301 Permanent Redirect
+    // (excluding static files with extensions like .xml, .txt, .svg, .js, .css, etc.)
+    const isFile = pathname.split('/').pop().includes('.');
+    if (!isFile && !pathname.endsWith('/')) {
+      const canonicalTarget = new URL(url.origin);
+      canonicalTarget.pathname = `${pathname}/`;
+      canonicalTarget.search = url.search;
+      return new Response(null, {
+        status: 301,
+        statusText: 'Moved Permanently',
+        headers: {
+          Location: canonicalTarget.toString(),
+          'Cache-Control': 'public, max-age=86400',
         },
       });
     }
