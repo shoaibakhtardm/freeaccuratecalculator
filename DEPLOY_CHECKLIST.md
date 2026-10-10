@@ -101,6 +101,13 @@ Before deploying the worker to the production route, test locally or on staging:
    node --test tests/edge-worker-redirects-410.test.mjs
    ```
 
+### Pre-Deploy Worker Backup (Safety Gate)
+Before updating or deploying the Cloudflare Worker:
+1. Go to Cloudflare Dashboard → **Compute (Workers) & Pages** → **Workers** → select active worker (e.g. `freeaccuratecalculator-edge-cache`).
+2. Click **Edit code** (Quick Edit).
+3. Copy the current live script and save it locally to `baseline/worker-live-backup-2026-10-10.js` (or note the active Version ID under **Deployments** / **Version History**).
+4. This guarantees you can immediately restore the exact prior worker state in <30 seconds.
+
 ### Worker Deployment Options
 
 #### Option A: Via Cloudflare Dashboard (Recommended, Zero CLI Auth Setup)
@@ -110,13 +117,50 @@ Before deploying the worker to the production route, test locally or on staging:
 4. Copy the entire contents of `workers/edge-cache.js` from the repository and paste it into the editor.
 5. Click **Deploy**.
 6. Under the worker's **Settings** → **Triggers** → **Routes**, confirm the route is active:
-   * **Route:** `freeaccuratecalculator.com/*` (and `www.freeaccuratecalculator.com/*` if applicable)
+   * **Route:** `freeaccuratecalculator.com/*`
    * **Zone:** `freeaccuratecalculator.com`
 
 #### Option B: Via Wrangler CLI
 ```bash
 npx wrangler deploy workers/edge-cache.js --name freeaccuratecalculator-edge-cache --compatibility-date 2025-02-01
 ```
+
+---
+
+## 3c. Subdomain Canonicalization (`www` → Apex 301)
+
+Because a single Worker route on `freeaccuratecalculator.com/*` will not intercept incoming requests to `www.freeaccuratecalculator.com/*`, you must ensure `www` is canonicalized to apex.
+
+> [!IMPORTANT]
+> **DNS Prerequisite:** In Cloudflare Dashboard → **DNS** → **Records**, the `www` record (CNAME or A) **MUST be set to Proxied (Orange Cloud)**. If `www` is DNS-Only (Grey Cloud), Cloudflare cannot execute rules or workers on `www` requests.
+
+### Recommended Method: Cloudflare Redirect Rule (Native Edge 301)
+*Why recommended:* Executes before Workers and Pages at the Cloudflare edge, does not consume Worker CPU time or invocation counts, and preserves query strings and paths natively.
+
+**Exact Configuration Steps:**
+1. Open Cloudflare Dashboard → select domain **`freeaccuratecalculator.com`**.
+2. In the sidebar, navigate to **Rules** → **Redirect Rules**.
+3. Click **Create rule**.
+4. **Rule name:** `Redirect www to apex`
+5. **Incoming requests:** Select **Custom filter expression**
+   * Field: `Hostname`
+   * Operator: `equals`
+   * Value: `www.freeaccuratecalculator.com`
+6. **Then (URL redirect):**
+   * Type: **Dynamic**
+   * Expression: `concat("https://freeaccuratecalculator.com", http.request.uri.path)`
+   * Status code: **301 Moved Permanently**
+   * **Preserve query string:** **Checked** (enabled)
+7. Click **Deploy**.
+
+### Alternative / Defense-in-Depth: Second Worker Route
+If you prefer having the Worker handle `www` (the Worker already contains code at lines 30–47 specifically checking `isWww` and issuing a 301):
+1. In Cloudflare Dashboard → **Workers & Pages** → select your worker.
+2. Go to **Settings** → **Triggers** → **Routes** → click **Add route**.
+3. **Route:** `www.freeaccuratecalculator.com/*`
+4. **Zone:** `freeaccuratecalculator.com`
+5. Click **Save**.
+*(Both methods can safely coexist as defense-in-depth).*
 
 ---
 
@@ -255,9 +299,9 @@ Trigger an immediate rollback if ANY of the following occur:
 If `workers/edge-cache.js` was deployed as a standalone Worker:
 1. Open Cloudflare Dashboard → **Workers & Pages** → select Worker **`freeaccuratecalculator-edge-cache`** (or active worker name).
 2. Navigate to **Deployments** / **Version History**.
-3. Select the version active prior to release.
-4. Click **Rollback** to reactivate the prior script.
-5. Purge Cloudflare Edge Cache.
+3. Select the version active prior to release and click **Rollback to this version**.
+   *(Alternatively, open **Quick Edit**, paste the code saved in `baseline/worker-live-backup-2026-10-10.js`, and click **Save and Deploy**)*.
+4. Purge Cloudflare Edge Cache.
 
 ---
 
