@@ -1,10 +1,10 @@
 // scripts/locales/de.mjs
 export const de = {
   seo: {
-    title: 'Kostenlose Online-Rechner – Finanzen, Gesundheit & Mathe | Free Accurate Calculator',
-    description: 'Kostenlose Online-Rechner für Finanzen, Gesundheit, Mathematik und Alltag. Schnelle, transparente Ergebnisse mit dokumentierten Formeln und Erklärungen.',
+    title: 'Kostenloser Online-Rechner – Schnelle & Präzise Tools | Free Accurate Calculator',
+    description: 'Kostenloser Online-Rechner für Finanzen, Gesundheit, Mathematik und Alltag. Schnelle, transparente Ergebnisse mit dokumentierten Formeln direkt im Browser.',
     websiteName: 'Free Accurate Calculator (Deutsch)',
-    websiteDesc: 'Kostenlose, transparente und präzise Online-Rechner für Finanzen, Gesundheit, Mathematik und Alltag.',
+    websiteDesc: 'Kostenloser, transparenter und präziser Online-Rechner für Finanzen, Gesundheit, Mathematik und Alltag.',
   },
   hero: {
     pillBadge: '100+ Kostenlose Online-Rechner • Dokumentierte Formeln',

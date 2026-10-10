@@ -1,10 +1,10 @@
 // scripts/locales/it.mjs
 export const it = {
   seo: {
-    title: 'Calcolatori online gratuiti – Finanza, salute e matematica | Free Accurate Calculator',
-    description: 'Calcolatori online gratuiti per finanza, salute, matematica e vita quotidiana. Risultati immediati e trasparenti con formule documentate e spiegazioni chiare.',
+    title: 'Calcolatore Online Gratis – Strumenti Rapidi e Precisi | Free Accurate Calculator',
+    description: 'Calcolatore online gratis e preciso per finanza, salute, matematica e uso quotidiano. Calcoli immediati e privati nel browser con formule documentate.',
     websiteName: 'Free Accurate Calculator (Italiano)',
-    websiteDesc: 'Calcolatori online gratuiti, trasparenti e accurati per finanza, salute, matematica e uso quotidiano.',
+    websiteDesc: 'Calcolatore online gratuito, trasparente e accurato per finanza, salute, matematica e uso quotidiano.',
   },
   hero: {
     pillBadge: '100+ Calcolatori gratuiti • Formule documentate • Calcoli protetti',

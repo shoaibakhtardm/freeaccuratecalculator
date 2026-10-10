@@ -867,10 +867,10 @@ export const HOMEPAGE_TRANSLATIONS: Record<SupportedLocale, HomepageStrings> = {
   },
   "de": {
     "seo": {
-      "title": "Kostenlose Online-Rechner – Finanzen, Gesundheit & Mathe | Free Accurate Calculator",
-      "description": "Kostenlose Online-Rechner für Finanzen, Gesundheit, Mathematik und Alltag. Schnelle, transparente Ergebnisse mit dokumentierten Formeln und Erklärungen.",
+      "title": "Kostenloser Online-Rechner – Schnelle & Präzise Tools | Free Accurate Calculator",
+      "description": "Kostenloser Online-Rechner für Finanzen, Gesundheit, Mathematik und Alltag. Schnelle, transparente Ergebnisse mit dokumentierten Formeln direkt im Browser.",
       "websiteName": "Free Accurate Calculator (Deutsch)",
-      "websiteDesc": "Kostenlose, transparente und präzise Online-Rechner für Finanzen, Gesundheit, Mathematik und Alltag."
+      "websiteDesc": "Kostenloser, transparenter und präziser Online-Rechner für Finanzen, Gesundheit, Mathematik und Alltag."
     },
     "hero": {
       "pillBadge": "100+ Kostenlose Online-Rechner • Dokumentierte Formeln",
@@ -1595,10 +1595,10 @@ export const HOMEPAGE_TRANSLATIONS: Record<SupportedLocale, HomepageStrings> = {
   },
   "it": {
     "seo": {
-      "title": "Calcolatori online gratuiti – Finanza, salute e matematica | Free Accurate Calculator",
-      "description": "Calcolatori online gratuiti per finanza, salute, matematica e vita quotidiana. Risultati immediati e trasparenti con formule documentate e spiegazioni chiare.",
+      "title": "Calcolatore Online Gratis – Strumenti Rapidi e Precisi | Free Accurate Calculator",
+      "description": "Calcolatore online gratis e preciso per finanza, salute, matematica e uso quotidiano. Calcoli immediati e privati nel browser con formule documentate.",
       "websiteName": "Free Accurate Calculator (Italiano)",
-      "websiteDesc": "Calcolatori online gratuiti, trasparenti e accurati per finanza, salute, matematica e uso quotidiano."
+      "websiteDesc": "Calcolatore online gratuito, trasparente e accurato per finanza, salute, matematica e uso quotidiano."
     },
     "hero": {
       "pillBadge": "100+ Calcolatori gratuiti • Formule documentate • Calcoli protetti",
