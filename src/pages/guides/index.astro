@@ -1,0 +1,198 @@
+---
+// src/pages/guides/index.astro
+import Layout from '../../layouts/Layout.astro';
+import Breadcrumbs from '../../components/common/Breadcrumbs.astro';
+
+const guides = [
+  {
+    title: 'Screen Calibration & Exact DPI Measurement Guide',
+    description: 'Learn how physical screen PPI, device pixel ratios, and CSS reference pixels interact to calibrate a 100% physically accurate online ruler.',
+    href: '/ruler/guides/',
+    category: 'Measurement & Physics',
+    readTime: '7 min',
+    icon: '📏',
+    badge: 'Hardware Verified',
+  },
+  {
+    title: 'Guía de Cálculo de Edad Exacta: Calendario y Años Bisiestos',
+    description: 'Aprende cómo calcular tu edad exacta en años, meses y días con precisión matemática, años bisiestos y reglas de acarreo de calendario.',
+    href: '/calculadora-edad/guides/es/',
+    category: 'Cálculo Temporal',
+    readTime: '8 min',
+    icon: '🎂',
+    badge: 'Guía en Español',
+  },
+  {
+    title: 'Loan EMI & Reducing Balance Amortization Mechanics',
+    description: 'Understand the mathematical proof behind Equated Monthly Installments, reducing balance interest calculations, and pre-payment principal relief.',
+    href: '/emi-calculator/',
+    category: 'Personal Finance',
+    readTime: '9 min',
+    icon: '🏦',
+    badge: 'Mathematical Proof',
+  },
+  {
+    title: 'Compound Interest Formulas & Investment Growth Math',
+    description: 'A comprehensive derivation of annual, monthly, and daily compounding frequencies, annuity due formulas, and exponential interest curves.',
+    href: '/compound-interest-calculator/',
+    category: 'Wealth & Investing',
+    readTime: '8 min',
+    icon: '📈',
+    badge: 'Formula Breakdown',
+  },
+  {
+    title: 'Systematic Investment Plan (SIP) vs Lump Sum Compounding',
+    description: 'Explore the mathematical differences between regular dollar-cost averaging through monthly installments versus single lump-sum compounding.',
+    href: '/sip-calculator/',
+    category: 'Investment Strategy',
+    readTime: '10 min',
+    icon: '💼',
+    badge: 'Portfolio Math',
+  },
+  {
+    title: 'Percentage Math: Relative Change, Points & Step-by-Step Formulas',
+    description: 'Master percentage calculations: finding percentage of a value, percentage change vs percentage points, and fractional conversions with proofs.',
+    href: '/percentage-calculator/',
+    category: 'Pure Mathematics',
+    readTime: '6 min',
+    icon: '📊',
+    badge: 'Core Reference',
+  },
+  {
+    title: 'Palworld Breeding Combinations & Inherited Stat Mechanics',
+    description: 'Step-by-step documentation on breeding formulas, parent power weighting, passive skill inheritance probabilities, and shortest path trees.',
+    href: '/palworld-breeding-calculator/',
+    category: 'Algorithmic Gaming',
+    readTime: '11 min',
+    icon: '🐾',
+    badge: 'Algorithm Guide',
+  },
+  {
+    title: 'Calculadora de Salário Líquido 2026: INSS Progressivo e IRRF',
+    description: 'Entenda como funciona a tabela progressiva do INSS de 2026 e as novas faixas de isenção e deduções do IRRF no cálculo do salário líquido CLT.',
+    href: '/calculadora-salario/pt/',
+    category: 'Direito do Trabalho',
+    readTime: '7 min',
+    icon: '💰',
+    badge: 'Tabelas 2026',
+  },
+  {
+    title: 'Calculadora de Férias CLT 2026: Terço Constitucional e Abono',
+    description: 'Simulação matemática de férias trabalhistas: cálculo do adicional de 1/3, dedução de faltas, venda de 10 dias (abono pecuniário) e recolhimentos.',
+    href: '/calculadora-de-ferias/pt/',
+    category: 'Direito do Trabalho',
+    readTime: '6 min',
+    icon: '🏖️',
+    badge: 'Legislação CLT',
+  },
+  {
+    title: 'Clinical Body Mass Index (BMI) & Body Fat Percentage Standards',
+    description: 'Review the Quetelet formula, modern Oxford BMI adjustments, WHO health classification ranges, and differences between BMI and body fat.',
+    href: '/bmi-calculator/',
+    category: 'Clinical Health',
+    readTime: '7 min',
+    icon: '🩺',
+    badge: 'Clinical Reference',
+  },
+];
+
+const webPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Calculation Guides & Mathematical Proofs',
+  description: 'In-depth educational articles, documented mathematical formulas, step-by-step worked examples, and quantitative calculation guides.',
+  url: 'https://freeaccuratecalculator.com/guides/',
+  isPartOf: {
+    '@type': 'WebSite',
+    name: 'Free Accurate Calculator',
+    url: 'https://freeaccuratecalculator.com/',
+  },
+};
+---
+
+<Layout
+  title="Calculation Guides & Mathematical Proofs | Free Accurate Calculator"
+  description="In-depth educational articles, documented mathematical formulas, step-by-step worked examples, and quantitative calculation guides across finance, health, and math."
+  canonicalUrl="https://freeaccuratecalculator.com/guides/"
+  jsonLd={webPageSchema}
+  lang="en"
+>
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <!-- Breadcrumbs: Home → Guides -->
+    <Breadcrumbs
+      items={[
+        { label: 'Guides' },
+      ]}
+    />
+
+    <!-- Hero Header -->
+    <header class="mt-6 mb-10 border-b border-hairline pb-8">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-mono font-semibold mb-3">
+        <span>Quantitative Documentation</span>
+        <span class="h-1 w-1 rounded-full bg-primary/40"></span>
+        <span>Educational Reference</span>
+      </div>
+      <h1 class="display-hero text-ink tracking-tight mb-3 text-3xl sm:text-4xl md:text-5xl font-black font-outfit">
+        Calculation Guides & Mathematical Proofs
+      </h1>
+      <p class="text-base sm:text-lg text-body max-w-3xl leading-relaxed">
+        Peer-reviewed calculation formulas, step-by-step worked examples, and technical documentation behind our verified client-side calculators.
+      </p>
+    </header>
+
+    <!-- Guides Directory Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+      {guides.map((guide) => (
+        <article class="group relative rounded-2xl border border-hairline bg-canvas-elevated p-6 hover:border-link/40 hover:shadow-whisper transition-all duration-200 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between gap-2 mb-3">
+              <span class="inline-flex items-center gap-1.5 text-xs font-mono font-semibold text-link bg-link/10 dark:bg-link/15 px-2.5 py-0.5 rounded-full">
+                <span>{guide.icon}</span>
+                <span>{guide.category}</span>
+              </span>
+              <span class="text-xs font-mono text-mute">{guide.readTime} read</span>
+            </div>
+
+            <h2 class="text-lg sm:text-xl font-bold font-outfit text-ink group-hover:text-link transition-colors leading-snug mb-2.5">
+              <a href={guide.href} class="focus:outline-none">
+                <span class="absolute inset-0" aria-hidden="true"></span>
+                {guide.title}
+              </a>
+            </h2>
+
+            <p class="text-sm text-body leading-relaxed mb-4 line-clamp-3">
+              {guide.description}
+            </p>
+          </div>
+
+          <div class="pt-4 border-t border-hairline/80 flex items-center justify-between mt-auto">
+            <span class="text-[11px] font-mono font-medium text-mute uppercase tracking-wider">{guide.badge}</span>
+            <span class="text-xs font-semibold text-link flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+              <span>Read Documentation</span>
+              <span>→</span>
+            </span>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <!-- Trust & Verification Section -->
+    <section class="mt-12 rounded-2xl border border-hairline bg-canvas p-6 sm:p-8 text-center space-y-3">
+      <h2 class="text-xl sm:text-2xl font-bold font-outfit text-ink">
+        Strict Mathematical Accuracy & Formula Transparency
+      </h2>
+      <p class="text-sm sm:text-base text-body max-w-2xl mx-auto leading-relaxed">
+        Every calculator on Free Accurate Calculator is accompanied by verified algebraic proofs, standard rounding rules, and unit definitions so you can inspect and verify every computation independently.
+      </p>
+      <div class="pt-2">
+        <a
+          href="/"
+          class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-2.5 text-sm font-semibold text-on-primary hover:opacity-90 transition-all shadow-whisper"
+        >
+          <span>Explore All 33 Popular Calculators</span>
+          <span>→</span>
+        </a>
+      </div>
+    </section>
+  </div>
+</Layout>

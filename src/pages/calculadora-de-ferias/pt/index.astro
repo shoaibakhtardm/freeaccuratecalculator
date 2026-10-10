@@ -1,0 +1,1330 @@
+---
+// src/pages/calculadora-de-ferias/pt/index.astro
+import CalculatorLayout from '../../../layouts/CalculatorLayout.astro';
+import FormulaSection from '../../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../../components/calculator/WorkedExample.astro';
+import FAQSection from '../../../components/calculator/FAQSection.astro';
+import {
+  calcularFerias,
+  regrasINSS2026,
+  regrasIRRF2026,
+  formatarMoedaBRL,
+  formatarPercentualBRL,
+} from '../../../engines/feriasBrasil2026.ts';
+
+// Perguntas frequentes estruturadas em português brasileiro para o schema FAQPage
+const faqs = [
+  {
+    question: 'Como calcular o valor das férias pela CLT em 2026?',
+    answer:
+      'Para calcular o valor bruto das férias, divide-se o salário bruto mensal por 30 e multiplica-se pelo número de dias de férias a serem gozados. Em seguida, soma-se o adicional constitucional de 1/3 (dividindo o valor das férias por 3). Sobre essa soma, incide o desconto progressivo do INSS oficial de 2026 e, se aplicável, o IRRF com as deduções de dependentes e as novas faixas de isenção de 2026. O valor líquido corresponde ao total bruto menos os descontos legais.',
+  },
+  {
+    question: 'Como funciona o adicional constitucional de 1/3 de férias?',
+    answer:
+      'Garantido pelo artigo 7º, inciso XVII, da Constituição Federal de 1988, o adicional de férias concede ao trabalhador o direito de receber pelo menos um terço a mais do que o seu salário normal durante o período de descanso. Por exemplo, para um salário de R$ 3.000,00 com 30 dias de férias, o adicional de 1/3 é de R$ 1.000,00, totalizando R$ 4.000,00 brutos.',
+  },
+  {
+    question: 'O que é o abono pecuniário e como funciona a venda de 10 dias de férias?',
+    answer:
+      'O abono pecuniário é a faculdade que o empregado tem de converter até 1/3 do seu período de férias em dinheiro (CLT, artigo 143), popularmente conhecida como "venda de férias". Para quem tem direito a 30 dias, é possível gozar 20 dias de descanso e receber 10 dias como abono pecuniário. Um grande benefício fiscal é que o valor do abono e seu respectivo 1/3 são 100% isentos de desconto de INSS (Lei nº 8.212/91) e de IRRF (Súmula 125 do STJ).',
+  },
+  {
+    question: 'Quando o pagamento das férias deve ser feito pela empresa?',
+    answer:
+      'De acordo com o artigo 145 da CLT, o pagamento da remuneração das férias e, se for o caso, do abono pecuniário, deve ser efetuado até 2 (dois) dias antes do início do respectivo período de gozo. O descumprimento desse prazo pode acarretar penalidades administrativas para o empregador.',
+  },
+  {
+    question: 'Como funciona o adiantamento da 1ª parcela do 13º salário nas férias?',
+    answer:
+      'Conforme a Lei nº 4.749/1965 (art. 2º, § 2º), o empregado pode solicitar o adiantamento da primeira parcela (50%) do seu 13º salário por ocasião das férias, desde que faça o requerimento por escrito à empresa durante o mês de janeiro do ano correspondente. O adiantamento é pago sem descontos de INSS e IRRF no momento das férias, sendo esses encargos apurados apenas na segunda parcela em dezembro.',
+  },
+  {
+    question: 'Incide desconto de INSS e Imposto de Renda (IRRF) sobre as férias?',
+    answer:
+      'Sim. Sobre a remuneração das férias gozadas e seu 1/3 constitucional incidem tanto o INSS (tabela progressiva oficial) quanto o IRRF (com retenção na fonte no mês do pagamento). Em 2026, quem recebe até R$ 5.000,00 de remuneração bruta mensal conta com isenção total de IRRF. Já sobre o abono pecuniário (dias vendidos) e seu terço, não há incidência de INSS nem de IRRF por se tratarem de verbas indenizatórias.',
+  },
+  {
+    question: 'As férias podem ser divididas em períodos menores?',
+    answer:
+      'Sim. Desde a Reforma Trabalhista (Lei nº 13.467/2017), havendo concordância entre empregado e empregador, as férias podem ser usufruídas em até 3 (três) períodos, desde que um deles não seja inferior a 14 (quatorze) dias corridos e os demais não sejam inferiores a 5 (cinco) dias corridos cada um.',
+  },
+  {
+    question: 'Os dados informados nesta calculadora de férias são confidenciais?',
+    answer:
+      'Sim, total e irrestritamente privados. Todos os cálculos matemáticos são executados exclusivamente no navegador do seu dispositivo (processamento local no cliente). Nenhuma informação de salário, dias de descanso ou dependentes é transmitida, armazenada ou rastreada em servidores externos.',
+  },
+];
+
+// Calculadoras relacionadas em português para linkagem interna de alta relevância
+const relatedCalculators = [
+  { title: 'Calculadora de Salário Líquido 2026', href: '/calculadora-salario/pt/', badge: 'Trabalho' },
+  { title: 'Calculadora de Porcentagem', href: '/percentage-calculator/', badge: 'Matemática' },
+  { title: 'Calculadora de Juros Compostos', href: '/compound-interest-calculator/', badge: 'Finanças' },
+  { title: 'Calculadora de Empréstimo e Financiamento', href: '/emi-calculator/', badge: 'Crédito' },
+  { title: 'Calculadora de Idade', href: '/calculadora-edad/es/', badge: 'Pessoal' },
+];
+
+// Exemplo passo a passo verificado matematicamente para Salário R$ 5.000,00 (30 dias)
+const workedExampleSteps = [
+  {
+    number: 1,
+    title: 'Apuração do Salário Base das Férias Gozadas',
+    description: 'Para um período de 30 dias com salário contratual de R$ 5.000,00, o valor base de férias gozadas é de 30 dias integrais.',
+    mathExpression: 'Férias Gozadas = (R$ 5.000,00 / 30) × 30 = R$ 5.000,00',
+  },
+  {
+    number: 2,
+    title: 'Cálculo do Adicional Constitucional de 1/3 (CF/88 Art. 7º, XVII)',
+    description: 'Calcula-se um terço sobre a remuneração das férias gozadas: R$ 5.000,00 dividido por 3, resultando em R$ 1.666,67.',
+    mathExpression: '1/3 Constitucional = R$ 5.000,00 / 3 = R$ 1.666,67',
+  },
+  {
+    number: 3,
+    title: 'Composição da Remuneração Bruta Tributável',
+    description: 'Soma-se o valor das férias ao terço constitucional para obter a base bruta sujeita aos encargos oficiais.',
+    mathExpression: 'Total Bruto Tributável = R$ 5.000,00 + R$ 1.666,67 = R$ 6.666,67',
+  },
+  {
+    number: 4,
+    title: 'Aplicação da Tabela Progressiva do INSS 2026',
+    description: 'Aplica-se a tabela progressiva: 7,5% na 1ª faixa (R$ 121,58), 9% na 2ª faixa (R$ 115,37), 12% na 3ª faixa (R$ 174,17) e 14% sobre o excedente até R$ 6.666,67 (R$ 323,74). O desconto do INSS resulta em R$ 734,85.',
+    mathExpression: 'Desconto INSS 2026 = R$ 734,85 (alíquota efetiva de 11,02%)',
+  },
+  {
+    number: 5,
+    title: 'Apuração do IRRF 2026 com Faixa de Transição do Novo IR',
+    description: 'Subtrai-se o INSS: R$ 6.666,67 − R$ 734,85 = R$ 5.931,82. Pela tabela base, o imposto seria R$ 722,52. Como a renda bruta situa-se na faixa de transição (R$ 5.000,01 a R$ 7.350,00), aplica-se o redutor oficial de R$ 90,99, apurando R$ 631,53 de IRRF.',
+    mathExpression: 'IRRF a Pagar = R$ 722,52 − R$ 90,99 = R$ 631,53',
+  },
+  {
+    number: 6,
+    title: 'Determinação do Valor Líquido das Férias a Receber',
+    description: 'Subtraem-se o INSS (R$ 734,85) e o IRRF (R$ 631,53) do valor bruto total (R$ 6.666,67). O trabalhador recebe R$ 5.300,29 líquidos na conta até 2 dias antes das férias.',
+    mathExpression: 'Valor Líquido = R$ 6.666,67 − R$ 1.366,38 = R$ 5.300,29',
+  },
+];
+
+// Dados pré-calculados para a tabela comparativa oficial de 30 dias de férias em 2026
+const exemplosTabela = [
+  { salarioBruto: 2000, terco: 666.67, totalBruto: 2666.67, inss: 215.69, irrf: 0.00, liquido: 2450.98, aliqEfetiva: '8,09%' },
+  { salarioBruto: 3000, terco: 1000.00, totalBruto: 4000.00, inss: 368.60, irrf: 0.00, liquido: 3631.40, aliqEfetiva: '9,21%' },
+  { salarioBruto: 5000, terco: 1666.67, totalBruto: 6666.67, inss: 734.85, irrf: 631.53, liquido: 5300.29, aliqEfetiva: '20,50%' },
+  { salarioBruto: 7000, terco: 2333.33, totalBruto: 9333.33, inss: 988.09, irrf: 1391.22, liquido: 6954.02, aliqEfetiva: '25,49%' },
+  { salarioBruto: 10000, terco: 3333.33, totalBruto: 13333.33, inss: 988.09, irrf: 2486.22, liquido: 9859.03, aliqEfetiva: '26,06%' },
+];
+
+const dataHojePt = new Intl.DateTimeFormat('pt-BR', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+}).format(new Date());
+---
+
+<CalculatorLayout
+  title="Calculadora de Férias 2026: Calcule o Valor das Férias CLT"
+  metaDescription="Calcule suas férias em 2026 com base nas regras da CLT: adicional de 1/3, venda de férias (abono pecuniário), adiantamento do 13º e descontos de INSS e IRRF."
+  h1="Calculadora de Férias 2026"
+  subtitle="Descubra o valor bruto e líquido a receber nas suas férias pela CLT, com o adicional constitucional de 1/3, venda de férias (abono pecuniário) e as tabelas oficiais de INSS e IRRF de 2026."
+  category={{ label: 'Calculadoras Financeiras', href: '/finance/' }}
+  calculatorName="Calculadora de Férias 2026"
+  relatedCalculators={relatedCalculators}
+  faqs={faqs}
+  lang="pt-BR"
+  canonical="https://freeaccuratecalculator.com/calculadora-de-ferias/pt/"
+  disableEmailModal={true}
+>
+  <!-- Caixa Principal da Calculadora -->
+  <div
+    id="ferias-calculator-card"
+    class="calculator-main-box relative rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6 overflow-hidden transition-all pb-24 sm:pb-8"
+  >
+    <!-- Resplendor Ambiental Sutil -->
+    <div class="pointer-events-none absolute -top-32 -right-32 w-80 h-80 rounded-full bg-link/10 blur-3xl print:hidden"></div>
+    <div class="pointer-events-none absolute -bottom-32 -left-32 w-80 h-80 rounded-full bg-cyan/10 blur-3xl print:hidden"></div>
+
+    <!-- Relatório Dedicado de Alta Fidelidade para Impressão e PDF (Visível apenas na impressão) -->
+    <div id="ferias-print-report" class="hidden print:block font-mono text-slate-900 fac-print-report">
+      <!-- Cabeçalho Oficial -->
+      <div class="border-b-2 border-slate-900 pb-4 mb-5 flex justify-between items-start">
+        <div>
+          <div class="text-2xl font-black uppercase tracking-tight">Free Accurate Calculator</div>
+          <div class="text-sm font-bold text-blue-700 mt-0.5">Demonstrativo de Cálculo de Férias CLT 2026</div>
+          <div class="text-xs text-slate-500 mt-1">freeaccuratecalculator.com • Consolidação das Leis do Trabalho e CF/88 Art. 7º, XVII</div>
+        </div>
+        <div class="text-right text-xs text-slate-600 space-y-0.5">
+          <div><span class="text-slate-400 uppercase">Data da Simulação:</span> <strong id="print-date" class="text-slate-900">{dataHojePt}</strong></div>
+          <div><span class="text-slate-400 uppercase">Exercício Fiscal:</span> <strong class="text-slate-900">2026 (Portaria MPS/MF nº 13/2026)</strong></div>
+        </div>
+      </div>
+
+      <!-- Parâmetros de Entrada -->
+      <div class="bg-slate-50 border border-slate-200 rounded-lg p-3.5 mb-5">
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500 mb-2">Parâmetros das Férias</div>
+        <div class="grid grid-cols-4 gap-4 text-xs">
+          <div><span class="text-slate-500 block text-[10px] uppercase">Salário Bruto Mensal</span><span id="print-salario-bruto" class="text-sm font-bold text-slate-900">R$ 5.000,00</span></div>
+          <div><span class="text-slate-500 block text-[10px] uppercase">Dias de Férias Gozados</span><span id="print-dias-gozados" class="text-sm font-bold text-slate-900">30 dias</span></div>
+          <div><span class="text-slate-500 block text-[10px] uppercase">Venda de Férias (Abono)</span><span id="print-dias-abono" class="text-sm font-bold text-slate-900">Não (0 dias)</span></div>
+          <div><span class="text-slate-500 block text-[10px] uppercase">Adiantamento do 13º</span><span id="print-adiantamento-13" class="text-sm font-bold text-slate-900">Não solicitado</span></div>
+        </div>
+      </div>
+
+      <!-- Destaque do Valor Líquido -->
+      <div class="border-2 border-slate-900 rounded-lg p-4 bg-slate-50 mb-6">
+        <span class="text-[10px] font-bold uppercase text-slate-900 block">Valor Líquido a Receber (Crédito em Conta)</span>
+        <div id="print-valor-liquido" class="text-3xl font-black text-slate-900 mt-1">R$ 5.300,29</div>
+        <div id="print-resumo-subtitulo" class="text-xs text-slate-600 mt-1">Total bruto de R$ 6.666,67 com retenções de R$ 1.366,38 (20,50%)</div>
+        <div class="text-[11px] font-bold text-emerald-800 mt-2 bg-emerald-50 p-2 rounded border border-emerald-200">
+          Prazo Legal: Pagamento obrigatório até 2 dias antes do início do gozo (Artigo 145 da CLT).
+        </div>
+      </div>
+
+      <!-- Tabela do Demonstrativo de Férias -->
+      <div class="space-y-2 mb-6">
+        <div class="text-xs font-bold uppercase tracking-wider text-slate-900">Detalhamento de Proventos e Descontos Legais</div>
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="border-b-2 border-slate-300 bg-slate-100 text-slate-700">
+              <th class="py-2 px-2.5">Descrição da Rubrica</th>
+              <th class="py-2 px-2.5 text-center">Referência</th>
+              <th class="py-2 px-2.5 text-right">Proventos (+)</th>
+              <th class="py-2 px-2.5 text-right">Descontos (−)</th>
+            </tr>
+          </thead>
+          <tbody id="print-tabela-corpo" class="divide-y divide-slate-200">
+            <!-- Preenchido dinamicamente pelo script -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Rodapé do Demonstrativo -->
+      <div class="mt-8 pt-3 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-500">
+        <div>Free Accurate Calculator • https://freeaccuratecalculator.com/calculadora-de-ferias/pt/</div>
+        <div>Os resultados são estimativas informativas baseadas na legislação trabalhista brasileira em vigor.</div>
+      </div>
+    </div>
+
+    <!-- Interface Interativa na Tela (Oculta na Impressão) -->
+    <div class="print:hidden space-y-6">
+      <!-- Barra Superior de Identificação e Regime -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-hairline pb-4 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+          <span class="mono-eyebrow text-ink font-semibold">Regras CLT & INSS/IRRF 2026 Ativas</span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold">
+            CF/88 Art. 7º & CLT Art. 129–145
+          </span>
+        </div>
+
+        <div class="flex items-center gap-2 text-mute font-mono text-[11px]">
+          <span>Moeda: <strong>Real Brasileiro (R$)</strong></span>
+          <span>•</span>
+          <span>Base: <strong>Mensal CLT</strong></span>
+        </div>
+      </div>
+
+      <!-- Formulário: Parâmetros Principais de Férias -->
+      <form id="ferias-calculator-form" class="space-y-5" onsubmit="event.preventDefault();">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Campo 1: Salário Bruto Mensal -->
+          <div class="space-y-1.5">
+            <label for="salario-bruto-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+              Salário bruto mensal <span class="text-red-500">*</span>
+            </label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-mute font-mono text-sm">
+                R$
+              </span>
+              <input
+                id="salario-bruto-input"
+                name="salarioBruto"
+                type="text"
+                inputmode="decimal"
+                value="5.000,00"
+                placeholder="Ex.: 5.000,00"
+                aria-label="Salário bruto mensal em reais"
+                required
+                class="w-full min-h-[44px] rounded-[8px] border border-hairline bg-canvas pl-10 pr-3.5 py-2.5 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-colors"
+              />
+            </div>
+            <p class="text-[11px] text-mute font-mono">Salário fixo registrado na sua carteira de trabalho.</p>
+          </div>
+
+          <!-- Campo 2: Dias de Férias a Tirar (Gozo) -->
+          <div class="space-y-1.5">
+            <label for="dias-ferias-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+              Dias de férias a gozar <span class="text-red-500">*</span>
+            </label>
+            <div class="flex items-center gap-2">
+              <input
+                id="dias-ferias-input"
+                name="diasFerias"
+                type="number"
+                min="1"
+                max="30"
+                step="1"
+                value="30"
+                aria-label="Quantidade de dias corridos de férias a usufruir"
+                class="w-24 min-h-[44px] rounded-[8px] border border-hairline bg-canvas px-3 py-2 text-base sm:text-sm font-mono text-ink text-center focus:border-link focus:outline-none"
+              />
+              <!-- Botões de Seleção Rápida -->
+              <div class="flex items-center gap-1">
+                <button type="button" class="btn-quick-dias px-2.5 py-1.5 rounded border border-hairline bg-canvas hover:bg-hairline text-xs font-mono text-ink cursor-pointer" data-dias="30">30d</button>
+                <button type="button" class="btn-quick-dias px-2.5 py-1.5 rounded border border-hairline bg-canvas hover:bg-hairline text-xs font-mono text-ink cursor-pointer" data-dias="20">20d</button>
+                <button type="button" class="btn-quick-dias px-2.5 py-1.5 rounded border border-hairline bg-canvas hover:bg-hairline text-xs font-mono text-ink cursor-pointer" data-dias="15">15d</button>
+                <button type="button" class="btn-quick-dias px-2.5 py-1.5 rounded border border-hairline bg-canvas hover:bg-hairline text-xs font-mono text-ink cursor-pointer" data-dias="10">10d</button>
+              </div>
+            </div>
+            <p class="text-[11px] text-mute font-mono">Direito padrão: 30 dias (pode ser fracionado pela CLT).</p>
+          </div>
+
+          <!-- Campo 3: Dependentes no IRRF -->
+          <div class="space-y-1.5">
+            <label for="dependentes-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+              Número de dependentes
+            </label>
+            <div class="relative">
+              <input
+                id="dependentes-input"
+                name="dependentes"
+                type="number"
+                min="0"
+                max="20"
+                step="1"
+                value="0"
+                placeholder="0"
+                aria-label="Quantidade de dependentes cadastrados para dedução do IRRF"
+                class="w-full min-h-[44px] rounded-[8px] border border-hairline bg-canvas px-3.5 py-2.5 text-base sm:text-sm font-mono text-ink focus:border-link focus:outline-none focus:ring-1 focus:ring-link transition-colors"
+              />
+            </div>
+            <p class="text-[11px] text-mute font-mono">Dedução legal de R$ 189,59 por dependente no imposto de renda.</p>
+          </div>
+        </div>
+
+        <!-- Seção de Opções Trabalhistas Estratégicas (Abono e 13º) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+          <!-- Card Vender Férias (Abono Pecuniário) -->
+          <div class="rounded-xl border border-hairline bg-canvas/60 p-4 space-y-3 transition-colors hover:border-link/40">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <label for="vender-ferias-checkbox" class="text-xs font-bold text-ink uppercase font-mono cursor-pointer flex items-center gap-2">
+                  <input
+                    id="vender-ferias-checkbox"
+                    type="checkbox"
+                    class="w-4 h-4 rounded border-hairline text-link focus:ring-link cursor-pointer"
+                  />
+                  <span>Vender 1/3 das férias (Abono)</span>
+                </label>
+                <p class="text-[11px] text-mute font-mono leading-relaxed">
+                  Converte até 10 dias em dinheiro (CLT Art. 143). <strong>Isento de INSS e IRRF!</strong>
+                </p>
+              </div>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold shrink-0">
+                Isento de Impostos
+              </span>
+            </div>
+
+            <!-- Input de Dias Vendidos (Visível quando marcado) -->
+            <div id="container-dias-abono" class="hidden pt-2 border-t border-hairline flex items-center justify-between text-xs font-mono">
+              <span class="text-ink">Quantidade de dias vendidos:</span>
+              <div class="flex items-center gap-2">
+                <input
+                  id="dias-abono-input"
+                  type="number"
+                  min="1"
+                  max="10"
+                  step="1"
+                  value="10"
+                  class="w-20 rounded border border-hairline bg-canvas px-2 py-1 text-center font-bold text-ink"
+                />
+                <span class="text-mute text-[11px]">dias (máx. 10)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Adiantar 1ª Parcela do 13º -->
+          <div class="rounded-xl border border-hairline bg-canvas/60 p-4 space-y-3 transition-colors hover:border-link/40">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-1">
+                <label for="adiantar-13-checkbox" class="text-xs font-bold text-ink uppercase font-mono cursor-pointer flex items-center gap-2">
+                  <input
+                    id="adiantar-13-checkbox"
+                    type="checkbox"
+                    class="w-4 h-4 rounded border-hairline text-link focus:ring-link cursor-pointer"
+                  />
+                  <span>Adiantar 1ª parcela do 13º (50%)</span>
+                </label>
+                <p class="text-[11px] text-mute font-mono leading-relaxed">
+                  Receba metade do seu 13º salário junto com as férias (Lei nº 4.749/1965).
+                </p>
+              </div>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-mono bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold shrink-0">
+                Sem Descontos Agora
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Seção Expansível: Opções Avançadas e Deduções -->
+        <div class="rounded-xl border border-hairline bg-canvas/60 overflow-hidden transition-all">
+          <button
+            type="button"
+            id="toggle-opcoes-avancadas-btn"
+            aria-expanded="false"
+            aria-controls="secao-opcoes-avancadas"
+            class="w-full flex items-center justify-between p-4 text-xs font-mono font-semibold text-ink hover:text-link transition-colors cursor-pointer select-none"
+          >
+            <div class="flex items-center gap-2">
+              <span class="text-sm">⚙️</span>
+              <span class="uppercase tracking-wider">Opções avançadas (Horas extras, pensão e deduções)</span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] bg-hairline text-mute">
+                Opcional
+              </span>
+            </div>
+            <span id="icone-opcoes-avancadas" class="transform transition-transform duration-200 text-mute">
+              ▼
+            </span>
+          </button>
+
+          <div id="secao-opcoes-avancadas" class="hidden p-4 pt-0 border-t border-hairline space-y-4">
+            <p class="text-[11px] text-mute font-mono">
+              Preencha caso possua adicionais variáveis no período aquisitivo ou descontos específicos em folha.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <!-- Média de Horas Extras e Adicionais -->
+              <div class="space-y-1">
+                <label for="media-horas-extras-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+                  Média de horas extras / adicionais (R$)
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-mute font-mono text-xs">
+                    R$
+                  </span>
+                  <input
+                    id="media-horas-extras-input"
+                    type="text"
+                    inputmode="decimal"
+                    value="0,00"
+                    placeholder="0,00"
+                    aria-label="Média mensal de horas extras e adicionais no período aquisitivo"
+                    class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas pl-9 pr-3 py-2 text-sm font-mono text-ink focus:border-link focus:outline-none"
+                  />
+                </div>
+                <span class="text-[10px] text-mute block font-mono">Adicional noturno, insalubridade e periculosidade (CLT art. 142).</span>
+              </div>
+
+              <!-- Pensão Alimentícia -->
+              <div class="space-y-1">
+                <label for="pensao-alimenticia-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+                  Pensão alimentícia judicial (R$)
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-mute font-mono text-xs">
+                    R$
+                  </span>
+                  <input
+                    id="pensao-alimenticia-input"
+                    type="text"
+                    inputmode="decimal"
+                    value="0,00"
+                    placeholder="0,00"
+                    aria-label="Valor de pensão alimentícia descontado judicialmente nas férias"
+                    class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas pl-9 pr-3 py-2 text-sm font-mono text-ink focus:border-link focus:outline-none"
+                  />
+                </div>
+                <span class="text-[10px] text-mute block font-mono">Dedutível da base de cálculo do IRRF.</span>
+              </div>
+
+              <!-- Outros Descontos Autorizados -->
+              <div class="space-y-1">
+                <label for="outros-descontos-input" class="block text-xs font-semibold text-ink uppercase font-mono">
+                  Outros descontos autorizados (R$)
+                </label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-mute font-mono text-xs">
+                    R$
+                  </span>
+                  <input
+                    id="outros-descontos-input"
+                    type="text"
+                    inputmode="decimal"
+                    value="0,00"
+                    placeholder="0,00"
+                    aria-label="Outros descontos autorizados em folha de pagamento"
+                    class="w-full min-h-[44px] rounded-[6px] border border-hairline bg-canvas pl-9 pr-3 py-2 text-sm font-mono text-ink focus:border-link focus:outline-none"
+                  />
+                </div>
+                <span class="text-[10px] text-mute block font-mono">Adiantamentos anteriores de férias ou consignados.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botões de Ação -->
+        <div class="flex flex-col sm:flex-row items-center gap-3 pt-2">
+          <button
+            type="button"
+            id="calcular-ferias-btn"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-link hover:bg-link-hover active:scale-98 text-white font-semibold text-sm shadow-xs transition-all cursor-pointer min-h-[48px]"
+          >
+            <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+            <span>Calcular férias CLT</span>
+          </button>
+
+          <button
+            type="button"
+            id="imprimir-holerite-btn"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 rounded-lg border border-hairline bg-canvas hover:bg-hairline text-ink text-xs font-mono transition-colors cursor-pointer min-h-[48px]"
+          >
+            <svg class="w-4 h-4 shrink-0 text-mute" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            <span>Imprimir / Salvar Demonstrativo PDF</span>
+          </button>
+
+          <button
+            type="button"
+            id="limpar-formulario-btn"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-4 py-3 rounded-lg border border-hairline bg-canvas hover:bg-hairline text-mute hover:text-ink text-xs font-mono transition-colors cursor-pointer min-h-[48px]"
+          >
+            <span>Restabelecer Padrões</span>
+          </button>
+        </div>
+      </form>
+
+      <!-- Cartão Hero de Resultado Principal -->
+      <div
+        id="hero-resultado-card"
+        aria-live="polite"
+        class="rounded-2xl border border-link/30 bg-gradient-to-br from-link/5 via-canvas to-link/10 p-6 sm:p-8 relative overflow-hidden transition-all shadow-whisper space-y-5"
+      >
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-hairline pb-3">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="mono-eyebrow text-xs uppercase tracking-wider text-link font-bold">
+              Resultado Principal • Valor Líquido das Férias
+            </span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span id="badge-status-ir" class="inline-flex items-center px-2.5 py-1 rounded text-xs font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
+              Isenção de IRRF Aplicada
+            </span>
+          </div>
+        </div>
+
+        <!-- Valor Central das Férias Líquidas -->
+        <div class="space-y-1">
+          <span class="text-xs font-mono text-mute uppercase tracking-wider block">Valor líquido a receber em conta</span>
+          <div class="text-3xl sm:text-5xl font-extrabold font-mono text-ink tracking-tight flex flex-wrap items-baseline gap-2">
+            <span id="resultado-valor-liquido" class="text-ink">R$ 5.300,29</span>
+          </div>
+          <p id="resultado-resumo-texto" class="text-xs sm:text-sm font-mono text-mute pt-1">
+            Você receberá aproximadamente <strong>79,50%</strong> do total bruto de proventos após R$ 1.366,38 em retenções.
+          </p>
+        </div>
+
+        <!-- Caixa de Alerta do Prazo de Pagamento (CLT Art. 145) -->
+        <div class="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4 flex items-start gap-3">
+          <span class="text-xl">📅</span>
+          <div class="space-y-0.5 text-xs font-mono">
+            <strong class="text-ink font-bold uppercase tracking-wide">Prazo Legal de Pagamento (Artigo 145 da CLT)</strong>
+            <p class="text-mute leading-relaxed">
+              O empregador é obrigado por lei a depositar o valor das suas férias e do abono pecuniário até <strong>2 (dois) dias antes</strong> do primeiro dia do seu descanso.
+            </p>
+          </div>
+        </div>
+
+        <!-- Barra Visual de Composição das Férias -->
+        <div class="space-y-2 pt-2">
+          <div class="flex justify-between items-center text-xs font-mono text-mute">
+            <span>Composição dos Proventos de Férias:</span>
+            <span id="label-proporcao-liquido">Líquido: 79,50%</span>
+          </div>
+          <div class="w-full h-3 rounded-full bg-hairline overflow-hidden flex" aria-hidden="true">
+            <div id="barra-liquido" class="h-full bg-emerald-500 transition-all duration-300" style="width: 79.50%;" title="Férias Líquidas"></div>
+            <div id="barra-inss" class="h-full bg-amber-500 transition-all duration-300" style="width: 11.02%;" title="Desconto INSS"></div>
+            <div id="barra-irrf" class="h-full bg-rose-500 transition-all duration-300" style="width: 9.47%;" title="Desconto IRRF"></div>
+            <div id="barra-outros" class="h-full bg-indigo-500 transition-all duration-300" style="width: 0%;" title="Outros Descontos"></div>
+          </div>
+          <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] font-mono text-mute pt-1">
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Líquido a Receber</div>
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-500"></span> INSS</div>
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span> IRRF</div>
+            <div class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500"></span> Outros Descontos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Grade de Métricas Secundárias -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <!-- Total Bruto de Férias -->
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Total bruto</span>
+          <div id="card-total-bruto" class="text-base sm:text-lg font-bold font-mono text-ink">R$ 6.666,67</div>
+          <span class="text-[10px] font-mono text-mute block">Férias + 1/3 + adicionais</span>
+        </div>
+
+        <!-- Férias Gozadas -->
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Férias gozadas</span>
+          <div id="card-ferias-gozadas" class="text-base sm:text-lg font-bold font-mono text-ink">R$ 5.000,00</div>
+          <span id="card-dias-gozadas-rotulo" class="text-[10px] font-mono text-mute block">30 dias corridos</span>
+        </div>
+
+        <!-- Terço Constitucional (1/3) -->
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">1/3 Constitucional</span>
+          <div id="card-terco-ferias" class="text-base sm:text-lg font-bold font-mono text-ink">R$ 1.666,67</div>
+          <span class="text-[10px] font-mono text-mute block">CF/88 Art. 7º, XVII</span>
+        </div>
+
+        <!-- Desconto INSS -->
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Desconto INSS</span>
+          <div id="card-inss" class="text-base sm:text-lg font-bold font-mono text-amber-600 dark:text-amber-400">R$ 734,85</div>
+          <span id="card-aliq-inss" class="text-[10px] font-mono text-mute block">Efetiva: 11,02%</span>
+        </div>
+
+        <!-- Desconto IRRF -->
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Desconto IRRF</span>
+          <div id="card-irrf" class="text-base sm:text-lg font-bold font-mono text-rose-600 dark:text-rose-400">R$ 631,53</div>
+          <span id="card-aliq-irrf" class="text-[10px] font-mono text-mute block">Efetiva: 9,47%</span>
+        </div>
+
+        <!-- Total de Descontos -->
+        <div class="rounded-xl border border-hairline bg-canvas p-3.5 space-y-1">
+          <span class="text-[10px] font-mono text-mute uppercase tracking-wider block">Total descontos</span>
+          <div id="card-total-descontos" class="text-base sm:text-lg font-bold font-mono text-rose-600 dark:text-rose-400">R$ 1.366,38</div>
+          <span id="card-aliq-total" class="text-[10px] font-mono text-mute block">20,50% do bruto</span>
+        </div>
+      </div>
+
+      <!-- Tabela de Detalhamento Transparente Passo a Passo -->
+      <div class="rounded-xl border border-hairline bg-canvas p-4 sm:p-6 space-y-4">
+        <div class="flex items-center justify-between border-b border-hairline pb-3">
+          <div>
+            <h3 class="text-xs sm:text-sm font-semibold uppercase font-mono text-ink">
+              Demonstrativo Transparente de Rubricas de Férias
+            </h3>
+            <p class="text-[11px] text-mute font-mono mt-0.5">
+              Confira detalhadamente cada item de proventos e descontos que compõem o seu recibo de férias.
+            </p>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs font-mono border-collapse">
+            <thead>
+              <tr class="border-b border-hairline text-mute">
+                <th class="py-2 pr-4 font-semibold uppercase text-[10px]">Rubrica / Evento</th>
+                <th class="py-2 px-3 font-semibold uppercase text-[10px] text-center">Referência</th>
+                <th class="py-2 px-3 font-semibold uppercase text-[10px] text-center">Fundamento Legal</th>
+                <th class="py-2 px-3 font-semibold uppercase text-[10px] text-right">Proventos (+)</th>
+                <th class="py-2 pl-3 font-semibold uppercase text-[10px] text-right">Descontos (−)</th>
+              </tr>
+            </thead>
+            <tbody id="tabela-demonstrativo-corpo" class="divide-y divide-hairline">
+              <!-- Preenchido via JavaScript -->
+            </tbody>
+            <tfoot>
+              <tr class="border-t-2 border-hairline font-bold text-ink bg-canvas-elevated">
+                <td class="py-3 pr-4" colspan="3">TOTAIS CONSOLIDADOS</td>
+                <td id="tabela-total-proventos" class="py-3 px-3 text-right text-emerald-600 dark:text-emerald-400">R$ 6.666,67</td>
+                <td id="tabela-total-descontos" class="py-3 pl-3 text-right text-rose-600 dark:text-rose-400">R$ 1.366,38</td>
+              </tr>
+              <tr class="border-t border-hairline font-bold text-ink bg-link/5">
+                <td class="py-3 pr-4" colspan="3">VALOR LÍQUIDO A RECEBER (DEPÓSITO EM CONTA)</td>
+                <td id="tabela-valor-liquido-final" class="py-3 pl-3 text-right text-ink font-mono text-sm sm:text-base" colspan="2">R$ 5.300,29</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEÇÕES DE CONTEÚDO EDITORIAL PROFUNDO, RICO E ORIGINAL (SEO SEMÂNTICO E E-E-A-T) -->
+
+  <!-- Seção 1: Guia Passo a Passo -->
+  <section class="mt-12 rounded-[16px] border border-hairline bg-canvas-elevated p-6 sm:p-10 shadow-whisper space-y-6">
+    <div class="space-y-2">
+      <span class="mono-eyebrow text-link">Guia Trabalhista Oficial</span>
+      <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+        Como calcular o valor das férias pela CLT em 2026?
+      </h2>
+      <p class="text-sm text-body leading-relaxed">
+        O cálculo das férias no Brasil é disciplinado pelos artigos 129 a 145 da Consolidação das Leis do Trabalho (CLT) e pelo artigo 7º, inciso XVII, da Constituição Federal. O direito é adquirido a cada 12 meses de vigência do contrato de trabalho (denominado <em>período aquisitivo</em>), devendo ser concedido pelo empregador nos 12 meses subsequentes (<em>período concessivo</em>).
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+      <div class="rounded-xl border border-hairline bg-canvas p-5 space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-link/10 text-link text-xs font-bold font-mono flex items-center justify-center">1</span>
+          <h3 class="text-sm font-bold text-ink">Remuneração Base Diária</h3>
+        </div>
+        <p class="text-xs text-body leading-relaxed">
+          Divide-se a remuneração integral do trabalhador (salário base somado à média de horas extras, adicional noturno, insalubridade e comissões) por 30 dias para obter o valor da diária.
+        </p>
+      </div>
+
+      <div class="rounded-xl border border-hairline bg-canvas p-5 space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-link/10 text-link text-xs font-bold font-mono flex items-center justify-center">2</span>
+          <h3 class="text-sm font-bold text-ink">Adicional Constitucional de 1/3</h3>
+        </div>
+        <p class="text-xs text-body leading-relaxed">
+          Acrescenta-se obrigatoriamente um terço (33,33%) sobre o valor das férias apuradas. O 1/3 constitucional é direito indisponível de todo trabalhador com carteira assinada.
+        </p>
+      </div>
+
+      <div class="rounded-xl border border-hairline bg-canvas p-5 space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="w-6 h-6 rounded-full bg-link/10 text-link text-xs font-bold font-mono flex items-center justify-center">3</span>
+          <h3 class="text-sm font-bold text-ink">Dedução de Encargos Oficiais</h3>
+        </div>
+        <p class="text-xs text-body leading-relaxed">
+          Sobre o valor bruto (férias + 1/3), aplicam-se a tabela progressiva do INSS 2026 e a retenção do IRRF na fonte (observadas as novas regras de isenção de 2026).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção 2: Abono Pecuniário e Venda de Férias (Diferencial Competitivo e Isenção Fiscal) -->
+  <section class="mt-8 rounded-[16px] border border-hairline bg-canvas-elevated p-6 sm:p-10 shadow-whisper space-y-6">
+    <div class="space-y-2">
+      <span class="mono-eyebrow text-emerald-600 dark:text-emerald-400">Economia Tributária & Benefício Financeiro</span>
+      <h2 class="text-xl sm:text-2xl font-bold text-ink tracking-tight">
+        O que é o Abono Pecuniário e como funciona a venda de férias?
+      </h2>
+      <p class="text-sm text-body leading-relaxed">
+        O artigo 143 da CLT faculta ao empregado converter <strong>1/3 do seu período de férias</strong> em abono pecuniário no valor da remuneração que lhe seria devida nos dias correspondentes. Para um direito integral de 30 dias, o trabalhador pode vender até 10 dias, gozando 20 dias de descanso.
+      </p>
+    </div>
+
+    <!-- Destaque de Isenção Fiscal -->
+    <div class="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-5 space-y-3">
+      <div class="flex items-center gap-2 text-emerald-700 dark:text-emerald-300 font-bold text-sm">
+        <span>🛡️</span>
+        <span>Abono Pecuniário é 100% Isento de INSS e IRRF</span>
+      </div>
+      <p class="text-xs sm:text-sm text-body leading-relaxed">
+        Diferentemente das férias gozadas, o abono pecuniário possui natureza estritamente <strong>indenizatória</strong>:
+      </p>
+      <ul class="text-xs sm:text-sm text-body space-y-2 list-disc pl-5">
+        <li><strong>Isenção Previdenciária (INSS):</strong> Expressamente garantida pelo artigo 28, § 9º, alínea "e", item 6, da Lei nº 8.212/1991.</li>
+        <li><strong>Isenção Fiscal (IRRF):</strong> Pacificada pelo Superior Tribunal de Justiça (Súmula 125 do STJ: <em>"O pagamento de férias não gozadas por necessidade do serviço não está sujeito a incidência do imposto de renda"</em>) e reiterada pelas soluções de consulta da Receita Federal do Brasil.</li>
+      </ul>
+      <p class="text-xs text-mute font-mono pt-1">
+        * Conclusão financeira: Ao vender 10 dias de férias, o trabalhador reduz a base tributável e recebe proporcionalmente mais dinheiro líquido no bolso do que se gozasse os 30 dias integrais.
+      </p>
+    </div>
+
+    <!-- Requisitos para Pedir a Venda de Férias -->
+    <div class="space-y-2 pt-2">
+      <h3 class="text-base font-bold text-ink">Como solicitar o abono pecuniário na empresa?</h3>
+      <p class="text-xs sm:text-sm text-body leading-relaxed">
+        Conforme o § 1º do artigo 143 da CLT, o abono de férias deve ser requerido pelo empregado até <strong>15 (quinze) dias antes do término do período aquisitivo</strong>. Quando requerido dentro desse prazo legal, o empregador não pode recusar a solicitação, sendo um direito potestativo do trabalhador.
+      </p>
+    </div>
+  </section>
+
+  <!-- Seção 3: Adiantamento do 13º Salário e Prazos de Pagamento -->
+  <section class="mt-8 rounded-[16px] border border-hairline bg-canvas-elevated p-6 sm:p-10 shadow-whisper space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Coluna 1: Adiantamento 13º -->
+      <div class="space-y-3">
+        <span class="mono-eyebrow text-blue-600 dark:text-blue-400">Gratificação Natalina</span>
+        <h2 class="text-lg sm:text-xl font-bold text-ink tracking-tight">
+          Adiantamento do 13º Salário nas Férias
+        </h2>
+        <p class="text-xs sm:text-sm text-body leading-relaxed">
+          A Lei nº 4.749/1965 (art. 2º, § 2º) estabelece que o empregado pode solicitar o pagamento adiantado da 1ª parcela (50%) do seu 13º salário juntamente com a remuneração das férias.
+        </p>
+        <div class="rounded-lg border border-hairline bg-canvas p-4 text-xs space-y-1.5 font-mono">
+          <strong class="text-ink block">Requisito Obrigatório:</strong>
+          <span class="text-body block">O requerimento deve ser feito por escrito ao setor de Recursos Humanos (RH) da empresa durante o <strong>mês de janeiro</strong> do ano em curso.</span>
+        </div>
+      </div>
+
+      <!-- Coluna 2: Prazos Legais (CLT Art. 145) -->
+      <div class="space-y-3">
+        <span class="mono-eyebrow text-amber-600 dark:text-amber-400">Regras e Penalidades</span>
+        <h2 class="text-lg sm:text-xl font-bold text-ink tracking-tight">
+          Quando o Empregador Deve Pagar as Férias?
+        </h2>
+        <p class="text-xs sm:text-sm text-body leading-relaxed">
+          O artigo 145 da CLT é categórico: o pagamento da remuneração das férias e do abono pecuniário deve ser creditado ao empregado <strong>até 2 (dois) dias antes do início do descanso</strong>.
+        </p>
+        <div class="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 text-xs space-y-1.5 font-mono text-body">
+          <strong class="text-ink block">Início das Férias e Dias de Folga:</strong>
+          <span>A CLT (art. 134, § 3º) proíbe o início das férias no período de dois dias que antecede feriado ou dia de repouso semanal remunerado (DSR). Portanto, para quem folga aos sábados e domingos, as férias não podem ter início em uma quinta ou sexta-feira.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção 4: Reforma Trabalhista e Fracionamento de Férias -->
+  <section class="mt-8 rounded-[16px] border border-hairline bg-canvas-elevated p-6 sm:p-10 shadow-whisper space-y-4">
+    <div class="space-y-2">
+      <span class="mono-eyebrow text-ink font-semibold">Lei nº 13.467/2017</span>
+      <h2 class="text-lg sm:text-xl font-bold text-ink tracking-tight">
+        Como funciona a divisão das férias em até 3 períodos?
+      </h2>
+      <p class="text-xs sm:text-sm text-body leading-relaxed">
+        Desde a vigência da Reforma Trabalhista, as férias podem ser usufruídas em até 3 períodos, desde que haja concordância entre as partes e sejam cumpridos os limites legais do artigo 134, § 1º, da CLT:
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+      <div class="rounded-lg border border-hairline bg-canvas p-4 text-xs space-y-1">
+        <span class="font-bold text-ink block font-mono text-sm">Período Principal</span>
+        <span class="text-emerald-600 dark:text-emerald-400 font-bold block">Mínimo de 14 dias corridos</span>
+        <span class="text-mute block">Um dos três períodos não pode ser menor que 14 dias.</span>
+      </div>
+
+      <div class="rounded-lg border border-hairline bg-canvas p-4 text-xs space-y-1">
+        <span class="font-bold text-ink block font-mono text-sm">Demais Períodos</span>
+        <span class="text-emerald-600 dark:text-emerald-400 font-bold block">Mínimo de 5 dias corridos cada</span>
+        <span class="text-mute block">Nenhum dos períodos fracionados pode ter menos de 5 dias.</span>
+      </div>
+
+      <div class="rounded-lg border border-hairline bg-canvas p-4 text-xs space-y-1">
+        <span class="font-bold text-ink block font-mono text-sm">Concordância Mútua</span>
+        <span class="text-blue-600 dark:text-blue-400 font-bold block">Acordo entre as partes</span>
+        <span class="text-mute block">A divisão depende de acordo mútuo entre empregado e empresa.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção 5: Tabela Oficial do INSS e Novo IRRF 2026 -->
+  <section class="mt-8 rounded-[16px] border border-hairline bg-canvas-elevated p-6 sm:p-10 shadow-whisper space-y-6">
+    <div class="space-y-2">
+      <span class="mono-eyebrow text-ink font-semibold">Tabelas Oficiais em Vigor</span>
+      <h2 class="text-lg sm:text-xl font-bold text-ink tracking-tight">
+        Tabelas de INSS e IRRF Aplicáveis às Férias em 2026
+      </h2>
+      <p class="text-xs sm:text-sm text-body leading-relaxed">
+        O cálculo dos descontos das férias segue exatamente os mesmos parâmetros progressivos da folha de pagamento do trabalhador brasileiro:
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Tabela INSS 2026 -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-ink font-mono uppercase tracking-wider flex items-center justify-between">
+          <span>Tabela INSS 2026 Progressiva</span>
+          <span class="text-[10px] text-mute font-normal">Portaria MPS/MF nº 13/2026</span>
+        </h3>
+        <div class="overflow-x-auto rounded-lg border border-hairline bg-canvas">
+          <table class="w-full text-left text-xs font-mono">
+            <thead>
+              <tr class="border-b border-hairline text-mute bg-hairline/20">
+                <th class="p-2.5">Faixa Salarial (R$)</th>
+                <th class="p-2.5 text-center">Alíquota</th>
+                <th class="p-2.5 text-right">Contribuição Máx.</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-hairline">
+              <tr>
+                <td class="p-2.5">Até R$ 1.621,00</td>
+                <td class="p-2.5 text-center">7,5%</td>
+                <td class="p-2.5 text-right">R$ 121,58</td>
+              </tr>
+              <tr>
+                <td class="p-2.5">De R$ 1.621,01 a R$ 2.902,84</td>
+                <td class="p-2.5 text-center">9,0%</td>
+                <td class="p-2.5 text-right">R$ 115,37</td>
+              </tr>
+              <tr>
+                <td class="p-2.5">De R$ 2.902,85 a R$ 4.354,27</td>
+                <td class="p-2.5 text-center">12,0%</td>
+                <td class="p-2.5 text-right">R$ 174,17</td>
+              </tr>
+              <tr>
+                <td class="p-2.5">De R$ 4.354,28 a R$ 8.475,55</td>
+                <td class="p-2.5 text-center">14,0%</td>
+                <td class="p-2.5 text-right">R$ 576,98</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="border-t border-hairline bg-hairline/10 font-bold">
+                <td class="p-2.5" colspan="2">Teto Máximo de Recolhimento</td>
+                <td class="p-2.5 text-right text-emerald-600 dark:text-emerald-400">R$ 988,09</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tabela IRRF e Novo IR 2026 -->
+      <div class="space-y-3">
+        <h3 class="text-sm font-bold text-ink font-mono uppercase tracking-wider flex items-center justify-between">
+          <span>Novo IRRF 2026 & Isenção</span>
+          <span class="text-[10px] text-mute font-normal">Lei do Novo IRRF</span>
+        </h3>
+        <div class="overflow-x-auto rounded-lg border border-hairline bg-canvas">
+          <table class="w-full text-left text-xs font-mono">
+            <thead>
+              <tr class="border-b border-hairline text-mute bg-hairline/20">
+                <th class="p-2.5">Renda Bruta Mensal</th>
+                <th class="p-2.5 text-center">Tratamento Fiscal</th>
+                <th class="p-2.5 text-right">Redutor Oficial</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-hairline">
+              <tr>
+                <td class="p-2.5">Até R$ 5.000,00</td>
+                <td class="p-2.5 text-center text-emerald-600 dark:text-emerald-400 font-bold">Isenção Total</td>
+                <td class="p-2.5 text-right">Zera o Imposto</td>
+              </tr>
+              <tr>
+                <td class="p-2.5">De R$ 5.000,01 a R$ 7.350,00</td>
+                <td class="p-2.5 text-center text-blue-600 dark:text-blue-400">Faixa de Transição</td>
+                <td class="p-2.5 text-right">Fórmula Gradual</td>
+              </tr>
+              <tr>
+                <td class="p-2.5">Acima de R$ 7.350,00</td>
+                <td class="p-2.5 text-center text-ink">Tabela Integral</td>
+                <td class="p-2.5 text-right">Sem Redutor</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr class="border-t border-hairline bg-hairline/10 font-bold">
+                <td class="p-2.5" colspan="2">Dedução por Dependente</td>
+                <td class="p-2.5 text-right">R$ 189,59/mês</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Seção 6: Tabela Comparativa de Exemplos Práticos Oficiais -->
+  <section class="mt-8 rounded-[16px] border border-hairline bg-canvas-elevated p-6 sm:p-10 shadow-whisper space-y-4">
+    <div class="space-y-1">
+      <span class="mono-eyebrow text-link">Simulações Verificadas</span>
+      <h2 class="text-lg sm:text-xl font-bold text-ink tracking-tight">
+        Tabela Comparativa de Férias CLT em 2026 (30 Dias Integrais)
+      </h2>
+      <p class="text-xs sm:text-sm text-body">
+        Veja quanto você recebe em diferentes faixas salariais para 30 dias de férias integrais sem dependentes:
+      </p>
+    </div>
+
+    <div class="overflow-x-auto rounded-lg border border-hairline bg-canvas">
+      <table class="w-full text-left text-xs font-mono">
+        <thead>
+          <tr class="border-b border-hairline text-mute bg-hairline/20">
+            <th class="p-3">Salário Bruto</th>
+            <th class="p-3 text-right">1/3 Constitucional</th>
+            <th class="p-3 text-right">Total Bruto</th>
+            <th class="p-3 text-right">INSS 2026</th>
+            <th class="p-3 text-right">IRRF 2026</th>
+            <th class="p-3 text-right">Valor Líquido</th>
+            <th class="p-3 text-right">Retenção</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-hairline">
+          {exemplosTabela.map((row) => (
+            <tr class="hover:bg-hairline/10 transition-colors">
+              <td class="p-3 font-bold text-ink">{formatarMoedaBRL(row.salarioBruto)}</td>
+              <td class="p-3 text-right text-mute">{formatarMoedaBRL(row.terco)}</td>
+              <td class="p-3 text-right font-semibold text-ink">{formatarMoedaBRL(row.totalBruto)}</td>
+              <td class="p-3 text-right text-amber-600 dark:text-amber-400">{formatarMoedaBRL(row.inss)}</td>
+              <td class="p-3 text-right text-rose-600 dark:text-rose-400">{formatarMoedaBRL(row.irrf)}</td>
+              <td class="p-3 text-right font-bold text-emerald-600 dark:text-emerald-400">{formatarMoedaBRL(row.liquido)}</td>
+              <td class="p-3 text-right text-mute">{row.aliqEfetiva}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Componente de Fórmula Oficial -->
+  <FormulaSection
+    formula="Valor Líquido = (Férias Gozadas + 1/3 CF/88 + Abono + 1/3 Abono + 13º Adiantado) − (INSS + IRRF + Deduções)"
+    explanation="O cálculo das férias compreende a soma da remuneração dos dias de descanso com o adicional constitucional obrigatório de 1/3 (art. 7º, XVII, da CF/88), adicionando eventuais valores de abono pecuniário (CLT art. 143) e primeira parcela do 13º salário (Lei 4.749/65), deduzindo-se a contribuição previdenciária progressiva do INSS e a retenção do Imposto de Renda na fonte conforme as tabelas oficiais de 2026."
+    variables={[
+      { symbol: 'Férias Gozadas', meaning: '(Salário Bruto Mensal + Médias de Adicionais / 30) × Dias de Descanso' },
+      { symbol: '1/3 Constitucional', meaning: 'Férias Gozadas / 3 (Garantia constitucional do Art. 7º, XVII)' },
+      { symbol: 'Abono Pecuniário', meaning: '(Remuneração / 30) × Dias Vendidos (Máximo de 10 dias, 100% isento de encargos)' },
+      { symbol: 'INSS 2026', meaning: 'Alíquotas progressivas de 7,5% a 14% incidentes apenas sobre férias gozadas e seu terço' },
+      { symbol: 'IRRF 2026', meaning: 'Imposto de renda na fonte com isenção total até R$ 5.000,00 e desconto por dependentes' },
+    ]}
+    isPortuguese={true}
+  />
+
+  <!-- Componente de Exemplo Trabalhado Passo a Passo -->
+  <WorkedExample
+    calculatorId="calculadora-de-ferias-pt"
+    title="Exemplo Prático Passo a Passo: Férias com Salário de R$ 5.000,00"
+    scenario="Vejamos o caso real de um trabalhador contratado sob o regime CLT com salário fixo mensal de R$ 5.000,00, que irá gozar 30 dias de férias integrais, sem venda de dias e sem dependentes cadastrados."
+    steps={workedExampleSteps}
+    conclusion="O trabalhador receberá exatamente R$ 5.300,29 depositados em sua conta corrente até dois dias antes de iniciar as suas férias, comprovando a exatidão das regras vigentes em 2026."
+    formula="Líquido = R$ 6.666,67 − (R$ 734,85 de INSS + R$ 631,53 de IRRF) = R$ 5.300,29"
+    isPortuguese={true}
+  />
+
+  <!-- Componente FAQ com FAQPage Schema Oficial -->
+  <FAQSection
+    faqs={faqs}
+    title="Perguntas Frequentes sobre Cálculo de Férias CLT"
+    isPortuguese={true}
+  />
+
+  <!-- Seção de Metodologia, Fontes e Termo de Isenção Legal -->
+  <section class="mt-8 rounded-[12px] border border-hairline bg-canvas p-6 text-xs text-mute space-y-3 font-mono">
+    <div class="flex items-center gap-2 text-ink font-semibold uppercase">
+      <span>⚖️</span>
+      <span>Metodologia, Fontes Oficiais e Termo de Isenção Legal</span>
+    </div>
+    <p>
+      <strong>Fontes Normativas Oficiais:</strong> Decreto-Lei nº 5.452/1943 (Consolidação das Leis do Trabalho - CLT), Constituição Federal de 1988 (Art. 7º), Lei nº 13.467/2017 (Modernização Trabalhista), Lei nº 4.749/1965 (Gratificação Natalina), Lei nº 8.212/1991 (Plano de Custeio da Previdência Social), Portaria Interministerial MPS/MF nº 13/2026 (Tabelas de Contribuição Previdenciária) e Legislação Tributária do Imposto de Renda Retido na Fonte (Receita Federal do Brasil).
+    </p>
+    <p>
+      <strong>Isenção de Responsabilidade (Disclaimer):</strong> Esta calculadora é uma ferramenta tecnológica de uso público e informativo, desenvolvida para fornecer estimativas matemáticas transparentes conforme as regras gerais da legislação brasileira. Situações particulares decorrentes de convenções coletivas de trabalho (CCT), acordos coletivos (ACT), adicionais setoriais específicos, faltas injustificadas no período aquisitivo ou planos de demissão voluntária devem ser consultadas diretamente junto ao departamento de Recursos Humanos (RH) da sua empresa ou com o seu sindicato de classe.
+    </p>
+  </section>
+
+  <!-- Script Cliente Interativo e Reativo -->
+  <script>
+    import {
+      calcularFerias,
+      formatarMoedaBRL,
+      formatarPercentualBRL,
+      parseMoedaBRL,
+    } from '../../../engines/feriasBrasil2026.ts';
+
+    function inicializarCalculadoraFerias() {
+      // Elementos de Entrada
+      const salarioInput = document.getElementById('salario-bruto-input') as HTMLInputElement | null;
+      const diasFeriasInput = document.getElementById('dias-ferias-input') as HTMLInputElement | null;
+      const dependentesInput = document.getElementById('dependentes-input') as HTMLInputElement | null;
+      const venderCheckbox = document.getElementById('vender-ferias-checkbox') as HTMLInputElement | null;
+      const containerDiasAbono = document.getElementById('container-dias-abono') as HTMLElement | null;
+      const diasAbonoInput = document.getElementById('dias-abono-input') as HTMLInputElement | null;
+      const adiantar13Checkbox = document.getElementById('adiantar-13-checkbox') as HTMLInputElement | null;
+      const mediaHorasExtrasInput = document.getElementById('media-horas-extras-input') as HTMLInputElement | null;
+      const pensaoInput = document.getElementById('pensao-alimenticia-input') as HTMLInputElement | null;
+      const outrosDescontosInput = document.getElementById('outros-descontos-input') as HTMLInputElement | null;
+
+      // Botões e Toggles
+      const calcularBtn = document.getElementById('calcular-ferias-btn');
+      const resetBtn = document.getElementById('limpar-formulario-btn');
+      const imprimirBtn = document.getElementById('imprimir-holerite-btn');
+      const toggleAvancadasBtn = document.getElementById('toggle-opcoes-avancadas-btn');
+      const secaoAvancadas = document.getElementById('secao-opcoes-avancadas');
+      const iconeAvancadas = document.getElementById('icone-opcoes-avancadas');
+      const quickDiasBtns = document.querySelectorAll('.btn-quick-dias');
+
+      // Elementos de Saída (Hero Card)
+      const resValorLiquido = document.getElementById('resultado-valor-liquido');
+      const resResumoTexto = document.getElementById('resultado-resumo-texto');
+      const badgeStatusIr = document.getElementById('badge-status-ir');
+      const barraLiquido = document.getElementById('barra-liquido');
+      const barraInss = document.getElementById('barra-inss');
+      const barraIrrf = document.getElementById('barra-irrf');
+      const barraOutros = document.getElementById('barra-outros');
+      const labelProporcaoLiquido = document.getElementById('label-proporcao-liquido');
+
+      // Cards Secundários
+      const cardTotalBruto = document.getElementById('card-total-bruto');
+      const cardFeriasGozadas = document.getElementById('card-ferias-gozadas');
+      const cardDiasGozadasRotulo = document.getElementById('card-dias-gozadas-rotulo');
+      const cardTercoFerias = document.getElementById('card-terco-ferias');
+      const cardInss = document.getElementById('card-inss');
+      const cardAliqInss = document.getElementById('card-aliq-inss');
+      const cardIrrf = document.getElementById('card-irrf');
+      const cardAliqIrrf = document.getElementById('card-aliq-irrf');
+      const cardTotalDescontos = document.getElementById('card-total-descontos');
+      const cardAliqTotal = document.getElementById('card-aliq-total');
+
+      // Tabela de Demonstrativo na Tela
+      const tabelaCorpo = document.getElementById('tabela-demonstrativo-corpo');
+      const tabTotalProventos = document.getElementById('tabela-total-proventos');
+      const tabTotalDescontos = document.getElementById('tabela-total-descontos');
+      const tabValorLiquidoFinal = document.getElementById('tabela-valor-liquido-final');
+
+      // Elementos do Relatório de Impressão (PDF)
+      const printSalarioBruto = document.getElementById('print-salario-bruto');
+      const printDiasGozados = document.getElementById('print-dias-gozados');
+      const printDiasAbono = document.getElementById('print-dias-abono');
+      const printAdiantamento13 = document.getElementById('print-adiantamento-13');
+      const printValorLiquido = document.getElementById('print-valor-liquido');
+      const printResumoSubtitulo = document.getElementById('print-resumo-subtitulo');
+      const printTabelaCorpo = document.getElementById('print-tabela-corpo');
+
+      if (!salarioInput) return;
+
+      // Toggle de Opções Avançadas
+      if (toggleAvancadasBtn && secaoAvancadas && iconeAvancadas) {
+        toggleAvancadasBtn.addEventListener('click', () => {
+          const isHidden = secaoAvancadas.classList.contains('hidden');
+          if (isHidden) {
+            secaoAvancadas.classList.remove('hidden');
+            iconeAvancadas.classList.add('rotate-180');
+            toggleAvancadasBtn.setAttribute('aria-expanded', 'true');
+          } else {
+            secaoAvancadas.classList.add('hidden');
+            iconeAvancadas.classList.remove('rotate-180');
+            toggleAvancadasBtn.setAttribute('aria-expanded', 'false');
+          }
+        });
+      }
+
+      // Toggle do Abono Pecuniário (Venda de Férias)
+      if (venderCheckbox && containerDiasAbono) {
+        venderCheckbox.addEventListener('change', () => {
+          if (venderCheckbox.checked) {
+            containerDiasAbono.classList.remove('hidden');
+            // Se o usuário selecionou vender férias e os dias de gozo estão em 30, ajusta para 20
+            if (diasFeriasInput && parseInt(diasFeriasInput.value, 10) === 30) {
+              diasFeriasInput.value = '20';
+            }
+          } else {
+            containerDiasAbono.classList.add('hidden');
+            if (diasFeriasInput && parseInt(diasFeriasInput.value, 10) === 20) {
+              diasFeriasInput.value = '30';
+            }
+          }
+          executarCalculo();
+        });
+      }
+
+      // Botões de Seleção Rápida de Dias de Férias
+      quickDiasBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const dias = btn.getAttribute('data-dias');
+          if (dias && diasFeriasInput) {
+            diasFeriasInput.value = dias;
+            // Se escolher 30 dias de gozo, desmarca venda de férias
+            if (dias === '30' && venderCheckbox && venderCheckbox.checked) {
+              venderCheckbox.checked = false;
+              if (containerDiasAbono) containerDiasAbono.classList.add('hidden');
+            }
+            executarCalculo();
+          }
+        });
+      });
+
+      // Função Principal de Execução do Cálculo
+      function executarCalculo() {
+        const salarioBruto = parseMoedaBRL(salarioInput?.value || '0');
+        const diasFerias = parseInt(diasFeriasInput?.value || '30', 10);
+        const dependentes = parseInt(dependentesInput?.value || '0', 10);
+        const vender = Boolean(venderCheckbox?.checked);
+        const diasAbono = vender ? parseInt(diasAbonoInput?.value || '10', 10) : 0;
+        const adiantar13 = Boolean(adiantar13Checkbox?.checked);
+        const mediaHorasExtras = parseMoedaBRL(mediaHorasExtrasInput?.value || '0');
+        const pensao = parseMoedaBRL(pensaoInput?.value || '0');
+        const outrosDescontos = parseMoedaBRL(outrosDescontosInput?.value || '0');
+
+        const resultado = calcularFerias({
+          salarioBrutoMensal: salarioBruto,
+          diasFerias,
+          venderFerias: vender,
+          diasAbono,
+          adiantar13o: adiantar13,
+          dependentes,
+          mediaHorasExtras,
+          pensaoAlimenticia: pensao,
+          outrasDeducoes: outrosDescontos,
+        });
+
+        // Atualização dos Textos e Valores no Hero Card
+        if (resValorLiquido) {
+          resValorLiquido.textContent = formatarMoedaBRL(resultado.valorLiquidoReceber);
+        }
+
+        const pctLiquido = resultado.totalBrutoRecebido > 0
+          ? ((resultado.valorLiquidoReceber / resultado.totalBrutoRecebido) * 100).toFixed(2).replace('.', ',')
+          : '0,00';
+
+        if (resResumoTexto) {
+          resResumoTexto.innerHTML = `Você receberá aproximadamente <strong>${pctLiquido}%</strong> do total bruto de proventos após ${formatarMoedaBRL(resultado.totalDescontos)} em retenções.`;
+        }
+
+        // Status do IRRF
+        if (badgeStatusIr) {
+          if (resultado.irrf.irrfFinal === 0) {
+            badgeStatusIr.textContent = resultado.irrf.isencaoTotal2026
+              ? 'Isenção Total do IRRF Aplicada'
+              : 'Sem Retenção de IRRF';
+            badgeStatusIr.className = 'inline-flex items-center px-2.5 py-1 rounded text-xs font-mono font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400';
+          } else if (resultado.irrf.redutor2026 > 0) {
+            badgeStatusIr.textContent = 'Novo IR 2026: Redutor de Transição Ativo';
+            badgeStatusIr.className = 'inline-flex items-center px-2.5 py-1 rounded text-xs font-mono font-medium bg-blue-500/10 text-blue-600 dark:text-blue-400';
+          } else {
+            badgeStatusIr.textContent = `IRRF: Alíquota Efetiva de ${formatarPercentualBRL(resultado.irrf.aliquotaEfetiva)}`;
+            badgeStatusIr.className = 'inline-flex items-center px-2.5 py-1 rounded text-xs font-mono font-medium bg-hairline text-ink';
+          }
+        }
+
+        // Atualização da Barra de Composição
+        if (resultado.totalBrutoRecebido > 0) {
+          const pLiquido = (resultado.valorLiquidoReceber / resultado.totalBrutoRecebido) * 100;
+          const pInss = (resultado.inss.totalDesconto / resultado.totalBrutoRecebido) * 100;
+          const pIrrf = (resultado.irrf.irrfFinal / resultado.totalBrutoRecebido) * 100;
+          const pOutros = ((resultado.pensaoAlimenticia + resultado.outrasDeducoes) / resultado.totalBrutoRecebido) * 100;
+
+          if (barraLiquido) barraLiquido.style.width = `${pLiquido.toFixed(2)}%`;
+          if (barraInss) barraInss.style.width = `${pInss.toFixed(2)}%`;
+          if (barraIrrf) barraIrrf.style.width = `${pIrrf.toFixed(2)}%`;
+          if (barraOutros) barraOutros.style.width = `${pOutros.toFixed(2)}%`;
+
+          if (labelProporcaoLiquido) {
+            labelProporcaoLiquido.textContent = `Líquido: ${pLiquido.toFixed(2).replace('.', ',')}%`;
+          }
+        }
+
+        // Cards Secundários
+        if (cardTotalBruto) cardTotalBruto.textContent = formatarMoedaBRL(resultado.totalBrutoRecebido);
+        if (cardFeriasGozadas) cardFeriasGozadas.textContent = formatarMoedaBRL(resultado.valorFeriasGozadas);
+        if (cardDiasGozadasRotulo) cardDiasGozadasRotulo.textContent = `${resultado.diasGozados} ${resultado.diasGozados === 1 ? 'dia corrido' : 'dias corridos'}`;
+        if (cardTercoFerias) cardTercoFerias.textContent = formatarMoedaBRL(resultado.valorTercoConstitucionalFerias);
+        if (cardInss) cardInss.textContent = formatarMoedaBRL(resultado.inss.totalDesconto);
+        if (cardAliqInss) cardAliqInss.textContent = `Efetiva: ${formatarPercentualBRL(resultado.inss.aliquotaEfetiva)}`;
+        if (cardIrrf) cardIrrf.textContent = formatarMoedaBRL(resultado.irrf.irrfFinal);
+        if (cardAliqIrrf) cardAliqIrrf.textContent = resultado.irrf.irrfFinal === 0 ? 'Isento em 2026' : `Efetiva: ${formatarPercentualBRL(resultado.irrf.aliquotaEfetiva)}`;
+        if (cardTotalDescontos) cardTotalDescontos.textContent = formatarMoedaBRL(resultado.totalDescontos);
+        if (cardAliqTotal) cardAliqTotal.textContent = `${formatarPercentualBRL(resultado.percentualDescontosSobreBruto)} do bruto`;
+
+        // Renderização Dinâmica da Tabela na Tela
+        if (tabelaCorpo) {
+          tabelaCorpo.innerHTML = '';
+          resultado.tabelaRubricas.forEach((item) => {
+            const tr = document.createElement('tr');
+            tr.className = 'hover:bg-hairline/20 transition-colors';
+            tr.innerHTML = `
+              <td class="py-2.5 pr-4">
+                <span class="font-semibold text-ink block">${item.descricao}</span>
+              </td>
+              <td class="py-2.5 px-3 text-center text-mute">${item.referencia}</td>
+              <td class="py-2.5 px-3 text-center text-mute text-[10px]">${item.baseLegal}</td>
+              <td class="py-2.5 px-3 text-right font-medium text-emerald-600 dark:text-emerald-400">
+                ${item.provento > 0 ? formatarMoedaBRL(item.provento) : '—'}
+              </td>
+              <td class="py-2.5 pl-3 text-right font-medium text-rose-600 dark:text-rose-400">
+                ${item.desconto > 0 ? formatarMoedaBRL(item.desconto) : '—'}
+              </td>
+            `;
+            tabelaCorpo.appendChild(tr);
+          });
+        }
+
+        if (tabTotalProventos) tabTotalProventos.textContent = formatarMoedaBRL(resultado.totalBrutoRecebido);
+        if (tabTotalDescontos) tabTotalDescontos.textContent = formatarMoedaBRL(resultado.totalDescontos);
+        if (tabValorLiquidoFinal) tabValorLiquidoFinal.textContent = formatarMoedaBRL(resultado.valorLiquidoReceber);
+
+        // Atualização do Relatório de Impressão (PDF)
+        if (printSalarioBruto) printSalarioBruto.textContent = formatarMoedaBRL(resultado.salarioContratual);
+        if (printDiasGozados) printDiasGozados.textContent = `${resultado.diasGozados} dias`;
+        if (printDiasAbono) printDiasAbono.textContent = resultado.diasAbono > 0 ? `Sim (${resultado.diasAbono} dias vendidos)` : 'Não (0 dias)';
+        if (printAdiantamento13) printAdiantamento13.textContent = resultado.solicitouAdiantamento13 ? `Sim (${formatarMoedaBRL(resultado.valorAdiantamento13o)})` : 'Não solicitado';
+        if (printValorLiquido) printValorLiquido.textContent = formatarMoedaBRL(resultado.valorLiquidoReceber);
+        if (printResumoSubtitulo) {
+          printResumoSubtitulo.textContent = `Total bruto de ${formatarMoedaBRL(resultado.totalBrutoRecebido)} com retenções de ${formatarMoedaBRL(resultado.totalDescontos)} (${formatarPercentualBRL(resultado.percentualDescontosSobreBruto)})`;
+        }
+
+        if (printTabelaCorpo) {
+          printTabelaCorpo.innerHTML = '';
+          resultado.tabelaRubricas.forEach((item) => {
+            const tr = document.createElement('tr');
+            tr.className = 'border-b border-slate-200';
+            tr.innerHTML = `
+              <td class="py-2 px-2.5">
+                <span class="font-bold text-slate-900 block">${item.descricao}</span>
+                <span class="text-[10px] text-slate-500 block">${item.baseLegal}</span>
+              </td>
+              <td class="py-2 px-2.5 text-center text-slate-600">${item.referencia}</td>
+              <td class="py-2 px-2.5 text-right font-medium text-emerald-800">
+                ${item.provento > 0 ? formatarMoedaBRL(item.provento) : '—'}
+              </td>
+              <td class="py-2 px-2.5 text-right font-medium text-rose-800">
+                ${item.desconto > 0 ? formatarMoedaBRL(item.desconto) : '—'}
+              </td>
+            `;
+            printTabelaCorpo.appendChild(tr);
+          });
+        }
+      }
+
+      // Formatação automática do Salário Bruto ao sair do campo
+      salarioInput.addEventListener('blur', () => {
+        const val = parseMoedaBRL(salarioInput.value);
+        salarioInput.value = val.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        executarCalculo();
+      });
+
+      // Eventos de entrada em tempo real
+      const inputsMonitorados = [
+        salarioInput,
+        diasFeriasInput,
+        dependentesInput,
+        diasAbonoInput,
+        mediaHorasExtrasInput,
+        pensaoInput,
+        outrosDescontosInput,
+      ];
+
+      inputsMonitorados.forEach((input) => {
+        if (!input) return;
+        input.addEventListener('input', executarCalculo);
+        input.addEventListener('change', executarCalculo);
+      });
+
+      if (adiantar13Checkbox) {
+        adiantar13Checkbox.addEventListener('change', executarCalculo);
+      }
+
+      if (calcularBtn) {
+        calcularBtn.addEventListener('click', executarCalculo);
+      }
+
+      // Impressão / Salvar PDF
+      if (imprimirBtn) {
+        imprimirBtn.addEventListener('click', () => {
+          window.print();
+        });
+      }
+
+      // Botão de Restabelecer Padrões
+      if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+          if (salarioInput) salarioInput.value = '5.000,00';
+          if (diasFeriasInput) diasFeriasInput.value = '30';
+          if (dependentesInput) dependentesInput.value = '0';
+          if (venderCheckbox) {
+            venderCheckbox.checked = false;
+            if (containerDiasAbono) containerDiasAbono.classList.add('hidden');
+          }
+          if (diasAbonoInput) diasAbonoInput.value = '10';
+          if (adiantar13Checkbox) adiantar13Checkbox.checked = false;
+          if (mediaHorasExtrasInput) mediaHorasExtrasInput.value = '0,00';
+          if (pensaoInput) pensaoInput.value = '0,00';
+          if (outrosDescontosInput) outrosDescontosInput.value = '0,00';
+          executarCalculo();
+        });
+      }
+
+      // Executa o cálculo imediatamente no carregamento da página
+      executarCalculo();
+    }
+
+    // Inicialização segura no ciclo de vida do Astro e transições de página
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', inicializarCalculadoraFerias);
+    } else {
+      inicializarCalculadoraFerias();
+    }
+    document.addEventListener('astro:page-load', inicializarCalculadoraFerias);
+  </script>
+</CalculatorLayout>

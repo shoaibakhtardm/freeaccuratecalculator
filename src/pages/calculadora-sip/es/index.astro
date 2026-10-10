@@ -1,0 +1,244 @@
+---
+// src/pages/calculadora-sip/es/index.astro
+import CalculatorLayout from '../../../layouts/CalculatorLayout.astro';
+import ResultDisplay from '../../../components/calculator/ResultDisplay.astro';
+import FormulaSection from '../../../components/calculator/FormulaSection.astro';
+import WorkedExample from '../../../components/calculator/WorkedExample.astro';
+
+const faqs = [
+  {
+    question: '¿Qué es un Plan de Inversión Sistemática (SIP)?',
+    answer: 'Un SIP (Systematic Investment Plan) es una estrategia financiera que consiste en invertir una cantidad fija de dinero de forma periódica (habitualmente mensual) en un fondo de inversión o cartera indexada. Permite promediar el coste de adquisición (Dollar-Cost Averaging) y maximizar el interés compuesto a largo plazo.',
+  },
+  {
+    question: '¿Cómo se calcula el interés compuesto de un SIP?',
+    answer: 'El cálculo utiliza la fórmula de anualidad anticipada: M = P × [((1 + i)^n - 1) / i] × (1 + i), donde P es la cuota mensual, i es la tasa mensual equivalente (rendimiento anual / 12) y n es el número total de meses. Cada aportación genera intereses de forma independiente según el tiempo que permanezca invertida.',
+  },
+  {
+    question: '¿Qué ventaja tiene invertir mes a mes frente a una inversión única?',
+    answer: 'La inversión periódica reduce el riesgo de entrar en un pico de mercado al diversificar el momento de compra (promediación temporal). Permite comprar más participaciones cuando los precios bajan y menos cuando suben, sin necesidad de intentar predecir los movimientos del mercado.',
+  },
+  {
+    question: '¿Qué rentabilidad anual esperada es prudente utilizar?',
+    answer: 'Históricamente, los índices bursátiles globales diversificados (como el MSCI World o el S&P 500) han ofrecido rendimientos nominales promedio a largo plazo de entre el 7% y el 10% anual antes de inflación. Es recomendable realizar simulaciones conservadoras (ej. 6% - 8%) para una planificación prudente.',
+  },
+  {
+    question: '¿Existe algún importe mínimo para empezar un SIP?',
+    answer: 'La mayoría de fondos indexados y brokers permiten configurar planes de aportación periódica desde 25 € o 50 € al mes. Lo determinante para el crecimiento del patrimonio es la constancia y el horizonte temporal de acumulación.',
+  },
+];
+
+const relatedCalculators = [
+  { title: 'Calculadora de Salário Líquido', href: '/calculadora-salario/pt/', badge: 'Finanças' },
+  { title: 'Compound Interest Calculator', href: '/compound-interest-calculator/', badge: 'Inversión' },
+  { title: 'Calculadora de Edad Exacta', href: '/calculadora-edad/es/', badge: 'Herramientas' },
+  { title: 'Calculadora de Porcentaje', href: '/percentage-calculator/', badge: 'Matemáticas' },
+];
+
+const formulaVariables = [
+  { symbol: 'P', meaning: 'Inversión o aportación mensual fija (€ / $)' },
+  { symbol: 'i', meaning: 'Tasa de rendimiento mensual periódica (Tasa Anual / 12)' },
+  { symbol: 'n', meaning: 'Número total de aportaciones mensuales (Años × 12)' },
+  { symbol: 'M', meaning: 'Valor futuro acumulado al vencimiento (Total final)' },
+];
+
+const workedSteps = [
+  {
+    number: 1,
+    title: 'Determinar la tasa de rendimiento mensual',
+    description: 'Dividir la rentabilidad anual esperada (ej. 12%) entre 12 meses para obtener la tasa mensual.',
+    mathExpression: 'i = 12% / 12 = 1% = 0,01 mensual',
+  },
+  {
+    number: 2,
+    title: 'Calcular el número total de cuotas y el capital aportado',
+    description: 'Para una inversión de 200 € al mes durante 10 años (120 meses), el capital invertido de tu bolsillo es:',
+    mathExpression: 'Total Invertido = 200 € × 120 meses = 24.000 €',
+  },
+  {
+    number: 3,
+    title: 'Aplicar la fórmula de anualidad anticipada',
+    description: 'Multiplicar la aportación por el factor de capitalización compuesta mensual acumulada.',
+    mathExpression: 'M = 200 × [((1 + 0,01)^120 - 1) / 0,01] × (1 + 0,01) = 46.468 €',
+  },
+  {
+    number: 4,
+    title: 'Calcular la riqueza generada por interés compuesto',
+    description: 'Restar el capital invertido del valor total final para cuantificar las ganancias generadas.',
+    mathExpression: 'Ganancias = 46.468 € - 24.000 € = 22.468 € (+93,6%)',
+  },
+];
+---
+
+<CalculatorLayout
+  title="Calculadora SIP: Plan de Inversión Sistemática y Rentabilidad"
+  metaDescription="Calcula los rendimientos de tu Plan de Inversión Sistemática (SIP) en tiempo real. Simula aportaciones periódicas mensuales, interés compuesto y desglose de ganancias."
+  h1="Calculadora SIP"
+  subtitle="Simula el crecimiento de tus inversiones periódicas con aportaciones mensuales e interés compuesto a largo plazo con cálculo instantáneo en navegador."
+  category={{ label: 'Finanzas', href: '/finance/' }}
+  calculatorName="Calculadora SIP"
+  relatedCalculators={relatedCalculators}
+  faqs={faqs}
+  lang="es"
+>
+  <div class="calculator-main-box relative rounded-[20px] border border-hairline bg-canvas-elevated p-4 sm:p-8 shadow-whisper space-y-6 overflow-hidden">
+    <!-- Entrada de Datos -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div class="space-y-2">
+        <label for="sip-monthly" class="block text-xs font-mono font-bold text-ink uppercase tracking-wider">
+          Aportación Mensual (€)
+        </label>
+        <div class="relative">
+          <input
+            type="number"
+            id="sip-monthly"
+            min="10"
+            max="100000"
+            step="10"
+            value="250"
+            class="w-full rounded-xl border border-hairline bg-canvas px-4 py-3 text-base font-semibold text-ink focus:border-link focus:outline-none transition-colors"
+          />
+        </div>
+        <input type="range" id="sip-monthly-range" min="10" max="2500" step="10" value="250" class="w-full accent-link" />
+      </div>
+
+      <div class="space-y-2">
+        <label for="sip-rate" class="block text-xs font-mono font-bold text-ink uppercase tracking-wider">
+          Rendimiento Anual Esperado (%)
+        </label>
+        <div class="relative">
+          <input
+            type="number"
+            id="sip-rate"
+            min="1"
+            max="30"
+            step="0.5"
+            value="10"
+            class="w-full rounded-xl border border-hairline bg-canvas px-4 py-3 text-base font-semibold text-ink focus:border-link focus:outline-none transition-colors"
+          />
+        </div>
+        <input type="range" id="sip-rate-range" min="1" max="25" step="0.5" value="10" class="w-full accent-link" />
+      </div>
+
+      <div class="space-y-2">
+        <label for="sip-years" class="block text-xs font-mono font-bold text-ink uppercase tracking-wider">
+          Horizonte Temporal (Años)
+        </label>
+        <div class="relative">
+          <input
+            type="number"
+            id="sip-years"
+            min="1"
+            max="40"
+            step="1"
+            value="10"
+            class="w-full rounded-xl border border-hairline bg-canvas px-4 py-3 text-base font-semibold text-ink focus:border-link focus:outline-none transition-colors"
+          />
+        </div>
+        <input type="range" id="sip-years-range" min="1" max="35" step="1" value="10" class="w-full accent-link" />
+      </div>
+    </div>
+
+    <!-- Resultados en Tiempo Real -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-hairline">
+      <div class="rounded-xl border border-hairline bg-canvas p-4 text-center">
+        <span class="block text-xs font-mono text-mute uppercase">Total Invertido</span>
+        <span id="sip-res-invested" class="block text-xl sm:text-2xl font-bold font-mono text-ink mt-1">30.000 €</span>
+        <span class="text-[11px] text-mute block mt-0.5">Capital de tus ahorros</span>
+      </div>
+
+      <div class="rounded-xl border border-hairline bg-canvas p-4 text-center">
+        <span class="block text-xs font-mono text-emerald-600 dark:text-emerald-400 uppercase font-semibold">Ganancias Estimadas</span>
+        <span id="sip-res-gain" class="block text-xl sm:text-2xl font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-1">21.614 €</span>
+        <span class="text-[11px] text-mute block mt-0.5">Generado por interés compuesto</span>
+      </div>
+
+      <div class="rounded-xl border-2 border-link/40 bg-link/5 p-4 text-center">
+        <span class="block text-xs font-mono text-link uppercase font-bold">Valor Total Acumulado</span>
+        <span id="sip-res-total" class="block text-2xl sm:text-3xl font-black font-mono text-link mt-1">51.614 €</span>
+        <span class="text-[11px] text-mute block mt-0.5">Capital + Intereses al vencimiento</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script interactivo del cliente -->
+  <script is:inline>
+    function calculateSip() {
+      const monthlyInput = document.getElementById('sip-monthly');
+      const rateInput = document.getElementById('sip-rate');
+      const yearsInput = document.getElementById('sip-years');
+
+      const monthlyRange = document.getElementById('sip-monthly-range');
+      const rateRange = document.getElementById('sip-rate-range');
+      const yearsRange = document.getElementById('sip-years-range');
+
+      const P = parseFloat(monthlyInput.value) || 0;
+      const annualRate = parseFloat(rateInput.value) || 0;
+      const years = parseFloat(yearsInput.value) || 0;
+
+      const n = years * 12;
+      const i = (annualRate / 100) / 12;
+
+      let totalValue = 0;
+      if (i > 0 && n > 0) {
+        totalValue = P * (((Math.pow(1 + i, n) - 1) / i) * (1 + i));
+      } else {
+        totalValue = P * n;
+      }
+
+      const totalInvested = P * n;
+      const totalGain = Math.max(0, totalValue - totalInvested);
+
+      const fmt = new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+      document.getElementById('sip-res-invested').textContent = fmt.format(Math.round(totalInvested));
+      document.getElementById('sip-res-gain').textContent = fmt.format(Math.round(totalGain));
+      document.getElementById('sip-res-total').textContent = fmt.format(Math.round(totalValue));
+    }
+
+    function sync(inpId, rangeId) {
+      const inp = document.getElementById(inpId);
+      const rng = document.getElementById(rangeId);
+      if (inp && rng) {
+        inp.addEventListener('input', () => {
+          rng.value = inp.value;
+          calculateSip();
+        });
+        rng.addEventListener('input', () => {
+          inp.value = rng.value;
+          calculateSip();
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      sync('sip-monthly', 'sip-monthly-range');
+      sync('sip-rate', 'sip-rate-range');
+      sync('sip-years', 'sip-years-range');
+      calculateSip();
+    });
+    // Astro page load hook
+    document.addEventListener('astro:page-load', () => {
+      sync('sip-monthly', 'sip-monthly-range');
+      sync('sip-rate', 'sip-rate-range');
+      sync('sip-years', 'sip-years-range');
+      calculateSip();
+    });
+  </script>
+
+  <!-- Sección de Fórmula y Ejemplo Práctico -->
+  <div slot="content" class="space-y-8 mt-12">
+    <FormulaSection
+      formula="M = P \times \left[ \frac{(1 + i)^n - 1}{i} \right] \times (1 + i)"
+      formulaTitle="Fórmula Matemática del Plan de Inversión Sistemática (SIP)"
+      explanation="La fórmula calcula el valor futuro de una serie de pagos periódicos constantes realizados al inicio de cada mes (anualidad anticipada), aplicando capitalización compuesta continua sobre cada aportación individual."
+      variables={formulaVariables}
+    />
+
+    <WorkedExample
+      title="Ejemplo Práctico de Simulación SIP"
+      description="Supongamos que comienzas hoy a invertir 200 € al mes en un fondo indexado global con una rentabilidad media esperada del 12% anual durante 10 años:"
+      steps={workedSteps}
+    />
+  </div>
+</CalculatorLayout>
