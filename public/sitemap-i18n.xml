@@ -8,6 +8,12 @@
     <priority>1.0</priority>
   </url>
   <url>
+    <loc>https://freeaccuratecalculator.com/calculadora-de-ferias/pt/</loc>
+    <lastmod>2026-09-29T17:36:59.167Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
     <loc>https://freeaccuratecalculator.com/calculadora-edad/es/</loc>
     <lastmod>2026-09-29T05:46:23.000Z</lastmod>
     <changefreq>weekly</changefreq>
@@ -21,7 +27,13 @@
   </url>
   <url>
     <loc>https://freeaccuratecalculator.com/calculadora-salario/pt/</loc>
-    <lastmod>2026-09-29T13:43:23.857Z</lastmod>
+    <lastmod>2026-09-29T13:52:17.000Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://freeaccuratecalculator.com/calculadora-sip/es/</loc>
+    <lastmod>2026-10-10T08:07:35.642Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
