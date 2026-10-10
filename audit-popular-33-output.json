@@ -1,0 +1,996 @@
+[
+  {
+    "slug": "percentage-calculator",
+    "name": "Percentage Calculator",
+    "category": "math",
+    "href": "/percentage-calculator/",
+    "title": "Percentage Calculator — Free, Accurate &amp; Instant Percent Math | Free Accurate Calculator",
+    "titleLength": 92,
+    "metaDescription": "Free online percentage calculator. Calculate percentages, percentage change, increase, decrease, and differences with step-by-step formulas and instant verified results.",
+    "metaDescLength": 169,
+    "canonical": "https://freeaccuratecalculator.com/percentage-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Percentage Calculator",
+    "h2Count": 3,
+    "h3Count": 9,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "BreadcrumbList",
+      "FAQPage"
+    ],
+    "faqCount": 5,
+    "internalLinkCount": 18,
+    "wordCount": 747,
+    "htmlSizeBytes": 130539
+  },
+  {
+    "slug": "bmi-calculator",
+    "name": "BMI Calculator",
+    "category": "health",
+    "href": "/bmi-calculator/",
+    "title": "BMI Calculator — Body Mass Index with Metric &amp; Imperial Toggles | Free Accurate Calculator",
+    "titleLength": 94,
+    "metaDescription": "Calculate your exact Body Mass Index (BMI) with instant Metric (kg/cm) and Imperial (lbs/ft-in) switchers, WHO classification gauge, and healthy weight recommendations.",
+    "metaDescLength": 168,
+    "canonical": "https://freeaccuratecalculator.com/bmi-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "BMI Calculator",
+    "h2Count": 4,
+    "h3Count": 9,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "BreadcrumbList",
+      [
+        "WebApplication",
+        "SoftwareApplication"
+      ],
+      "HowTo",
+      "FAQPage"
+    ],
+    "faqCount": 5,
+    "internalLinkCount": 19,
+    "wordCount": 923,
+    "htmlSizeBytes": 145681
+  },
+  {
+    "slug": "age-calculator",
+    "name": "Age Calculator",
+    "category": "everyday",
+    "href": "/age-calculator/",
+    "title": "Age Calculator — Exact Chronological Age in Days, Hours &amp; Live Seconds | Free Accurate Calculator",
+    "titleLength": 101,
+    "metaDescription": "Calculate your exact chronological age in years, months, days, hours, minutes, and live ticking seconds. Includes future date limits, next birthday countdown, and birth day of week.",
+    "metaDescLength": 181,
+    "canonical": "https://freeaccuratecalculator.com/age-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Age Calculator",
+    "h2Count": 3,
+    "h3Count": 12,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 5,
+    "internalLinkCount": 18,
+    "wordCount": 1080,
+    "htmlSizeBytes": 145499
+  },
+  {
+    "slug": "love-calculator",
+    "name": "Love Calculator",
+    "category": "love",
+    "href": "/love-calculator/",
+    "title": "Love Calculator by Name - Free &amp; Accurate Compatibility Test (2026) | Free Accurate Calculator",
+    "titleLength": 98,
+    "metaDescription": "Calculate your love compatibility score instantly with our free love calculator by name. Private, instant name analysis and relationship insights.",
+    "metaDescLength": 146,
+    "canonical": "https://freeaccuratecalculator.com/love-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Love Calculator by Name",
+    "h2Count": 1,
+    "h3Count": 9,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      "SoftwareApplication",
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 5,
+    "internalLinkCount": 19,
+    "wordCount": 721,
+    "htmlSizeBytes": 156560
+  },
+  {
+    "slug": "scientific-calculator",
+    "name": "Scientific Calculator",
+    "category": "math",
+    "href": "/scientific-calculator/",
+    "title": "Scientific Calculator — Trigonometry, Powers, Logarithms &amp; Roots | Free Accurate Calculator",
+    "titleLength": 95,
+    "metaDescription": "Perform advanced mathematical operations including sine, cosine, tangent, natural logs, square roots, and exponentiation.",
+    "metaDescLength": 121,
+    "canonical": "https://freeaccuratecalculator.com/scientific-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Scientific Calculator",
+    "h2Count": 3,
+    "h3Count": 8,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 666,
+    "htmlSizeBytes": 209615
+  },
+  {
+    "slug": "emi-calculator",
+    "name": "EMI Calculator",
+    "category": "finance",
+    "href": "/emi-calculator/",
+    "title": "Free EMI Calculator: Fast &amp; Accurate Home, Car &amp; Personal Loan Payoff | Free Accurate Calculator",
+    "titleLength": 104,
+    "metaDescription": "Calculate loan EMI, interest savings &amp; amortization instantly. Free, accurate payment schedule for home, car, and personal loans with reducing balance math.",
+    "metaDescLength": 160,
+    "canonical": "https://freeaccuratecalculator.com/emi-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "EMI Calculator",
+    "h2Count": 3,
+    "h3Count": 11,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "BreadcrumbList",
+      "FAQPage"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 19,
+    "wordCount": 1015,
+    "htmlSizeBytes": 171597
+  },
+  {
+    "slug": "mortgage-calculator",
+    "name": "Mortgage Calculator",
+    "category": "finance",
+    "href": "/mortgage-calculator/",
+    "title": "Free Mortgage Calculator — Monthly Payment, Taxes &amp; Interest | Free Accurate Calculator",
+    "titleLength": 91,
+    "metaDescription": "Calculate monthly mortgage payments including principal, interest, property taxes, and homeowners insurance with full amortization.",
+    "metaDescLength": 131,
+    "canonical": "https://freeaccuratecalculator.com/mortgage-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Mortgage Calculator",
+    "h2Count": 3,
+    "h3Count": 9,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 834,
+    "htmlSizeBytes": 225380
+  },
+  {
+    "slug": "loan-calculator",
+    "name": "Loan Calculator",
+    "category": "finance",
+    "href": "/loan-calculator/",
+    "title": "Free Loan Calculator — Monthly Payments &amp; Total Interest | Free Accurate Calculator",
+    "titleLength": 87,
+    "metaDescription": "Calculate monthly loan payments, total interest costs, and repayment schedules for personal, auto, or student loans.",
+    "metaDescLength": 116,
+    "canonical": "https://freeaccuratecalculator.com/loan-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Loan Calculator",
+    "h2Count": 3,
+    "h3Count": 8,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 733,
+    "htmlSizeBytes": 216840
+  },
+  {
+    "slug": "time-calculator",
+    "name": "Time Calculator",
+    "category": "everyday",
+    "href": "/time-calculator/",
+    "title": "Time Calculator — Add &amp; Subtract Hours, Minutes &amp; Seconds | Free Accurate Calculator",
+    "titleLength": 92,
+    "metaDescription": "Add or subtract hours, minutes, and seconds, convert between 12-hour AM/PM and 24-hour military time.",
+    "metaDescLength": 101,
+    "canonical": "https://freeaccuratecalculator.com/time-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Time Calculator",
+    "h2Count": 3,
+    "h3Count": 7,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 669,
+    "htmlSizeBytes": 212993
+  },
+  {
+    "slug": "date-calculator",
+    "name": "Date Calculator",
+    "category": "everyday",
+    "href": "/date-calculator/",
+    "title": "Date Calculator — Days Between Dates &amp; Business Day Counter | Free Accurate Calculator",
+    "titleLength": 90,
+    "metaDescription": "Calculate the number of calendar days, business working days, and weeks between two arbitrary dates.",
+    "metaDescLength": 100,
+    "canonical": "https://freeaccuratecalculator.com/date-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Date Calculator",
+    "h2Count": 3,
+    "h3Count": 7,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 672,
+    "htmlSizeBytes": 217995
+  },
+  {
+    "slug": "salary-calculator",
+    "name": "Salary Calculator",
+    "category": "finance",
+    "href": "/salary-calculator/",
+    "title": "Salary Calculator — Hourly to Annual Wage Conversion | Free Accurate Calculator",
+    "titleLength": 79,
+    "metaDescription": "Convert between hourly wage, weekly salary, bi-weekly paychecks, monthly earnings, and annual salary.",
+    "metaDescLength": 101,
+    "canonical": "https://freeaccuratecalculator.com/salary-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Salary Calculator",
+    "h2Count": 3,
+    "h3Count": 8,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 683,
+    "htmlSizeBytes": 213186
+  },
+  {
+    "slug": "compound-interest-calculator",
+    "name": "Compound Interest",
+    "category": "finance",
+    "href": "/compound-interest-calculator/",
+    "title": "Compound Interest Calculator — Free Daily &amp; Monthly Investment Growth | Free Accurate Calculator",
+    "titleLength": 100,
+    "metaDescription": "Free compound interest calculator. Calculate future investment growth with regular monthly deposits, daily, monthly or annual compounding, and interactive breakdown.",
+    "metaDescLength": 165,
+    "canonical": "https://freeaccuratecalculator.com/compound-interest-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Compound Interest Calculator",
+    "h2Count": 3,
+    "h3Count": 8,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 837,
+    "htmlSizeBytes": 223626
+  },
+  {
+    "slug": "conversion-calculator",
+    "name": "Unit Converter",
+    "category": "converter",
+    "href": "/conversion-calculator/",
+    "title": "Unit Conversion Calculator — Length, Weight, Volume &amp; Temp | Free Accurate Calculator",
+    "titleLength": 89,
+    "metaDescription": "Convert between metric and imperial units across length, mass, temperature, area, volume, and digital storage.",
+    "metaDescLength": 110,
+    "canonical": "https://freeaccuratecalculator.com/conversion-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Conversion Calculator",
+    "h2Count": 3,
+    "h3Count": 7,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 670,
+    "htmlSizeBytes": 208718
+  },
+  {
+    "slug": "body-fat-calculator",
+    "name": "Body Fat Calculator",
+    "category": "health",
+    "href": "/body-fat-calculator/",
+    "title": "Body Fat Calculator — US Navy Circumference Method | Free Accurate Calculator",
+    "titleLength": 77,
+    "metaDescription": "Estimate body fat percentage and lean muscle mass using the official US Navy circumference formula.",
+    "metaDescLength": 99,
+    "canonical": "https://freeaccuratecalculator.com/body-fat-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Body Fat Calculator",
+    "h2Count": 3,
+    "h3Count": 7,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 678,
+    "htmlSizeBytes": 212308
+  },
+  {
+    "slug": "bmr-calculator",
+    "name": "BMR Calculator",
+    "category": "health",
+    "href": "/bmr-calculator/",
+    "title": "BMR Calculator — Basal Metabolic Rate (Calories at Complete Rest) | Free Accurate Calculator",
+    "titleLength": 92,
+    "metaDescription": "Calculate the baseline number of calories your body burns every 24 hours performing vital involuntary functions.",
+    "metaDescLength": 112,
+    "canonical": "https://freeaccuratecalculator.com/bmr-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "BMR Calculator",
+    "h2Count": 3,
+    "h3Count": 7,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 674,
+    "htmlSizeBytes": 211833
+  },
+  {
+    "slug": "sip-calculator",
+    "name": "SIP Calculator",
+    "category": "finance",
+    "href": "/sip-calculator/",
+    "title": "SIP Calculator — Mutual Fund Systematic Investment Plan Growth &amp; Wealth Planner | Free Accurate Calculator",
+    "titleLength": 110,
+    "metaDescription": "Free accurate SIP calculator for mutual funds. Calculate maturity wealth, compounding returns, annual step-up top-up, inflation-adjusted real value, and PDF/Excel reports.",
+    "metaDescLength": 171,
+    "canonical": "https://freeaccuratecalculator.com/sip-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "SIP Calculator",
+    "h2Count": 6,
+    "h3Count": 16,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "BreadcrumbList",
+      "FAQPage"
+    ],
+    "faqCount": 10,
+    "internalLinkCount": 20,
+    "wordCount": 2131,
+    "htmlSizeBytes": 166469
+  },
+  {
+    "slug": "auto-loan-calculator",
+    "name": "Auto Loan",
+    "category": "finance",
+    "href": "/auto-loan-calculator/",
+    "title": "Auto Loan Calculator — Monthly Car Payment &amp; Financing Costs | Free Accurate Calculator",
+    "titleLength": 91,
+    "metaDescription": "Calculate monthly car payments, financing costs, and trade-in adjustments with tax rate considerations.",
+    "metaDescLength": 103,
+    "canonical": "https://freeaccuratecalculator.com/auto-loan-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Auto Loan Calculator",
+    "h2Count": 3,
+    "h3Count": 7,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 771,
+    "htmlSizeBytes": 220852
+  },
+  {
+    "slug": "gpa-calculator",
+    "name": "GPA Calculator",
+    "category": "everyday",
+    "href": "/gpa-calculator/",
+    "title": "GPA Calculator — 4.0 Scale Cumulative &amp; Semester Average | Free Accurate Calculator",
+    "titleLength": 87,
+    "metaDescription": "Calculate high school or college Grade Point Average (GPA) on standard 4.0 weighted and unweighted scales.",
+    "metaDescLength": 106,
+    "canonical": "https://freeaccuratecalculator.com/gpa-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "GPA Calculator",
+    "h2Count": 3,
+    "h3Count": 8,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 714,
+    "htmlSizeBytes": 211757
+  },
+  {
+    "slug": "roi-calculator",
+    "name": "ROI Calculator",
+    "category": "business",
+    "href": "/roi-calculator/",
+    "title": "Free ROI Calculator — Return on Investment &amp; Annualized CAGR | Free Accurate Calculator",
+    "titleLength": 91,
+    "metaDescription": "Calculate percentage Return on Investment (ROI) and annualized investment yields across business initiatives and capital expenditures.",
+    "metaDescLength": 134,
+    "canonical": "https://freeaccuratecalculator.com/roi-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "ROI Calculator",
+    "h2Count": 3,
+    "h3Count": 8,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 708,
+    "htmlSizeBytes": 214548
+  },
+  {
+    "slug": "tip-calculator",
+    "name": "Tip Calculator",
+    "category": "everyday",
+    "href": "/tip-calculator/",
+    "title": "Tip Calculator — Fast Gratuity &amp; Equal Bill Splitting | Free Accurate Calculator",
+    "titleLength": 84,
+    "metaDescription": "Calculate restaurant tips, total bill amounts, and per-person split costs with preset percentages, tax separation, and dollar rounding.",
+    "metaDescLength": 135,
+    "canonical": "https://freeaccuratecalculator.com/tip-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Tip Calculator",
+    "h2Count": 3,
+    "h3Count": 9,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 730,
+    "htmlSizeBytes": 214456
+  },
+  {
+    "slug": "income-tax-calculator",
+    "name": "Income Tax Calculator",
+    "category": "finance",
+    "href": "/income-tax-calculator/",
+    "title": "Income Tax Calculator 2026 — Federal &amp; State Tax Brackets | Free Accurate Calculator",
+    "titleLength": 88,
+    "metaDescription": "Calculate your 2026 income tax with current IRS federal tax brackets, standard deduction ($16,100 single / $32,200 joint), FICA, and state tax estimates.",
+    "metaDescLength": 153,
+    "canonical": "https://freeaccuratecalculator.com/income-tax-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Income Tax Calculator",
+    "h2Count": 3,
+    "h3Count": 11,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "BreadcrumbList",
+      "FAQPage"
+    ],
+    "faqCount": 5,
+    "internalLinkCount": 20,
+    "wordCount": 1091,
+    "htmlSizeBytes": 144803
+  },
+  {
+    "slug": "probability-calculator",
+    "name": "Probability Calculator",
+    "category": "statistics",
+    "href": "/probability-calculator/",
+    "title": "Free Probability Calculator — Independent, Joint &amp; Conditional Odds | Free Accurate Calculator",
+    "titleLength": 98,
+    "metaDescription": "Calculate single event odds, joint probabilities P(A and B), union odds P(A or B), and conditional likelihoods.",
+    "metaDescLength": 111,
+    "canonical": "https://freeaccuratecalculator.com/probability-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Probability Calculator",
+    "h2Count": 3,
+    "h3Count": 8,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 701,
+    "htmlSizeBytes": 210442
+  },
+  {
+    "slug": "password-generator",
+    "name": "Password Generator",
+    "category": "technology",
+    "href": "/password-generator/",
+    "title": "Password Generator — Secure Cryptographic Random Passwords | Free Accurate Calculator",
+    "titleLength": 85,
+    "metaDescription": "Generate high-entropy, cryptographically secure passwords locally inside your browser with customizable symbol sets.",
+    "metaDescLength": 116,
+    "canonical": "https://freeaccuratecalculator.com/password-generator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Password Generator",
+    "h2Count": 3,
+    "h3Count": 7,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 640,
+    "htmlSizeBytes": 206753
+  },
+  {
+    "slug": "discount-calculator",
+    "name": "Discount Calculator",
+    "category": "everyday",
+    "href": "/discount-calculator/",
+    "title": "Discount Calculator — Sale Price, Percent Off &amp; Total Savings | Free Accurate Calculator",
+    "titleLength": 92,
+    "metaDescription": "Calculate final sale prices, dollar savings, and stacked coupon discounts with optional sales tax inclusion for shopping savings.",
+    "metaDescLength": 129,
+    "canonical": "https://freeaccuratecalculator.com/discount-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Discount Calculator",
+    "h2Count": 3,
+    "h3Count": 9,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 736,
+    "htmlSizeBytes": 214889
+  },
+  {
+    "slug": "ovulation-calculator",
+    "name": "Ovulation Calculator",
+    "category": "health",
+    "href": "/ovulation-calculator/",
+    "title": "Ovulation Calculator — Fertile Window &amp; Conception Peak Days | Free Accurate Calculator",
+    "titleLength": 91,
+    "metaDescription": "Estimate your fertile window and peak ovulation date based on menstrual cycle length using clinical ACOG timing guidelines.",
+    "metaDescLength": 123,
+    "canonical": "https://freeaccuratecalculator.com/ovulation-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Ovulation Calculator",
+    "h2Count": 3,
+    "h3Count": 8,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 724,
+    "htmlSizeBytes": 212872
+  },
+  {
+    "slug": "ohms-law-calculator",
+    "name": "Ohm’s Law Calculator",
+    "category": "physics",
+    "href": "/ohms-law-calculator/",
+    "title": "Free Ohm’s Law Calculator — Voltage, Current, Resistance &amp; Power | Free Accurate Calculator",
+    "titleLength": 95,
+    "metaDescription": "Calculate electrical circuit parameters: Voltage (V), Current (I), Resistance (R), and Power dissipation (W) across DC circuits.",
+    "metaDescLength": 128,
+    "canonical": "https://freeaccuratecalculator.com/ohms-law-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Ohm’s Law Calculator",
+    "h2Count": 3,
+    "h3Count": 7,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 685,
+    "htmlSizeBytes": 209549
+  },
+  {
+    "slug": "pregnancy-due-date-calculator",
+    "name": "Pregnancy Due Date",
+    "category": "health",
+    "href": "/pregnancy-due-date-calculator/",
+    "title": "Pregnancy Due Date Calculator — Estimated Delivery Date by LMP | Free Accurate Calculator",
+    "titleLength": 89,
+    "metaDescription": "Estimate your baby's due date using Naegele's rule based on your last menstrual period or conception date with trimester milestones.",
+    "metaDescLength": 132,
+    "canonical": "https://freeaccuratecalculator.com/pregnancy-due-date-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Pregnancy Due Date Calculator",
+    "h2Count": 3,
+    "h3Count": 9,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 766,
+    "htmlSizeBytes": 211898
+  },
+  {
+    "slug": "concrete-calculator",
+    "name": "Concrete Volume",
+    "category": "construction",
+    "href": "/concrete-calculator/",
+    "title": "Concrete Calculator — Cubic Yards, Slabs, Footings &amp; Bags | Free Accurate Calculator",
+    "titleLength": 88,
+    "metaDescription": "Calculate concrete volume in cubic yards and cubic meters, and determine how many 60-lb or 80-lb pre-mixed bags you need.",
+    "metaDescLength": 121,
+    "canonical": "https://freeaccuratecalculator.com/concrete-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Concrete Calculator",
+    "h2Count": 3,
+    "h3Count": 8,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 698,
+    "htmlSizeBytes": 212265
+  },
+  {
+    "slug": "paint-calculator",
+    "name": "Paint Calculator",
+    "category": "construction",
+    "href": "/paint-calculator/",
+    "title": "Free Paint Calculator — Gallons Needed &amp; Wall Surface Coverage | Free Accurate Calculator",
+    "titleLength": 93,
+    "metaDescription": "Calculate paint gallons required for interior rooms and exterior walls accounting for doors, windows, and multiple coat applications.",
+    "metaDescLength": 133,
+    "canonical": "https://freeaccuratecalculator.com/paint-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Paint Calculator",
+    "h2Count": 3,
+    "h3Count": 9,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 760,
+    "htmlSizeBytes": 217004
+  },
+  {
+    "slug": "amortization-calculator",
+    "name": "Amortization Calculator",
+    "category": "finance",
+    "href": "/amortization-calculator/",
+    "title": "Loan Amortization Calculator — Principal vs Interest Schedule | Free Accurate Calculator",
+    "titleLength": 88,
+    "metaDescription": "Generate detailed month-by-month and annual amortization schedules showing balance reduction and interest payments.",
+    "metaDescLength": 115,
+    "canonical": "https://freeaccuratecalculator.com/amortization-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Amortization Calculator",
+    "h2Count": 3,
+    "h3Count": 8,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 707,
+    "htmlSizeBytes": 217013
+  },
+  {
+    "slug": "inflation-calculator",
+    "name": "Inflation Calculator",
+    "category": "finance",
+    "href": "/inflation-calculator/",
+    "title": "Inflation Calculator — Purchasing Power &amp; Future Money Value Decay | Free Accurate Calculator",
+    "titleLength": 97,
+    "metaDescription": "Calculate how inflation impacts purchasing power over time using historical CPI compound decay rates and future cost projections.",
+    "metaDescLength": 129,
+    "canonical": "https://freeaccuratecalculator.com/inflation-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Inflation Calculator",
+    "h2Count": 3,
+    "h3Count": 9,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 781,
+    "htmlSizeBytes": 218105
+  },
+  {
+    "slug": "square-footage-calculator",
+    "name": "Square Footage",
+    "category": "construction",
+    "href": "/square-footage-calculator/",
+    "title": "Free Square Footage Calculator — Area &amp; Flooring Materials Estimator | Free Accurate Calculator",
+    "titleLength": 99,
+    "metaDescription": "Calculate total square footage, square yardage, and material costs for rooms, houses, landscapes, and construction sites.",
+    "metaDescLength": 121,
+    "canonical": "https://freeaccuratecalculator.com/square-footage-calculator/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Square Footage Calculator",
+    "h2Count": 3,
+    "h3Count": 8,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 6,
+    "internalLinkCount": 17,
+    "wordCount": 750,
+    "htmlSizeBytes": 217067
+  },
+  {
+    "slug": "ruler",
+    "name": "Online Ruler",
+    "category": "everyday",
+    "href": "/ruler/",
+    "title": "Online Ruler — Free Accurate Ruler in cm, mm &amp; Inches | Free Accurate Calculator",
+    "titleLength": 84,
+    "metaDescription": "Free online ruler with screen calibration. Measure real objects on screen in cm, mm and inches — auto, device, diagonal or bank-card calibration on phone, tablet and desktop.",
+    "metaDescLength": 174,
+    "canonical": "https://freeaccuratecalculator.com/ruler/",
+    "canonicalMatches": true,
+    "h1Count": 1,
+    "h1": "Free Online Ruler — Measure in cm, mm &amp; Inches",
+    "h2Count": 12,
+    "h3Count": 7,
+    "schemaTypes": [
+      "Organization",
+      "WebSite",
+      [
+        "SoftwareApplication",
+        "WebApplication"
+      ],
+      "WebApplication",
+      "HowTo",
+      "FAQPage",
+      "BreadcrumbList"
+    ],
+    "faqCount": 13,
+    "internalLinkCount": 18,
+    "wordCount": 2452,
+    "htmlSizeBytes": 164302
+  }
+]

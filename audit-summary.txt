@@ -1,0 +1,243 @@
+=== 33 POPULAR CALCULATORS SUMMARY ===
+Total audited: 33
+Long titles (>65 chars): 33
+Short titles (<40 chars): 0
+Long meta desc (>165 chars): 5
+Short meta desc (<120 chars): 12
+Canonical mismatches: 0
+H1 issues: 0
+No FAQ: 0
+Low word count (<500 words): 0
+
+--- Details of all 33 ---
+1. [MATH] Percentage Calculator (percentage-calculator)
+   URL: /percentage-calculator/
+   Title (92ch): "Percentage Calculator — Free, Accurate &amp; Instant Percent Math | Free Accurate Calculator"
+   Desc (169ch): "Free online percentage calculator. Calculate percentages, percentage change, increase, decrease, and differences with step-by-step formulas and instant verified results."
+   H1: "Percentage Calculator" | H2s: 3 | H3s: 9 | FAQs: 5 | Words: 747
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"BreadcrumbList","FAQPage"]
+
+2. [HEALTH] BMI Calculator (bmi-calculator)
+   URL: /bmi-calculator/
+   Title (94ch): "BMI Calculator — Body Mass Index with Metric &amp; Imperial Toggles | Free Accurate Calculator"
+   Desc (168ch): "Calculate your exact Body Mass Index (BMI) with instant Metric (kg/cm) and Imperial (lbs/ft-in) switchers, WHO classification gauge, and healthy weight recommendations."
+   H1: "BMI Calculator" | H2s: 4 | H3s: 9 | FAQs: 5 | Words: 923
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"BreadcrumbList",["WebApplication","SoftwareApplication"],"HowTo","FAQPage"]
+
+3. [EVERYDAY] Age Calculator (age-calculator)
+   URL: /age-calculator/
+   Title (101ch): "Age Calculator — Exact Chronological Age in Days, Hours &amp; Live Seconds | Free Accurate Calculator"
+   Desc (181ch): "Calculate your exact chronological age in years, months, days, hours, minutes, and live ticking seconds. Includes future date limits, next birthday countdown, and birth day of week."
+   H1: "Age Calculator" | H2s: 3 | H3s: 12 | FAQs: 5 | Words: 1080
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+4. [LOVE] Love Calculator (love-calculator)
+   URL: /love-calculator/
+   Title (98ch): "Love Calculator by Name - Free &amp; Accurate Compatibility Test (2026) | Free Accurate Calculator"
+   Desc (146ch): "Calculate your love compatibility score instantly with our free love calculator by name. Private, instant name analysis and relationship insights."
+   H1: "Love Calculator by Name" | H2s: 1 | H3s: 9 | FAQs: 5 | Words: 721
+   Schemas: ["Organization","WebSite","SoftwareApplication","FAQPage","BreadcrumbList"]
+
+5. [MATH] Scientific Calculator (scientific-calculator)
+   URL: /scientific-calculator/
+   Title (95ch): "Scientific Calculator — Trigonometry, Powers, Logarithms &amp; Roots | Free Accurate Calculator"
+   Desc (121ch): "Perform advanced mathematical operations including sine, cosine, tangent, natural logs, square roots, and exponentiation."
+   H1: "Scientific Calculator" | H2s: 3 | H3s: 8 | FAQs: 6 | Words: 666
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+6. [FINANCE] EMI Calculator (emi-calculator)
+   URL: /emi-calculator/
+   Title (104ch): "Free EMI Calculator: Fast &amp; Accurate Home, Car &amp; Personal Loan Payoff | Free Accurate Calculator"
+   Desc (160ch): "Calculate loan EMI, interest savings &amp; amortization instantly. Free, accurate payment schedule for home, car, and personal loans with reducing balance math."
+   H1: "EMI Calculator" | H2s: 3 | H3s: 11 | FAQs: 6 | Words: 1015
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"BreadcrumbList","FAQPage"]
+
+7. [FINANCE] Mortgage Calculator (mortgage-calculator)
+   URL: /mortgage-calculator/
+   Title (91ch): "Free Mortgage Calculator — Monthly Payment, Taxes &amp; Interest | Free Accurate Calculator"
+   Desc (131ch): "Calculate monthly mortgage payments including principal, interest, property taxes, and homeowners insurance with full amortization."
+   H1: "Mortgage Calculator" | H2s: 3 | H3s: 9 | FAQs: 6 | Words: 834
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+8. [FINANCE] Loan Calculator (loan-calculator)
+   URL: /loan-calculator/
+   Title (87ch): "Free Loan Calculator — Monthly Payments &amp; Total Interest | Free Accurate Calculator"
+   Desc (116ch): "Calculate monthly loan payments, total interest costs, and repayment schedules for personal, auto, or student loans."
+   H1: "Loan Calculator" | H2s: 3 | H3s: 8 | FAQs: 6 | Words: 733
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+9. [EVERYDAY] Time Calculator (time-calculator)
+   URL: /time-calculator/
+   Title (92ch): "Time Calculator — Add &amp; Subtract Hours, Minutes &amp; Seconds | Free Accurate Calculator"
+   Desc (101ch): "Add or subtract hours, minutes, and seconds, convert between 12-hour AM/PM and 24-hour military time."
+   H1: "Time Calculator" | H2s: 3 | H3s: 7 | FAQs: 6 | Words: 669
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+10. [EVERYDAY] Date Calculator (date-calculator)
+   URL: /date-calculator/
+   Title (90ch): "Date Calculator — Days Between Dates &amp; Business Day Counter | Free Accurate Calculator"
+   Desc (100ch): "Calculate the number of calendar days, business working days, and weeks between two arbitrary dates."
+   H1: "Date Calculator" | H2s: 3 | H3s: 7 | FAQs: 6 | Words: 672
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+11. [FINANCE] Salary Calculator (salary-calculator)
+   URL: /salary-calculator/
+   Title (79ch): "Salary Calculator — Hourly to Annual Wage Conversion | Free Accurate Calculator"
+   Desc (101ch): "Convert between hourly wage, weekly salary, bi-weekly paychecks, monthly earnings, and annual salary."
+   H1: "Salary Calculator" | H2s: 3 | H3s: 8 | FAQs: 6 | Words: 683
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+12. [FINANCE] Compound Interest (compound-interest-calculator)
+   URL: /compound-interest-calculator/
+   Title (100ch): "Compound Interest Calculator — Free Daily &amp; Monthly Investment Growth | Free Accurate Calculator"
+   Desc (165ch): "Free compound interest calculator. Calculate future investment growth with regular monthly deposits, daily, monthly or annual compounding, and interactive breakdown."
+   H1: "Compound Interest Calculator" | H2s: 3 | H3s: 8 | FAQs: 6 | Words: 837
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+13. [CONVERTER] Unit Converter (conversion-calculator)
+   URL: /conversion-calculator/
+   Title (89ch): "Unit Conversion Calculator — Length, Weight, Volume &amp; Temp | Free Accurate Calculator"
+   Desc (110ch): "Convert between metric and imperial units across length, mass, temperature, area, volume, and digital storage."
+   H1: "Conversion Calculator" | H2s: 3 | H3s: 7 | FAQs: 6 | Words: 670
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+14. [HEALTH] Body Fat Calculator (body-fat-calculator)
+   URL: /body-fat-calculator/
+   Title (77ch): "Body Fat Calculator — US Navy Circumference Method | Free Accurate Calculator"
+   Desc (99ch): "Estimate body fat percentage and lean muscle mass using the official US Navy circumference formula."
+   H1: "Body Fat Calculator" | H2s: 3 | H3s: 7 | FAQs: 6 | Words: 678
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+15. [HEALTH] BMR Calculator (bmr-calculator)
+   URL: /bmr-calculator/
+   Title (92ch): "BMR Calculator — Basal Metabolic Rate (Calories at Complete Rest) | Free Accurate Calculator"
+   Desc (112ch): "Calculate the baseline number of calories your body burns every 24 hours performing vital involuntary functions."
+   H1: "BMR Calculator" | H2s: 3 | H3s: 7 | FAQs: 6 | Words: 674
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+16. [FINANCE] SIP Calculator (sip-calculator)
+   URL: /sip-calculator/
+   Title (110ch): "SIP Calculator — Mutual Fund Systematic Investment Plan Growth &amp; Wealth Planner | Free Accurate Calculator"
+   Desc (171ch): "Free accurate SIP calculator for mutual funds. Calculate maturity wealth, compounding returns, annual step-up top-up, inflation-adjusted real value, and PDF/Excel reports."
+   H1: "SIP Calculator" | H2s: 6 | H3s: 16 | FAQs: 10 | Words: 2131
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"BreadcrumbList","FAQPage"]
+
+17. [FINANCE] Auto Loan (auto-loan-calculator)
+   URL: /auto-loan-calculator/
+   Title (91ch): "Auto Loan Calculator — Monthly Car Payment &amp; Financing Costs | Free Accurate Calculator"
+   Desc (103ch): "Calculate monthly car payments, financing costs, and trade-in adjustments with tax rate considerations."
+   H1: "Auto Loan Calculator" | H2s: 3 | H3s: 7 | FAQs: 6 | Words: 771
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+18. [EVERYDAY] GPA Calculator (gpa-calculator)
+   URL: /gpa-calculator/
+   Title (87ch): "GPA Calculator — 4.0 Scale Cumulative &amp; Semester Average | Free Accurate Calculator"
+   Desc (106ch): "Calculate high school or college Grade Point Average (GPA) on standard 4.0 weighted and unweighted scales."
+   H1: "GPA Calculator" | H2s: 3 | H3s: 8 | FAQs: 6 | Words: 714
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+19. [BUSINESS] ROI Calculator (roi-calculator)
+   URL: /roi-calculator/
+   Title (91ch): "Free ROI Calculator — Return on Investment &amp; Annualized CAGR | Free Accurate Calculator"
+   Desc (134ch): "Calculate percentage Return on Investment (ROI) and annualized investment yields across business initiatives and capital expenditures."
+   H1: "ROI Calculator" | H2s: 3 | H3s: 8 | FAQs: 6 | Words: 708
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+20. [EVERYDAY] Tip Calculator (tip-calculator)
+   URL: /tip-calculator/
+   Title (84ch): "Tip Calculator — Fast Gratuity &amp; Equal Bill Splitting | Free Accurate Calculator"
+   Desc (135ch): "Calculate restaurant tips, total bill amounts, and per-person split costs with preset percentages, tax separation, and dollar rounding."
+   H1: "Tip Calculator" | H2s: 3 | H3s: 9 | FAQs: 6 | Words: 730
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+21. [FINANCE] Income Tax Calculator (income-tax-calculator)
+   URL: /income-tax-calculator/
+   Title (88ch): "Income Tax Calculator 2026 — Federal &amp; State Tax Brackets | Free Accurate Calculator"
+   Desc (153ch): "Calculate your 2026 income tax with current IRS federal tax brackets, standard deduction ($16,100 single / $32,200 joint), FICA, and state tax estimates."
+   H1: "Income Tax Calculator" | H2s: 3 | H3s: 11 | FAQs: 5 | Words: 1091
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"BreadcrumbList","FAQPage"]
+
+22. [STATISTICS] Probability Calculator (probability-calculator)
+   URL: /probability-calculator/
+   Title (98ch): "Free Probability Calculator — Independent, Joint &amp; Conditional Odds | Free Accurate Calculator"
+   Desc (111ch): "Calculate single event odds, joint probabilities P(A and B), union odds P(A or B), and conditional likelihoods."
+   H1: "Probability Calculator" | H2s: 3 | H3s: 8 | FAQs: 6 | Words: 701
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+23. [TECHNOLOGY] Password Generator (password-generator)
+   URL: /password-generator/
+   Title (85ch): "Password Generator — Secure Cryptographic Random Passwords | Free Accurate Calculator"
+   Desc (116ch): "Generate high-entropy, cryptographically secure passwords locally inside your browser with customizable symbol sets."
+   H1: "Password Generator" | H2s: 3 | H3s: 7 | FAQs: 6 | Words: 640
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+24. [EVERYDAY] Discount Calculator (discount-calculator)
+   URL: /discount-calculator/
+   Title (92ch): "Discount Calculator — Sale Price, Percent Off &amp; Total Savings | Free Accurate Calculator"
+   Desc (129ch): "Calculate final sale prices, dollar savings, and stacked coupon discounts with optional sales tax inclusion for shopping savings."
+   H1: "Discount Calculator" | H2s: 3 | H3s: 9 | FAQs: 6 | Words: 736
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+25. [HEALTH] Ovulation Calculator (ovulation-calculator)
+   URL: /ovulation-calculator/
+   Title (91ch): "Ovulation Calculator — Fertile Window &amp; Conception Peak Days | Free Accurate Calculator"
+   Desc (123ch): "Estimate your fertile window and peak ovulation date based on menstrual cycle length using clinical ACOG timing guidelines."
+   H1: "Ovulation Calculator" | H2s: 3 | H3s: 8 | FAQs: 6 | Words: 724
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+26. [PHYSICS] Ohm’s Law Calculator (ohms-law-calculator)
+   URL: /ohms-law-calculator/
+   Title (95ch): "Free Ohm’s Law Calculator — Voltage, Current, Resistance &amp; Power | Free Accurate Calculator"
+   Desc (128ch): "Calculate electrical circuit parameters: Voltage (V), Current (I), Resistance (R), and Power dissipation (W) across DC circuits."
+   H1: "Ohm’s Law Calculator" | H2s: 3 | H3s: 7 | FAQs: 6 | Words: 685
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+27. [HEALTH] Pregnancy Due Date (pregnancy-due-date-calculator)
+   URL: /pregnancy-due-date-calculator/
+   Title (89ch): "Pregnancy Due Date Calculator — Estimated Delivery Date by LMP | Free Accurate Calculator"
+   Desc (132ch): "Estimate your baby's due date using Naegele's rule based on your last menstrual period or conception date with trimester milestones."
+   H1: "Pregnancy Due Date Calculator" | H2s: 3 | H3s: 9 | FAQs: 6 | Words: 766
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+28. [CONSTRUCTION] Concrete Volume (concrete-calculator)
+   URL: /concrete-calculator/
+   Title (88ch): "Concrete Calculator — Cubic Yards, Slabs, Footings &amp; Bags | Free Accurate Calculator"
+   Desc (121ch): "Calculate concrete volume in cubic yards and cubic meters, and determine how many 60-lb or 80-lb pre-mixed bags you need."
+   H1: "Concrete Calculator" | H2s: 3 | H3s: 8 | FAQs: 6 | Words: 698
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+29. [CONSTRUCTION] Paint Calculator (paint-calculator)
+   URL: /paint-calculator/
+   Title (93ch): "Free Paint Calculator — Gallons Needed &amp; Wall Surface Coverage | Free Accurate Calculator"
+   Desc (133ch): "Calculate paint gallons required for interior rooms and exterior walls accounting for doors, windows, and multiple coat applications."
+   H1: "Paint Calculator" | H2s: 3 | H3s: 9 | FAQs: 6 | Words: 760
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+30. [FINANCE] Amortization Calculator (amortization-calculator)
+   URL: /amortization-calculator/
+   Title (88ch): "Loan Amortization Calculator — Principal vs Interest Schedule | Free Accurate Calculator"
+   Desc (115ch): "Generate detailed month-by-month and annual amortization schedules showing balance reduction and interest payments."
+   H1: "Amortization Calculator" | H2s: 3 | H3s: 8 | FAQs: 6 | Words: 707
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+31. [FINANCE] Inflation Calculator (inflation-calculator)
+   URL: /inflation-calculator/
+   Title (97ch): "Inflation Calculator — Purchasing Power &amp; Future Money Value Decay | Free Accurate Calculator"
+   Desc (129ch): "Calculate how inflation impacts purchasing power over time using historical CPI compound decay rates and future cost projections."
+   H1: "Inflation Calculator" | H2s: 3 | H3s: 9 | FAQs: 6 | Words: 781
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+32. [CONSTRUCTION] Square Footage (square-footage-calculator)
+   URL: /square-footage-calculator/
+   Title (99ch): "Free Square Footage Calculator — Area &amp; Flooring Materials Estimator | Free Accurate Calculator"
+   Desc (121ch): "Calculate total square footage, square yardage, and material costs for rooms, houses, landscapes, and construction sites."
+   H1: "Square Footage Calculator" | H2s: 3 | H3s: 8 | FAQs: 6 | Words: 750
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"FAQPage","BreadcrumbList"]
+
+33. [EVERYDAY] Online Ruler (ruler)
+   URL: /ruler/
+   Title (84ch): "Online Ruler — Free Accurate Ruler in cm, mm &amp; Inches | Free Accurate Calculator"
+   Desc (174ch): "Free online ruler with screen calibration. Measure real objects on screen in cm, mm and inches — auto, device, diagonal or bank-card calibration on phone, tablet and desktop."
+   H1: "Free Online Ruler — Measure in cm, mm &amp; Inches" | H2s: 12 | H3s: 7 | FAQs: 13 | Words: 2452
+   Schemas: ["Organization","WebSite",["SoftwareApplication","WebApplication"],"WebApplication","HowTo","FAQPage","BreadcrumbList"]
+
