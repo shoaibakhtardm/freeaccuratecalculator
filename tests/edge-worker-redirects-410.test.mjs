@@ -2,13 +2,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import worker from '../workers/edge-cache.js';
 
-// Mock Cloudflare Edge Cache API in Node test environment
+// Mock Cloudflare Edge Cache API and origin fetch in Node test environment
 globalThis.caches = {
   default: {
     match: async () => null,
     put: async () => {}
   }
 };
+globalThis.fetch = async () => new Response('OK', { status: 200, headers: { 'Content-Type': 'text/html' } });
 
 test('Edge Worker: HTTP protocol redirects to HTTPS with 1-day Cache-Control', async () => {
   const req = new Request('http://freeaccuratecalculator.com/', { method: 'GET' });
