@@ -25,50 +25,50 @@
 /sheets/*
   Cache-Control: public, max-age=2592000
 
-# Edge Cache for Static Calculators and Hubs (30 Days TTL, <100ms TTFB)
+# Edge Cache for Static Calculators and Hubs (Fast Browser Revalidation, 1-Day Edge CDN)
 /finance/*
-  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  CDN-Cache-Control: max-age=2592000
+  Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: max-age=86400, stale-while-revalidate=604800
 
 /math/*
-  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  CDN-Cache-Control: max-age=2592000
+  Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: max-age=86400, stale-while-revalidate=604800
 
 /health/*
-  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  CDN-Cache-Control: max-age=2592000
+  Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: max-age=86400, stale-while-revalidate=604800
 
 /everyday/*
-  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  CDN-Cache-Control: max-age=2592000
+  Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: max-age=86400, stale-while-revalidate=604800
 
 /guides/*
-  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  CDN-Cache-Control: max-age=2592000
+  Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: max-age=86400, stale-while-revalidate=604800
 
 /business/*
-  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  CDN-Cache-Control: max-age=2592000
+  Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: max-age=86400, stale-while-revalidate=604800
 
 /insurance/*
-  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  CDN-Cache-Control: max-age=2592000
+  Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: max-age=86400, stale-while-revalidate=604800
 
 /legal/*
-  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  CDN-Cache-Control: max-age=2592000
+  Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: max-age=86400, stale-while-revalidate=604800
 
 /real-estate/*
-  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  CDN-Cache-Control: max-age=2592000
+  Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: max-age=86400, stale-while-revalidate=604800
 
 /technology/*
-  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  CDN-Cache-Control: max-age=2592000
+  Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: max-age=86400, stale-while-revalidate=604800
 
 /converter/*
-  Cache-Control: public, max-age=2592000, stale-while-revalidate=86400
-  CDN-Cache-Control: max-age=2592000
+  Cache-Control: public, max-age=0, must-revalidate
+  CDN-Cache-Control: max-age=86400, stale-while-revalidate=604800
 
 # Sitemaps and Robots
 /sitemap*.xml
