@@ -1,0 +1,12 @@
+{
+  "captured_at": "2026-10-10T15:25:00Z",
+  "account_id": "569227437eb97ec95894fff0fe116f1f",
+  "primary_worker": {
+    "name": "freeaccuratecalculator",
+    "active_deployment_id": "918cb8be-dba4-48d6-9c6c-81354bac5828",
+    "active_deployment_created": "2026-10-10T09:30:11.682Z",
+    "previous_stable_deployment_id": "4b439f37-173d-4f67-b43a-d4125ba13942",
+    "previous_deployment_created": "2026-09-29T17:42:42.665Z"
+  },
+  "deployment_mode": "Cloudflare Worker with Static Assets (assets directory: ./dist/client)"
+}
